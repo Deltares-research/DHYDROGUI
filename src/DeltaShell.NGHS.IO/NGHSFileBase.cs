@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Threading;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.NGHS.IO
 {

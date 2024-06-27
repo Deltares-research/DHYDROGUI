@@ -1,6 +1,6 @@
 ﻿using DelftTools.Functions.Generic;
 using DelftTools.Units;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
 {

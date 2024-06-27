@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;

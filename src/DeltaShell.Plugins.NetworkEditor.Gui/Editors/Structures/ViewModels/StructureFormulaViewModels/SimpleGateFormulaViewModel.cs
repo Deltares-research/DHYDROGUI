@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels
 {

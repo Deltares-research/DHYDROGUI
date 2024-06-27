@@ -3,9 +3,9 @@ using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

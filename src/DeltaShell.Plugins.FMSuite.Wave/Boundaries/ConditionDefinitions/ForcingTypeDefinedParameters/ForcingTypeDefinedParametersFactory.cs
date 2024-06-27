@@ -1,4 +1,4 @@
-﻿using DelftTools.Utils.Guards;
+﻿using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 

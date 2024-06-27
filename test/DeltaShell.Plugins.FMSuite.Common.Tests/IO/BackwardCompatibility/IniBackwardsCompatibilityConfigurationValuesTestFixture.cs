@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DHYDRO.Common.IO.Ini.BackwardCompatibility;
+using Deltares.Infrastructure.IO.Ini.BackwardCompatibility;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility

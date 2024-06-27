@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Gui.Modals.ViewModels;
 
 namespace DeltaShell.NGHS.Common.Gui.Modals.Views

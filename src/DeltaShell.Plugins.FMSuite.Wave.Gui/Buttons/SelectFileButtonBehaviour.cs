@@ -1,7 +1,7 @@
 ﻿using DelftTools.Controls;
-using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using System;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -15,8 +17,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergy
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
-using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.Logging;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries

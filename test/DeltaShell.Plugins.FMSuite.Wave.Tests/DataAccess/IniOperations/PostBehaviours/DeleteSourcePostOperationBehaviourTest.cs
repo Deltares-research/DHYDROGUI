@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations.PostBehaviours;
-using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.IniOperations.PostBehaviours

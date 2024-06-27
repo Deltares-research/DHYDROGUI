@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.NetCdf;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using log4net;
 

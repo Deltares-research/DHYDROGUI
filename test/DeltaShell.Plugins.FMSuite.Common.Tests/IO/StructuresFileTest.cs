@@ -8,17 +8,18 @@ using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
-using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.Logging;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using log4net.Core;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
@@ -99,23 +100,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 string path = copiesInTempFilePaths[0];
 
                 var structuresFile = CreateStructuresFile();
-
-                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
-                logHandlerMock.Expect(l => l.ReportErrorFormat(
-                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__)),
-                                          Arg<object[]>.Matches(fs => fs.Length == 2 &&
-                                                                      fs[0].Equals(1) &&
-                                                                      fs[1].Equals("Structure 'structure02' does not have a filename specified for property 'polylinefile'."))))
-                              .Repeat.Once();
-
-                // When
-                logHandlerMock.Replay();
+                var logHandlerMock = Substitute.For<ILogHandler>();
 
                 IList<StructureDAO> structureDataAccessObjects = structuresFile.ReadStructuresFromFile(path, logHandlerMock).ToList();
 
                 // Then
                 Assert.AreEqual(0, structureDataAccessObjects.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
-                logHandlerMock.VerifyAllExpectations();
+
+                logHandlerMock.Received().ReportErrorFormat(
+                    Arg.Is<string>(fp => fp.Equals(Resources.StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__)),
+                    Arg.Is<object[]>(fs => fs.Length == 2 &&
+                                           fs[0].Equals(1) &&
+                                           fs[1].Equals("Structure 'structure02' does not have a filename specified for property 'polylinefile'.")));
             }
         }
 
@@ -133,23 +129,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 string path = copiesInTempFilePaths[0];
 
                 var structuresFile = CreateStructuresFile();
-
-                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
-                logHandlerMock.Expect(l => l.ReportWarningFormat(
-                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Section__0__not_supported_for_structures_and_is_skipped_Line__1__)),
-                                          Arg<object[]>.Matches(fs => fs.Length == 2 &&
-                                                                      fs[0].Equals("test") &&
-                                                                      fs[1].Equals(1))))
-                              .Repeat.Once();
+                var logHandlerMock = Substitute.For<ILogHandler>();
 
                 // When
-                logHandlerMock.Replay();
-
                 IList<StructureDAO> structureDataAccessObjects = structuresFile.ReadStructuresFromFile(path, logHandlerMock).ToList();
 
                 // Then
                 Assert.AreEqual(0, structureDataAccessObjects.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
-                logHandlerMock.VerifyAllExpectations();
+
+                logHandlerMock.Received().ReportWarningFormat(
+                    Arg.Is<string>(fp => fp.Equals(Resources.StructureFile_Section__0__not_supported_for_structures_and_is_skipped_Line__1__)),
+                    Arg.Is<object[]>(fs => fs.Length == 2 &&
+                                           fs[0].Equals("test") &&
+                                           fs[1].Equals(1)));
             }
         }
 
@@ -166,31 +158,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 string path = copiesInTempFilePaths[0];
 
                 var structuresFile = CreateStructuresFile();
-
-                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
-                logHandlerMock.Expect(l => l.ReportWarningFormat(
-                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__)),
-                                          Arg<object[]>.Matches(fs => fs.Length == 3 &&
-                                                                      fs[0].Equals("weir1") &&
-                                                                      fs[1].Equals("weir") &&
-                                                                      fs[2].Equals(8))))
-                              .Repeat.Once();
-                logHandlerMock.Expect(l => l.ReportWarningFormat(
-                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__)),
-                                          Arg<object[]>.Matches(fs => fs.Length == 3 &&
-                                                                      fs[0].Equals("weir2") &&
-                                                                      fs[1].Equals("weir") &&
-                                                                      fs[2].Equals(9))))
-                              .Repeat.Once();
+                var logHandlerMock = Substitute.For<ILogHandler>();
 
                 // When
-                logHandlerMock.Replay();
-
                 IList<StructureDAO> structureDataAccessObjects = structuresFile.ReadStructuresFromFile(path, logHandlerMock).ToList();
 
                 // Then
                 Assert.AreEqual(1, structureDataAccessObjects.Count, "One structure should have been created");
-                logHandlerMock.VerifyAllExpectations();
+
+                logHandlerMock.Received().ReportWarningFormat(
+                    Arg.Is<string>(fp => fp.Equals(Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__)),
+                    Arg.Is<object[]>(fs => fs.Length == 3 &&
+                                           fs[0].Equals("weir1") &&
+                                           fs[1].Equals("weir") &&
+                                           fs[2].Equals(8)));
+                
+                logHandlerMock.Received().ReportWarningFormat(
+                    Arg.Is<string>(fp => fp.Equals(Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__)),
+                    Arg.Is<object[]>(fs => fs.Length == 3 &&
+                                           fs[0].Equals("weir2") &&
+                                           fs[1].Equals("weir") &&
+                                           fs[2].Equals(9)));
             }
         }
 
@@ -207,23 +195,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 string path = copiesInTempFilePaths[0];
 
                 var structuresFile = CreateStructuresFile();
-
-                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
-                logHandlerMock.Expect(l => l.ReportWarningFormat(
-                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Obligated_property__0__expected_but_is_missing_Structure_is_skipped_Line__1__)),
-                                          Arg<object[]>.Matches(fs => fs.Length == 2 &&
-                                                                      fs[0].Equals("type") &&
-                                                                      fs[1].Equals(1))))
-                              .Repeat.Once();
+                var logHandlerMock = Substitute.For<ILogHandler>();
 
                 // When
-                logHandlerMock.Replay();
-
                 IList<StructureDAO> structureDataAccessObjects = structuresFile.ReadStructuresFromFile(path, logHandlerMock).ToList();
 
                 // Then
                 Assert.AreEqual(0, structureDataAccessObjects.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
-                logHandlerMock.VerifyAllExpectations();
+
+                logHandlerMock.Received().ReportWarningFormat(
+                    Arg.Is<string>(fp => fp.Equals(Resources.StructureFile_Obligated_property__0__expected_but_is_missing_Structure_is_skipped_Line__1__)),
+                    Arg.Is<object[]>(fs => fs.Length == 2 &&
+                                           fs[0].Equals("type") &&
+                                           fs[1].Equals(1)));
             }
         }
 

@@ -5,10 +5,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using Deltares.Infrastructure.Extensions;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DHYDRO.Common.Extensions;
 using log4net;
 using Newtonsoft.Json;
 

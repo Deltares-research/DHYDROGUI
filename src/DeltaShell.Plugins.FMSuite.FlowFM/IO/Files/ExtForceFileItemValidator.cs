@@ -1,5 +1,5 @@
 using System.IO.Abstractions;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using Deltares.Infrastructure.API.Validation;
 using DeltaShell.Plugins.FMSuite.Common.IO.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
@@ -7,7 +7,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     /// <summary>
-    /// Validator for <see cref="ExtForceFileItem"/> object from from the old external forcing file.
+    /// Validator for <see cref="ExtForceFileItem"/> object from the old external forcing file.
     /// </summary>
     public sealed class ExtForceFileItemValidator : IValidator<ExtForceFileItem>
     {

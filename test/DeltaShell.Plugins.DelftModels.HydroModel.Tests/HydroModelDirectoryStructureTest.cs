@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Services;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Core.Services;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -13,7 +14,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

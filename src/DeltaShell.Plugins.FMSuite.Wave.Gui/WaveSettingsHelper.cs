@@ -7,7 +7,7 @@ using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Controls.Wpf.Services;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons;

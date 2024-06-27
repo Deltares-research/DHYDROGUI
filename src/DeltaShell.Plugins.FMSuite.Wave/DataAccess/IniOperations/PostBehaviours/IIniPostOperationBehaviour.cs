@@ -1,6 +1,6 @@
 ﻿using System.IO;
-using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations.PostBehaviours
 {

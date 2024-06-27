@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Validation;
+using Deltares.Infrastructure.Extensions;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -16,7 +17,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
-using DHYDRO.Common.Extensions;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model

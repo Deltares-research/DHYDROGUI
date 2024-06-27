@@ -1,6 +1,6 @@
 ﻿using System;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 {

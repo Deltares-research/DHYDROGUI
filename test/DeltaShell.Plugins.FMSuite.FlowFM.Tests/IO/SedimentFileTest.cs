@@ -8,6 +8,8 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -17,14 +19,12 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
-using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Coverages;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
@@ -915,21 +915,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 CreateSedFile(sedPath, 0, 0, 0);
 
-                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
-                logHandlerMock.Expect(lh => lh.LogReport()).Repeat.Any();
-                logHandlerMock.Expect(lh => lh.ReportError(null)).IgnoreArguments().Repeat.Never();
-                logHandlerMock.Expect(lh => lh.ReportInfo(null)).IgnoreArguments().Repeat.Never();
-                logHandlerMock.Expect(lh => lh.ReportWarning(null)).IgnoreArguments().Repeat.Never();
-                logHandlerMock.Expect(lh => lh.ReportErrorFormat(null)).IgnoreArguments().Repeat.Never();
-                logHandlerMock.Expect(lh => lh.ReportInfoFormat(null)).IgnoreArguments().Repeat.Never();
-                logHandlerMock.Expect(lh => lh.ReportWarningFormat(null)).IgnoreArguments().Repeat.Never();
+                var logHandlerMock = Substitute.For<ILogHandler>();
 
-                logHandlerMock.Replay();
                 // When
                 SedimentFile.LoadSediments(sedPath, model, logHandlerMock);
 
                 // Then
-                logHandlerMock.VerifyAllExpectations();
+                logHandlerMock.Received().LogReport();
+                logHandlerMock.DidNotReceive().ReportError(Arg.Any<string>());
+                logHandlerMock.DidNotReceive().ReportInfo(Arg.Any<string>());
+                logHandlerMock.DidNotReceive().ReportWarning(Arg.Any<string>());
+                logHandlerMock.DidNotReceive().ReportErrorFormat(Arg.Any<string>());
+                logHandlerMock.DidNotReceive().ReportInfoFormat(Arg.Any<string>());
+                logHandlerMock.DidNotReceive().ReportWarningFormat(Arg.Any<string>());
             }
         }
 
@@ -1039,32 +1037,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 CreateSedFile(sedPath, nUnknownOverall, nUnknownSediment, nUnknownUnknown);
 
-                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
-                logHandlerMock.Expect(lh => lh.LogReport()).Repeat.Once();
+                var logHandlerMock = Substitute.For<ILogHandler>();
 
-                setUpExpectationsReportWarning(logHandlerMock, nUnknownOverall, iniPropertyKeysOverall);
-                setUpExpectationsReportWarning(logHandlerMock, nUnknownSediment, iniPropertyKeySedimentFraction);
-                setUpExpectationsReportWarning(logHandlerMock, nUnknownUnknown, iniPropertyKeysUnknown);
-
-                logHandlerMock.Replay();
                 // When
                 SedimentFile.LoadSediments(sedPath, model, logHandlerMock);
 
                 // Then
-                logHandlerMock.VerifyAllExpectations();
+                AssertExpectationsReportWarning(logHandlerMock, nUnknownOverall, iniPropertyKeysOverall);
+                AssertExpectationsReportWarning(logHandlerMock, nUnknownSediment, iniPropertyKeySedimentFraction);
+                AssertExpectationsReportWarning(logHandlerMock, nUnknownUnknown, iniPropertyKeysUnknown);
             }
         }
 
-        private static void setUpExpectationsReportWarning(ILogHandler mock, int nUnknown, IReadOnlyList<string> names)
+        private static void AssertExpectationsReportWarning(ILogHandler mock, int nUnknown, IReadOnlyList<string> names)
         {
             for (var i = 0; i < nUnknown; i++)
             {
                 string propName = names[i];
 
-                mock.Expect(lh => lh.ReportWarningFormat(
-                                Arg<string>.Matches(m => m.Equals(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_)),
-                                Arg<object[]>.Matches(o => o.Length == 2 && (o[0] as string).Equals(propName) && o[1] is int)))
-                    .Repeat.Once();
+                mock.Received().ReportWarningFormat(
+                                Arg.Is<string>(m => m.Equals(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_)),
+                                Arg.Is<object[]>(o => o.Length == 2 && (o[0] as string).Equals(propName) && o[1] is int));
             }
         }
 

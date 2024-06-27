@@ -4,7 +4,7 @@ using System.Windows;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;

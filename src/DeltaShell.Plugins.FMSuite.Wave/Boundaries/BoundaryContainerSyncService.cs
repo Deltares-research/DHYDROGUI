@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Utils;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries;
 using GeoAPI.Extensions.Coverages;

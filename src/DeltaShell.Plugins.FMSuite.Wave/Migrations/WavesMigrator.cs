@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.IO;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._2._0._0;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations

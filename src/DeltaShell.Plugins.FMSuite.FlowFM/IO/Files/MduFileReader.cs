@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Collections;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.IO.Ini;
+using Deltares.Infrastructure.IO.Ini.BackwardCompatibility;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.IO.Ini.BackwardCompatibility;
-using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files

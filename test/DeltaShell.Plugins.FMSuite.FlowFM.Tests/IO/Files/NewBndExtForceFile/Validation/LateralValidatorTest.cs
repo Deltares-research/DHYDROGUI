@@ -1,12 +1,12 @@
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
+using Deltares.Infrastructure.API.Logging;
 using Deltares.Infrastructure.IO;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Validation;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

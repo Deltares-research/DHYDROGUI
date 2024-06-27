@@ -83,6 +83,14 @@
 		<ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" IncludeAssets="compile" Private="false" PrivateAssets="all"></ProjectReference>
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Deltares.NET.Infrastructure">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Deltares.NET.Infrastructure.API">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference GeneratePathProperty="true" Include="DeltaShell.Framework" IncludeAssets="compile" PrivateAssets="all"></PackageReference>
 		<PackageReference Include="DHYDRO.Common">
 			<IncludeAssets>compile</IncludeAssets>

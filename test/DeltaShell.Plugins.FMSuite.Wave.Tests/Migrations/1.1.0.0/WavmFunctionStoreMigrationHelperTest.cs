@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

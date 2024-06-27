@@ -1,6 +1,6 @@
 using System;
 using DelftTools.Functions;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Laterals.TimeSeriesGeneration

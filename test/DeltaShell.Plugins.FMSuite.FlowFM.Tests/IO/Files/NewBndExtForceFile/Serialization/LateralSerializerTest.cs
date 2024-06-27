@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Serialization;
-using DHYDRO.Common.IO.Ini;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;

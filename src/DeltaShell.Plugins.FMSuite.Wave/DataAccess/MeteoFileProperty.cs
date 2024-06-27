@@ -1,4 +1,5 @@
-﻿using DelftTools.Utils.Guards;
+﻿
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 {

@@ -5,11 +5,11 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
-using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import

@@ -53,6 +53,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Deltares.NET.Infrastructure.API">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

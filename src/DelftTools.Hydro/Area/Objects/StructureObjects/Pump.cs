@@ -2,7 +2,7 @@
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 

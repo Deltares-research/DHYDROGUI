@@ -2,8 +2,8 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.Properties;
-using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.Ini
 {

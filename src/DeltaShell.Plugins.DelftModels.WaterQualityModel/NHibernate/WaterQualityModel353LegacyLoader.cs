@@ -4,8 +4,8 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
 {

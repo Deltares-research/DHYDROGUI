@@ -1,4 +1,4 @@
-﻿using DelftTools.Utils.Guards;
+﻿using Deltares.Infrastructure.API.Guards;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries

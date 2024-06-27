@@ -4,7 +4,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 {

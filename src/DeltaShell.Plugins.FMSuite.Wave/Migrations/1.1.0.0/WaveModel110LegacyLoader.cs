@@ -5,9 +5,9 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
-using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0

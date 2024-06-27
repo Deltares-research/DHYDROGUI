@@ -1,6 +1,6 @@
 ﻿using System;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
-using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders

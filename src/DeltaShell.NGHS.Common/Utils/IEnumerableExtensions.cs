@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.NGHS.Common.Utils
 {

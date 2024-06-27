@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

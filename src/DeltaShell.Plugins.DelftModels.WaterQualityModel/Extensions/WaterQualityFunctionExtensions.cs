@@ -7,6 +7,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using SharpMap.Api.SpatialOperations;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
 {

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.Extensions;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DHYDRO.Common.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {

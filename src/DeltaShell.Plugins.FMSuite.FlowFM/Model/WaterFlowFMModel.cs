@@ -16,6 +16,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.IO;
+using Deltares.Infrastructure.Extensions;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Restart;
@@ -42,7 +43,6 @@ using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
-using DHYDRO.Common.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {

@@ -4,10 +4,11 @@ using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DHYDRO.Common.Extensions;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO

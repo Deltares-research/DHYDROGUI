@@ -1,7 +1,9 @@
-﻿namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
+﻿using DeltaShell.Dimr.RtcXsd;
+
+namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
 {
     /// <summary>
-    /// Represents an expression parameter reference that references another <see cref="Xsd.ExpressionComplexType"/>,
+    /// Represents an expression parameter reference that references another <see cref="ExpressionComplexType"/>,
     /// this could be another Mathematical Expression or a sub expression of the same Mathematical Expression. 
     /// </summary>
     public class ExpressionReference : IExpressionReference

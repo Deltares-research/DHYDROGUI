@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Reflection;
-using DHYDRO.Common.Extensions;
+using Deltares.Infrastructure.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile
 {

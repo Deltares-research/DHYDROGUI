@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DHYDRO.Common.IO.Ini.BackwardCompatibility;
+using Deltares.Infrastructure.IO.Ini.BackwardCompatibility;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers
 {

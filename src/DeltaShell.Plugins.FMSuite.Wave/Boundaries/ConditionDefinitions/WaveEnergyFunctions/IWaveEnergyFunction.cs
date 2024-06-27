@@ -1,13 +1,14 @@
 ﻿using System;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions
 {
     /// <summary>
     /// <see cref="IWaveEnergyFunction{TSpreading}"/> defines the WaveEnergyFunction as used within a
-    /// <see cref="Parameters.TimeDependentParameters"/>.
+    /// <see cref="TimeDependentParameters{TSpreading}"/>.
     /// </summary>
     /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
     /// <remarks>

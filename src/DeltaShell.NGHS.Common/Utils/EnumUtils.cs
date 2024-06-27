@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.NGHS.Common.Utils
 {

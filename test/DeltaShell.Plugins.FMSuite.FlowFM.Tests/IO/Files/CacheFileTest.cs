@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers.CopyHandlers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

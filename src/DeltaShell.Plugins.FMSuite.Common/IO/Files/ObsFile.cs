@@ -4,9 +4,9 @@ using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
+using Deltares.Infrastructure.Extensions;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
-using DHYDRO.Common.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {

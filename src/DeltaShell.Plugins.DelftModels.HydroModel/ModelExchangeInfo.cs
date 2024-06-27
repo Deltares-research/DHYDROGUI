@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel

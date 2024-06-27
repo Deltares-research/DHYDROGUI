@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.IO.FileReaders;
-using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders
 {
@@ -37,16 +37,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             // Given
             string dimrConfigurationFile = DimrConfigFileWithExtraCategory();
-            SetExpectationReportedInfoMessageLogHandler(new[]
-            {
-                "test"
-            });
 
             // When
             delftConfigXmlParser.Read<dimrXML>(dimrConfigurationFile);
 
             // Then
-            logHandler.VerifyAllExpectations();
+            AssertExpectationReportedInfoMessage(new[] { "test" });
         }
 
         [Test]
@@ -55,17 +51,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             // Given
             string dimrConfigurationFile = DimrConfigFileWithExtraCategory();
-            SetExpectationReportedInfoMessageLogHandler(new[]
-            {
-                "Attribute",
-                "abc"
-            });
 
             // When
             delftConfigXmlParser.Read<dimrXML>(dimrConfigurationFile);
 
             // Then
-            logHandler.VerifyAllExpectations();
+            AssertExpectationReportedInfoMessage(new[]
+            {
+                "Attribute",
+                "abc"
+            });
         }
 
         [Test]
@@ -74,7 +69,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             // Given
             string dimrConfigurationFile = DimrConfigFileWithExtraCategory();
-            SetExpectationReportedInfoMessageLogHandler(new[]
+
+            // When
+            delftConfigXmlParser.Read<dimrXML>(dimrConfigurationFile);
+
+            // Then
+            AssertExpectationReportedInfoMessage(new[]
             {
                 "Element",
                 "test",
@@ -83,12 +83,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 "dimrwithextrainfo.xml",
                 "Attribute"
             });
-
-            // When
-            delftConfigXmlParser.Read<dimrXML>(dimrConfigurationFile);
-
-            // Then
-            logHandler.VerifyAllExpectations();
         }
 
         #region General Exception tests
@@ -99,7 +93,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [SetUp]
         public void SetUp()
         {
-            logHandler = MockRepository.GenerateMock<ILogHandler>();
+            logHandler = Substitute.For<ILogHandler>();
             delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
         }
 
@@ -184,14 +178,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             return dimrFile;
         }
 
-        private void SetExpectationReportedInfoMessageLogHandler(IList<string> expectedStrings)
+        private void AssertExpectationReportedInfoMessage(IList<string> expectedStrings)
         {
-            string argExpectation = Arg<string>.Matches(arg => expectedStrings.All(arg.Contains));
-
-            logHandler.Expect(obj => obj.ReportInfo(argExpectation))
-                      .Repeat.Once().Message(
-                          "ReportInfo method was not called with an argument containing all of the following strings: " +
-                          $"'{"\"" + string.Join("\" \"", expectedStrings) + "\""}'");
+            logHandler.Received().ReportInfo(Arg.Is<string>(arg => expectedStrings.All(arg.Contains)));
         }
 
         #endregion

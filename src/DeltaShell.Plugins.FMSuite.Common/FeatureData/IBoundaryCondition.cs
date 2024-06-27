@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         bool IsHorizontallyUniform { get; }
 
         /// <summary>
-        /// When true - only <see cref="DepthLayerType.Single"/> can be used to define Z layers.
+        /// When true - only <see cref="float"/> can be used to define Z layers.
         /// </summary>
         bool IsVerticallyUniform { get; }
 

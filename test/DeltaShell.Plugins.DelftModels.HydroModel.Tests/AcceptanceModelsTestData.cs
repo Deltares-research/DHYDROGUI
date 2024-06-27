@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Utils.IO;
-using DHYDRO.Common.Extensions;
+using Deltares.Infrastructure.Extensions;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests

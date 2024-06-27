@@ -1,4 +1,4 @@
-﻿using DHYDRO.Common.IO.Ini;
+﻿using Deltares.Infrastructure.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.Ini
 {

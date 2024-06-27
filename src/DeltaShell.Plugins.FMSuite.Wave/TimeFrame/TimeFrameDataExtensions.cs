@@ -1,5 +1,5 @@
 ﻿using DelftTools.Functions;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.TimeFrame.DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.TimeFrame

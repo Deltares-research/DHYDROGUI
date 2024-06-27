@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.IO;
 using DelftTools.Utils.IO;
 
 namespace DeltaShell.NGHS.Common.IO

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._2._0._0;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

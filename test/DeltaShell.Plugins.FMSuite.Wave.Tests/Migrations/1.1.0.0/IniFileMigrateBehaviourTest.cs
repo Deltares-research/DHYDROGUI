@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
-using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

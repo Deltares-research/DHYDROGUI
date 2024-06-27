@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using SharpMap.SpatialOperations;

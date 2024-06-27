@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.NGHS.Common.IO;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

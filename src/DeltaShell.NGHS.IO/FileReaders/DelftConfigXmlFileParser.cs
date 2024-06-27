@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.NGHS.IO.FileConverters;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {

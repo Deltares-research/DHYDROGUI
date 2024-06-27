@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DelftTools.Utils.Guards;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.API.Logging;
 
 namespace DeltaShell.NGHS.Common.IO
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using DelftTools.Functions.Binding;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.ViewModels.TimeFrameEditor;
 using DeltaShell.Plugins.FMSuite.Wave.TimeFrame;

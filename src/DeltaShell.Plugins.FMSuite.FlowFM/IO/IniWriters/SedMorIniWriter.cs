@@ -1,5 +1,5 @@
-﻿using DeltaShell.NGHS.IO.Ini;
-using DHYDRO.Common.IO.Ini;
+﻿using Deltares.Infrastructure.IO.Ini;
+using DeltaShell.NGHS.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.IniWriters
 {

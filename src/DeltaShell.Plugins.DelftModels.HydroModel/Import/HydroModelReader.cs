@@ -1,7 +1,7 @@
 ﻿using DelftTools.Shell.Core.Services;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.IO.FileReaders;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {

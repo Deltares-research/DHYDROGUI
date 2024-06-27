@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Deltares.Infrastructure.IO.Ini.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility;
-using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 {

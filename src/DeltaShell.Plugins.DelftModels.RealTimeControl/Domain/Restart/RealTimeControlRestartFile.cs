@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Restart;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart

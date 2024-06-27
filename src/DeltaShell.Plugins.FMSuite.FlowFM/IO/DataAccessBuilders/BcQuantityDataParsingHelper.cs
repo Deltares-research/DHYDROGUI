@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using Deltares.Infrastructure.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
-using DHYDRO.Common.Extensions;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
