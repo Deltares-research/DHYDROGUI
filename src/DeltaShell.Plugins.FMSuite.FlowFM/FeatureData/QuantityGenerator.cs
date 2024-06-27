@@ -4,7 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
