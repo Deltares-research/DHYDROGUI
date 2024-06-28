@@ -620,9 +620,6 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___" xml:space="preserve">
     <value>Output timers ({0}) have been synchronized to match the Simulation {0} ({1}).</value>
   </data>
-  <data name="WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_" xml:space="preserve">
-    <value>Failed to initialize pre-processor.{0}Please look at the List file for more information.{0}List file found in: Project view -&gt; Output -&gt; List file.{0} {1}</value>
-  </data>
   <data name="SubFileImporter_Import_Sub_file_successfully_imported_from___0_" xml:space="preserve">
     <value>Sub file successfully imported from: {0}</value>
   </data>

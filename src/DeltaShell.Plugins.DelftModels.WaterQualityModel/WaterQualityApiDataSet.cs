@@ -32,14 +32,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         public static string WaqDataDirectory { get; } = Path.Combine(WaqKernelDirectory, "Data");
 
         /// <summary>
-        /// Gets the full path of the delwaq1 executable.
+        /// Gets the full path of the delwaq executable.
         /// </summary>
-        public static string DelWaq1ExePath { get; } = Path.Combine(DimrApiDataSet.DelWaqExeDirectory, DimrApiDataSet.DelWaq1ExeName);
-
-        /// <summary>
-        /// Gets the full path of the delwaq2 executable.
-        /// </summary>
-        public static string DelWaq2ExePath { get; } = Path.Combine(DimrApiDataSet.DelWaqExeDirectory, DimrApiDataSet.DelWaq2ExeName);
+        public static string DelWaqExePath { get; } = Path.Combine(DimrApiDataSet.DelWaqExeDirectory, DimrApiDataSet.DelWaqExeName);
 
         /// <summary>
         /// Gets the full path of the bloom substances file.

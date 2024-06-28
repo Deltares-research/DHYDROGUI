@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         public IWaterQualityModelSettings Settings { get; set; }
 
         /// <summary>
-        /// Input file used for preprocessing with delwaq1.exe
+        /// Input file used for preprocessing with delwaq.exe
         /// </summary>
         public TextDocument InputFile { get; set; }
 

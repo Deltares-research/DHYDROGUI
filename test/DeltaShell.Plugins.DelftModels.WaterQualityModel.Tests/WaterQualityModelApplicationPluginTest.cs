@@ -7,9 +7,7 @@ using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using Deltares.Infrastructure.API.DependencyInjection;
@@ -20,7 +18,6 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.Scripting;
@@ -109,56 +106,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 string newDataDirectory = waqModel.ModelDataDirectory;
                 Assert.That(Path.Combine(tempDirectory, "WAQ_proj_data\\WAQ2\\output"), Is.EqualTo(newOutputDirectory));
                 Assert.That(Path.Combine(tempDirectory, "WAQ_proj_data\\WAQ2"), Is.EqualTo(newDataDirectory));
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
-        public void ImportCorrectSubFileAndThenCorruptItAndExpectExceptionMessage()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            using (var app = GetRunningApplication(tempDirectory.Path))
-            using (WaterQualityModel model = GetWesternscheldtModelInApplication(tempDirectory.Path, app))
-            {
-                string boundaryDataTableFilePath = Path.Combine(model.BoundaryDataManager.FolderPath, "bacteria.tbl");
-                Assert.True(File.Exists(boundaryDataTableFilePath));
-
-                // Simulate corruption of boundary table data
-                using (StreamWriter sw = File.AppendText(boundaryDataTableFilePath))
-                {
-                    sw.WriteLine("The Corruption");
-                    sw.WriteLine("Spreads in this file");
-                }
-
-                string expectedExceptionMsg =
-                    string.Format(Resources.WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_,
-                                  Environment.NewLine, model.ModelSettings.OutputDirectory);
-
-                //Expect the exception message thrown as log message
-                TestHelper.AssertAtLeastOneLogMessagesContains(() => ActivityRunner.RunActivity(model), expectedExceptionMsg);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void Check_When_RunningTwice_WaqModel_OutputFiles_And_Saving_TheFilesArePersisted()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            using (var app = GetRunningApplication(tempDirectory.Path))
-            using (WaterQualityModel model = GetWesternscheldtModelInApplication(tempDirectory.Path, app))
-            {
-                //First run
-                ActivityRunner.RunActivity(model);
-                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
-
-                //save the project
-                app.SaveProject();
-
-                //Second run
-                ActivityRunner.RunActivity(model);
-                CheckDataItems(model);
             }
         }
 
@@ -491,60 +438,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             };
             return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
-        }
-
-        private IApplication GetRunningApplication(string tempDirectory)
-        {
-            string workingDirectoryPath = Path.Combine(tempDirectory, "DeltaShell_Working_Directory");
-            ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
-
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new SharpMapGisApplicationPlugin(),
-                plugin,
-                new CommonToolsApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ScriptingApplicationPlugin(),
-                new ToolboxApplicationPlugin(),
-            };
-            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
-            app.UserSettings = userSettings;
-            
-            app.Run();
-            app.CreateNewProject();
-            app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
-
-            return app;
-        }
-
-        private static void CheckDataItems(WaterQualityModel waqModel)
-        {
-            //Check data items
-            IList<string> dataItemTags = GetDataItemTags(waqModel);
-
-            string[] expectedDataItemTags =
-            {
-                WaterQualityModel.ListFileDataItemMetaData.Tag,
-                WaterQualityModel.ProcessFileDataItemMetaData.Tag,
-                WaterQualityModel.MonitoringFileDataItemMetaData.Tag
-            };
-
-            foreach (string expectedTag in expectedDataItemTags)
-            {
-                Assert.IsTrue(dataItemTags.Any(t => t == expectedTag),
-                              $"DataItem with tag {expectedTag} not found in dataItems {string.Join(", ", dataItemTags)}");
-            }
-        }
-
-        private static IList<string> GetDataItemTags(WaterQualityModel waqModel)
-        {
-            List<IDataItem> dataItems = waqModel.DataItems.Where(di => di.Role == DataItemRole.Output
-                                                                       && di.ValueType == typeof(TextDocument)).ToList();
-            Assert.IsTrue(dataItems.Any());
-            Assert.AreEqual(3, dataItems.Count);
-            return dataItems.Select(di => di.Tag).ToList();
         }
     }
 }

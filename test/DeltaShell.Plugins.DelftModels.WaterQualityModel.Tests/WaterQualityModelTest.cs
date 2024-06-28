@@ -158,8 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             // assert
             StringAssert.Contains(@"Kernel", kernalVersionsText[0]);
-            StringAssert.Contains(@"delwaq1.exe", kernalVersionsText[1]);
-            StringAssert.Contains(@"delwaq2.exe", kernalVersionsText[6]);
+            StringAssert.Contains(@"delwaq.exe", kernalVersionsText[1]);
         }
 
         [Test]
@@ -945,25 +944,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void CallingCancelShouldCancelOnProcessorAndPreProcessor()
+        public void CallingCancelShouldCancelOnProcessor()
         {
-            var preProcessor = MockRepository.GenerateStrictMock<IWaqPreProcessor>();
             var processor = MockRepository.GenerateStrictMock<IWaqProcessor>();
 
-            preProcessor.Expect(p => p.TryToCancel).SetPropertyWithArgument(true);
             processor.Expect(p => p.TryToCancel).SetPropertyWithArgument(true);
 
-            preProcessor.Replay();
             processor.Replay();
 
             var model = new WaterQualityModel();
 
-            TypeUtils.SetField(model, "waqPreProcessor", preProcessor);
             TypeUtils.SetField(model, "waqProcessor", processor);
 
             model.Cancel();
 
-            preProcessor.VerifyAllExpectations();
             processor.VerifyAllExpectations();
         }
 

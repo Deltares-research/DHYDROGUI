@@ -5,20 +5,15 @@ using System.Linq;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 {
     public sealed class WaqFileBasedPreProcessor : IWaqPreProcessor
     {
         private const string RestartString = "0\n" + FileConstants.RestartInFileName + "\n";
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaqFileBasedPreProcessor));
 
         // save the work directory, because you cannot know it anymore in Cleanup phase.
         private string outputWorkDirectory;
-
-        public bool TryToCancel { get; set; }
 
         /// <summary>
         /// Writes the include files and binary files.
@@ -121,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             return Path.Combine(FileConstants.IncludesDirectoryName, Path.GetFileName(manager.FolderPath));
         }
 
-        public bool InitializeWaq(WaqInitializationSettings initSettings)
+        public void InitializeWaq(WaqInitializationSettings initSettings)
         {
             CheckInput(initSettings);
 
@@ -140,21 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             WriteIncludeFilesAndBinaryFiles(initSettings, includeDirectory);
 
-            File.WriteAllText(Path.Combine(outputWorkDirectory, FileConstants.InputFileName),
-                              GetInputFileContents(initSettings));
-
-            string parameters = string.Format("{0} {1} \"{2}\" -eco \"{3}\"", FileConstants.InputFileName,
-                                              initSettings.Settings.ProcessesActive ? "-p" : "-np",
-                                              initSettings.SubstanceProcessLibrary.ProcessDefinitionFilesPath,
-                                              WaterQualityApiDataSet.DelWaqBloomSpePath);
-
-            DateTime startTime = DateTime.Now;
-            Log.Info("Started delwaq1.exe.");
-            bool processSuccessful = WaterQualityUtils.RunProcess(WaterQualityApiDataSet.DelWaq1ExePath,
-                                                                  parameters, outputWorkDirectory, () => TryToCancel, false);
-            Log.InfoFormat("Done running delwaq1.exe. (Took {0})", DateTime.Now - startTime);
-
-            return processSuccessful;
+            File.WriteAllText(Path.Combine(outputWorkDirectory, FileConstants.InputFileName), GetInputFileContents(initSettings));
         }
 
         public void Dispose()

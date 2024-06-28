@@ -29,14 +29,9 @@ namespace DeltaShell.Dimr
         public const string RtcToolsDllName = "FBCTools_BMI.dll";
 
         /// <summary>
-        /// The file name of the Water Quality 1 executable.
+        /// The file name of the Water Quality executable.
         /// </summary>
-        public const string DelWaq1ExeName = "delwaq1.exe";
-
-        /// <summary>
-        /// The file name of the Water Quality 2 executable.
-        /// </summary>
-        public const string DelWaq2ExeName = "delwaq2.exe";
+        public const string DelWaqExeName = "delwaq.exe";
 
         /// <summary>
         /// The file name of the bloom substances file.
@@ -84,7 +79,7 @@ namespace DeltaShell.Dimr
         public static string RtcToolsDllDirectory => KernelsLibDirectory;
 
         /// <summary>
-        /// The directory that contains the water quality executables.
+        /// The directory that contains the water quality executable.
         /// </summary>
         public static string DelWaqExeDirectory => KernelsBinDirectory;
 

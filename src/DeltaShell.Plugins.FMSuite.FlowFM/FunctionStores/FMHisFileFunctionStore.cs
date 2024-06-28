@@ -25,6 +25,7 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using StringExtensions = Deltares.Infrastructure.Extensions.StringExtensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 {
@@ -57,9 +58,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             Functions?.OfType<IFeatureCoverage>().ForEach(InsertFeaturesInCoverage);
         }
 
-        protected FMHisFileFunctionStore() {}
-
         public ICoordinateSystem CoordinateSystem { get; set; }
+
+        protected override void UpdateFunctionsAfterPathSet()
+        {
+            PluralizeFeatureNameMappings();
+            base.UpdateFunctionsAfterPathSet();
+        }
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
@@ -276,17 +281,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private bool CanBeMappedToFeatureName(NetCdfDimension[] dimensions, string nodeCoordinatesVariableNames)
         {
-            return nodeCoordinatesVariableNames != null
-                   && dimensions != null
-                   && dimensions.Any()
-                   && dimensions
-                      .Select(netCdfFile.GetDimensionName)
-                      .Where(coordinateKeyByDimensionNameDictionary.ContainsKey)
-                      .Any(dimensionName =>
-                               nodeCoordinatesVariableNames
-                                   .Split(separator, StringSplitOptions.RemoveEmptyEntries)
-                                   .Any(coordinateVariableName => coordinateKeyByDimensionNameDictionary[dimensionName]
-                                            .Equals(coordinateVariableName, StringComparison.InvariantCultureIgnoreCase)));
+            // Check if any dimension name has a matching coordinate variable name (case-insensitive)
+            return nodeCoordinatesVariableNames != null && dimensions != null && Array.Exists(dimensions, dimension =>
+            {
+                string dimensionName = netCdfFile.GetDimensionName(dimension);
+                if (coordinateKeyByDimensionNameDictionary.TryGetValue(dimensionName, out string variableName))
+                {
+                    string[] coordinateVariableNames = nodeCoordinatesVariableNames.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                    return Array.Exists(coordinateVariableNames, coordinateVariableName => StringExtensions.EqualsCaseInsensitive(variableName, variableName));
+                }
+                
+                return false;
+            });
         }
 
         private bool CanBeMappedToFeatureGeometry(NetCdfDimension[] dimensions)
@@ -492,12 +498,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         #region Feature names and coverage helpers
 
-        private const string featureNameStations = "stations";
+        private const string featureNameStation = "station";
         private const string featureNameCrossSection = "cross_section";
-        private const string featureNameGeneralStructures = "general_structures";
-        private const string featureNameWeirgens = "weirgens";
-        private const string featureNameGategens = "gategens";
-        private const string featureNamePumps = "pumps";
+        private const string featureNameGeneralStructure = "general_structure";
+        private const string featureNameWeirgen = "weirgen";
+        private const string featureNameGategen = "gategen";
+        private const string featureNamePump = "pump";
 
         // Mapping dictionary used to relate under which name is an IFeature stored in the NetCdfFile.
         private readonly IDictionary<string, IEnumerable<IFeature>> featuresDictionary = new Dictionary<string, IEnumerable<IFeature>>();
@@ -518,21 +524,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private readonly IDictionary<string, Type> mapTypeDictionary =
             new Dictionary<string, Type>()
             {
-                {featureNameStations, typeof(GroupableFeature2DPoint)},
+                {featureNameStation, typeof(GroupableFeature2DPoint)},
                 {featureNameCrossSection, typeof(ObservationCrossSection2D)},
-                {featureNameGeneralStructures, typeof(IStructure)},
-                {featureNameWeirgens, typeof(IStructure)},
-                {featureNameGategens, typeof(IStructure)},
-                {featureNamePumps, typeof(IPump)}
+                {featureNameGeneralStructure, typeof(IStructure)},
+                {featureNameWeirgen, typeof(IStructure)},
+                {featureNameGategen, typeof(IStructure)},
+                {featureNamePump, typeof(IPump)}
             };
 
         // Mapping dictionary used to relate under which name are FeatureTypes are mapped.
         private readonly IDictionary<string, Func<IStructureFormula>> weirFormulaByDimensionName =
             new Dictionary<string, Func<IStructureFormula>>()
             {
-                {featureNameGeneralStructures, () => new GeneralStructureFormula()},
-                {featureNameWeirgens, () => new SimpleWeirFormula()},
-                {featureNameGategens, () => new SimpleGateFormula()},
+                {featureNameGeneralStructure, () => new GeneralStructureFormula()},
+                {featureNameWeirgen, () => new SimpleWeirFormula()},
+                {featureNameGategen, () => new SimpleGateFormula()},
             };
 
         // Mapping dictionary used to create features under which name are FeatureTypes are mapped.
@@ -559,7 +565,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         })
                 },
                 {
-                    featureNamePumps, (netCdfVariable, netCdfFile) => GetFeatureNamesVariableForBackWardsCompatibilityName(
+                    featureNamePump, (netCdfVariable, netCdfFile) => GetFeatureNamesVariableForBackWardsCompatibilityName(
                         netCdfFile,
                         netCdfVariable,
                         new[]
@@ -569,7 +575,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         })
                 },
                 {
-                    featureNameStations, (netCdfVariable, netCdfFile) =>
+                    featureNameStation, (netCdfVariable, netCdfFile) =>
                     {
                         return GetFeatureNamesVariableForBackWardsCompatibilityName(
                             netCdfFile,
@@ -582,7 +588,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     }
                 },
                 {
-                    featureNameGeneralStructures, (netCdfVariable, netCdfFile) => GetFeatureNamesVariableForBackWardsCompatibilityName(
+                    featureNameGeneralStructure, (netCdfVariable, netCdfFile) => GetFeatureNamesVariableForBackWardsCompatibilityName(
                         netCdfFile,
                         netCdfVariable,
                         new[]
@@ -592,7 +598,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         })
                 },
                 {
-                    featureNameWeirgens, (netCdfVariable, netCdfFile) => GetFeatureNamesVariableForBackWardsCompatibilityName(
+                    featureNameWeirgen, (netCdfVariable, netCdfFile) => GetFeatureNamesVariableForBackWardsCompatibilityName(
                         netCdfFile,
                         netCdfVariable,
                         new[]
@@ -602,7 +608,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         })
                 },
                 {
-                    featureNameGategens, (netCdfVariable, netCdfFile) => GetFeatureNamesVariableForBackWardsCompatibilityName(
+                    featureNameGategen, (netCdfVariable, netCdfFile) => GetFeatureNamesVariableForBackWardsCompatibilityName(
                         netCdfFile,
                         netCdfVariable,
                         new[]
@@ -661,8 +667,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             new Dictionary<string, Func<NetCdfVariable, NetCdfFile, (string, string)>>()
             {
                 {featureNameCrossSection, (netCdfVariable, netCdfFile) => GetFeatureGeometryXAndYVariableForBackWardCompatibilityNames(netCdfFile, netCdfVariable, "cross_section_x_coordinate", "cross_section_y_coordinate")},
-                {featureNameStations, (netCdfVariable, netCdfFile) => GetFeatureGeometryXAndYVariableForBackWardCompatibilityNames(netCdfFile, netCdfVariable, "station_x_coordinate", "station_y_coordinate")},
-                {featureNamePumps, (netCdfVariable, netCdfFile) => GetFeatureGeometryXAndYVariableForBackWardCompatibilityNames(netCdfFile, netCdfVariable, "pump_xmid", "pump_ymid")}
+                {featureNameStation, (netCdfVariable, netCdfFile) => GetFeatureGeometryXAndYVariableForBackWardCompatibilityNames(netCdfFile, netCdfVariable, "station_x_coordinate", "station_y_coordinate")},
+                {featureNamePump, (netCdfVariable, netCdfFile) => GetFeatureGeometryXAndYVariableForBackWardCompatibilityNames(netCdfFile, netCdfVariable, "pump_xmid", "pump_ymid")}
             };
 
         private static readonly string[] separator =
@@ -689,10 +695,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             return (featureNamesXVariableName ?? defaultXCoordinateName, featureNamesYVariableName ?? defaultYCoordinateName);
         }
 
+        /// <summary>
+        /// His file dimension names are changed to singular as of DIMRset 2.27.3
+        /// Add plural names for backwards compatibility.
+        /// </summary>
+        private void PluralizeFeatureNameMappings()
+        {
+            PluralizeFeatureNameMapping(mapTypeDictionary);
+            PluralizeFeatureNameMapping(weirFormulaByDimensionName);
+            PluralizeFeatureNameMapping(mapDimensionToFeatureNamesForBackWardsCompatibilityFunctionsDictionary);
+            PluralizeFeatureNameMapping(mapDimensionToFeatureGeometriesForBackWardsCompatibilityFunctionsDictionary);
+        }
+        
+        private static void PluralizeFeatureNameMapping<TValue>(IDictionary<string, TValue> dict)
+        {
+            foreach (KeyValuePair<string, TValue> kvp in dict.ToList().Where(kvp => !IsPluralFeatureName(kvp.Key)))
+            {
+                dict[GetPluralFeatureName(kvp.Key)] = kvp.Value;
+            }
+        }
+        
+        private static bool IsPluralFeatureName(string featureName)
+            => featureName.EndsWith("s", StringComparison.OrdinalIgnoreCase);
+
+        private static string GetPluralFeatureName(string featureName)
+            => featureName + "s";
+
         #endregion
 
         #region Feature Initialization
-
+        
         private void InitializeFeatures(IFeature[] features)
         {
             foreach (string dimensionName in timeSeriesIdsByDimensionNameDictionary.Keys)
@@ -707,7 +739,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 }
             }
         }
-
+        
         private IEnumerable<IFeature> GetOrCreateFeatures(IFeature[] features, string dimensionName, IReadOnlyList<string> timeSeriesIds)
         {
             for (var i = 0; i < timeSeriesIds.Count; i++)

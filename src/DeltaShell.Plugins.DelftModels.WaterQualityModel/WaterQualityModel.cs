@@ -1036,22 +1036,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             get
             {
-                string asmPath1 = WaterQualityApiDataSet.DelWaq1ExePath;
-                string asmPath2 = WaterQualityApiDataSet.DelWaq2ExePath;
+                string delWaqExePath = WaterQualityApiDataSet.DelWaqExePath;
 
-                var kernelVersions = "";
-
-                if (File.Exists(WaterQualityApiDataSet.DelWaq1ExePath))
+                if (File.Exists(delWaqExePath))
                 {
-                    kernelVersions += $"Kernel: {Path.GetFileName(asmPath1)}  {FileVersionInfo.GetVersionInfo(asmPath1).FileVersion}" + Environment.NewLine;
+                    return $"Kernel: {Path.GetFileName(delWaqExePath)}  {FileVersionInfo.GetVersionInfo(delWaqExePath).FileVersion}";
                 }
 
-                if (File.Exists(asmPath2))
-                {
-                    kernelVersions += $"Kernel: {Path.GetFileName(asmPath2)}  {FileVersionInfo.GetVersionInfo(asmPath2).FileVersion}" + Environment.NewLine;
-                }
-
-                return kernelVersions;
+                return string.Empty;
             }
         }
 
@@ -1713,20 +1705,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             WaterQualityOutputDisconnector.Disconnect(this);
 
-            waqPreProcessor = new WaqFileBasedPreProcessor();
-            bool success = waqPreProcessor.InitializeWaq(waqInitializationSettings);
-
-            if (!success)
-            {
-                ConnectOutput(ModelSettings.WorkingOutputDirectory);
-                throw new Exception(string.Format(
-                                        Resources
-                                            .WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_,
-                                        Environment.NewLine,
-                                        Path.GetDirectoryName(Path.Combine(ModelSettings.OutputDirectory, FileConstants.OutputDirectoryName))));
-            }
-
             waqProcessor = new WaqFileBasedProcessor();
+            waqPreProcessor = new WaqFileBasedPreProcessor();
+            waqPreProcessor.InitializeWaq(waqInitializationSettings);
         }
 
         protected override void OnExecute()
@@ -1736,11 +1717,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         protected override void OnCancel()
         {
-            if (waqPreProcessor != null)
-            {
-                waqPreProcessor.TryToCancel = true;
-            }
-
             if (waqProcessor != null)
             {
                 waqProcessor.TryToCancel = true;

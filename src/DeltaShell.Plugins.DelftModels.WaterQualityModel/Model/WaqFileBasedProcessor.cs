@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -25,16 +26,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         public void Process(WaqInitializationSettings initializationSettings, Action<double> setProgress)
         {
             var errorMessages = "";
-            DateTime startTime = DateTime.Now;
+            var stopWatch = Stopwatch.StartNew();
 
             string optionalCustomProcessDllSwitch =
                 !string.IsNullOrEmpty(initializationSettings.SubstanceProcessLibrary.ProcessDllFilePath)
                     ? "-openpb \"" + initializationSettings.SubstanceProcessLibrary.ProcessDllFilePath + "\""
                     : string.Empty;
+            
+            string parameters = string.Format("{0} {1} \"{2}\" -eco \"{3}\" {4}", FileConstants.InputFileName,
+                                              initializationSettings.Settings.ProcessesActive ? "-p" : "-np",
+                                              initializationSettings.SubstanceProcessLibrary.ProcessDefinitionFilesPath,
+                                              WaterQualityApiDataSet.DelWaqBloomSpePath,
+                                              optionalCustomProcessDllSwitch);
 
-            Log.Debug("Started delwaq2.exe.");
-            WaterQualityUtils.RunProcess(WaterQualityApiDataSet.DelWaq2ExePath,
-                                         string.Format(FileConstants.InputFileName + " " + optionalCustomProcessDllSwitch),
+            Log.Info("Started delwaq.exe.");
+            WaterQualityUtils.RunProcess(WaterQualityApiDataSet.DelWaqExePath, parameters,
                                          initializationSettings.Settings.WorkingOutputDirectory, () => TryToCancel, false, 3000,
                                          (s, e) =>
                                          {
@@ -42,6 +48,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                                              {
                                                  return;
                                              }
+                                             
+                                             Log.Debug(e.Data);
 
                                              double progress = ParseProgressText(e.Data);
                                              if (progress != NoDataValue)
@@ -55,7 +63,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                                                  errorMessages += e.Data + Environment.NewLine;
                                              }
                                          });
-            Log.DebugFormat("Done running delwaq2.exe. (Took {0})", DateTime.Now - startTime);
+            
+            stopWatch.Stop();
+            Log.InfoFormat("Done running delwaq.exe. (Took {0})", stopWatch.Elapsed);
 
             if (!string.IsNullOrEmpty(errorMessages))
             {

@@ -89,8 +89,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     ActivityRunner.RunActivity(model);
                     Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
+
                     // open standalone editor for his feature coverage
-                    gui.CommandHandler.OpenView(model.OutputHisFileStore.Functions.First(), typeof(CoverageView));
+                    IFunction coverage = model.OutputHisFileStore.Functions.First(f => f.Components[0].Name == "cross_section_discharge");
+                    gui.CommandHandler.OpenView(coverage, typeof(CoverageView));
 
                     Assert.AreEqual(1, gui.DocumentViews.Count);
                     model.ShowModelRunConsole = true;
