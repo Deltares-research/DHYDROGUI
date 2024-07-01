@@ -41,13 +41,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
 
             CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes, prefix);
 
-            yield return new XElement(xNamespace + "timeSeries",
-                                      new XAttribute("id", rootNode.YName));
+            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", rootNode.YName));
 
             foreach (IBranchNode branchNode in subBranchNodes)
             {
-                yield return new XElement(xNamespace + "timeSeries",
-                                          new XAttribute("id", branchNode.YName));
+                yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", branchNode.YName));
             }
         }
 
@@ -69,13 +67,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes, prefix);
 
             string idRootNode = GetXmlNameWithoutTag(prefix);
-            yield return CreateTriggerForExpression(xNamespace, rootNode, idRootNode, prefix);
 
             foreach (IBranchNode subBranchNode in subBranchNodes)
             {
                 string idSubBranchNodes = subBranchNode.YName;
                 yield return CreateTriggerForExpression(xNamespace, subBranchNode, idSubBranchNodes, prefix);
             }
+
+            yield return CreateTriggerForExpression(xNamespace, rootNode, idRootNode, prefix);
         }
 
         /// <summary>

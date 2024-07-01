@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                                                                          new List<ControlGroup> {controlGroup}, null);
 
             // Assert
-            List<XNode> exportTimeSeriesList = RetrieveExportTimeSeries(result);
+            List<XNode> exportTimeSeriesList = RetrieveTimeSeriesOrTriggers(result);
             var exportTimeSeriesNode = exportTimeSeriesList.Last() as XElement;
             Assert.NotNull(exportTimeSeriesNode, "error in xml: time series element not found");
 
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                                                                          null);
 
             // Assert
-            List<XNode> exportTimeSeriesList = RetrieveExportTimeSeries(result);
+            List<XNode> exportTimeSeriesList = RetrieveTimeSeriesOrTriggers(result);
 
             int nrOfTimeseries = exportTimeSeriesList.Count;
             var mainMathematicalExpressionYValueReference = exportTimeSeriesList[nrOfTimeseries - 2] as XElement;
@@ -331,7 +331,75 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             return controlGroup;
         }
 
-        private static List<XNode> RetrieveExportTimeSeries(XDocument result)
+        [Test]
+        public void ControlGroupWithMathematicalExpressionWritesBranchNodesBeforeRootNode()
+        {
+            // Setup
+            const string expression = "(B+C)+A";
+            ControlGroup controlGroup = CreateControlGroupWithPidRuleAndMathematicalExpressionWithThreeInputs(expression);
+
+            // Act
+            XDocument result = RealTimeControlXmlWriter.GetToolsConfigXml(DimrApiDataSet.RtcXsdDirectory,
+                                                                          new List<ControlGroup> {controlGroup},
+                                                                          false);
+
+            // Assert
+            List<XNode> triggers = RetrieveTimeSeriesOrTriggers(result);
+            Assert.That(triggers.Count, Is.EqualTo(2)); // One for (B+C) and one for (B+C) + A
+
+            string yValueOfFirstTrigger = GetYValueOfTrigger(triggers[0]);
+            Assert.That(yValueOfFirstTrigger, Is.EqualTo("Control Group/f1/([Input]feature2/waterlevel + [Input]feature3/waterlevel)"));
+
+            string yValueOfSecondTrigger = GetYValueOfTrigger(triggers[1]);
+            Assert.That(yValueOfSecondTrigger, Is.EqualTo("Control Group/f1")); 
+        }
+
+        private static ControlGroup CreateControlGroupWithPidRuleAndMathematicalExpressionWithThreeInputs(string expression)
+        {
+            // Create three inputs: A, B and C
+            Input inputOne = CreateTestInput("waterlevel", "feature1");
+            Input inputTwo = CreateTestInput("waterlevel", "feature2");
+            Input inputThree = CreateTestInput("waterlevel", "feature3");
+            
+            var mathExpression = new MathematicalExpression{ Name = "f1", Expression = expression };
+            mathExpression.Inputs.Add(inputOne);
+            mathExpression.Inputs.Add(inputTwo);
+            mathExpression.Inputs.Add(inputThree);
+
+            var output = new Output();
+
+            // Create a PIDRule that takes the MathematicalExpression as input and the Output as output
+            var pidRule = new PIDRule { Inputs = {mathExpression}, Outputs = {output} };
+
+            return new ControlGroup
+            {
+                Name = "Control Group",
+                Rules = {pidRule},
+                MathematicalExpressions = {mathExpression},
+                Inputs = {inputOne, inputTwo, inputThree},
+                Outputs = {output}
+            };
+        }
+
+        private static string GetYValueOfTrigger(XNode trigger)
+        {
+            XNamespace rtc = "http://www.wldelft.nl/fews";
+            var triggerElement = trigger as XElement;
+            XElement y = triggerElement.Descendants(rtc + "y").First();
+
+            return y.Value;
+        }
+
+        private static Input CreateTestInput(string parameterName, string name)
+        {
+            return new Input
+            {
+                ParameterName = parameterName,
+                Feature = new RtcTestFeature { Name = name }
+            };
+        }
+
+        private static List<XNode> RetrieveTimeSeriesOrTriggers(XDocument result)
         {
             XContainer topNode = result.Nodes().OfType<XContainer>().FirstOrDefault();
             Assert.NotNull(topNode, "error in xml: top node not found.");
