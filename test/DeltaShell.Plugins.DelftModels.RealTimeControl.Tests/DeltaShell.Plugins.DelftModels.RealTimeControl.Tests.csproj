@@ -2,7 +2,6 @@
   <ItemGroup>
     <PackageReference Include="Deltares.NET.Infrastructure" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="Deltares.NET.Infrastructure.API" IncludeAssets="compile" PrivateAssets="all" />
-    <PackageReference Include="Deltares.NET.Infrastructure.API" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
     <PackageReference Include="DeltaShell.TestProject" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="DHYDRO.Common" IncludeAssets="compile" PrivateAssets="all" />
