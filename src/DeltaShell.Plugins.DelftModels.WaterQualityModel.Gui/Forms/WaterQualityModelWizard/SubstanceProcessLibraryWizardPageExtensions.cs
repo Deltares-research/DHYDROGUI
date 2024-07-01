@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                 case WaterQualityProcessType.Sobek:
                 {
                     substanceProcessLibrary.ProcessDllFilePath = "";
-                    substanceProcessLibrary.ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory;
+                    substanceProcessLibrary.ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesPath;
 
                     break;
                 }
@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                     else
                     {
                         substanceProcessLibrary.ProcessDllFilePath = "";
-                        substanceProcessLibrary.ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory;
+                        substanceProcessLibrary.ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesPath;
                     }
 
                     break;

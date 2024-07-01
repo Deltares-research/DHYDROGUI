@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     // As the file path ends with "DeltaShell.Plugins(.DelftModels).WaterQualityModel\waq_kernel\Data\Default\proc_def", this is the default file path to the process 
                     // definition path on another PC or DeltaShell build.
                     // Here, we check that this process definition file path is set to the one that is default on the current build of DeltaShell.
-                    Assert.That(waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath, Is.EqualTo(WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory));
+                    Assert.That(waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath, Is.EqualTo(WaterQualityApiDataSet.DelWaqProcessDefinitionFilesPath));
                 }
             }
             finally

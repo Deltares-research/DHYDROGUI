@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
             Parameters = new EventedList<WaterQualityParameter>();
             Processes = new EventedList<WaterQualityProcess>();
             OutputParameters = new EventedList<WaterQualityOutputParameter>();
-            ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory;
+            ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesPath;
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
             Parameters.Clear();
             Processes.Clear();
             OutputParameters.Clear();
-            ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory;
+            ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesPath;
         }
 
         public override string ToString()

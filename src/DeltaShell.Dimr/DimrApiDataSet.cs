@@ -39,6 +39,11 @@ namespace DeltaShell.Dimr
         public const string DelWaqBloomSpeName = "bloom.spe";
 
         /// <summary>
+        /// The file name of the process definition file.
+        /// </summary>
+        public const string DelWaqProcDefName = "proc_def.def";
+
+        /// <summary>
         /// The directory where the DIMR API plugin is located.
         /// </summary>
         private static string DimrPluginDirectory { get; } = Path.GetDirectoryName(typeof(DimrApi).Assembly.Location);
@@ -51,7 +56,7 @@ namespace DeltaShell.Dimr
         /// <summary>
         /// The directory that contains the executables and run scripts for the kernels.
         /// </summary>
-        public static string KernelsBinDirectory { get; } = Path.Combine(KernelsDirectory, "bin");
+        private static string KernelsBinDirectory { get; } = Path.Combine(KernelsDirectory, "bin");
 
         /// <summary>
         /// The directory that contains the kernel libraries and third-party libraries.
@@ -61,7 +66,7 @@ namespace DeltaShell.Dimr
         /// <summary>
         /// The directory that contains the kernel resource files.
         /// </summary>
-        public static string KernelsShareDirectory { get; } = Path.Combine(KernelsDirectory, "share");
+        private static string KernelsShareDirectory { get; } = Path.Combine(KernelsDirectory, "share");
 
         /// <summary>
         /// The directory that contains the DIMR library.
@@ -107,6 +112,11 @@ namespace DeltaShell.Dimr
         /// The directory that contains the default water quality process definition files.
         /// </summary>
         public static string DelWaqResourcesDirectory { get; } = Path.Combine(KernelsShareDirectory, "delft3d");
+        
+        /// <summary>
+        /// The directory that contains the default water quality substances files.
+        /// </summary>
+        public static string DelWaqSubstancesDirectory { get; } = Path.Combine(DelWaqResourcesDirectory, "subFiles");
 
         /// <summary>
         /// Add the kernel directory to the PATH variable, if not already present.

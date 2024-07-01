@@ -17,21 +17,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
-        /// The directory where the water quality plugin is located.
-        /// </summary>
-        private static string WaqPluginDirectory { get; } = Path.GetDirectoryName(typeof(WaterQualityApiDataSet).Assembly.Location);
-
-        /// <summary>
-        /// The base directory of the water quality kernel.
-        /// </summary>
-        private static string WaqKernelDirectory { get; } = Path.Combine(WaqPluginDirectory, "waq_kernel");
-
-        /// <summary>
-        /// Gets the directory of the water quality substances and process data.
-        /// </summary>
-        public static string WaqDataDirectory { get; } = Path.Combine(WaqKernelDirectory, "Data");
-
-        /// <summary>
         /// Gets the full path of the delwaq executable.
         /// </summary>
         public static string DelWaqExePath { get; } = Path.Combine(DimrApiDataSet.DelWaqExeDirectory, DimrApiDataSet.DelWaqExeName);
@@ -42,8 +27,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         public static string DelWaqBloomSpePath { get; } = Path.Combine(DimrApiDataSet.DelWaqResourcesDirectory, DimrApiDataSet.DelWaqBloomSpeName);
 
         /// <summary>
-        /// Gets the directory that contains the default water quality process definition files.
+        /// Gets the full path of the default water quality process definition files (without *.dat/*.def extension).
         /// </summary>
-        public static string DelWaqProcessDefinitionFilesDirectory { get; } = Path.Combine(DimrApiDataSet.DelWaqResourcesDirectory, "proc_def");
+        public static string DelWaqProcessDefinitionFilesPath { get; } = Path.Combine(DimrApiDataSet.DelWaqResourcesDirectory, Path.GetFileNameWithoutExtension(DimrApiDataSet.DelWaqProcDefName));
+        
+        /// <summary>
+        /// The directory that contains the default water quality substances files.
+        /// </summary>
+        public static string DelWaqSubstanceFilesDirectory => DimrApiDataSet.DelWaqSubstancesDirectory;
     }
 }

@@ -509,7 +509,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 currentProcessDefinitionFilePath.EndsWith(
                     Path.Combine(newWaqProjectName, relativePathToProcessDefinitionFile)))
             {
-                newProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory;
+                newProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesPath;
             }
             else
             {

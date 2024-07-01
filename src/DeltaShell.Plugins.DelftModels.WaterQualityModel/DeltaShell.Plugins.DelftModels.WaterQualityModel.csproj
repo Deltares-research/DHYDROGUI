@@ -92,7 +92,6 @@
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Substances.Libs" />
   </ItemGroup>
   
   <ItemGroup>

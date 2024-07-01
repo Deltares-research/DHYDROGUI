@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
             if (dataDirectory == null)
             {
-                dataDirectory = WaterQualityApiDataSet.WaqDataDirectory;
+                dataDirectory = WaterQualityApiDataSet.DelWaqSubstanceFilesDirectory;
             }
 
             InitializeControls(dataDirectory);
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
         private void InitializeControls(string dataDirectory)
         {
             IEnumerable<ListViewItem> sobekListItems =
-                CreateListViewItems(dataDirectory + "\\Sobek", listView2.Groups[0]);
+                CreateListViewItems(dataDirectory, listView2.Groups[0]);
 
             listView2.Items.Clear();
             listView2.Items.AddRange(sobekListItems.ToArray());
