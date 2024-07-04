@@ -2257,7 +2257,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, observationPoint)));
             Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Output)));
-            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "water_level", "salinity", "water_depth" }));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "water_level", "salinity", "water_depth", "velocity", "discharge" }));
+        }
+        
+        public void GivenAModel_WhenRetrievingChildDataItemsForObservationPoint_ReturnsDataItems(
+            HeatFluxModelType temperature,
+            bool useSalinity,
+            string[] expectedTags)
+        {
+            var model = new WaterFlowFMModel();
+            var observationPoint = new ObservationPoint2D();
+
+            model.Area.ObservationPoints.Add(observationPoint);
+
+            // set after adding the observation point, to test the model property eventing
+            model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = useSalinity;
+            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString(((int)temperature).ToString());
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(observationPoint).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, observationPoint)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(expectedTags));
         }
 
         [Test]
@@ -2366,6 +2387,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, culvert)));
             Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Input) && x.Role.HasFlag(DataItemRole.Output)));
             Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "Valve opening (s)" }));
+        }
+        
+        [Test]
+        public void GivenAModel_WhenRetrievingChildDataItemsFor1DObservationPoint_ReturnsDataItems()
+        {
+            var model = new WaterFlowFMModel();
+            var branch = new Channel();
+            model.Network.Branches.Add(branch);
+
+            var observationPoint = new ObservationPoint(){ Geometry = new Point(1, 1) };
+            branch.BranchFeatures.Add(observationPoint);
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(observationPoint).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, observationPoint)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "Water level (op)", "Water depth (op)", "Discharge (op)", "Velocity (op)" }));
+        }
+        
+        [Test]
+        public void GivenAModelWithUseSalinity_WhenRetrievingChildDataItemsFor1DObservationPoint_ReturnsDataItems()
+        {
+            var model = new WaterFlowFMModel();
+            var branch = new Channel();
+            model.Network.Branches.Add(branch);
+
+            var observationPoint = new ObservationPoint(){ Geometry = new Point(1, 1) };
+            branch.BranchFeatures.Add(observationPoint);
+            
+            model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = true;
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(observationPoint).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, observationPoint)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "Water level (op)", "Water depth (op)", "Discharge (op)", "Velocity (op)", "Salt concentration (op)" }));
+        }
+        
+        [Test]
+        public void GivenAModelWithUseTemperature_WhenRetrievingChildDataItemsFor1DObservationPoint_ReturnsDataItems()
+        {
+            var model = new WaterFlowFMModel();
+            var branch = new Channel();
+            model.Network.Branches.Add(branch);
+
+            var observationPoint = new ObservationPoint(){ Geometry = new Point(1, 1) };
+            branch.BranchFeatures.Add(observationPoint);
+            
+            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature)
+                 .SetValueAsString(((int) HeatFluxModelType.ExcessTemperature).ToString());
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(observationPoint).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, observationPoint)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "Water level (op)", "Water depth (op)", "Discharge (op)", "Velocity (op)", "Temperature (op)" }));
         }
     }
 

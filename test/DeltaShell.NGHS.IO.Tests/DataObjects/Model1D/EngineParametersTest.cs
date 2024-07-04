@@ -22,7 +22,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Model1D
             weir.WeirFormula = new SimpleWeirFormula();
 
             // Call
-            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(weir, engineParameter);
+            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(weir, engineParameter, false, false);
 
             // Assert
             bool isAllowed = quantityType == QuantityType.CrestLevel;
@@ -39,7 +39,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Model1D
             weir.WeirFormula = new GatedWeirFormula();
 
             // Call
-            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(weir, engineParameter);
+            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(weir, engineParameter, false, false);
 
             // Assert
             bool isAllowed = quantityType == QuantityType.GateLowerEdgeLevel;
@@ -56,7 +56,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Model1D
             weir.WeirFormula = new GeneralStructureWeirFormula();
 
             // Call
-            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(weir, engineParameter);
+            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(weir, engineParameter, false, false);
 
             // Assert
             bool isAllowed = engineParameter.QuantityType == QuantityType.CrestLevel
@@ -77,7 +77,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Model1D
             culvert.IsGated.Returns(isGated);
 
             // Call
-            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(culvert, engineParameter);
+            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(culvert, engineParameter, false, false);
 
             // Assert
             bool isAllowed = culvert.IsGated && quantityType == QuantityType.ValveOpening;
@@ -93,7 +93,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Model1D
             var pump = Substitute.For<IPump>();
 
             // Call
-            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(pump, engineParameter);
+            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(pump, engineParameter, false, false);
 
             // Assert
             bool isAllowed = quantityType == QuantityType.PumpCapacity;
@@ -109,7 +109,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Model1D
             var observationPoint = Substitute.For<IObservationPoint>();
 
             // Call
-            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(observationPoint, engineParameter);
+            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(observationPoint, engineParameter, false, false);
 
             // Assert
             bool isAllowed = quantityType == QuantityType.WaterLevel ||

@@ -69,6 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 OnPropertyChanged(nameof(UseSalinity));
                 BoundaryConditions1D?.ForEach(bc => bc.UseSalt = UseSalinity);
                 LateralSourcesData?.ForEach(lat => lat.UseSalt = UseSalinity);
+                UpdateDataItemsForObservationPoints();
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.UseMorSed))
@@ -110,6 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 BeginEdit("Switching heat flux model");
                 HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
                 EndEdit();
+                UpdateDataItemsForObservationPoints();
             }
             else if (IsParameter(KnownProperties.SecondaryFlow))
             {
@@ -232,6 +234,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 BeginEdit("");
                 EndEdit();
+            }
+        }
+        
+        private void UpdateDataItemsForObservationPoints()
+        {
+            GroupableFeature2DPoint[] observationPointsToUpdate = 
+                areaDataItems.Keys.OfType<GroupableFeature2DPoint>().ToArray();
+
+            foreach (IFeature feature in observationPointsToUpdate)
+            {
+                RemoveAreaFeature(feature);
+                AddAreaItem(feature);
             }
         }
 

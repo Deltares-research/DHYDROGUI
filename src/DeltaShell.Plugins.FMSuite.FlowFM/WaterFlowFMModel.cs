@@ -1012,7 +1012,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else
             {
-                foreach (EngineParameter exchangeableParameter in EngineParameters.GetExchangeableParameters(EngineParameters.EngineMapping(), location))
+                foreach (EngineParameter exchangeableParameter in EngineParameters.GetExchangeableParameters(
+                             EngineParameters.EngineMapping(), location, UseSalinity, UseTemperature))
                 {
                     yield return exchangeableParameter;
                 }
@@ -2376,7 +2377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         private DataItemRole GetDataItemRole(IFeature feature)
         {
-            if (IsInputAndOutputFeature(feature))
+            if (IsInputOrOutputFeature(feature))
             {
                 return DataItemRole.Input | DataItemRole.Output;
             }
@@ -2389,7 +2390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return DataItemRole.None;
         }
 
-        private bool IsInputAndOutputFeature(IFeature feature)
+        private bool IsInputOrOutputFeature(IFeature feature)
         {
             return feature is Pump2D || feature is Weir2D || feature is Gate2D || IsSourcesAndSinksFeature(feature);
         }

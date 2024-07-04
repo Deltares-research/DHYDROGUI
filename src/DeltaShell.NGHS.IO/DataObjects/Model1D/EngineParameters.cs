@@ -369,9 +369,16 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
             };
         }
 
-        // used for RTC and for OpenMI
+        /// <summary>
+        /// Gets the engine parameters for the given feature that can be used in RTC. 
+        /// </summary>
+        /// <param name="mapping">Collection of engine parameters supported by SOBEK.</param>
+        /// <param name="feature">The feature to get the engine parameters for.</param>
+        /// <param name="useSalinity">Whether or not salinity is used.</param>
+        /// <param name="useTemperature">Whether or not temperature is used.</param>
+        /// <returns></returns>
         public static IEnumerable<EngineParameter> GetExchangeableParameters(IEnumerable<EngineParameter> mapping,
-            IFeature feature)
+            IFeature feature, bool useSalinity, bool useTemperature)
         {
             var elementSet = GetElementSet(feature);
             if (feature == null)
@@ -381,7 +388,7 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
 
             foreach (var engineParameter in mapping.Where(m => m.ElementSet == elementSet))
             {
-                if (!AllowedAsQuantityTypeForFeature(feature, engineParameter))
+                if (!AllowedAsQuantityTypeForFeature(feature, engineParameter, useSalinity, useTemperature))
                 {
                     continue;
                 }
@@ -395,8 +402,11 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         /// </summary>
         /// <param name="feature">The feature to check.</param>
         /// <param name="engineParameter">The engine parameter to check.</param>
+        /// <param name="useSalinity">Whether or not salinity is used.</param>
+        /// <param name="useTemperature">Whether or not temperature is used.</param>
         /// <returns>Whether or not the engine parameter is allowed for the feature.</returns>
-        public static bool AllowedAsQuantityTypeForFeature(IFeature feature, EngineParameter engineParameter)
+        public static bool AllowedAsQuantityTypeForFeature(
+            IFeature feature, EngineParameter engineParameter, bool useSalinity, bool useTemperature)
         {
             switch (feature)
             {
@@ -407,21 +417,15 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
                 case IWeir weir:
                     return IsAllowedForWeir(weir.WeirFormula, engineParameter);
                 case IObservationPoint _:
-                    return IsAllowedForObservationPoint(engineParameter);
+                    return IsAllowedForObservationPoint(engineParameter, useSalinity, useTemperature);
             }
 
             return false;
-
         }
 
         private static bool IsAllowedForPump(EngineParameter engineParameter)
         {
             return engineParameter.QuantityType == QuantityType.PumpCapacity;
-        }
-
-        private static bool IsAllowedForCulvert(EngineParameter engineParameter, ICulvert culvert)
-        {
-            return culvert.IsGated && engineParameter.QuantityType == QuantityType.ValveOpening;
         }
 
         private static bool IsAllowedForWeir(IWeirFormula weirFormula, EngineParameter engineParameter)
@@ -441,13 +445,30 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
                     return false;
             }
         }
-        
-        private static bool IsAllowedForObservationPoint(EngineParameter engineParameter)
+
+        private static bool IsAllowedForObservationPoint(EngineParameter engineParameter, bool useSalinity, bool useTemperature)
         {
-            return engineParameter.QuantityType == QuantityType.WaterLevel
-                   || engineParameter.QuantityType == QuantityType.WaterDepth
-                   || engineParameter.QuantityType == QuantityType.Discharge
-                   || engineParameter.QuantityType == QuantityType.Velocity;
+            bool isAllowed = engineParameter.QuantityType == QuantityType.WaterLevel
+                             || engineParameter.QuantityType == QuantityType.WaterDepth
+                             || engineParameter.QuantityType == QuantityType.Discharge
+                             || engineParameter.QuantityType == QuantityType.Velocity;
+
+            if (useSalinity)
+            {
+                isAllowed = isAllowed || engineParameter.QuantityType == QuantityType.Salinity;
+            }
+
+            if (useTemperature)
+            {
+                isAllowed = isAllowed || engineParameter.QuantityType == QuantityType.Temperature;
+            }
+
+            return isAllowed;
+        }
+
+        private static bool IsAllowedForCulvert(EngineParameter engineParameter, ICulvert culvert)
+        {
+            return culvert.IsGated && engineParameter.QuantityType == QuantityType.ValveOpening;
         }
 
         public static ElementSet? GetElementSet(IFeature feature)

@@ -156,6 +156,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
 
             yield return "water_depth";
+            yield return "velocity";
+            yield return "discharge";
             foreach (string tracerDefinition in tracerDefinitions)
             {
                 yield return tracerDefinition;
