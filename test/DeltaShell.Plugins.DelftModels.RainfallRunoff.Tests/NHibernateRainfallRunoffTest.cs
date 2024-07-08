@@ -28,25 +28,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         #region SetUp
 
         private IProjectRepository projectRepository;
-        private NHibernateProjectRepositoryFactory factory;
         private ISettingsManager settingsManager;
 
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new RainfallRunoffApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-            };
-            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
             settingsManager = Substitute.For<ISettingsManager>();
         }
 
         [SetUp]
         public void SetUp()
         {
-            projectRepository = factory.CreateNew();
+            projectRepository = CreateProjectRepository();
         }
 
         [TearDown]
@@ -78,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             hybridProjectRepository.Close(project);
             hybridProjectRepository.Dispose();
 
-            using (projectRepository = factory.CreateNew())
+            using (projectRepository = CreateProjectRepository())
             {
                 projectRepository.Open(path);
                 var retrievedProject = projectRepository.GetProject();
@@ -107,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             model.StartTime = new DateTime(2011, 2, 2);
             model.Basin = new DrainageBasin {Name = ""};
 
-            _hybridProjectRepository = new HybridProjectRepository(factory, settingsManager, Substitute.For<IProjectFileBasedItemRepository>(), Substitute.For<IPluginsManager>());
+            _hybridProjectRepository = new HybridProjectRepository(CreateProjectRepository(), settingsManager, Substitute.For<IProjectFileBasedItemRepository>(), Substitute.For<IPluginsManager>());
             project = new Project();
 
             var dataItem = new DataItem(model);
@@ -134,7 +127,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             hybridProjectRepository.Close(project);
             hybridProjectRepository.Dispose();
 
-            using (projectRepository = factory.CreateNew())
+            using (projectRepository = CreateProjectRepository())
             {
                 projectRepository.Open(path);
                 var retrievedProject = projectRepository.GetProject();
@@ -146,6 +139,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 Assert.AreEqual(catchmentName,unpavedDataExtended.CatchmentName);
                 Assert.AreEqual(useLocalBoundaryData,unpavedDataExtended.UseLocalBoundaryData);
             }
+        }
+        
+        private static NHibernateProjectRepository CreateProjectRepository()
+        {
+            var additionalPlugins = new List<IPlugin>
+            {
+                new RainfallRunoffApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+            };
+            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
         }
     }
 }

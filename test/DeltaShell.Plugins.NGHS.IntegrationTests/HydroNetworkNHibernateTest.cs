@@ -24,18 +24,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
     [Category(TestCategory.Slow)]
     class HydroNetworkNHibernateTest
     {
-        private NHibernateProjectRepositoryFactory factory;
-        
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new NetworkEditorApplicationPlugin()
-            };
-            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
-        }
-
         [Test]
         public void SaveLoadFeatureCoverageWithBranchFeatures()
         {
@@ -59,7 +47,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             featureCoverage[dateTime, cs] = 17.0;
 
             //save 
-            using (var projectRepository = factory.CreateNew())
+            using (var projectRepository = CreateProjectRepository())
             {
                 projectRepository.Create(path);
 
@@ -70,7 +58,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 projectRepository.SaveOrUpdate(project);
             }
 
-            using (var projectRepository = factory.CreateNew())
+            using (var projectRepository = CreateProjectRepository())
             {
                 //reload
                 var retrievedProject = projectRepository.Open(path);
@@ -104,7 +92,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             featureCoverage[cs] = 17.0;
 
             //save 
-            using (var projectRepository = factory.CreateNew())
+            using (var projectRepository = CreateProjectRepository())
             {
                 projectRepository.Create(path);
 
@@ -121,7 +109,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 projectRepository.SaveOrUpdate(project);
             }
 
-            using (var projectRepository = factory.CreateNew())
+            using (var projectRepository = CreateProjectRepository())
             {
                 //reload
                 var retrievedProject = projectRepository.Open(path);
@@ -130,6 +118,16 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 //check the crossection is still network
                 Assert.AreEqual(1, retrievedNetwork.BranchFeatures.Count());
             }
+        }
+        
+        protected NHibernateProjectRepository CreateProjectRepository()
+        {
+            var additionalPlugins = new List<IPlugin>
+            {
+                new NetworkEditorApplicationPlugin()
+            };
+            NHibernateProjectRepository projectRepository = new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
+            return projectRepository;
         }
     }
 }

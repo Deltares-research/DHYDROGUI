@@ -10,6 +10,7 @@ using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -25,20 +26,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [Category(TestCategory.Slow)]
     public class NHibernateHydroModelIntegrationTest : NHibernateIntegrationTestBase
     {
-        [OneTimeSetUp]
-        public override void OneTimeSetUp()
-        {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new NetworkEditorApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new RainfallRunoffApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new FlowFMApplicationPlugin()
-            };
-            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
-        }
-
         [Test]
         public void SaveLoadHydroModelWithSeveralSubActivities()
         {
@@ -139,6 +126,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             };
             return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+        }
+        
+        protected override NHibernateProjectRepository CreateProjectRepository()
+        {
+            var additionalPlugins = new List<IPlugin>
+            {
+                new NetworkEditorApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new RainfallRunoffApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new FlowFMApplicationPlugin()
+            };
+            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
         }
     }
 }

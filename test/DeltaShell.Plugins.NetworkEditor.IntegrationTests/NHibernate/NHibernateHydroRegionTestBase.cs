@@ -3,29 +3,17 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.IntegrationTestUtils.NHibernate;
+using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 {
     public class NHibernateHydroRegionTestBase : NHibernateIntegrationTestBase
     {
-        [OneTimeSetUp]
-        public override void OneTimeSetUp()
-        {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new NetworkEditorApplicationPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin()
-            };
-            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
-        }
-
         /// <summary>
         /// Saves and retrieves an object by wrapping it in a dataitem in the rootfolder
         /// </summary>
@@ -46,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             ProjectRepository.Dispose();
 
             // read it back
-            ProjectRepository = factory.CreateNew();
+            ProjectRepository = CreateProjectRepository();
             ProjectRepository.Open(path);
 
             var project2 = ProjectRepository.GetProject();
@@ -65,6 +53,17 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                        {
                            Geometry = new LineString(vertices.ToArray())
                        };
+        }
+        
+        protected override NHibernateProjectRepository CreateProjectRepository()
+        {
+            var additionalPlugins = new List<IPlugin>
+            {
+                new NetworkEditorApplicationPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new SharpMapGisGuiPlugin()
+            };
+            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
         }
     }
 }

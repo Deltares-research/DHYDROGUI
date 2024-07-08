@@ -45,27 +45,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
     public class NHibernateNetCdfFunctionStoreTest
     {
         private IProjectRepository projectRepository;
-        private NHibernateProjectRepositoryFactory factory;
-
-        [OneTimeSetUp]
-        public void TestFixtureSetUp()
-        {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new NetworkEditorApplicationPlugin(),
-            };
-            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
-        }
-
-        [OneTimeTearDown]
-        public void TestFixtureTearDown()
-        {
-        }
 
         [SetUp]
         public void SetUp()
         {
-            projectRepository = factory.CreateNew();
+            projectRepository = CreateProjectRepository();
 
         }
 
@@ -1156,6 +1140,15 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 new NetworkEditorApplicationPlugin(),
             };
             return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+        }
+        
+        private static NHibernateProjectRepository CreateProjectRepository()
+        {
+            var additionalPlugins = new List<IPlugin>
+            {
+                new NetworkEditorApplicationPlugin(),
+            };
+            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
         }
     }
 }
