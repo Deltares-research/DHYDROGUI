@@ -5,6 +5,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.IntegrationTestUtils.NHibernate;
+using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -20,21 +21,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [Category(TestCategory.Slow)]
     public class NHibernateHydroModelIntegrationTest : NHibernateIntegrationTestBase
     {
-        [OneTimeSetUp]
-        public override void OneTimeSetUp()
-        {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new NetworkEditorApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new WaterQualityModelApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new WaveApplicationPlugin()
-            };
-            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
-        }
-
         [Test]
         public void SaveLoadHydroModelWithSeveralSubActivities()
         {
@@ -148,6 +134,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var fmModel = (activities.Last() as ActivityWrapper)?.Activity as WaterFlowFMModel;
             Assert.That(fmModel, Is.Not.Null,
                         "WaterFlow FM model was expected to be in the current workflow of the hydro model");
+        }
+        
+        protected override NHibernateProjectRepository CreateProjectRepository()
+        {
+            var additionalPlugins = new List<IPlugin>
+            {
+                new NetworkEditorApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new WaveApplicationPlugin()
+            };
+            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
         }
     }
 }

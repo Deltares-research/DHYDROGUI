@@ -9,6 +9,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
@@ -409,9 +410,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.IsNotNull(retrievedEntity);
             Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfLookupSignals(RealTimeControlTestHelper.GenerateLookupSignal(), retrievedEntity));
         }
-
-        [OneTimeSetUp]
-        public override void OneTimeSetUp()
+       
+        protected override NHibernateProjectRepository CreateProjectRepository()
         {
             var additionalPlugins = new List<IPlugin>
             {
@@ -420,7 +420,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 new RealTimeControlApplicationPlugin(),
                 new CommonToolsApplicationPlugin()
             };
-            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
+            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
         }
     }
 }

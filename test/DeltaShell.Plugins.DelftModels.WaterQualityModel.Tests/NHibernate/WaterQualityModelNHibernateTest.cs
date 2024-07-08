@@ -13,6 +13,7 @@ using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -41,20 +42,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         private const double LOAD_X = 0.1d;
         private const double LOAD_Y = 0.2d;
         private const double LOAD_Z = 0.3d;
-
-        #region SetUp / TearDown
-
-        [OneTimeSetUp]
-        public override void OneTimeSetUp()
-        {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new WaterQualityModelApplicationPlugin()
-            };
-            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
-        }
-
-        #endregion
 
         [Test]
         [Category(TestCategory.Slow)]
@@ -703,6 +690,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 new WaterQualityModelApplicationPlugin(),
             };
             return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+        }
+
+        protected override NHibernateProjectRepository CreateProjectRepository()
+        {
+            var additionalPlugins = new List<IPlugin>
+            {
+                new WaterQualityModelApplicationPlugin()
+            };
+            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
         }
     }
 }

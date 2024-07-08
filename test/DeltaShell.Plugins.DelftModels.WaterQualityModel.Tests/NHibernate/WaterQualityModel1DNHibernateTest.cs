@@ -6,6 +6,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils.NHibernate;
+using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
@@ -19,20 +20,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
     [Category(TestCategory.Slow)]
     public class WaterQualityModel1DNHibernateTest : NHibernateIntegrationTestBase
     {
-        # region SetUp / TearDown
-
-        [OneTimeSetUp]
-        public override void OneTimeSetUp()
-        {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new WaterQualityModelApplicationPlugin()
-            };
-            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
-        }
-
-        # endregion
-
         private void SaveAndRetrieveFunctionWithObjectTArgument<T>(T object1, T object2)
         {
             var entity = new Function
@@ -366,5 +353,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         }
 
         # endregion
+
+        protected override NHibernateProjectRepository CreateProjectRepository()
+        {
+            var additionalPlugins = new List<IPlugin> { new WaterQualityModelApplicationPlugin() };
+            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
+        }
     }
 }

@@ -5,7 +5,6 @@ using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
@@ -33,20 +32,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
     [Category(TestCategory.Slow)]
     public class NHibernateNetCdfFunctionStoreTest : NHibernateIntegrationTestBase
     {
-        private IProjectRepository projectRepository;
-
-        [SetUp]
-        public void SetUp()
-        {
-            projectRepository = factory.CreateNew();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            projectRepository.Dispose();
-        }
-
         [Test]
         public void SaveAndRetrieveFunctionWithNetCdfFunctionValueStore()
         {
@@ -63,16 +48,16 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             // setup repository
             string path = TestHelper.GetCurrentMethodName() + ".dsproj";
 
-            projectRepository.Create(path);
+            ProjectRepository.Create(path);
 
             // save project with a function
-            Project project = projectRepository.GetProject();
+            Project project = ProjectRepository.GetProject();
             project.RootFolder.Items.Add(new DataItem(function, "function"));
 
-            projectRepository.SaveOrUpdate(project);
+            ProjectRepository.SaveOrUpdate(project);
 
             // retrieve 
-            Project retrievedProject = projectRepository.Open(path);
+            Project retrievedProject = ProjectRepository.Open(path);
             var retrievedFunction = (Function) retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
 
             // asserts
@@ -105,11 +90,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             network.Branches.Add(branch1);
             network.Branches.Add(branch2);
 
-            projectRepository.Create(path);
+            ProjectRepository.Create(path);
 
             var project = new Project();
             project.RootFolder.Add(new DataItem(network));
-            projectRepository.SaveOrUpdate(project);
+            ProjectRepository.SaveOrUpdate(project);
 
             var store = new NetCdfFunctionStore();
             store.CreateNew(TestHelper.GetCurrentMethodName() + ".nc");
@@ -125,10 +110,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             networkCoverage[new NetworkLocation(branch2, 200.0)] = 0.5;
 
             project.RootFolder.Add(new DataItem(networkCoverage));
-            projectRepository.SaveOrUpdate(project);
+            ProjectRepository.SaveOrUpdate(project);
 
             //reload
-            Project retrievedProject = projectRepository.Open(path);
+            Project retrievedProject = ProjectRepository.Open(path);
             IDataItem[] retrievedDataItems = retrievedProject.RootFolder.DataItems.ToArray();
             var retrievedNetwork = (INetwork) retrievedDataItems[0].Value;
             var retrievedNetworkCoverage = (INetworkCoverage) retrievedDataItems[1].Value;
@@ -212,15 +197,15 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             store.Functions.Add(featureCoverage);
 
             string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-            projectRepository.Create(path);
+            ProjectRepository.Create(path);
 
             //save
             var project = new Project();
             project.RootFolder.Add(new DataItem(featureCoverage, DataItemRole.Output));
-            projectRepository.SaveOrUpdate(project);
+            ProjectRepository.SaveOrUpdate(project);
 
             //reload
-            Project retrievedProject = projectRepository.Open(path);
+            Project retrievedProject = ProjectRepository.Open(path);
             IDataItem[] retrievedDataItems = retrievedProject.RootFolder.DataItems.ToArray();
             var retrievedFeatureCoverage = (IFeatureCoverage) retrievedDataItems[0].Value;
 
@@ -235,7 +220,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         {
             string path = TestHelper.GetCurrentMethodName() + ".dsproj";
 
-            projectRepository.Create(path);
+            ProjectRepository.Create(path);
 
             var project = new Project();
 
@@ -250,10 +235,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             // set values
             project.RootFolder.Add(new DataItem(regularGridCoverage));
-            projectRepository.SaveOrUpdate(project);
+            ProjectRepository.SaveOrUpdate(project);
 
             //reload
-            Project retrievedProject = projectRepository.Open(path);
+            Project retrievedProject = ProjectRepository.Open(path);
             var retrievedCoverage = (IRegularGridCoverage) retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
 
             //compare
@@ -270,7 +255,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         {
             string path = TestHelper.GetCurrentMethodName() + ".dsproj";
 
-            projectRepository.Create(path);
+            ProjectRepository.Create(path);
 
             var project = new Project();
 
@@ -284,15 +269,15 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             regularGridCoverage.Resize(100, 100, 1, 1);
 
             project.RootFolder.Add(regularGridCoverage);
-            projectRepository.SaveOrUpdate(project);
+            ProjectRepository.SaveOrUpdate(project);
 
             regularGridCoverage.Clear();
             regularGridCoverage.Components.Clear();
             regularGridCoverage.Components.Add(new Variable<double>("new_component"));
-            projectRepository.SaveOrUpdate(project); // bang! exception, cascade
+            ProjectRepository.SaveOrUpdate(project); // bang! exception, cascade
 
             //reload
-            Project retrievedProject = projectRepository.Open(path);
+            Project retrievedProject = ProjectRepository.Open(path);
             var retrievedCoverage = (IRegularGridCoverage) retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
 
             //compare
