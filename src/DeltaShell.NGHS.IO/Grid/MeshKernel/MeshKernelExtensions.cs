@@ -5,7 +5,7 @@ using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using MeshKernelNETCore.Api;
+using MeshKernelNET.Api;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.NGHS.IO.Grid.MeshKernel

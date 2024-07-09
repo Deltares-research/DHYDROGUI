@@ -10,7 +10,7 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
-using MeshKernelNETCore.Api;
+using MeshKernelNET.Api;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 
@@ -48,13 +48,21 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
                     var id = api.AllocateState(0);
 
                     // setup 1d/2d meshes
-                    var success = api.Mesh1dSet(id, mesh1d);
-                    success = success && api.Mesh2dSet(id, mesh2d);
+                    var success = api.Mesh1dSet(id, mesh1d) == 0;
+                    success = success && api.Mesh2dSet(id, mesh2d) == 0;
 
                     // generate contacts (links)
                     success = success && ComputeContacts(api, id, linkType, mask1DMesh, filterArea, gullies);
 
-                    var contacts = success ? api.ContactsGetData(id) : new DisposableContacts(0);
+                    DisposableContacts contacts;
+                    if (success && api.ContactsGetData(id, out DisposableContacts disposableContacts) == 0)
+                    {
+                        contacts = disposableContacts;
+                    }
+                    else
+                    {
+                        contacts = new DisposableContacts();
+                    }
 
                     api.DeallocateState(id);
 
@@ -135,18 +143,18 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
                 switch (linkType)
                 {
                     case LinkGeneratingType.EmbeddedOneToOne:
-                        return api.ContactsComputeSingle(id, ref mask1DMeshPtr, ref selectedAreaGeometry);
+                        return api.ContactsComputeSingle(id, mask1DMeshPtr, selectedAreaGeometry, 0.0) == 0;
                     case LinkGeneratingType.EmbeddedOneToMany:
-                        return api.ContactsComputeMultiple(id, ref mask1DMeshPtr);
+                        return api.ContactsComputeMultiple(id, mask1DMeshPtr) == 0;
                     case LinkGeneratingType.Lateral:
-                        return api.ContactsComputeBoundary(id, ref mask1DMeshPtr, ref selectedAreaGeometry, 5000);
+                        return api.ContactsComputeBoundary(id, mask1DMeshPtr, selectedAreaGeometry, 5000) == 0;
                     case LinkGeneratingType.GullySewer:
                         var geometryGullies = gullies
                                               .Where(r => r.Geometry.Intersects(selectedArea))
                                               .Select(r => r.Geometry).ToList();
 
                         gulliesData = geometryGullies.CreateDisposableGeometryList();
-                        return api.ContactsComputeWithPoints(id, ref mask1DMeshPtr, ref gulliesData);
+                        return api.ContactsComputeWithPoints(id, mask1DMeshPtr, gulliesData) == 0;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(linkType), linkType, null);
                 }

@@ -23,7 +23,7 @@
     <PackageVersion Include="GeoAPI.Core" Version="1.7.5" />
     <PackageVersion Include="log4net" Version="2.0.15" />
     <PackageVersion Include="MathematicalExpressionParser.Core" Version="2.1.0.12" />
-    <PackageVersion Include="MeshKernelNET" Version="1.0.0.56-beta" />
+    <PackageVersion Include="MeshKernelNET" Version="4.3.0.429" />
     <PackageVersion Include="Mono.Addins" Version="1.4.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NSubstitute" Version="5.0.0" />
