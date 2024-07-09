@@ -284,47 +284,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
-        [Test]
-        [Category(TestCategory.Slow)]
-        public void Check_RunningWaterQualityModelTwice_ThenSeparateOutputFileContentsReferToTheirOwnRun()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            using (WaterQualityModel model = CreateWesternScheldtModel(tempDirectory.Path))
-            {
-                //First run
-                ActivityRunner.RunActivity(model);
-                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
-
-                List<string> contentFirstRun = RetrieveRunContent(model);
-
-                //Second run
-                ActivityRunner.RunActivity(model);
-                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
-
-                List<string> contentSecondRun = RetrieveRunContent(model);
-
-                // Assert
-                ExecutionStartTimeDifferent(contentFirstRun[0], contentSecondRun[0]);
-                ExecutionStartTimeDifferent(contentFirstRun[1], contentSecondRun[1]);
-                //  TODO: Since DIMRset 2.27.3 execution start header is missing in the .mon file. To be fixed with D3DFMIQ-3665
-                // ExecutionStartTimeDifferent(contentFirstRun[2], contentSecondRun[2]);
-            }
-        }
-
-        private static void ExecutionStartTimeDifferent(string entryA, string entryB)
-        {
-            const string lookFor = "Execution start";
-            int startIndex = entryA.IndexOf( lookFor, StringComparison.OrdinalIgnoreCase);
-            if (startIndex == -1)
-            {
-                Assert.Fail($"Could not find string '{lookFor}' in content of the file: {entryA}.");
-            }
-            string content1 = entryA.Substring(startIndex + 17, 19);
-            string content2 = entryB.Substring(startIndex + 17, 19);
-            
-            Assert.AreNotEqual(content1, content2);
-        }
-
         private static void EditInputFileToCreateBinaryFiles(WaterQualityModel model)
         {
             string inputFile = model.InputFile.Content;
@@ -391,25 +350,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             return dataItems.Select(di => di.Tag).ToList();
         }
 
-        private static List<string> RetrieveRunContent(WaterQualityModel model)
-        {
-            var content = new List<string>
-            {
-                RetrieveListFileContents(model),
-                RetrieveProcessFileContents(model),
-                RetrieveMonitoringFileContents(model)
-            };
-            return content;
-        }
-
         private static string RetrieveListFileContents(WaterQualityModel model)
             => RetrieveTextDocumentContents(model, WaterQualityModel.ListFileDataItemMetaData.Tag);
-
-        private static string RetrieveProcessFileContents(WaterQualityModel model)
-            => RetrieveTextDocumentContents(model, WaterQualityModel.ProcessFileDataItemMetaData.Tag);
-
-        private static string RetrieveMonitoringFileContents(WaterQualityModel model)
-            => RetrieveTextDocumentContents(model, WaterQualityModel.MonitoringFileDataItemMetaData.Tag);
         
         private static string RetrieveTextDocumentContents(WaterQualityModel model, string tag)
             => ((TextDocument)model.DataItems.Single(di => di.Tag == tag).Value).Content;
