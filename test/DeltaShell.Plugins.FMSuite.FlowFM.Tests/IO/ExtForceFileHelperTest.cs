@@ -11,6 +11,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DHYDRO.Common.IO.ExtForce;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -28,24 +29,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 FilePath = Path.GetFullPath(extForceFilePath + fileName),
             };
-            ExtForceFileItem item = ExtForceFileHelper.WriteInitialConditionsSamples(extForceFilePath, "quantity", importSamplesOperation, null, true);
+            ExtForceData item = ExtForceFileHelper.WriteInitialConditionsSamples(extForceFilePath, "quantity", importSamplesOperation, null, true);
             Assert.AreEqual(expectedFileName, item.FileName);
         }
 
         [Test]
         public void TestReadSourceAndSinkData()
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"timFiles\10Columns10Values.tim");
+            string testFilePath = TestHelper.GetTestFilePath(@"timFiles\10Columns10Values.tim");
 
             // setup
             var feature = new Feature2D();
-            var extForceFileItem = new ExtForceFileItem(ExtForceQuantNames.SourceAndSink);
+            var extForceFileItem = new ExtForceData { Quantity = ExtForceQuantNames.SourceAndSink };
 
             // do the import
-            var sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(testFilePath, feature, extForceFileItem, DateTime.Now);
+            SourceAndSink sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(testFilePath, feature, extForceFileItem, DateTime.Now);
 
             // check results
-            var sourceAndSinkAttributes = sourceAndSink.Feature.Attributes.Where(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)).ToList();
+            List<KeyValuePair<string, object>> sourceAndSinkAttributes = sourceAndSink.Feature.Attributes.Where(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)).ToList();
             Assert.AreEqual(10, sourceAndSinkAttributes.Count);
             Assert.True(sourceAndSinkAttributes.Select(a => a.Value).OfType<MultiDimensionalArray<double>>().All(v => v.Count == 10));
         }
@@ -119,8 +120,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var exportedFile = Path.Combine(FileUtils.CreateTempDirectory(), fileName);
             FileUtils.DeleteIfExists(exportedFile);
 
-            var extForceFileItem = new ExtForceFileItem(ExtForceQuantNames.SourceAndSink)
+            var extForceFileItem = new ExtForceData
             {
+                Quantity = ExtForceQuantNames.SourceAndSink,
                 FileName = fileName.Replace(".tim", ".pli")
             };
 
@@ -148,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var exportedFile = Path.Combine(FileUtils.CreateTempDirectory(), "test.tim");
             FileUtils.DeleteIfExists(exportedFile);
-            var extForceFileItem = new ExtForceFileItem(ExtForceQuantNames.SourceAndSink) { FileName = "test.pli" };
+            var extForceFileItem = new ExtForceData { Quantity = ExtForceQuantNames.SourceAndSink, FileName = "test.pli" };
 
             // do the export
             ExtForceFileHelper.WriteSourceAndSinkData(exportedFile, sourceAndSink, fmModel.ReferenceTime, extForceFileItem, true, modelDefinition);

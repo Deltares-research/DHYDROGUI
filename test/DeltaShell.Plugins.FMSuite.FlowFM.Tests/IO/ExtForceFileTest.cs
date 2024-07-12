@@ -13,8 +13,10 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using DHYDRO.Common.IO.ExtForce;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
@@ -37,9 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName);
             Assert.AreEqual("surroundingDomain.pol",
                 def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName);
-            Assert.AreEqual(10, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileType);
-            Assert.AreEqual(4, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Method);
-            Assert.AreEqual("*", def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Operand);
+            Assert.AreEqual(ExtForceFileConstants.FileTypes.InsidePolygon, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileType);
+            Assert.AreEqual(ExtForceFileConstants.Methods.InsidePolygon, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Method);
+            Assert.AreEqual(ExtForceFileConstants.Operands.Multiply, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Operand);
             Assert.AreEqual(0.0125, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Value);
         }
 
@@ -136,7 +138,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Resources
                         .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
                     "initialspatialvaryingsedimentSediment_sand_SedConc", 
-                    ExtForceFile.InitialTracerPrefix,ExtForceFile.InitialSpatialVaryingSedimentPrefix));
+                    ExtForceQuantNames.InitialTracerPrefix,
+                    ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix));
 
             FileUtils.DeleteIfExists(extPath);
         }
@@ -158,7 +161,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         Resources
                             .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
                         ExtForceQuantNames.FrictCoef, 
-                        ExtForceFile.InitialTracerPrefix,ExtForceFile.InitialSpatialVaryingSedimentPrefix)),
+                        ExtForceQuantNames.InitialTracerPrefix,
+                        ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)),
                 "The warn message was logged, but we were not expecting it to appear");
             
 
@@ -220,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var expectedMessage =
                 string.Format(
                     "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",
-                    extForceFile.UnsupportedQuantityInMemory);
+                    ExtForceQuantNames.UnsupportedQuantityInMemory);
            
 
             Assert.IsFalse(def.BoundaryConditions.Any());
@@ -266,17 +270,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists(extPath));
 
             var extForceFile = new ExtForceFile();
-            var expectedMessage =
-                string.Format(
-                    "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",
-                    extForceFile.UnsupportedQuantityInMemory);
 
-            var correspondingFile = Path.Combine(Path.GetDirectoryName(extPath), "surroundingDomain.pol");
-            var expectedMessage2 = string.Format("File {0} could not be found for an internaltidesfrictioncoefficient quantity in the external force file", correspondingFile);
-
-            List< string> messages = new List<string>();
-            messages.Add(expectedMessage);
-            messages.Add(expectedMessage2);
+            var expectedMessage = "Forcing file does not exist: surroundingDomain.pol. Line: 57";
+            var messages = new List<string> { expectedMessage };
 
             IEnumerable<string> messagesExpected = messages;
 
@@ -301,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correct_prefix.ext");
             var extForceFile = new ExtForceFile();
-            TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, def), 0);
+            TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, def), 1);
         }
 
         [Test]
@@ -810,6 +806,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.IsTrue(File.Exists("chan2_east_outflow.pli"));
             Assert.IsTrue(File.Exists("chan2_east_outflow.tim"));
+        }
+        
+        [Test]
+        public void Read_FileReferenceMissing_DropsItemWithError()
+        {
+            var extForceFile = new ExtForceFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            const string fileReference = "ECMWF_P_u10n_v10n_C_2013-2017.nc";
+            string extFileContent =
+                "QUANTITY     =airpressure_windx_windy_charnock\n" +
+                $"FILENAME     ={fileReference}\n" +
+                "FILETYPE     =11\n" +
+                "METHOD       =3\n" +
+                "OPERAND      =O";
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string extForceFilePath = temp.CreateFile("forcings.ext", extFileContent);
+
+                string[] errors = TestHelper.GetAllRenderedMessages(() => extForceFile.Read(extForceFilePath, modelDefinition), Level.Error).ToArray();
+                string expError = $"Forcing file does not exist: {fileReference}. Line: 1";
+                
+                Assert.That(errors, Does.Contain(expError));
+                Assert.That(modelDefinition.UnsupportedFileBasedExtForceFileItems, Is.Empty);
+            }
         }
     }
 }

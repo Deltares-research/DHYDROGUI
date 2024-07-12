@@ -13,6 +13,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DHYDRO.Common.IO.ExtForce;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -45,9 +46,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return filename + "." + PliFile<Feature2D>.Extension;
         }
 
-        public static ExtForceFileItem WriteBoundaryData(string filePath, FlowBoundaryCondition boundaryCondition,
+        public static ExtForceData WriteBoundaryData(string filePath, FlowBoundaryCondition boundaryCondition,
                                                          DateTime modelReferenceDate, int bcIndex,
-                                                         ExtForceFileItem existingExtForceFileItem = null,
+                                                         ExtForceData existingExtForceFileItem = null,
                                                          bool writeToDisk = true)
         {
             var quantityName =
@@ -55,11 +56,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var operand = bcIndex == 0 ? Operator.Overwrite : Operator.Add;
 
-            var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            var extForceFileItem = existingExtForceFileItem ?? new ExtForceData
                 {
+                    Quantity = quantityName,
                     FileName = GetPliFileName(boundaryCondition),
-                    FileType = ExtForceQuantNames.FileTypes.PolyTim,
-                    Method = 3,
+                    FileType = ExtForceFileConstants.FileTypes.PolyTim,
+                    Method = ExtForceFileConstants.Methods.SpaceAndTimeSaveWeights,
                     Operand = ExtForceQuantNames.OperatorToStringMapping[operand]
                 };
 
@@ -138,22 +140,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return extForceFileItem;
         }
 
-        public static ExtForceFileItem WriteSourceAndSinkData(string filePath, SourceAndSink sourceAndSink,
+        public static ExtForceData WriteSourceAndSinkData(string filePath, SourceAndSink sourceAndSink,
                                                               DateTime referenceTime,
-                                                              ExtForceFileItem existingExtForceFileItem,
+                                                              ExtForceData existingExtForceFileItem,
                                                               bool writeToDisk, WaterFlowFMModelDefinition modelDefinition)
         {
-            var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(ExtForceQuantNames.SourceAndSink)
+            var extForceFileItem = existingExtForceFileItem ?? new ExtForceData
                 {
+                    Quantity = ExtForceQuantNames.SourceAndSink,
                     FileName = GetPliFileName(sourceAndSink),
-                    FileType = ExtForceQuantNames.FileTypes.PolyTim,
-                    Method = 1,
+                    FileType = ExtForceFileConstants.FileTypes.PolyTim,
+                    Method = ExtForceFileConstants.Methods.SpaceAndTimeKeepMeteoFields,
                     Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite]
                 };
 
             if (sourceAndSink.Area > 0)
             {
-                extForceFileItem.ModelData[ExtForceFile.AreaKey] = sourceAndSink.Area;
+                extForceFileItem.SetModelData(ExtForceFileConstants.Keys.Area, sourceAndSink.Area);
             }
 
             AddSuffixInCaseOfDuplicateFile(extForceFileItem);
@@ -204,15 +207,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public static IEnumerable<string[]> GetBoundaryDataFiles(FlowBoundaryCondition boundaryCondition,
                                                                  BoundaryConditionSet boundaryCoditionSet,
-                                                                 ExtForceFileItem existingExtForceFileItem = null)
+                                                                 ExtForceData existingExtForceFileItem = null)
         {
             var quantityName =
                 ExtForceQuantNames.GetQuantityString(boundaryCondition);
 
-            var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            var extForceFileItem = existingExtForceFileItem ?? new ExtForceData
                 {
+                    Quantity = quantityName,
                     FileName = GetPliFileName(boundaryCondition),
-                    FileType = ExtForceQuantNames.FileTypes.PolyTim,
+                    FileType = ExtForceFileConstants.FileTypes.PolyTim,
                 };
 
             AddSuffixInCaseOfDuplicateFile(extForceFileItem);
@@ -246,14 +250,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        public static IEnumerable<string[]> GetSourceAndSinkDataFiles(SourceAndSink sourceAndSink, ExtForceFileItem existingExtForceFileItem)
+        public static IEnumerable<string[]> GetSourceAndSinkDataFiles(SourceAndSink sourceAndSink, ExtForceData existingExtForceFileItem)
         {
             const string quantityName = ExtForceQuantNames.SourceAndSink;
 
-            var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            var extForceFileItem = existingExtForceFileItem ?? new ExtForceData
             {
+                Quantity = quantityName,
                 FileName = GetPliFileName(sourceAndSink),
-                FileType = ExtForceQuantNames.FileTypes.PolyTim,
+                FileType = ExtForceFileConstants.FileTypes.PolyTim,
             };
 
             AddSuffixInCaseOfDuplicateFile(extForceFileItem);
@@ -271,7 +276,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         // works (only) in conjuction with StartWritingSubFiles
-        public static void AddSuffixInCaseOfDuplicateFile(ExtForceFileItem item)
+        public static void AddSuffixInCaseOfDuplicateFile(ExtForceData item)
         {
             if (PreviousPaths.Contains(item.FileName))
             {
@@ -317,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         public static BoundaryCondition ReadBoundaryConditionData(string filePath, Feature2D feature2D,
-                                                                      ExtForceFileItem extForceFileItem,
+                                                                      ExtForceData extForceFileItem,
                                                                       DateTime modelReferenceDate)
         {
             FlowBoundaryQuantityType quantityType;
@@ -345,13 +350,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         return null;
                     }
 
-                    if (!double.IsNaN(extForceFileItem.Offset))
+                    if (extForceFileItem.Offset != null)
                     {
-                        boundaryCondition.Offset = extForceFileItem.Offset;
+                        boundaryCondition.Offset = extForceFileItem.Offset.Value;
                     }
-                    if (!double.IsNaN(extForceFileItem.Factor))
+                    if (extForceFileItem.Factor != null)
                     {
-                        boundaryCondition.Factor = extForceFileItem.Factor;
+                        boundaryCondition.Factor = extForceFileItem.Factor.Value;
                     }
 
                     var splitExtension = fileExtension.Split('|');
@@ -383,7 +388,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         public static SourceAndSink ReadSourceAndSinkData(string filePath, Feature2D feature2D,
-                                                              ExtForceFileItem extForceFileItem,
+                                                              ExtForceData extForceFileItem,
                                                               DateTime modelReferenceDate)
         {
             if (!Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink)) return null;
@@ -392,11 +397,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 Feature = feature2D,
             };
-            object area;
-            extForceFileItem.ModelData.TryGetValue(ExtForceFile.AreaKey, out area);
-            if (area != null)
+            
+            if (extForceFileItem.TryGetModelData(ExtForceFileConstants.Keys.Area, out double area))
             {
-                sourceAndSink.Area = Convert.ToDouble(area);
+                sourceAndSink.Area = area;
             }
 
             var dataFilePath = Path.ChangeExtension(filePath, ExtForceQuantNames.TimFileExtension);
@@ -543,13 +547,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             sourceAndSink.CopyValuesFromFileToSourceAndSinkAttributes(readFunction);
         }
 
-        public static ExtForceFileItem WriteInitialConditionsPolygon(string extForceFilePath, string extForceFileQuantityName, SetValueOperation operation, ExtForceFileItem existingExtForceFileItem = null, bool writeToDisk = true, string prefix = null)
+        public static ExtForceData WriteInitialConditionsPolygon(string extForceFilePath, string extForceFileQuantityName, SetValueOperation operation, ExtForceData existingExtForceFileItem = null, bool writeToDisk = true, string prefix = null)
         {
             var quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
-            var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            var extForceFileItem = existingExtForceFileItem ?? new ExtForceData
             {
-                FileName = string.Format("{0}_{1}.pol", extForceFileQuantityName, operation.Name.Replace(" ", "_").Replace("\t", "_")),
-                FileType = ExtForceQuantNames.FileTypes.InsidePolygon,
+                Quantity = quantityName,
+                FileName = $"{extForceFileQuantityName}_{operation.Name.Replace(" ", "_").Replace("\t", "_")}.pol",
+                FileType = ExtForceFileConstants.FileTypes.InsidePolygon,
                 Method = GetSpatialOperationMethod(operation),
             };
 
@@ -558,7 +563,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var op = ExtForceQuantNames.OperatorMapping[operation.OperationType];
 
             extForceFileItem.Value = operation.Value;
-            extForceFileItem.Enabled = operation.Enabled;
+            extForceFileItem.IsEnabled = operation.Enabled;
             extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[op];
 
             if (writeToDisk)
@@ -583,9 +588,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return extForceFileItem;
         }
 
-        public static ExtForceFileItem WriteInitialConditionsSamples(string extForceFilePath,
+        public static ExtForceData WriteInitialConditionsSamples(string extForceFilePath,
             string extForceFileQuantityName, ImportSamplesOperationImportData importSamplesOperation,
-            ExtForceFileItem existingExtForceFileItem, bool writeToDisk, string prefix = null)
+            ExtForceData existingExtForceFileItem, bool writeToDisk, string prefix = null)
         {
             string targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extForceFilePath));
             if (writeToDisk && Path.GetDirectoryName(importSamplesOperation.FilePath) != targetDirectory)
@@ -605,40 +610,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             var quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
-            var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            var extForceFileItem = existingExtForceFileItem ?? new ExtForceData
             {
+                Quantity = quantityName,
                 FileName = targetDirectory != null ? importSamplesOperation.FilePath.Replace(targetDirectory + "\\", "") : importSamplesOperation.FilePath,
                 FileType = GetSpatialOperationFileType(importSamplesOperation),
                 Method = GetSpatialOperationMethod(importSamplesOperation)
             };
             if (importSamplesOperation.InterpolationMethod == SpatialInterpolationMethod.Averaging)
             {
-                extForceFileItem.ModelData[ExtForceFile.AveragingTypeKey] = (int) importSamplesOperation.AveragingMethod;
-                extForceFileItem.ModelData[ExtForceFile.RelSearchCellSizeKey] = importSamplesOperation.RelativeSearchCellSize;
-                extForceFileItem.ModelData[ExtForceFile.MinSamplePointsKey] = importSamplesOperation.MinSamplePoints;
+                extForceFileItem.SetModelData(ExtForceFileConstants.Keys.AveragingType, (int) importSamplesOperation.AveragingMethod);
+                extForceFileItem.SetModelData(ExtForceFileConstants.Keys.RelativeSearchCellSize, importSamplesOperation.RelativeSearchCellSize);
+                extForceFileItem.SetModelData(ExtForceFileConstants.Keys.MinSamplePoints, importSamplesOperation.MinSamplePoints);
             }
 
-            extForceFileItem.Enabled = importSamplesOperation.Enabled;
+            extForceFileItem.IsEnabled = importSamplesOperation.Enabled;
             extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[ExtForceQuantNames.OperatorMapping[importSamplesOperation.Operand]];
 
             return extForceFileItem;
         }
 
-        public static ExtForceFileItem WriteInitialConditionsUnsupported(string filePath, string quantity,
+        public static ExtForceData WriteInitialConditionsUnsupported(string filePath, string quantity,
             AddSamplesOperation operation, bool writeToDisk, string prefix = null)
         {
             var quantityName = prefix != null ? prefix + quantity : quantity;
-            var forceFileItem = new ExtForceFileItem(quantityName)
+            var forceFileItem = new ExtForceData
             {
+                Quantity = quantityName,
                 FileName = ExtForceFile.MakeXyzFileName(quantity),
-                FileType = ExtForceQuantNames.FileTypes.Triangulation,
+                FileType = ExtForceFileConstants.FileTypes.Triangulation,
                 Method = GetSpatialOperationMethod(operation),
-                Enabled = operation.Enabled,
+                IsEnabled = operation.Enabled,
                 Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite],
             };
-            forceFileItem.ModelData[ExtForceFile.AveragingTypeKey] = (int) GridCellAveragingMethod.ClosestPoint;
-            forceFileItem.ModelData[ExtForceFile.RelSearchCellSizeKey] = 1.0;
-            forceFileItem.ModelData[ExtForceFile.MinSamplePointsKey] = 1;
+            forceFileItem.SetModelData(ExtForceFileConstants.Keys.AveragingType, (int) GridCellAveragingMethod.ClosestPoint);
+            forceFileItem.SetModelData(ExtForceFileConstants.Keys.RelativeSearchCellSize, 1.0);
+            forceFileItem.SetModelData(ExtForceFileConstants.Keys.MinSamplePoints, 1);
 
             if (writeToDisk)
             {
@@ -658,49 +665,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return forceFileItem;
         }
 
-        private static int GetSpatialOperationMethod(ISpatialOperation operation)
+        private static int? GetSpatialOperationMethod(ISpatialOperation operation)
         {
             if (operation is SetValueOperation)
             {
-                return 4;
+                return ExtForceFileConstants.Methods.InsidePolygon;
             }
             if (operation is ImportSamplesOperationImportData extension)
             {
                 switch (extension.InterpolationMethod)
                 {
                     case SpatialInterpolationMethod.Triangulation:
-                        return 5;
+                        return ExtForceFileConstants.Methods.Triangulation;
                     case SpatialInterpolationMethod.Averaging:
-                        return 6;
+                        return ExtForceFileConstants.Methods.Averaging;
                 }
             }
             if (operation is AddSamplesOperation)
             {
-                return 6;
+                return ExtForceFileConstants.Methods.Averaging;
             }
-            return -1;
+            return null;
         }
 
-        private static int GetSpatialOperationFileType(ISpatialOperation operation)
+        private static int? GetSpatialOperationFileType(ISpatialOperation operation)
         {
             if (operation is ImportSamplesOperation importSamplesOperation)
             {
                 var fileExtension = Path.GetExtension(importSamplesOperation.FilePath);
                 if (fileExtension.Equals(".asc", StringComparison.OrdinalIgnoreCase))
                 {
-                    return ExtForceQuantNames.FileTypes.ArcInfo;
+                    return ExtForceFileConstants.FileTypes.ArcInfo;
                 }
                 if (fileExtension.Equals(".tif", StringComparison.OrdinalIgnoreCase))
                 {
-                    return ExtForceQuantNames.FileTypes.GeoTiff;
+                    return ExtForceFileConstants.FileTypes.GeoTiff;
                 }
-                return ExtForceQuantNames.FileTypes.Triangulation;
+                return ExtForceFileConstants.FileTypes.Triangulation;
             }
             if (operation is SetValueOperation)
             {
-                return ExtForceQuantNames.FileTypes.InsidePolygon;
+                return ExtForceFileConstants.FileTypes.InsidePolygon;
             }
-            return -1;
+            return null;
         }
 
         private static IList<int> GetDataFileNumbers(string fileNameOrPath, int numPointsOnPolyLine, string fileExtension)
@@ -740,57 +747,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 : string.Format("{0}_{1:0000}.{2}", filePathWithoutExtension, i, fileExtension);
         }
 
-        public static ExtForceFileItem CreateWindFieldExtForceFileItem(IWindField windField, string filePath)
+        public static ExtForceData CreateWindFieldExtForceFileItem(IWindField windField, string filePath)
         {
-            return new ExtForceFileItem(ExtForceQuantNames.WindQuantityNames[windField.Quantity])
+            return new ExtForceData
                    {
+                       Quantity = ExtForceQuantNames.WindQuantityNames[windField.Quantity],
                        FileName = filePath,
                        FileType = GetFileType(windField),
                        Method = GetMethod(windField),
-                       Operand = "+"
+                       Operand = ExtForceFileConstants.Operands.Add
                    };
         }
 
-        private static int GetFileType(IWindField windField)
+        private static int? GetFileType(IWindField windField)
         {
             var uniformWindField = windField as UniformWindField;
             if (uniformWindField != null)
             {
                 return uniformWindField.Components.Contains(WindComponent.Magnitude)
-                    ? ExtForceQuantNames.FileTypes.UniMagDir
-                    : ExtForceQuantNames.FileTypes.Uniform;
+                    ? ExtForceFileConstants.FileTypes.UniMagDir
+                    : ExtForceFileConstants.FileTypes.Uniform;
             }
             if (windField is GriddedWindField)
             {
                 return windField.Quantity == WindQuantity.VelocityVectorAirPressure
-                    ? ExtForceQuantNames.FileTypes.Curvi
-                    : ExtForceQuantNames.FileTypes.ArcInfo;
+                    ? ExtForceFileConstants.FileTypes.Curvi
+                    : ExtForceFileConstants.FileTypes.ArcInfo;
             }
             if (windField is SpiderWebWindField)
             {
-                return ExtForceQuantNames.FileTypes.SpiderWeb;
+                return ExtForceFileConstants.FileTypes.SpiderWeb;
             }
-            return -1;
+            return null;
         }
 
-        private static int GetMethod(IWindField windField)
+        private static int? GetMethod(IWindField windField)
         {
             if (windField is UniformWindField)
             {
-                return 1;
+                return ExtForceFileConstants.Methods.SpaceAndTimeKeepMeteoFields;
             }
             if (windField is GriddedWindField)
             {
-                return windField.Quantity == WindQuantity.VelocityVectorAirPressure ? 3 : 2;
+                return windField.Quantity == WindQuantity.VelocityVectorAirPressure 
+                           ? ExtForceFileConstants.Methods.SpaceAndTimeSaveWeights 
+                           : ExtForceFileConstants.Methods.SpaceAndTimeKeepFlowFields;
             }
             if (windField is SpiderWebWindField)
             {
-                return 1;
+                return ExtForceFileConstants.Methods.SpaceAndTimeKeepMeteoFields;
             }
-            return -1;
+            return null;
         }
 
-        public static IWindField CreateWindField(ExtForceFileItem extForceFileItem, string extForceFilePath)
+        public static IWindField CreateWindField(ExtForceData extForceFileItem, string extForceFilePath)
         {
             if (!ExtForceQuantNames.WindQuantityNames.Values.Contains(extForceFileItem.Quantity))
             {
@@ -806,7 +816,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             switch (extForceFileItem.FileType)
             {
-                case ExtForceQuantNames.FileTypes.Uniform:
+                case ExtForceFileConstants.FileTypes.Uniform:
                     if (quantity == WindQuantity.VelocityX)
                     {
                         return UniformWindField.CreateWindXSeries();
@@ -824,13 +834,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         return UniformWindField.CreatePressureSeries();
                     }
                     break;
-                case ExtForceQuantNames.FileTypes.UniMagDir:
+                case ExtForceFileConstants.FileTypes.UniMagDir:
                     if (quantity == WindQuantity.VelocityVector)
                     {
                         return UniformWindField.CreateWindPolarSeries();
                     }
                     break;
-                case ExtForceQuantNames.FileTypes.ArcInfo:
+                case ExtForceFileConstants.FileTypes.ArcInfo:
                     if (quantity == WindQuantity.VelocityX)
                     {
                         return GriddedWindField.CreateXField(fileName);
@@ -844,20 +854,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         return GriddedWindField.CreatePressureField(fileName);
                     }
                     break;
-                case ExtForceQuantNames.FileTypes.SpiderWeb:
+                case ExtForceFileConstants.FileTypes.SpiderWeb:
                     if (quantity == WindQuantity.VelocityVectorAirPressure)
                     {
                         return SpiderWebWindField.Create(fileName);
                     }
                     break;
-                case ExtForceQuantNames.FileTypes.Curvi:
+                case ExtForceFileConstants.FileTypes.Curvi:
                     if (quantity == WindQuantity.VelocityVectorAirPressure)
                     {
                         return GriddedWindField.CreateCurviField(fileName,
                             GriddedWindField.GetCorrespondingGridFilePath(fileName));
                     }
                     break;
-                case ExtForceQuantNames.FileTypes.NCgrid:
+                case ExtForceFileConstants.FileTypes.NcGrid:
                     if (quantity == WindQuantity.VelocityX)
                     {
                         return GriddedWindField.CreateXField(fileName);

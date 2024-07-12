@@ -20,6 +20,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using DHYDRO.Common.IO.ExtForce;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -313,13 +314,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             int index = fileContent.FindIndex(l => ContainsQuantity(l, quantity));
             var lines = new List<string>
             {
-                $"{ExtForceFile.QuantityKey}={quantity}",
-                $"{ExtForceFile.FileNameKey}={fileName}",
-                $"{ExtForceFile.FileTypeKey}={ExtForceQuantNames.FileTypes.Triangulation}",
-                $"{ExtForceFile.MethodKey}=6",
-                $"{ExtForceFile.OperandKey}={ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite]}",
-                $"{ExtForceFile.AveragingTypeKey}={(int) GridCellAveragingMethod.ClosestPoint}",
-                $"{ExtForceFile.RelSearchCellSizeKey}=1",
+                $"{ExtForceFileConstants.Keys.Quantity}={quantity}",
+                $"{ExtForceFileConstants.Keys.FileName}={fileName}",
+                $"{ExtForceFileConstants.Keys.FileType}={ExtForceFileConstants.FileTypes.Triangulation}",
+                $"{ExtForceFileConstants.Keys.Method}=6",
+                $"{ExtForceFileConstants.Keys.Operand}={ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite]}",
+                $"{ExtForceFileConstants.Keys.AveragingType}={(int) GridCellAveragingMethod.ClosestPoint}",
+                $"{ExtForceFileConstants.Keys.RelativeSearchCellSize}=1",
                 ""
             };
             fileContent.InsertRange(index, lines);

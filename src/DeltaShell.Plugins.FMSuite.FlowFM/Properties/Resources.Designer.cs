@@ -1016,6 +1016,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reading external forcings file from {0}.
+        /// </summary>
+        public static string Reading_external_forcings_file_from_0_ {
+            get {
+                return ResourceManager.GetString("Reading_external_forcings_file_from_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reading initial field data from {0}.
         /// </summary>
         public static string Reading_initial_field_data_from_0_ {

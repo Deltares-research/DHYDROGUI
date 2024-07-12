@@ -1,10 +1,10 @@
 ﻿using DelftTools.Utils.IO;
+using DHYDRO.Common.IO.ExtForce;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public interface IUnsupportedFileBasedExtForceFileItem : IFileBased
-
     {
-        ExtForceFileItem UnsupportedExtForceFileItem { get; set; }
+        ExtForceData UnsupportedExtForceFileItem { get; set; }
     }
 }

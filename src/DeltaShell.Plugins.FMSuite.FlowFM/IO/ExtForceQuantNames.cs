@@ -32,6 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string FrictCoef = "frictioncoefficient";
         public const string HorEddyViscCoef = "horizontaleddyviscositycoefficient";
         public const string HorEddyDiffCoef = "horizontaleddydiffusivitycoefficient";
+        public const string UnsupportedQuantityInMemory = "internaltidesfrictioncoefficient";
 
         public const string InitialSalinity = "initialsalinity";
         public const string InitialSalinityTop = "initialsalinitytop";
@@ -63,6 +64,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string QhFileExtension = "qh";
         public const string T3DFileExtension = "t3d";
         public const string XyzFileExtension = "xyz";
+        
+        public const string InitialTracerPrefix = "initialtracer";
+        public const string InitialSpatialVaryingSedimentPrefix = "initialsedfrac";
+        public const string SedConcPostfix = "_SedConc";
 
         public static readonly IDictionary<BoundaryConditionDataType, string> ForcingToFileExtensionMapping =
             new Dictionary<BoundaryConditionDataType, string>
@@ -74,22 +79,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {BoundaryConditionDataType.HarmonicCorrection, CmpFileExtension},
                 {BoundaryConditionDataType.Qh, QhFileExtension}
             };
-
-        public static class FileTypes
-        {
-            public const int Uniform = 1;
-            public const int UniMagDir = 2;
-            public const int SVWP = 3;
-            public const int ArcInfo = 4;
-            public const int SpiderWeb = 5;
-            public const int Curvi = 6;
-            public const int Triangulation = 7;
-            public const int TriangulationMagDir = 8;
-            public const int PolyTim = 9;
-            public const int InsidePolygon = 10;
-            public const int NCgrid = 11;
-            public const int GeoTiff = 12;
-        }
 
         // spatial operation operator mappings
         public static readonly IDictionary<PointwiseOperationType, Operator> OperatorMapping =
