@@ -69,6 +69,15 @@ namespace DHYDRO.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Forcing file does not exist: {0}..
+        /// </summary>
+        public static string Forcing_file_does_not_exist_0_ {
+            get {
+                return ResourceManager.GetString("Forcing_file_does_not_exist_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initial field data file does not exist: {0}..
         /// </summary>
         public static string Initial_field_data_file_does_not_exist_0_ {

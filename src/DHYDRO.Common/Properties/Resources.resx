@@ -48,4 +48,7 @@
     <data name="Property_0_contains_value_1_but_this_is_not_supported_for_quantity_2_" xml:space="preserve">
         <value>Property '{0}' contains value '{1}', but this is not supported for quantity '{2}'.</value>
     </data>
+    <data name="Forcing_file_does_not_exist_0_" xml:space="preserve">
+        <value>Forcing file does not exist: {0}.</value>
+    </data>
 </root>

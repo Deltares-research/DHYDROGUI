@@ -72,9 +72,7 @@ namespace DHYDRO.Common.Tests.IO.InitialField
         }
 
         [Test]
-        [TestCase(false)]
-        [TestCase(true)]
-        public void Validate_WithValidInitialFieldData_WithAveragingInterpolation_ReturnsTrue(bool withCustomSettings)
+        public void Validate_WithValidInitialFieldData_WithAveragingInterpolation_ReturnsTrue()
         {
             // Arrange
             InitialFieldDataValidator validator = CreateValidator();
@@ -91,9 +89,7 @@ namespace DHYDRO.Common.Tests.IO.InitialField
         }
 
         [Test]
-        [TestCase(false)]
-        [TestCase(true)]
-        public void Validate_WithValidInitialFieldData_WithPolygonDataFileType_ReturnsTrue(bool withCustomSettings)
+        public void Validate_WithValidInitialFieldData_WithPolygonDataFileType_ReturnsTrue()
         {
             // Arrange
             InitialFieldDataValidator validator = CreateValidator();
@@ -110,9 +106,7 @@ namespace DHYDRO.Common.Tests.IO.InitialField
         }
 
         [Test]
-        [TestCase(false)]
-        [TestCase(true)]
-        public void Validate_WithValidInitialFieldData_With1DFieldDataFileType_ReturnsTrue(bool withCustomSettings)
+        public void Validate_WithValidInitialFieldData_With1DFieldDataFileType_ReturnsTrue()
         {
             // Arrange
             InitialFieldDataValidator validator = CreateValidator();

@@ -54,7 +54,7 @@ namespace DHYDRO.Common.IO.InitialField
         /// </summary>
         /// <param name="initialFieldData"> The object to validate. </param>
         /// <returns>
-        /// A boolean indicating whether or not the validation was successful.
+        /// A boolean indicating whether the validation was successful.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="initialFieldData"/> is <c>null</c>.
