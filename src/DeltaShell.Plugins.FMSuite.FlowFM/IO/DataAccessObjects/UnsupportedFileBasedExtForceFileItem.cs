@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using DHYDRO.Common.IO.ExtForce;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
 {
     public class UnsupportedFileBasedExtForceFileItem : IUnsupportedFileBasedExtForceFileItem
     {
-        public UnsupportedFileBasedExtForceFileItem(string path, ExtForceFileItem parent)
+        public UnsupportedFileBasedExtForceFileItem(string path, ExtForceData parent)
         {
             Path = path;
             UnsupportedExtForceFileItem = parent;
         }
 
-        public ExtForceFileItem UnsupportedExtForceFileItem { get; set; }
+        public ExtForceData UnsupportedExtForceFileItem { get; set; }
 
         public string Path { get; set; }
         public IEnumerable<string> Paths { get; }

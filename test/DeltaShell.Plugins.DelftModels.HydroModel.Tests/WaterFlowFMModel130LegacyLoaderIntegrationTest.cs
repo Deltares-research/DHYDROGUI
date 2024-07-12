@@ -51,8 +51,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     string filePath = Path.Combine(inputDir, fileName);
                     Assert.That(filePath, Does.Exist);
 
-                    string actual = File.ReadAllText(filePath);
-                    string expected = File.ReadAllText(Path.Combine(expectedDir, fileName));
+                    string actual = File.ReadAllText(filePath).Trim();
+                    string expected = File.ReadAllText(Path.Combine(expectedDir, fileName)).Trim();
                     Assert.That(actual, Is.EqualTo(expected));
                 }
             }

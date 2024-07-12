@@ -18,12 +18,12 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using DHYDRO.Common.IO.ExtForce;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -321,13 +321,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             int index = fileContent.FindIndex(l => ContainsQuantity(l, quantity));
             var lines = new List<string>
             {
-                $"{ExtForceFileConstants.QuantityKey}={quantity}",
-                $"{ExtForceFileConstants.FileNameKey}={fileName}",
-                $"{ExtForceFileConstants.FileTypeKey}={AddSamplesDefaults.FileType}",
-                $"{ExtForceFileConstants.MethodKey}={AddSamplesDefaults.Method}",
-                $"{ExtForceFileConstants.OperandKey}={ExtForceQuantNames.OperatorToStringMapping[AddSamplesDefaults.Operand]}",
-                $"{ExtForceFileConstants.AveragingTypeKey}={(int) AddSamplesDefaults.AveragingType}",
-                $"{ExtForceFileConstants.RelSearchCellSizeKey}={AddSamplesDefaults.RelSearchCellSize.ToString(CultureInfo.InvariantCulture)}",
+                $"{ExtForceFileConstants.Keys.Quantity}={quantity}",
+                $"{ExtForceFileConstants.Keys.FileName}={fileName}",
+                $"{ExtForceFileConstants.Keys.FileType}={AddSamplesDefaults.FileType}",
+                $"{ExtForceFileConstants.Keys.Method}={AddSamplesDefaults.Method}",
+                $"{ExtForceFileConstants.Keys.Operand}={ExtForceQuantNames.OperatorToStringMapping[AddSamplesDefaults.Operand]}",
+                $"{ExtForceFileConstants.Keys.AveragingType}={(int) AddSamplesDefaults.AveragingType}",
+                $"{ExtForceFileConstants.Keys.RelativeSearchCellSize}={AddSamplesDefaults.RelSearchCellSize.ToString(CultureInfo.InvariantCulture)}",
                 ""
             };
             fileContent.InsertRange(index, lines);

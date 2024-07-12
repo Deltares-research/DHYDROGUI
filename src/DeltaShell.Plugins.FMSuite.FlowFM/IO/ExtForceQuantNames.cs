@@ -67,6 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public const string InitialTracerPrefix = "initialtracer";
         public const string InitialSpatialVaryingSedimentPrefix = "initialsedfrac";
+        public const string SedimentConcentrationPostfix = "_SedConc";
 
         public static readonly IDictionary<BoundaryConditionDataType, string> ForcingToFileExtensionMapping =
             new Dictionary<BoundaryConditionDataType, string>
@@ -284,21 +285,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             return string.Empty;
-        }
-
-        public static class FileTypes
-        {
-            public const int Uniform = 1;
-            public const int UniMagDir = 2;
-            public const int SVWP = 3;
-            public const int ArcInfo = 4;
-            public const int SpiderWeb = 5;
-            public const int Curvi = 6;
-            public const int Triangulation = 7;
-            public const int TriangulationMagDir = 8;
-            public const int PolyTim = 9;
-            public const int InsidePolygon = 10;
-            public const int NCgrid = 11;
         }
     }
 }

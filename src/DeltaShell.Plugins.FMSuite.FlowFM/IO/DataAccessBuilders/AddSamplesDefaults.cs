@@ -1,4 +1,5 @@
-﻿using SharpMap.SpatialOperations;
+﻿using DHYDRO.Common.IO.ExtForce;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 {
@@ -10,12 +11,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         /// <summary>
         /// The default file type.
         /// </summary>
-        public const int FileType = ExtForceQuantNames.FileTypes.Triangulation;
+        public const int FileType = ExtForceFileConstants.FileTypes.Triangulation;
         
         /// <summary>
         /// The default method.
         /// </summary>
-        public const int Method = 6;
+        public const int Method = ExtForceFileConstants.Methods.Averaging;
         
         /// <summary>
         /// The default operand.

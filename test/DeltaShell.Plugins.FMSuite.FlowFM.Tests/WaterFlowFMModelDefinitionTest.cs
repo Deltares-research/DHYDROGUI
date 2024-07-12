@@ -557,7 +557,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(extFileContent.Contains(
                               "* this comment block should still be there"));
             Assert.IsTrue(extFileContent.Contains(
-                              "# this one too"));
+                              "* this one too"));
             Assert.IsTrue(extFileContent.Contains(
                               "* and this one too"));
             Assert.IsTrue(extFileContent.Contains(

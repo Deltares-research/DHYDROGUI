@@ -18,6 +18,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using DHYDRO.Common.IO.ExtForce;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net.Core;
@@ -207,8 +208,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 extForceFile.Read(extReadPath, extReadPath, modelDefinition);
                 extForceFile.Write(extWritePath, extWritePath, modelDefinition, true, true);
 
-                string expectedFileContents = File.ReadAllText(extReadPath);
-                string actualFileContents = File.ReadAllText(extWritePath);
+                string expectedFileContents = File.ReadAllText(extReadPath).Trim();
+                string actualFileContents = File.ReadAllText(extWritePath).Trim();
                 
                 Assert.That(actualFileContents, Is.EqualTo(expectedFileContents));
             });
@@ -310,7 +311,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var unsupportedExternalForceItem = modelDefinition.UnsupportedFileBasedExtForceFileItems.First();
             Assert.IsNotNull(unsupportedExternalForceItem.UnsupportedExtForceFileItem);
             Assert.AreEqual("solarradiation", unsupportedExternalForceItem.UnsupportedExtForceFileItem.Quantity);
-            Assert.AreEqual("ssr", unsupportedExternalForceItem.UnsupportedExtForceFileItem.VarName);
+            Assert.AreEqual("ssr", unsupportedExternalForceItem.UnsupportedExtForceFileItem.VariableName);
         }
 
         [Test]
@@ -324,14 +325,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var quantity = "solarradiation";
                 var filename = @"ERA5_2005-2021_dfm_ssr_strd.nc";
                 var varname = "ssr";
-                var filetype = 11;
-                var method = 3;
-                var operation = "O";
+                var filetype = ExtForceFileConstants.FileTypes.NcGrid;
+                var method = ExtForceFileConstants.Methods.SpaceAndTimeSaveWeights;
+                var operation = ExtForceFileConstants.Operands.Override;
                 
-                var extForceFileItem = new ExtForceFileItem(quantity)
+                var extForceFileItem = new ExtForceData
                 {
+                    Quantity = quantity,
                     FileName = filename,
-                    VarName = varname,
+                    VariableName = varname,
                     FileType = filetype,
                     Method = method,
                     Operand = operation
@@ -356,7 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var writtenUnsupportedExternalForceItem = writtenModelDefinition.UnsupportedFileBasedExtForceFileItems.First();
                 Assert.IsNotNull(writtenUnsupportedExternalForceItem.UnsupportedExtForceFileItem);
                 Assert.AreEqual(quantity, writtenUnsupportedExternalForceItem.UnsupportedExtForceFileItem.Quantity);
-                Assert.AreEqual(varname, writtenUnsupportedExternalForceItem.UnsupportedExtForceFileItem.VarName);
+                Assert.AreEqual(varname, writtenUnsupportedExternalForceItem.UnsupportedExtForceFileItem.VariableName);
             }
         }
 
@@ -367,7 +369,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correct_prefix.ext");
             string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "correct_prefix.mdu");
             var extForceFile = new ExtForceFile();
-            TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, extSubFilesReferenceFilePath, def), 0);
+            TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, extSubFilesReferenceFilePath, def), 1);
         }
 
         [Test]
@@ -1216,9 +1218,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             extForceFile.Read(extPath, extSubFilesReferenceFilePath, def);
 
             var supportedExtForceFileItem = extForceFile.ExistingForceFileItems.First().Key;
+            supportedExtForceFileItem.TryGetModelData(ExtForceFileConstants.Keys.ExtrapolationTolerance, out double extrapolationTolerance);
 
-            Assert.That(supportedExtForceFileItem, Is.Not.Null);
-            Assert.That(supportedExtForceFileItem.ExtraPolTol, Is.EqualTo(expectedExtraPolTol));
+            Assert.That(extrapolationTolerance, Is.EqualTo(expectedExtraPolTol));
         }
 
         [Test]
@@ -1226,19 +1228,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             const string quantity = "initialvelocityx";
             const string filename = @"rijn_beno19_6_v2a_waal_ucx_S16000.xyz";
-            const int filetype = 7;
-            const int method = 5;
-            const string operation = "O";
+            const int filetype = ExtForceFileConstants.FileTypes.Triangulation;
+            const int method = ExtForceFileConstants.Methods.Triangulation;
+            const string operation = ExtForceFileConstants.Operands.Override;
             const int extrapoltol = 40;
 
-            var extForceFileItem = new ExtForceFileItem(quantity)
+            var extForceFileItem = new ExtForceData
             {
+                Quantity = quantity,
                 FileName = filename,
                 FileType = filetype,
                 Method = method,
-                Operand = operation,
-                ExtraPolTol = extrapoltol
+                Operand = operation
             };
+
+            extForceFileItem.SetModelData(ExtForceFileConstants.Keys.ExtrapolationTolerance, extrapoltol);
 
             using (var temporaryDirectory = new TemporaryDirectory())
             {
@@ -1296,12 +1300,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             const string quantity = "initialvelocityx";
             const string filename = @"rijn_beno19_6_v2a_waal_ucx_S16000.xyz";
-            const int filetype = 7;
-            const int method = 5;
-            const string operation = "O";
+            const int filetype = ExtForceFileConstants.FileTypes.Triangulation;
+            const int method = ExtForceFileConstants.Methods.Triangulation;
+            const string operation = ExtForceFileConstants.Operands.Override;
 
-            var extForceFileItem = new ExtForceFileItem(quantity)
+            var extForceFileItem = new ExtForceData
             {
+                Quantity = quantity,
                 FileName = filename,
                 FileType = filetype,
                 Method = method,
@@ -1362,8 +1367,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string extForceFilePath = temp.CreateFile("forcings.ext", extFileContent);
 
                 string[] errors = TestHelper.GetAllRenderedMessages(() => extForceFile.Read(extForceFilePath, extForceFilePath, modelDefinition), Level.Error).ToArray();
-
-                string expError = GetExpectedMessageMissingFile(Path.Combine(temp.Path, fileReference), extForceFilePath, 1);
+                string expError = $"Forcing file does not exist: {fileReference}. Line: 1";
+                
                 Assert.That(errors, Does.Contain(expError));
                 Assert.That(modelDefinition.UnsupportedFileBasedExtForceFileItems, Is.Empty);
             }
@@ -1385,17 +1390,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(1, def.UnsupportedFileBasedExtForceFileItems.Count,
                             "One unknown quantity was expected to be stored on the model definition.");
 
-            ExtForceFileItem unsupportedQuantity1 = def.UnsupportedFileBasedExtForceFileItems.First().UnsupportedExtForceFileItem;
+            ExtForceData unsupportedQuantity1 = def.UnsupportedFileBasedExtForceFileItems.First().UnsupportedExtForceFileItem;
 
             Assert.AreEqual("internaltidesfrictioncoefficient", unsupportedQuantity1.Quantity,
                             "Quantity name was not as expected.");
             Assert.AreEqual("surroundingDomain.pol", unsupportedQuantity1.FileName,
                             "File name of quantity was not as expected.");
-            Assert.AreEqual(10, unsupportedQuantity1.FileType,
+            Assert.AreEqual(ExtForceFileConstants.FileTypes.InsidePolygon, unsupportedQuantity1.FileType,
                             "File type of quantity was not as expected.");
-            Assert.AreEqual(4, unsupportedQuantity1.Method,
+            Assert.AreEqual(ExtForceFileConstants.Methods.InsidePolygon, unsupportedQuantity1.Method,
                             "Method type of quantity was not as expected.");
-            Assert.AreEqual("*", unsupportedQuantity1.Operand,
+            Assert.AreEqual(ExtForceFileConstants.Operands.Multiply, unsupportedQuantity1.Operand,
                             "Operand of quantity was not as expected.");
             Assert.AreEqual(0.0125, unsupportedQuantity1.Value,
                             "Value of quantity was not as expected.");
@@ -1419,13 +1424,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
                 });
             }
-        }
-        
-        private static string GetExpectedMessageMissingFile(string filePath, string extFilePath, int lineNumber)
-        {
-            string propertyName = ExtForceFileConstants.FileNameKey;
-            return string.Format(Common.Properties.Resources.File_at_location_0_does_not_exist_but_is_defined_in_1_, filePath, extFilePath) + "\r\n" +
-                   string.Format(Common.Properties.Resources.See_property_0_line_1_, propertyName, lineNumber) + " " + Common.Properties.Resources.Data_for_this_item_is_dropped;
         }
     }
 }

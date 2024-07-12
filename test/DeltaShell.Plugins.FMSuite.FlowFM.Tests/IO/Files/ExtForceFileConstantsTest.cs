@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+﻿using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DHYDRO.Common.IO.ExtForce;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
@@ -6,10 +7,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
     [TestFixture]
     public class ExtForceFileConstantsTest
     {
-        [TestCase(ExtForceFileConstants.AreaKey, "AREA")]
-        [TestCase(ExtForceFileConstants.AveragingTypeKey, "AVERAGINGTYPE")]
-        [TestCase(ExtForceFileConstants.RelSearchCellSizeKey, "RELATIVESEARCHCELLSIZE")]
-        [TestCase(ExtForceFileConstants.SedimentConcentrationPostfix, "_SedConc")]
+        [TestCase(ExtForceFileConstants.Keys.Area, "AREA")]
+        [TestCase(ExtForceFileConstants.Keys.AveragingType, "AVERAGINGTYPE")]
+        [TestCase(ExtForceFileConstants.Keys.RelativeSearchCellSize, "RELATIVESEARCHCELLSIZE")]
+        [TestCase(ExtForceQuantNames.SedimentConcentrationPostfix, "_SedConc")]
         public void ConstantField_ReturnsCorrectValue(string actualValue, string expectedValue)
         {
             Assert.That(actualValue, Is.EqualTo(expectedValue));

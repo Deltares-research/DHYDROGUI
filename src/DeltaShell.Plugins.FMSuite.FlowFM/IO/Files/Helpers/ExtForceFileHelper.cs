@@ -9,8 +9,8 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DHYDRO.Common.IO.ExtForce;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         /// <param name="polyLineForceFileItems">The existing items.</param>
         /// <returns>A collection containing collections of names.</returns>
         public static IEnumerable<string[]> GetFeatureDataFiles(WaterFlowFMModelDefinition modelDefinition,
-                                                                IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems)
+                                                                IDictionary<IFeatureData, ExtForceData> polyLineForceFileItems)
         {
             StartWritingSubFiles();
 
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 foreach (FlowBoundaryCondition bc in boundaryConditionSet
                                                      .BoundaryConditions.OfType<FlowBoundaryCondition>())
                 {
-                    polyLineForceFileItems.TryGetValue(bc, out ExtForceFileItem matchingItem);
+                    polyLineForceFileItems.TryGetValue(bc, out ExtForceData matchingItem);
                     string[][] dataFiles = GetBoundaryDataFiles(bc, boundaryConditionSet, matchingItem).ToArray();
 
                     foreach (string[] dataFile in dataFiles)
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
             foreach (SourceAndSink sourceAndSink in modelDefinition.SourcesAndSinks)
             {
-                polyLineForceFileItems.TryGetValue(sourceAndSink, out ExtForceFileItem matchingItem);
+                polyLineForceFileItems.TryGetValue(sourceAndSink, out ExtForceData matchingItem);
                 string[][] dataFiles = GetSourceAndSinkDataFiles(sourceAndSink, matchingItem).ToArray();
 
                 foreach (string[] dataFile in dataFiles)
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         }
 
         // works (only) in conjuction with StartWritingSubFiles
-        public static void AddSuffixInCaseOfDuplicateFile(ExtForceFileItem item)
+        public static void AddSuffixInCaseOfDuplicateFile(ExtForceData item)
         {
             if (previousPaths.Contains(item.FileName))
             {
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             return list;
         }
 
-        public static IWindField CreateWindField(ExtForceFileItem extForceFileItem, string filePath)
+        public static IWindField CreateWindField(ExtForceData extForceFileItem, string filePath)
         {
             if (!ExtForceQuantNames.WindQuantityNames.Values.Contains(extForceFileItem.Quantity))
             {
@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
             switch (extForceFileItem.FileType)
             {
-                case ExtForceQuantNames.FileTypes.Uniform:
+                case ExtForceFileConstants.FileTypes.Uniform:
                     if (quantity == WindQuantity.VelocityX)
                     {
                         return UniformWindField.CreateWindXSeries();
@@ -169,14 +169,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                     }
 
                     break;
-                case ExtForceQuantNames.FileTypes.UniMagDir:
+                case ExtForceFileConstants.FileTypes.UniMagDir:
                     if (quantity == WindQuantity.VelocityVector)
                     {
                         return UniformWindField.CreateWindPolarSeries();
                     }
 
                     break;
-                case ExtForceQuantNames.FileTypes.ArcInfo:
+                case ExtForceFileConstants.FileTypes.ArcInfo:
                     if (quantity == WindQuantity.VelocityX)
                     {
                         return GriddedWindField.CreateXField(filePath);
@@ -193,14 +193,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                     }
 
                     break;
-                case ExtForceQuantNames.FileTypes.SpiderWeb:
+                case ExtForceFileConstants.FileTypes.SpiderWeb:
                     if (quantity == WindQuantity.VelocityVectorAirPressure)
                     {
                         return SpiderWebWindField.Create(filePath);
                     }
 
                     break;
-                case ExtForceQuantNames.FileTypes.Curvi:
+                case ExtForceFileConstants.FileTypes.Curvi:
                     if (quantity == WindQuantity.VelocityVectorAirPressure)
                     {
                         return GriddedWindField.CreateCurviField(filePath,
@@ -209,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                     }
 
                     break;
-                case ExtForceQuantNames.FileTypes.NCgrid:
+                case ExtForceFileConstants.FileTypes.NcGrid:
                     if (quantity == WindQuantity.VelocityX)
                     {
                         return GriddedWindField.CreateXField(filePath);
@@ -252,15 +252,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
         private static IEnumerable<string[]> GetBoundaryDataFiles(FlowBoundaryCondition boundaryCondition,
                                                                   BoundaryConditionSet boundaryConditionSet,
-                                                                  ExtForceFileItem existingExtForceFileItem)
+                                                                  ExtForceData existingExtForceFileItem)
         {
             string quantityName =
                 ExtForceQuantNames.GetQuantityString(boundaryCondition);
 
-            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            ExtForceData extForceFileItem = existingExtForceFileItem ?? new ExtForceData
             {
+                Quantity = quantityName,
                 FileName = GetPliFileName(boundaryCondition),
-                FileType = ExtForceQuantNames.FileTypes.PolyTim
+                FileType = ExtForceFileConstants.FileTypes.PolyTim
             };
 
             AddSuffixInCaseOfDuplicateFile(extForceFileItem);
@@ -299,14 +300,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         }
 
         private static IEnumerable<string[]> GetSourceAndSinkDataFiles(SourceAndSink sourceAndSink,
-                                                                       ExtForceFileItem existingExtForceFileItem)
+                                                                       ExtForceData existingExtForceFileItem)
         {
             const string quantityName = ExtForceQuantNames.SourceAndSink;
 
-            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            ExtForceData extForceFileItem = existingExtForceFileItem ?? new ExtForceData
             {
+                Quantity = quantityName,
                 FileName = GetPliFileName(sourceAndSink),
-                FileType = ExtForceQuantNames.FileTypes.PolyTim
+                FileType = ExtForceFileConstants.FileTypes.PolyTim
             };
 
             AddSuffixInCaseOfDuplicateFile(extForceFileItem);

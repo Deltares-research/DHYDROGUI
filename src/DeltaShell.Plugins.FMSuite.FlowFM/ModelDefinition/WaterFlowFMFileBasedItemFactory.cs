@@ -3,10 +3,10 @@ using System.Linq;
 using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DHYDRO.Common.IO.ExtForce;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -33,11 +33,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                 if (subFile.Key.Equals(model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile)))
                 {
-                    IEnumerable<ExtForceFileItem> newExtForceFileItems =
+                    IEnumerable<ExtForceData> newExtForceFileItems =
                         ExtForceFileItemFactory.GetItems(model.ModelDefinition, !newFormatBoundaryConditions,
                                                          extForceFile.PolyLineForceFileItems, extForceFile.ExistingForceFileItems);
 
-                    foreach (ExtForceFileItem extForceFileItem in newExtForceFileItems)
+                    foreach (ExtForceData extForceFileItem in newExtForceFileItems)
                     {
                         newNode.AddChildItem(extForceFileItem.Quantity, extForceFileItem.FileName);
                     }

@@ -542,15 +542,6 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_" xml:space="preserve">
     <value>Quantity '{0}' detected in the external force file and will be passed to the computational core. This may affect your simulation.</value>
   </data>
-  <data name="ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_" xml:space="preserve">
-    <value>Unexpected line "{0}" on line {1} in file {2} and will be ignored.</value>
-  </data>
-  <data name="ExtForceFile_LogWarningQuantityPropertyAlreadySet__0__is_already_set__Line__1__of_file__2__will_be_ignored_" xml:space="preserve">
-    <value>{0} is already set; Line {1} of file {2} will be ignored.</value>
-  </data>
-  <data name="ExtForceFile_GetMessageUnexpectedKeyword_Unexpected_keyword__0__on_line__1__of_file__2_" xml:space="preserve">
-    <value>Unexpected keyword {0} on line {1} of file {2}</value>
-  </data>
   <data name="ShapeFileImporterHelper_Read_Shape_type__0__is_not_matching_expected_type__1__" xml:space="preserve">
     <value>Shape type {0} is not matching expected type {1}.</value>
   </data>
@@ -799,5 +790,8 @@ Manhole with unique id '{4}' is not imported.</value>
   </data>
   <data name="Property_0_contains_unsupported_value_1_" xml:space="preserve">
     <value>Property '{0}' contains unsupported value: {1}.</value>
+  </data>
+  <data name="Reading_external_forcings_file_from_0_" xml:space="preserve">
+    <value>Reading external forcings file from {0}</value>
   </data>
 </root>

@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.IO
         {
             var serializer = new XmlSerializer(typeof(ShapesConfigComplexType));
 
-            using (FileSystemStream stream = fileSystem.File.OpenWrite(xmlPath))
+            using (FileSystemStream stream = fileSystem.File.Open(xmlPath, FileMode.Create))
             {
                 serializer.Serialize(stream, xmlData);
             }
