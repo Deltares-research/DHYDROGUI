@@ -7,6 +7,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
@@ -84,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             plugin.Application = application;
 
             application.FileExportService.FileExporters.Returns(plugin.GetFileExporters());
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Call
             project.RootFolder.Add(model);
@@ -108,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             plugin.Application = application;
 
             // Call
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Assert
             IFileExportService fileExportService = model.DimrRunner.FileExportService;

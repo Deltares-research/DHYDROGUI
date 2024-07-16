@@ -76,16 +76,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (application != null)
                 {
-                    application.ProjectOpened -= Application_ProjectOpened;
-                    Application.ProjectClosing -= Application_ProjectClosing;
+                    Application.ProjectService.ProjectOpened -= Application_ProjectOpened;
+                    Application.ProjectService.ProjectCreated -= Application_ProjectOpened;
+                    Application.ProjectService.ProjectClosing -= Application_ProjectClosing;
                 }
 
                 application = value;
 
                 if (application != null)
                 {
-                    application.ProjectOpened += Application_ProjectOpened;
-                    Application.ProjectClosing += Application_ProjectClosing;
+                    Application.ProjectService.ProjectOpened += Application_ProjectOpened;
+                    Application.ProjectService.ProjectCreated += Application_ProjectOpened;
+                    Application.ProjectService.ProjectClosing += Application_ProjectClosing;
                 }
             }
         }
@@ -638,7 +640,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return false;
         }
         
-        private void Application_ProjectOpened(Project project)
+        private void Application_ProjectOpened(object sender, EventArgs<Project> e)
         {
             Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().ForEach(m =>
             {
@@ -649,9 +651,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Application.Project.CollectionChanging += OnProjectCollectionChanging;
         }
 
-        private void Application_ProjectClosing(Project project)
+        private void Application_ProjectClosing(object sender, EventArgs<Project> e)
         {
-            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+            e.Value.CollectionChanging -= OnProjectCollectionChanging;
         }
         
         private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)

@@ -63,8 +63,9 @@ namespace DeltaShell.Plugins.NetworkEditor
         {
             base.Activate();
 
-            Application.ProjectClosing += ApplicationOnProjectClosing;
-            Application.ProjectOpened += ApplicationOnProjectOpened;
+            Application.ProjectService.ProjectClosing += ApplicationOnProjectClosing;
+            Application.ProjectService.ProjectOpened += ApplicationOnProjectOpened;
+            Application.ProjectService.ProjectCreated += ApplicationOnProjectOpened;
         }
 
         public override IEnumerable<DataItemInfo> GetDataItemInfos()
@@ -176,15 +177,15 @@ namespace DeltaShell.Plugins.NetworkEditor
             return exporters;
         }
 
-        private void ApplicationOnProjectClosing(Project project)
+        private void ApplicationOnProjectClosing(object sender, EventArgs<Project> e)
         {
-            ((INotifyCollectionChanged) Application.Project).CollectionChanged -= OnProjectCollectionChanged;
+            ((INotifyCollectionChanged) e.Value).CollectionChanged -= OnProjectCollectionChanged;
         }
 
-        private void ApplicationOnProjectOpened(Project project)
+        private void ApplicationOnProjectOpened(object sender, EventArgs<Project> e)
         {
             ((INotifyCollectionChanged) Application.Project).CollectionChanged += OnProjectCollectionChanged;
-            FixOwnersOnChildDataItems(project.RootFolder);
+            FixOwnersOnChildDataItems(e.Value.RootFolder);
         }
 
         private void FixOwnersOnChildDataItems(Folder folder)

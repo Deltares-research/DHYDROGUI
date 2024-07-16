@@ -5,6 +5,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
+using DelftTools.Utils;
 using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
@@ -67,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             plugin.Application = application;
 
             application.FileExportService.FileExporters.Returns(plugin.GetFileExporters());
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Call
             project.RootFolder.Add(model);
@@ -91,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             plugin.Application = application;
 
             // Call
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Assert
             IFileExportService fileExportService = model.DimrRunner.FileExportService;

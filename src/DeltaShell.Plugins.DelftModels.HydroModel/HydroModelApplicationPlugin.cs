@@ -8,6 +8,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
@@ -49,11 +50,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (Application != null)
                 {
                     Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerOnActivityStatusChanged;
-                    Application.ProjectSaving -= ApplicationProjectSaving;
-                    Application.ProjectSaved -= ApplicationProjectSavedOrFailed;
-                    Application.ProjectSaveFailed -= ApplicationProjectSavedOrFailed;
-                    Application.ProjectOpened -= ApplicationProjectOpened;
-                    Application.ProjectClosing -= ApplicationProjectClosing;
+                    Application.ProjectService.ProjectSaving -= ApplicationProjectSaving;
+                    Application.ProjectService.ProjectSaved -= ApplicationProjectSaved;
+                    Application.ProjectService.ProjectOpened -= ApplicationProjectOpened;
+                    Application.ProjectService.ProjectCreated -= ApplicationProjectOpened;
+                    Application.ProjectService.ProjectClosing -= ApplicationProjectClosing;
                 }
                 
                 base.Application = value;
@@ -61,11 +62,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (Application != null)
                 {
                     Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerOnActivityStatusChanged;
-                    Application.ProjectSaving += ApplicationProjectSaving;
-                    Application.ProjectSaveFailed += ApplicationProjectSavedOrFailed;
-                    Application.ProjectSaved += ApplicationProjectSavedOrFailed;
-                    Application.ProjectOpened += ApplicationProjectOpened;
-                    Application.ProjectClosing += ApplicationProjectClosing;
+                    Application.ProjectService.ProjectSaving += ApplicationProjectSaving;
+                    Application.ProjectService.ProjectSaved += ApplicationProjectSaved;
+                    Application.ProjectService.ProjectOpened += ApplicationProjectOpened;
+                    Application.ProjectService.ProjectCreated += ApplicationProjectOpened;
+                    Application.ProjectService.ProjectClosing += ApplicationProjectClosing;
                 }
             }
         }
@@ -195,23 +196,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             new HydroModelBuilder();
         }
 
-        private void ApplicationProjectSaving(Project project)
+        private void ApplicationProjectSaving(object sender, EventArgs<Project> e)
         {
             // go through all hydro models and unlink all objects that link between rtc and flowFM, 
             // because flow is not saved in the database.
-            DoWithHydroModels(project, "Unlinking items for saving", m =>
+            DoWithHydroModels(e.Value, "Unlinking items for saving", m =>
             {
                 m.UnlinkAndRememberDataItems();
                 m.UnlinkAndRememberRegionLinks();
             });
         }
 
-        private void ApplicationProjectSavedOrFailed(Project project)
+        private void ApplicationProjectSaved(object sender, EventArgs<Project> e)
         {
-            DoWithHydroModels(project, Properties.Resources.Linking_items_in_the_integrated_model_after_saving_the_project, RelinkHydroModelItems);
+            DoWithHydroModels(e.Value, Properties.Resources.Linking_items_in_the_integrated_model_after_saving_the_project, RelinkHydroModelItems);
         }
 
-        private void ApplicationProjectOpened(Project project)
+        private void ApplicationProjectOpened(object sender, EventArgs<Project> e)
         {
             Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
             {
@@ -221,12 +222,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             Application.Project.CollectionChanging += OnProjectCollectionChanging;
 
-            DoWithHydroModels(project, Properties.Resources.Linking_items_in_the_integrated_model_after_loading_the_project, RelinkHydroModelItems);
+            DoWithHydroModels(e.Value, Properties.Resources.Linking_items_in_the_integrated_model_after_loading_the_project, RelinkHydroModelItems);
         }
         
-        private void ApplicationProjectClosing(Project project)
+        private void ApplicationProjectClosing(object sender, EventArgs<Project> e)
         {
-            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+            e.Value.CollectionChanging -= OnProjectCollectionChanging;
         }
         
         private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)

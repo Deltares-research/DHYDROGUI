@@ -19,7 +19,6 @@ using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -223,7 +222,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 using (var mapView = new MapView())
                 {
                     var application = Mocks.DynamicMock<IApplication>();
+                    var projectService = Mocks.DynamicMock<IProjectService>();
                     application.Stub(a => a.FileExporters).Return(new List<IFileExporter>());
+                    application.Stub(a => a.ProjectService).Return(projectService);
 
                     var project = new Project(); // Project is pretty lightweight don't need to mock here
 
@@ -236,7 +237,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                     Expect.Call(gui.Application).Return(application).Repeat.Any();
                     Expect.Call(application.Project).Return(project).Repeat.Any();
 
-                    application.ProjectClosing += null;
+                    projectService.ProjectClosing += null;
                     var projectClosingRaiser = LastCall.IgnoreArguments().GetEventRaiser();
 
                     Mocks.ReplayAll();
@@ -248,7 +249,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                         HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(new Bridge());
                         Assert.IsTrue(HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard());
 
-                        projectClosingRaiser.Raise(project);
+                        projectClosingRaiser.Raise(this, new EventArgs<Project>(project));
                         Assert.IsFalse(HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard());
                     }
                 }

@@ -11,6 +11,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -77,7 +78,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             {
                 if (base.Gui != null)
                 {
-                    Gui.Application.ProjectOpened -= ApplicationProjectOpened;
+                    Gui.Application.ProjectService.ProjectOpened -= ApplicationProjectOpened;
+                    Gui.Application.ProjectService.ProjectCreated -= ApplicationProjectOpened;
                     Gui.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerActivityStatusChanged;
                 }
 
@@ -87,7 +89,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                     return;
                 }
 
-                Gui.Application.ProjectOpened += ApplicationProjectOpened;
+                Gui.Application.ProjectService.ProjectOpened += ApplicationProjectOpened;
+                Gui.Application.ProjectService.ProjectCreated += ApplicationProjectOpened;
                 Gui.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerActivityStatusChanged;
             }
         }
@@ -171,7 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         public override void Activate()
         {
-            gui.Application.ProjectClosing += Application_ProjectClosing;
+            gui.Application.ProjectService.ProjectClosing += Application_ProjectClosing;
             base.Activate();
         }
 
@@ -182,7 +185,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 return;
             }
 
-            gui.Application.ProjectClosing -= Application_ProjectClosing;
+            gui.Application.ProjectService.ProjectClosing -= Application_ProjectClosing;
             base.Deactivate();
         }
 
@@ -229,7 +232,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return typeof(ShapeBase).Assembly;
         }
         
-        private void ApplicationProjectOpened(Project obj)
+        private void ApplicationProjectOpened(object sender, EventArgs<Project> e)
         {
             RealTimeControlModelExporter exporter = Gui.Application.FileExporters.OfType<RealTimeControlModelExporter>().First();
             RealTimeControlModelImporter importer = Gui.Application.FileImporters.OfType<RealTimeControlModelImporter>().First();
@@ -373,7 +376,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             return viewToSearch.GetViewsOfType<MapView>().FirstOrDefault();
         }
 
-        private void Application_ProjectClosing(Project project)
+        private void Application_ProjectClosing(object sender, EventArgs<Project> e)
         {
             var helper = RealTimeControlModelCopyPasteHelper.Instance;
             helper.ClearData();

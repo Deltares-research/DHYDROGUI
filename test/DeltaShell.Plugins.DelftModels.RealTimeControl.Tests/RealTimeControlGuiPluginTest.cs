@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 CollectionAssert.IsNotEmpty(helper.CopiedShapes);
 
                 // Call
-                application.ProjectClosing += Raise.Event<Action<Project>>(project);
+                application.ProjectService.ProjectClosing += Raise.EventWith(this, new EventArgs<Project>(project));
 
                 // Assert
                 Assert.IsFalse(helper.IsDataSet);
@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 application.FileExporters.Returns(new[] { exporter });
 
                 // When
-                application.ProjectOpened += Raise.Event<Action<Project>>(project);
+                application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
                 // Then
                 Assert.That(importer.XmlReaders, Has.One.InstanceOf<ShapesXmlReader>());
@@ -202,8 +202,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 application.FileExporters.Returns(new[] { exporter });
 
                 // When
-                application.ProjectOpened += Raise.Event<Action<Project>>(project);
-                application.ProjectOpened += Raise.Event<Action<Project>>(project);
+                application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
+                application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
                 // Then
                 Assert.That(importer.XmlReaders, Has.One.InstanceOf<ShapesXmlReader>());

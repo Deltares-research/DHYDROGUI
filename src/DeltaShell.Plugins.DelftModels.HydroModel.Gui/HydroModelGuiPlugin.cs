@@ -13,6 +13,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
@@ -85,8 +86,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 if (base.Gui != null)
                 {
                     Gui.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerActivityStatusChanged;
-                    Gui.Application.ProjectClosing -= ApplicationOnProjectClosing;
-                    Gui.Application.ProjectOpened -= ApplicationOnProjectOpened;
+                    Gui.Application.ProjectService.ProjectClosing -= ApplicationOnProjectClosing;
+                    Gui.Application.ProjectService.ProjectOpened -= ApplicationOnProjectOpened;
                 }
 
                 base.Gui = value;
@@ -94,16 +95,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 if (base.Gui != null)
                 {
                     Gui.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerActivityStatusChanged;
-                    Gui.Application.ProjectClosing += ApplicationOnProjectClosing;
-                    Gui.Application.ProjectOpened += ApplicationOnProjectOpened;
+                    Gui.Application.ProjectService.ProjectClosing += ApplicationOnProjectClosing;
+                    Gui.Application.ProjectService.ProjectOpened += ApplicationOnProjectOpened;
                 }
             }
         }
 
         [InvokeRequired]
-        private void ApplicationOnProjectOpened(Project obj)
+        private void ApplicationOnProjectOpened(object sender, EventArgs<Project> e)
         {
-            Gui.Selection = obj.RootFolder.Models.FirstOrDefault();
+            Gui.Selection = e.Value.RootFolder.Models.FirstOrDefault();
             Gui.CommandHandler.OpenViewForSelection();
         }
 
@@ -137,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             }
         }
 
-        private void ApplicationOnProjectClosing(Project obj)
+        private void ApplicationOnProjectClosing(object sender, EventArgs<Project> e)
         {
             // remove memory leaks
             Gui.Selection = null;

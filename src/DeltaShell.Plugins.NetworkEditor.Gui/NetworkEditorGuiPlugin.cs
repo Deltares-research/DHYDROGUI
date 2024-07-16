@@ -137,8 +137,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 if (gui != null)
                 {
                     gui.SelectionChanged -= GuiSelectionChanged;
-                    gui.Application.ProjectClosing -= ApplicationProjectClosed;
-                    gui.Application.ProjectOpened -= ApplicationProjectOpened;
+                    gui.Application.ProjectService.ProjectClosing -= ApplicationProjectClosed;
+                    gui.Application.ProjectService.ProjectOpened -= ApplicationProjectOpened;
+                    gui.Application.ProjectService.ProjectCreated -= ApplicationProjectOpened;
 
                 }
 
@@ -147,8 +148,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
                 if (gui != null)
                 {
-                    gui.Application.ProjectClosing += ApplicationProjectClosed;
-                    gui.Application.ProjectOpened += ApplicationProjectOpened;
+                    gui.Application.ProjectService.ProjectClosing += ApplicationProjectClosed;
+                    gui.Application.ProjectService.ProjectOpened += ApplicationProjectOpened;
+                    gui.Application.ProjectService.ProjectCreated += ApplicationProjectOpened;
                     gui.SelectionChanged += GuiSelectionChanged;
                 }
             }
@@ -559,7 +561,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (Gui.Application.Project != null)
             {
                 // if project already exist call registered handler
-                ApplicationProjectOpened(Gui.Application.Project);
+                ApplicationProjectOpened(this, new EventArgs<Project>(Gui.Application.Project));
             }
             
             ImportBranchesFromSelectionMapTool.BeforeExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = true;
@@ -721,8 +723,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             Gui.Selection = e.Item;
         }
 
-        void ApplicationProjectOpened(Project project)
+        void ApplicationProjectOpened(object sender, EventArgs<Project> e)
         {
+            Project project = e.Value;
             project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
             project.RootFolder.PropertyChanged += RootFolderPropertyChanged;
             ((INotifyPropertyChanged)Gui.Application.Project).PropertyChanged += ProjectPropertyChanged;
@@ -880,8 +883,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        private void ApplicationProjectClosed(Project project)
+        private void ApplicationProjectClosed(object sender, EventArgs<Project> e)
         {
+            Project project = e.Value;
             if (project != null)
             {
                 project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;

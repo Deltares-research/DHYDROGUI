@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.Dimr.Export;
@@ -65,10 +66,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 if (base.Application != null)
                 {
                     base.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerOnActivityStatusChanged;
-                    base.Application.ProjectSaving -= SynchronizeDataBeforeSaving;
-                    base.Application.ProjectSaved -= SaveToFile;
-                    base.Application.ProjectOpened -= Application_ProjectOpened;
-                    base.Application.ProjectClosing -= Application_ProjectClosing;
+                    base.Application.ProjectService.ProjectSaving -= SynchronizeDataBeforeSaving;
+                    base.Application.ProjectService.ProjectSaved -= SaveToFile;
+                    base.Application.ProjectService.ProjectOpened -= Application_ProjectOpened;
+                    base.Application.ProjectService.ProjectCreated -= Application_ProjectOpened;
+                    base.Application.ProjectService.ProjectClosing -= Application_ProjectClosing;
                 }
 
                 base.Application = value;
@@ -76,10 +78,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 if (base.Application != null)
                 {
                     base.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerOnActivityStatusChanged;
-                    base.Application.ProjectSaving += SynchronizeDataBeforeSaving;
-                    base.Application.ProjectSaved += SaveToFile;
-                    base.Application.ProjectOpened += Application_ProjectOpened;
-                    base.Application.ProjectClosing += Application_ProjectClosing;
+                    base.Application.ProjectService.ProjectSaving += SynchronizeDataBeforeSaving;
+                    base.Application.ProjectService.ProjectSaved += SaveToFile;
+                    base.Application.ProjectService.ProjectOpened += Application_ProjectOpened;
+                    base.Application.ProjectService.ProjectCreated += Application_ProjectOpened;
+                    base.Application.ProjectService.ProjectClosing += Application_ProjectClosing;
                 }
             }
         }
@@ -89,9 +92,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
         }
 
-        private void Application_ProjectOpened(Project project)
+        private void Application_ProjectOpened(object sender, EventArgs<Project> e)
         {
-            foreach (var rainfallRunoffModel in GetModels(project))
+            foreach (var rainfallRunoffModel in GetModels(e.Value))
             {
                 rainfallRunoffModel.WorkingDirectoryPathFunc = () => Application?.WorkDirectory;
                 rainfallRunoffModel.DimrRunner.FileExportService = Application.FileExportService;
@@ -102,9 +105,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             Application.Project.CollectionChanging += OnProjectCollectionChanging;
         }
         
-        private void Application_ProjectClosing(Project project)
+        private void Application_ProjectClosing(object sender, EventArgs<Project> e)
         {
-            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+            e.Value.CollectionChanging -= OnProjectCollectionChanging;
         }
         
         private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
@@ -115,9 +118,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
         
-        private void SynchronizeDataBeforeSaving(Project project)
+        private void SynchronizeDataBeforeSaving(object sender, EventArgs<Project> e)
         {
-            var rrModels = GetModels(project);
+            var rrModels = GetModels(e.Value);
             foreach (var rainfallRunoffModel in rrModels)
             {
                 rainfallRunoffModel.UpdateUnpavedDataExtended();
@@ -129,11 +132,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             rainfallRunoffModel.UpdateUnpavedDataWithExtendedData();
         }
 
-        private void SaveToFile(Project project)
+        private void SaveToFile(object sender, EventArgs<Project> e)
         {
+            Project project = e.Value;
             if (project == null || project.RootFolder == null) return;
 
-            var projectDataFolderDirectory = Application.ProjectDataDirectory;
+            var projectDataFolderDirectory = Application.ProjectFilePath + "_data";
             var rrModels = GetModels(project);
             var exporter = new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer(), evaporationExporter);
 
@@ -152,10 +156,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
                     MoveOutputFromWorkingDirectory(rainfallRunoffModel, savePath);
                 }
-                catch (IOException e)
+                catch (IOException exception)
                 {
                     Log.Error(string.Format(Properties.Resources.RainfallRunoffApplicationPluging_Could_not_save_RR_model,
-                                                rainfallRunoffModel.Name, e.Message));
+                                                rainfallRunoffModel.Name, exception.Message));
                     return;
                 }
             }

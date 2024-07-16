@@ -858,10 +858,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private void SubscribeToProjectEvents()
         {
             if (base.Gui == null || base.Gui.Application == null) return;
-            base.Gui.Application.ProjectOpened += SubscribeToProjectPropertyChanged;
-            base.Gui.Application.ProjectClosing += UnsubscribeToProjectPropertyChanged;
-            base.Gui.Application.ProjectSaving += ApplicationOnProjectSaving;
-            base.Gui.Application.ProjectSaved += ApplicationOnProjectSaved;
+            base.Gui.Application.ProjectService.ProjectOpened += SubscribeToProjectPropertyChanged;
+            base.Gui.Application.ProjectService.ProjectCreated += SubscribeToProjectPropertyChanged;
+            base.Gui.Application.ProjectService.ProjectClosing += UnsubscribeToProjectPropertyChanged;
+            base.Gui.Application.ProjectService.ProjectSaving += ApplicationOnProjectSaving;
+            base.Gui.Application.ProjectService.ProjectSaved += ApplicationOnProjectSaved;
             base.Gui.Application.FileImporters.OfType<RasterFileImporter>().ForEach(rfi => rfi.MakeLayerVisibleAfterImport = MakeLayerVisibleAfterImport);
 
             var project = base.Gui.Application.Project;
@@ -879,10 +880,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private void UnsubscribeToProjectEvents()
         {
             if (base.Gui == null || base.Gui.Application == null) return;
-            base.Gui.Application.ProjectOpened -= SubscribeToProjectPropertyChanged;
-            base.Gui.Application.ProjectClosing -= UnsubscribeToProjectPropertyChanged;
-            base.Gui.Application.ProjectSaving -= ApplicationOnProjectSaving;
-            base.Gui.Application.ProjectSaved -= ApplicationOnProjectSaved;
+            base.Gui.Application.ProjectService.ProjectOpened -= SubscribeToProjectPropertyChanged;
+            base.Gui.Application.ProjectService.ProjectCreated -= SubscribeToProjectPropertyChanged;
+            base.Gui.Application.ProjectService.ProjectClosing -= UnsubscribeToProjectPropertyChanged;
+            base.Gui.Application.ProjectService.ProjectSaving -= ApplicationOnProjectSaving;
+            base.Gui.Application.ProjectService.ProjectSaved -= ApplicationOnProjectSaved;
             var project = base.Gui.Application.Project;
             if (project != null)
             {
@@ -894,12 +896,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             Gui.Application.ActivityRunner.ActivityStatusChanged -= OnActivityRunnerStatusChanged;
         }
+        
+        private void SubscribeToProjectPropertyChanged(object sender, EventArgs<Project> e)
+        {
+            SubscribeToProjectPropertyChanged(e.Value);
+        }
 
         private void SubscribeToProjectPropertyChanged(Project project)
         {
             if (project == null) return;
             ((INotifyPropertyChange)project).PropertyChanging += ProjectPropertyChanging;
             ((INotifyPropertyChanged)project).PropertyChanged += ProjectPropertyChanged;
+        }
+
+        private void UnsubscribeToProjectPropertyChanged(object sender, EventArgs<Project> e)
+        {
+            UnsubscribeToProjectPropertyChanged(e.Value);
         }
 
         private void UnsubscribeToProjectPropertyChanged(Project project)
@@ -962,7 +974,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
         }
-        private void ApplicationOnProjectSaving(Project project)
+        private void ApplicationOnProjectSaving(object sender, EventArgs<Project> e)
         {
             foreach (WaterFlowFMModel model in FlowModels)
             {
@@ -971,7 +983,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
         }
 
-        private void ApplicationOnProjectSaved(Project obj)
+        private void ApplicationOnProjectSaved(object sender, EventArgs<Project> e)
         {
             foreach (WaterFlowFMModel model in FlowModels)
             {

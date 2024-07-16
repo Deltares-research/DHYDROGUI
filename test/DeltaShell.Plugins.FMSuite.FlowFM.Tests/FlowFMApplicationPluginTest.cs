@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
+using DelftTools.Utils;
 using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -220,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             applicationPlugin.Application = application;
 
             application.FileExportService.FileExporters.Returns(applicationPlugin.GetFileExporters());
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Call
             project.RootFolder.Add(model);
@@ -240,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             applicationPlugin.Application = application;
 
             // Call
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Assert
             IFileExportService fileExportService = model.DimrRunner.FileExportService;
