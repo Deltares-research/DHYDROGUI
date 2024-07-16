@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
@@ -93,8 +94,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             plugin.Application = application;
 
             // Assert
-            application.Received(1).ProjectOpened += Arg.Any<Action<Project>>();
-            application.DidNotReceiveWithAnyArgs().ProjectOpened -= Arg.Any<Action<Project>>();
+            application.ProjectService.Received(1).ProjectOpened += Arg.Any<EventHandler<EventArgs<Project>>>();
+            application.ProjectService.DidNotReceiveWithAnyArgs().ProjectOpened -= Arg.Any<EventHandler<EventArgs<Project>>>();
 
             Assert.That(plugin.Application, Is.SameAs(application));
         }
@@ -114,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             plugin.Application = application;
 
             // Call
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Assert
             string appWorkingDir = model.WorkingDirectoryPathFunc();
@@ -134,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             plugin.Application = application;
 
             application.FileExportService.FileExporters.Returns(plugin.GetFileExporters());
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Call
             project.RootFolder.Add(model);
@@ -160,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             plugin.Application = application;
 
             // Call
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Assert
             IFileExportService fileExportService = model.DimrRunner.FileExportService;
@@ -180,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             IApplication application2 = GetApplication(GetProject(new WaveModel()), "application2_working_directory");
 
             plugin.Application = application1;
-            application1.ClearReceivedCalls();
+            application1.ProjectService.ClearReceivedCalls();
 
             // Calls
             plugin.Application = application2;
@@ -188,8 +189,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             // Assert
             Assert.That(plugin.Application, Is.SameAs(application2));
 
-            application1.DidNotReceiveWithAnyArgs().ProjectOpened += Arg.Any<Action<Project>>();
-            application1.Received(1).ProjectOpened -= Arg.Any<Action<Project>>();
+            application1.ProjectService.DidNotReceiveWithAnyArgs().ProjectOpened += Arg.Any<EventHandler<EventArgs<Project>>>();
+            application1.ProjectService.Received(1).ProjectOpened -= Arg.Any<EventHandler<EventArgs<Project>>>();
         }
 
         [Test]
@@ -208,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             plugin.Application = application2;
 
             // Call
-            application1.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application1.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Assert
             Assert.That(model.WorkingDirectoryPathFunc(), Is.EqualTo(defaultWorkingDir));

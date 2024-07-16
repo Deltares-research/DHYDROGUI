@@ -12,6 +12,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using Deltares.Infrastructure.API.DependencyInjection;
@@ -64,16 +65,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (application != null)
                 {
-                    application.ProjectOpened -= Application_ProjectOpened;
-                    Application.ProjectClosing -= Application_ProjectClosing;
+                    application.ProjectService.ProjectOpened -= Application_ProjectOpened;
+                    application.ProjectService.ProjectCreated -= Application_ProjectOpened;
+                    Application.ProjectService.ProjectClosing -= Application_ProjectClosing;
                 }
 
                 application = value;
 
                 if (application != null)
                 {
-                    application.ProjectOpened += Application_ProjectOpened;
-                    Application.ProjectClosing += Application_ProjectClosing;
+                    application.ProjectService.ProjectOpened += Application_ProjectOpened;
+                    application.ProjectService.ProjectCreated += Application_ProjectOpened;
+                    Application.ProjectService.ProjectClosing += Application_ProjectClosing;
                 }
             }
         }
@@ -552,20 +555,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ? GetWaterFlowFMModels()
                 : Enumerable.Empty<WaterFlowFMModel>();
 
-        private void Application_ProjectOpened(Project project)
+        private void Application_ProjectOpened(object sender, EventArgs<Project> e)
         {
+            Project project = e.Value;
             Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().ForEach(m =>
             {
                 m.WorkingDirectoryPathFunc = () => application.WorkDirectory;
                 m.DimrRunner.FileExportService = Application.FileExportService;
             });
             
-            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+            project.CollectionChanging += OnProjectCollectionChanging;
         }
 
-        private void Application_ProjectClosing(Project project)
+        private void Application_ProjectClosing(object sender, EventArgs<Project> e)
         {
-            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+            Project project = e.Value;
+            project.CollectionChanging -= OnProjectCollectionChanging;
         }
 
         private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors)

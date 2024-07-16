@@ -97,8 +97,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             {
                 if (gui != null)
                 {
-                    gui.Application.ProjectOpened -= ApplicationProjectOpened;
-                    gui.Application.ProjectClosing -= ApplicationProjectClosing;
+                    gui.Application.ProjectService.ProjectOpened -= ApplicationProjectOpened;
+                    gui.Application.ProjectService.ProjectCreated -= ApplicationProjectOpened;
+                    gui.Application.ProjectService.ProjectClosing -= ApplicationProjectClosing;
 
                     if (gui.Application.Project != null)
                     {
@@ -120,8 +121,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
                 if (gui != null)
                 {
-                    gui.Application.ProjectOpened += ApplicationProjectOpened;
-                    gui.Application.ProjectClosing += ApplicationProjectClosing;
+                    gui.Application.ProjectService.ProjectOpened += ApplicationProjectOpened;
+                    gui.Application.ProjectService.ProjectCreated += ApplicationProjectOpened;
+                    gui.Application.ProjectService.ProjectClosing += ApplicationProjectClosing;
 
                     if (gui.Application.Project != null)
                     {
@@ -586,13 +588,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                       .FirstOrDefault(m => Equals(grid, m.Grid));
         }
 
-        private void ApplicationProjectOpened(Project project)
+        private void ApplicationProjectOpened(object sender, EventArgs<Project> e)
         {
+            Project project = e.Value;
             project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
         }
 
-        private void ApplicationProjectClosing(Project project)
+        private void ApplicationProjectClosing(object sender, EventArgs<Project> e)
         {
+            Project project = e.Value;
             project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
         }
 

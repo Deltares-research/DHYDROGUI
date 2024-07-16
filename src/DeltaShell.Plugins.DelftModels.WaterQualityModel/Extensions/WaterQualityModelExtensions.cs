@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
@@ -60,6 +61,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
             return model.AllDataItems
                         .Where(di => di.Role.HasFlag(DataItemRole.Output) && di.Value is UnstructuredGridCellCoverage)
                         .Select(di => (UnstructuredGridCellCoverage) di.Value);
+        }
+        
+        /// <summary>
+        /// Setups the model data folder structure.
+        /// </summary>
+        /// <param name="model"> The model to be configured. </param>
+        /// <param name="projectService"> The project service. </param>
+        public static void SetupModelDataFolderStructure(this WaterQualityModel model, IProjectService projectService)
+        {
+            model.SetupModelDataFolderStructure(projectService.ProjectFilePath + "_data");
         }
 
         /// <summary>

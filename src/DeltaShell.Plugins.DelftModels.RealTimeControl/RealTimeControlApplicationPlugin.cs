@@ -7,6 +7,7 @@ using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using Deltares.Infrastructure.API.DependencyInjection;
@@ -44,18 +45,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 if (Application != null)
                 {
-                    Application.ProjectOpened -= ApplicationProjectOpened;
-                    Application.ProjectOpening -= ApplicationProjectOpening;
-                    Application.ProjectClosing -= ApplicationProjectClosing;
+                    Application.ProjectService.ProjectOpened -= ApplicationProjectOpened;
+                    Application.ProjectService.ProjectCreated -= ApplicationProjectOpened;
+                    Application.ProjectService.ProjectOpening -= ApplicationProjectOpening;
+                    Application.ProjectService.ProjectClosing -= ApplicationProjectClosing;
                 }
 
                 base.Application = value;
 
                 if (Application != null)
                 {
-                    Application.ProjectOpened += ApplicationProjectOpened;
-                    Application.ProjectOpening += ApplicationProjectOpening;
-                    Application.ProjectClosing += ApplicationProjectClosing;
+                    Application.ProjectService.ProjectOpened += ApplicationProjectOpened;
+                    Application.ProjectService.ProjectCreated += ApplicationProjectOpened;
+                    Application.ProjectService.ProjectOpening += ApplicationProjectOpening;
+                    Application.ProjectService.ProjectClosing += ApplicationProjectClosing;
                 }
             }
         }
@@ -113,8 +116,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => 
             Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
 
-        private void ApplicationProjectOpening(string projectFilePath)
+        private void ApplicationProjectOpening(object sender, EventArgs<string> e)
         {
+            string projectFilePath = e.Value;
             if (string.IsNullOrEmpty(projectFilePath) || !File.Exists(projectFilePath))
             {
                 throw new FileNotFoundException($"File not found {projectFilePath}");
@@ -133,7 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <returns><c>true</c> when the version of the database provided by <paramref name="path"/> is 3.5.0.0 or lower</returns>
         private bool ShouldUpgradeDataBaseUsingSqlQueries(string path)
         {
-            IDictionary<string, Version> pluginVersions = Application.GetPluginFileFormatVersions(path);
+            IDictionary<string, Version> pluginVersions = Application.ProjectService.GetProjectFileInfo(path).PluginFileFormatVersions;
 
             if (pluginVersions.TryGetValue(Name, out Version currentVersion))
             {
@@ -196,9 +200,10 @@ PRAGMA foreign_keys = on;
             log.Info("RTC database schema updated to support mathematical expressions.");
         }
 
-        private void ApplicationProjectOpened(Project project)
+        private void ApplicationProjectOpened(object sender, EventArgs<Project> e)
         {
-            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+            Project project = e.Value;
+            project.CollectionChanging += OnProjectCollectionChanging;
 
             /*
                 Note: it was not possible to do this in RtcDataAccessListener.OnPostLoad() 
@@ -221,9 +226,10 @@ PRAGMA foreign_keys = on;
             rtcModelsWithControlGroups.ForEach(m => m.SyncControlGroupDataItemNames());
         }
         
-        private void ApplicationProjectClosing(Project project)
+        private void ApplicationProjectClosing(object sender, EventArgs<Project> e)
         {
-            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+            Project project = e.Value;
+            project.CollectionChanging -= OnProjectCollectionChanging;
         }
         
         private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)

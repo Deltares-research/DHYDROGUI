@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
+using DelftTools.Utils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
@@ -366,7 +364,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             application.GetAllModelsInProject().Returns(new List<IModel> {hydroModel});
 
             // Act
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
 
             // Assert
             Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());

@@ -50,11 +50,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 if (Application != null)
                 {
                     Application.ActivityRunner.ActivityStatusChanged -= ActivityRunner_OnActivityStatusChanged;
-                    Application.ProjectOpened -= Application_OnProjectOpened;
-                    Application.ProjectClosing -= Application_OnProjectClosing;
-                    Application.ProjectSaving -= Application_ProjectSaving;
-                    Application.ProjectSaveFailed -= Application_ProjectSaveFinished;
-                    Application.ProjectSaved -= Application_ProjectSaveFinished;
+                    Application.ProjectService.ProjectOpened -= Application_OnProjectOpened;
+                    Application.ProjectService.ProjectCreated -= Application_OnProjectOpened;
+                    Application.ProjectService.ProjectClosing -= Application_OnProjectClosing;
+                    Application.ProjectService.ProjectSaving -= Application_ProjectSaving;
+                    Application.ProjectService.ProjectSaved -= Application_ProjectSaveFinished;
                 }
 
                 base.Application = value;
@@ -63,11 +63,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 {
                     // list to activities. Especially the importers, so you can set extra information on them
                     Application.ActivityRunner.ActivityStatusChanged += ActivityRunner_OnActivityStatusChanged;
-                    Application.ProjectOpened += Application_OnProjectOpened;
-                    Application.ProjectClosing += Application_OnProjectClosing;
-                    Application.ProjectSaving += Application_ProjectSaving;
-                    Application.ProjectSaveFailed += Application_ProjectSaveFinished;
-                    Application.ProjectSaved += Application_ProjectSaveFinished;
+                    Application.ProjectService.ProjectOpened += Application_OnProjectOpened;
+                    Application.ProjectService.ProjectCreated += Application_OnProjectOpened;
+                    Application.ProjectService.ProjectClosing += Application_OnProjectClosing;
+                    Application.ProjectService.ProjectSaving += Application_ProjectSaving;
+                    Application.ProjectService.ProjectSaved += Application_ProjectSaveFinished;
                 }
             }
         }
@@ -152,9 +152,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             yield return typeof(FileBasedFolder).Assembly;
         }
 
-        private void Application_ProjectSaveFinished(Project obj)
+        private void Application_ProjectSaveFinished(object sender, EventArgs<Project> e)
         {
-            if (Application.Project == null)
+            Project project = e.Value;
+            if (project == null)
             {
                 return;
             }
@@ -164,7 +165,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                           .OfType<WaterQualityModel>();
             allWaqModels.ForEach(m =>
             {
-                m.SetupModelDataFolderStructure(Application.ProjectDataDirectory);
+                m.SetupModelDataFolderStructure(Application.ProjectService);
                 m.SetEnableMarkOutputOutOfSync(true);
                 RemoveDisconnectedOutputFiles(m);
             });
@@ -178,9 +179,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        private void Application_ProjectSaving(Project obj)
+        private void Application_ProjectSaving(object sender, EventArgs<Project> e)
         {
-            if (Application.Project == null)
+            Project project = e.Value;
+            if (project == null)
             {
                 return;
             }
@@ -190,10 +192,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             allWaqModels.ForEach(m => m.SetEnableMarkOutputOutOfSync(false));
         }
 
-        private void Application_OnProjectClosing(Project obj)
+        private void Application_OnProjectClosing(object sender, EventArgs<Project> e)
         {
-            ((INotifyCollectionChange) obj).CollectionChanged -= Project_OnCollectionChanged;
-            ((INotifyPropertyChanged) obj).PropertyChanged -= Project_OnPropertyChanged;
+            Project project = e.Value;
+            ((INotifyCollectionChange) project).CollectionChanged -= Project_OnCollectionChanged;
+            ((INotifyPropertyChanged) project).PropertyChanged -= Project_OnPropertyChanged;
         }
 
         private void OnHydroDataNotFound(WaterQualityModel model, string filePath)
@@ -284,8 +287,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// Subscribe to the event so we can check for new waq models.
         /// </summary>
         /// <param name="project"> </param>
-        private void Application_OnProjectOpened(Project project)
+        private void Application_OnProjectOpened(object sender, EventArgs<Project> e)
         {
+            Project project = e.Value;
             IEnumerable<WaterQualityModel> allWaqModels =
                 Application.GetAllModelsInProject().OfType<WaterQualityModel>().ToList();
 
@@ -346,7 +350,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 var model = e.GetRemovedOrAddedItem() as WaterQualityModel;
                 if (model != null)
                 {
-                    model.SetupModelDataFolderStructure(Application.ProjectDataDirectory);
+                    model.SetupModelDataFolderStructure(Application.ProjectService);
                 }
             }
         }
@@ -360,7 +364,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             if (e.PropertyName == "Name" && sender is WaterQualityModel model)
             {
-                model.SetupModelDataFolderStructure(Application.ProjectDataDirectory);
+                model.SetupModelDataFolderStructure(Application.ProjectService);
             }
         }
 

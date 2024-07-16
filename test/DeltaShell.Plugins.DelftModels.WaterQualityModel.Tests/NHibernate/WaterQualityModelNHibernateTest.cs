@@ -550,6 +550,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             app.Expect(a => a.ActivityRunner).Return(activityRunner);
             app.Expect(a => a.GetAllModelsInProject()).Return(waqModels);
+            
+            var projectService = mocks.Stub<IProjectService>();
+            app.Expect(a => a.ProjectService).Return(projectService);
+            
             mocks.ReplayAll();
 
             var _ = new WaterQualityModelApplicationPlugin {Application = app};
@@ -582,7 +586,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 using (var retrievedEntity = RetrievePersistedObjectFromProject<WaterQualityModel>(project))
                 {
                     waqModels.Add(retrievedEntity);
-                    app.Raise(a => a.ProjectOpened += null, project);
+                    projectService.Raise(a => a.ProjectOpened += null, this, new EventArgs<Project>(project));
 
                     // perform spatial operations just like WaterQualityModelApplicationPlugin
                     foreach (CoverageSpatialOperationValueConverter spatialOperationValueConverter in retrievedEntity.AllDataItems.Select(di => di.ValueConverter).OfType<CoverageSpatialOperationValueConverter>())

@@ -40,18 +40,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 if (Application != null)
                 {
-                    Application.ProjectOpened -= Application_ProjectOpened;
-                    Application.ProjectOpening -= Application_ProjectOpening;
-                    Application.ProjectClosing -= Application_ProjectClosing;
+                    Application.ProjectService.ProjectOpened -= Application_ProjectOpened;
+                    Application.ProjectService.ProjectCreated -= Application_ProjectOpened;
+                    Application.ProjectService.ProjectOpening -= Application_ProjectOpening;
+                    Application.ProjectService.ProjectClosing -= Application_ProjectClosing;
                 }
 
                 base.Application = value;
 
                 if (Application != null)
                 {
-                    Application.ProjectOpened += Application_ProjectOpened;
-                    Application.ProjectOpening += Application_ProjectOpening;
-                    Application.ProjectClosing += Application_ProjectClosing;
+                    Application.ProjectService.ProjectOpened += Application_ProjectOpened;
+                    Application.ProjectService.ProjectCreated += Application_ProjectOpened;
+                    Application.ProjectService.ProjectOpening += Application_ProjectOpening;
+                    Application.ProjectService.ProjectClosing += Application_ProjectClosing;
                 }
             }
         }
@@ -102,26 +104,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             yield return typeof(WaveModel).Assembly;
         }
 
-        private void Application_ProjectOpening(string projectFilePath)
+        private void Application_ProjectOpening(object sender, EventArgs<string> e)
         {
-            Version projectVersion = Application.GetPluginFileFormatVersions(projectFilePath)[Name];
+            string projectFilePath = e.Value;
+            Version projectVersion = Application.ProjectService.GetProjectFileInfo(projectFilePath).PluginFileFormatVersions[Name];
             WavesMigrator.Migrate(projectFilePath, projectVersion, System.Version.Parse(FileFormatVersion));
         }
 
-        private void Application_ProjectOpened(Project project)
+        private void Application_ProjectOpened(object sender, EventArgs<Project> e)
         {
+            Project project = e.Value;
             Application.GetAllModelsInProject().OfType<WaveModel>().ForEach(m =>
             {
                 m.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
                 m.DimrRunner.FileExportService = Application.FileExportService;
             });
             
-            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+            project.CollectionChanging += OnProjectCollectionChanging;
         }
         
-        private void Application_ProjectClosing(Project project)
+        private void Application_ProjectClosing(object sender, EventArgs<Project> e)
         {
-            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+            Project project = e.Value;
+            project.CollectionChanging -= OnProjectCollectionChanging;
         }
         
         private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)

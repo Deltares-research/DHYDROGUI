@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     WaterQualityModel retrievedModel = models[0];
 
-                    string projectDataDir = app.ProjectDataDirectory;
+                    string projectDataDir = app.ProjectService.ProjectFilePath + "_data";
 
                     StringAssert.StartsWith(saveLocation, projectDataDir);
                     StringAssert.StartsWith(projectDataDir, retrievedModel.ModelSettings.OutputDirectory);
@@ -390,7 +390,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     WaterQualityModel retrievedModel = models[0];
 
-                    string projectDataDir = app.ProjectDataDirectory;
+                    string projectDataDir = app.ProjectService.ProjectFilePath + "_data";
 
                     StringAssert.StartsWith(moveLocation, projectDataDir);
                     StringAssert.StartsWith(projectDataDir, retrievedModel.ModelSettings.OutputDirectory);

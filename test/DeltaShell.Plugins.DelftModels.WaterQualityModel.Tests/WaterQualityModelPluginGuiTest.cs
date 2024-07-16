@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui.Forms.ViewManager;
 using DeltaShell.IntegrationTestUtils.Builders;
@@ -104,17 +105,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             application.Stub(a => a.ActivityRunner).Return(activityRunner);
             application.Stub(a => a.Plugins).Return(new List<ApplicationPlugin>());
 
-            application.ProjectOpened += null;
+            var projectService = mocks.Stub<IProjectService>();
+            application.Stub(a => a.ProjectService).Return(projectService);
+            
+            projectService.ProjectOpened += null;
             LastCall.Constraints(Is.NotNull()).Repeat.Any();
 
-            application.ProjectClosing += null;
+            projectService.ProjectCreated += null;
+            LastCall.Constraints(Is.NotNull()).Repeat.Any();
+
+            projectService.ProjectClosing += null;
             LastCall.Constraints(Is.NotNull()).Repeat.Any();
             
             Expect.Call(gui.Plugins).Return(new List<GuiPlugin>()).Repeat.Any();
             Expect.Call(gui.DocumentViews).Return(documentViews);
 
-            application.Expect(a => a.ProjectClosing -= Arg<Action<Project>>.Is.Anything);
-            application.Expect(a => a.ProjectOpened -= Arg<Action<Project>>.Is.Anything);
+           projectService.Expect(a => a.ProjectClosing -= Arg<EventHandler<EventArgs<Project>>>.Is.Anything);
+           projectService.Expect(a => a.ProjectOpened -= Arg<EventHandler<EventArgs<Project>>>.Is.Anything);
+           projectService.Expect(a => a.ProjectCreated -= Arg<EventHandler<EventArgs<Project>>>.Is.Anything);
 
             // Create some other stubs
             var waterQualityModel1D = mocks.Stub<WaterQualityModel>();

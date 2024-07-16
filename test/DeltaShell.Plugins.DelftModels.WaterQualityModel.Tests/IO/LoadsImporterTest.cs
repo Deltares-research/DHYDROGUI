@@ -114,6 +114,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var runner = mocks.Stub<IActivityRunner>();
             var modelService = mocks.Stub<IModelService>();
 
+            var projectService = mocks.Stub<IProjectService>();
+            app.Stub(a => a.ProjectService).Return(projectService);
+
             var loadsImporter = new LoadsImporter();
             var waqModel = new WaterQualityModel();
             var applicationPlugin = new WaterQualityModelApplicationPlugin();
@@ -128,11 +131,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             app.ModelService = modelService;
             app.Expect(a => a.Project).Return(project).Repeat.Any();
             app.Expect(a => a.ActivityRunner).Return(runner).Repeat.Any();
-            app.Expect(a => a.ProjectOpened += null).IgnoreArguments();
-            app.Expect(a => a.ProjectClosing += null).IgnoreArguments();
-            app.Expect(a => a.ProjectSaving += null).IgnoreArguments();
-            app.Expect(a => a.ProjectSaved += null).IgnoreArguments();
-            app.Expect(a => a.ProjectSaveFailed += null).IgnoreArguments();
+            projectService.Expect(a => a.ProjectOpened += null).IgnoreArguments();
+            projectService.Expect(a => a.ProjectCreated += null).IgnoreArguments();
+            projectService.Expect(a => a.ProjectClosing += null).IgnoreArguments();
+            projectService.Expect(a => a.ProjectSaving += null).IgnoreArguments();
+            projectService.Expect(a => a.ProjectSaved += null).IgnoreArguments();
             app.Expect(a => a.GetAllModelsInProject()).Return(new[]
             {
                 waqModel

@@ -7,6 +7,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
@@ -40,18 +41,21 @@ namespace DeltaShell.Plugins.NetworkEditor
         {
             base.Activate();
 
-            Application.ProjectClosing += ApplicationOnProjectClosing;
-            Application.ProjectOpened += ApplicationOnProjectOpened;
+            Application.ProjectService.ProjectClosing += ApplicationOnProjectClosing;
+            Application.ProjectService.ProjectOpened += ApplicationOnProjectOpened;
+            Application.ProjectService.ProjectCreated += ApplicationOnProjectOpened;
         }
 
-        private void ApplicationOnProjectClosing(Project project)
+        private void ApplicationOnProjectClosing(object sender, EventArgs<Project> e)
         {
-            ((INotifyCollectionChanged)Application.Project).CollectionChanged -= OnProjectCollectionChanged;
+            Project project = e.Value;
+            ((INotifyCollectionChanged)project).CollectionChanged -= OnProjectCollectionChanged;
         }
 
-        private void ApplicationOnProjectOpened(Project project)
+        private void ApplicationOnProjectOpened(object sender, EventArgs<Project> e)
         {
-            ((INotifyCollectionChanged)Application.Project).CollectionChanged += OnProjectCollectionChanged;
+            Project project = e.Value;
+            ((INotifyCollectionChanged)project).CollectionChanged += OnProjectCollectionChanged;
             FixOwnersOnChildDataItems(project.RootFolder);
         }
 

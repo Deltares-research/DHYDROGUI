@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 deltaShell.Project.RootFolder.Add(model);
 
                 // assert
-                StringAssert.StartsWith(deltaShell.ProjectDataDirectory, model.ModelDataDirectory);
+                StringAssert.StartsWith(deltaShell.ProjectService.ProjectFilePath + "_data", model.ModelDataDirectory);
             }
         }
 
@@ -84,8 +84,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     ActivityRunner.RunActivity(model);
                     Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
 
-                    Assert.IsTrue(Directory.Exists(deltaShell.ProjectDataDirectory),
-                                  "Couldn't find " + deltaShell.ProjectDataDirectory);
+                    string projectDataDir = deltaShell.ProjectService.ProjectFilePath + "_data";
+                    Assert.IsTrue(Directory.Exists(projectDataDir),
+                                  "Couldn't find " + projectDataDir);
 
                     // delete the mon file, so it's incomplete
                     string monFilePath = Path.Combine(model.ModelSettings.WorkingOutputDirectory, "deltashell.mon");
@@ -240,13 +241,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     string deltaShellWorkingDirectory = deltaShell.WorkDirectory;
                     WaterQualityModel model = CreateWaqModelWithData(createFalseBoundaryData: false);
                     model.SetWorkingDirectoryInModelSettings(() => deltaShellWorkingDirectory);
-                    deltaShell.CreateNewProject();
-                    deltaShell.Project.RootFolder.Add(model);
+                    deltaShell.ProjectService.CreateProject();
+                    deltaShell.ProjectService.Project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
                     Assert.IsTrue(model.Status == ActivityStatus.Cleaned);
 
-                    deltaShell.SaveProjectAs(savePath);
+                    deltaShell.ProjectService.SaveProjectAs(savePath);
 
                     StringAssert.StartsWith(deltaShellWorkingDirectory, model.ModelSettings.WorkDirectory);
                     StringAssert.StartsWith(projectDataDir, model.ModelSettings.OutputDirectory);

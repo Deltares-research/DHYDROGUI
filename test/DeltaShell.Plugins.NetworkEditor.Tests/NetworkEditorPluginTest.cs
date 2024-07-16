@@ -3,6 +3,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpTestsEx;
@@ -28,9 +29,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var app = mocks.Stub<IApplication>();
             app.DataItemService = dataItemService;
             app.Expect(a => a.Project).Repeat.Any().Return(project);
-            app.ProjectClosing += null;
+
+            var projectService = mocks.Stub<IProjectService>();
+            app.Stub(a => a.ProjectService).Return(projectService);
+
+            projectService.ProjectClosing += null;
             LastCall.IgnoreArguments().Repeat.Any();
-            app.ProjectOpened += null;
+            projectService.ProjectOpened += null;
             LastCall.IgnoreArguments().Repeat.Any();
 
             mocks.ReplayAll();
@@ -38,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             // create plugin
             var plugin = new NetworkEditorApplicationPlugin {Application = app};
             plugin.Activate();
-            app.Raise(x => x.ProjectOpened += null, project); // makes sure plugin subscribes to project events
+            projectService.Raise(x => x.ProjectOpened += null, project, new EventArgs<Project>(project)); // makes sure plugin subscribes to project events
 
             // add sub region
             var subRegion = new HydroRegion();
@@ -69,9 +74,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var app = mocks.Stub<IApplication>();
             app.DataItemService = dataItemService;
             app.Expect(a => a.Project).Repeat.Any().Return(project);
-            app.ProjectClosing += null;
+
+            var projectService = mocks.Stub<IProjectService>();
+            app.Stub(a => a.ProjectService).Return(projectService);
+
+            projectService.ProjectClosing += null;
             LastCall.IgnoreArguments().Repeat.Any();
-            app.ProjectOpened += null;
+            projectService.ProjectOpened += null;
             LastCall.IgnoreArguments().Repeat.Any();
 
             mocks.ReplayAll();
@@ -79,7 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             // create plugin
             var plugin = new NetworkEditorApplicationPlugin {Application = app};
             plugin.Activate();
-            app.Raise(x => x.ProjectOpened += null, project); // makes sure plugin subscribes to project events
+            projectService.Raise(x => x.ProjectOpened += null, this, new EventArgs<Project>(project)); // makes sure plugin subscribes to project events
 
             // remove sub-region
             parentRegion.SubRegions.Remove(subRegion);
@@ -100,9 +109,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             // setup mock app
             var app = mocks.Stub<IApplication>();
             app.Expect(a => a.Project).Repeat.Any().Return(project);
-            app.ProjectClosing += null;
+
+            var projectService = mocks.DynamicMock<IProjectService>();
+            app.Stub(a => a.ProjectService).Return(projectService);
+
+            projectService.ProjectClosing += null;
             LastCall.IgnoreArguments().Repeat.Any();
-            app.ProjectOpened += null;
+            projectService.ProjectOpened += null;
             LastCall.IgnoreArguments().Repeat.Any();
 
             mocks.ReplayAll();
@@ -110,7 +123,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             // create plugin
             var plugin = new NetworkEditorApplicationPlugin {Application = app};
             plugin.Activate();
-            app.Raise(x => x.ProjectOpened += null, project); // makes sure plugin subscribes to project events
+            projectService.Raise(x => x.ProjectOpened += null, this, new EventArgs<Project>(project)); // makes sure plugin subscribes to project events
 
             // add region to project
             project.RootFolder.Add(parentRegion);
@@ -137,9 +150,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             // setup mock app
             var app = mocks.Stub<IApplication>();
             app.Expect(a => a.Project).Repeat.Any().Return(project);
-            app.ProjectClosing += null;
+
+            var projectService = mocks.Stub<IProjectService>();
+            app.Stub(a => a.ProjectService).Return(projectService);
+
+            projectService.ProjectClosing += null;
             LastCall.IgnoreArguments().Repeat.Any();
-            app.ProjectOpened += null;
+            projectService.ProjectOpened += null;
             LastCall.IgnoreArguments().Repeat.Any();
 
             mocks.ReplayAll();
@@ -147,7 +164,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             // create plugin
             var plugin = new NetworkEditorApplicationPlugin {Application = app};
             plugin.Activate();
-            app.Raise(x => x.ProjectOpened += null, project); // makes sure plugin subscribes to project events
+            projectService.Raise(x => x.ProjectOpened += null, this, new EventArgs<Project>(project)); // makes sure plugin subscribes to project events
 
             // add region to project
             project.RootFolder.Items.Add(parentRegionDataItem);
