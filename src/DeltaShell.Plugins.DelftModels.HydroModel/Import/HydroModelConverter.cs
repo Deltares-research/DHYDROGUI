@@ -55,13 +55,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
             string rootFolder = Path.GetDirectoryName(path);
             var hydroModel = new HydroModel();
+            hydroModel.FileContext.DimrFilePath = path;
 
             using (hydroModel.InEditMode("Importing full Dimr model"))
             {
                 reportProgress?.Invoke(Resources.HydroModelConverter_Convert_importing_on_hydromodel);
                 hydroModel.DoWithPropertySet(nameof(hydroModel.SuspendClearOutputOnInputChange), true, () =>
                 {
-                    AddModels(hydroModel, dimrObject, rootFolder, reportProgress);
+                    AddModels(hydroModel, dimrObject, rootFolder, hydroModel.FileContext, reportProgress);
 
                     if (dimrObject.coupler == null)
                     {
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return hydroModel;
         }
 
-        private void AddModels(HydroModel hydroModel, dimrXML dimrObject, string rootFolder, Action<string> progressChanged = null)
+        private void AddModels(HydroModel hydroModel, dimrXML dimrObject, string rootFolder, HydroModelFileContext fileContext, Action<string> progressChanged = null)
         {
             foreach (dimrComponentXML component in dimrObject.component)
             {
@@ -111,6 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     }
 
                     RenameSubModelWhenNeeded(subModel, component.name);
+                    fileContext.AddRelativeModelDirectory(subModel as IDimrModel, workDir);
                     SetHydroModelProperties(hydroModel, subModel);
                 }
             }

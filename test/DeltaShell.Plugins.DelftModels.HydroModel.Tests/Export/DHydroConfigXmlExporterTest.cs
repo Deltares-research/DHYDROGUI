@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
         [Test]
         public void FileExportService_SetToNull_ThrowsArgumentNullException()
         {
-            DHydroConfigXmlExporter exporter = CreateExporter(string.Empty);
+            DHydroConfigXmlExporter exporter = CreateExporter();
 
             Assert.That(() => exporter.FileExportService = null, Throws.ArgumentNullException);
         }
@@ -51,13 +51,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             }
 
             DirectoryInfo dirInfo = Directory.CreateDirectory("fmdimr");
-            DHydroConfigXmlExporter exporter = CreateExporter(Path.Combine(dirInfo.FullName, "dimr.xml"));
+            DHydroConfigXmlExporter exporter = CreateExporter();
             exporter.FileExportService = new FileExportService();
 
             WaterFlowFMModel waterFlowFmModel = SetupWaterFlowFmModel();
 
             var expectedMessage = $"Export failed: No file exporter found for model '{waterFlowFmModel.Name}'.";
-            TestHelper.AssertLogMessageIsGenerated(() => exporter.Export(waterFlowFmModel, null), expectedMessage, Level.Error);
+            TestHelper.AssertLogMessageIsGenerated(() => exporter.Export(waterFlowFmModel, Path.Combine(dirInfo.FullName, "dimr.xml")), expectedMessage, Level.Error);
         }
 
         [Test]
@@ -155,8 +155,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             }
 
             DirectoryInfo dirInfo = Directory.CreateDirectory("fmrtc");
-            DHydroConfigXmlExporter exporter = CreateExporter(Path.Combine(dirInfo.FullName, "dimr.xml"));
-            exporter.Export(hydroModel, null);
+            DHydroConfigXmlExporter exporter = CreateExporter();
+            exporter.Export(hydroModel, Path.Combine(dirInfo.FullName, "dimr.xml"));
 
             Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
             Assert.That(Path.Combine(dirInfo.FullName, "dflowfm"), Does.Exist);
@@ -175,11 +175,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
                 Directory.Delete(dirPath, true);
             }
 
-            DirectoryInfo dirInfo = Directory.CreateDirectory("fmdimr");
-            DHydroConfigXmlExporter exporter = CreateExporter(Path.Combine(dirInfo.FullName, "dimr.xml"));
-
             WaterFlowFMModel waterFlowFmModel = SetupWaterFlowFmModel();
-            exporter.Export(waterFlowFmModel, null);
+
+            DHydroConfigXmlExporter exporter = CreateExporter();
+            DirectoryInfo dirInfo = Directory.CreateDirectory("fmdimr");
+
+            exporter.Export(waterFlowFmModel, Path.Combine(dirInfo.FullName, "dimr.xml"));
 
             Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
             Assert.That(Path.Combine(dirInfo.FullName, "dflowfm"), Does.Exist);
@@ -230,7 +231,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             Assert.IsEmpty(dimrModels);
         }
 
-        private static DHydroConfigXmlExporter CreateExporter(string exportPath)
+        private static DHydroConfigXmlExporter CreateExporter()
         {
             var fileExportService = new FileExportService();
             fileExportService.RegisterFileExporter(new WaterFlowFMFileExporter());
@@ -243,7 +244,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
                 }
             });
 
-            return new DHydroConfigXmlExporter(fileExportService) { ExportFilePath = exportPath };
+            return new DHydroConfigXmlExporter(fileExportService);
         }
     }
 }

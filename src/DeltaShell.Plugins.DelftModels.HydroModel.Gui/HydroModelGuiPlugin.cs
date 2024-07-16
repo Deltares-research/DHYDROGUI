@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
@@ -205,7 +206,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 };
 
             yield return
-                new ViewInfo<DHydroConfigXmlExporter, DHydroExporterDialog> {AfterCreate = (v, o) => v.Gui = Gui};
+                new ViewInfo<DHydroConfigXmlExporter, DHydroExporterDialog>
+                {
+                    AfterCreate = (v, o) =>
+                    {
+                        v.Gui = Gui;
+                        v.FolderDialogService = new FolderDialogService();
+                    }
+                };
 
             yield return new ViewInfo<ValidateMergeModelObjects, MergeModelValidationView>
             {

@@ -13,6 +13,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -78,6 +79,38 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             Assert.That(result, Is.TypeOf<HydroModel>());
             Assert.That(result.Activities.Count, Is.EqualTo(1));
             Assert.That(result.Activities.ElementAt(0), Is.TypeOf<RealTimeControlModel>());
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Convert_HydroModelImportContextIsUpdated()
+        {
+            string dimrFilePath = TestHelper.GetTestFilePath(Path.Combine(nameof(HydroModelConverterTest), "dimr.xml"));
+            string workingDir = TestHelper.GetTestFilePath(nameof(HydroModelConverterTest));
+
+            var fileImporters = new List<IDimrModelFileImporter>
+            {
+                CreateRtcModelImporter(),
+                CreateFmModelImporter(workingDir)
+            };
+
+            fileImportService.FileImporters.Returns(fileImporters);
+
+            var parser = new DelftConfigXmlFileParser(logHandler);
+            var dimrXML = parser.Read<dimrXML>(dimrFilePath);
+
+            HydroModel hydroModel = hydroModelConverter.Convert(dimrXML, dimrFilePath);
+
+            HydroModelFileContext fileContext = hydroModel.FileContext;
+            Assert.That(fileContext.IsInitialized, Is.True);
+            Assert.That(fileContext.DimrFilePath, Is.EqualTo(dimrFilePath));
+            Assert.That(fileContext.GetRelativeDimrFilePath(), Is.EqualTo("dimr.xml"));
+
+            RealTimeControlModel rtcModel = hydroModel.Models.OfType<RealTimeControlModel>().Single();
+            Assert.That(fileContext.GetRelativeModelDirectory(rtcModel), Is.EqualTo("rtc"));
+
+            WaterFlowFMModel fmModel = hydroModel.Models.OfType<WaterFlowFMModel>().Single();
+            Assert.That(fileContext.GetRelativeModelDirectory(fmModel), Is.EqualTo("dflowfm"));
         }
 
         [Test]

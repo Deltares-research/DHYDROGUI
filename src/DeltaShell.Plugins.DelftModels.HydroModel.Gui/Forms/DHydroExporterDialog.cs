@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -11,6 +12,7 @@ using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -21,6 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
     public partial class DHydroExporterDialog : Form, IConfigureDialog, IView
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DHydroExporterDialog));
+        private IFolderDialogService folderDialogService;
 
         public DHydroExporterDialog()
         {
@@ -28,6 +31,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         }
 
         public IGui Gui { get; set; }
+        
+        /// <summary>
+        /// The folder dialog service for selecting the DIMR export folder.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public IFolderDialogService FolderDialogService
+        {
+            get => folderDialogService;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                folderDialogService = value;
+            }
+        }
 
         [ExcludeFromCodeCoverage]
         public string Title { get; set; }
@@ -54,56 +73,58 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
         public DelftDialogResult ShowModal()
         {
-            IModel model = SelectedModel;
-            if (!(model is HydroModel || model is IDimrModel))
-            {
-                return DelftDialogResult.Cancel;
-            }
-
             if (Exporter == null)
             {
                 return DelftDialogResult.Cancel;
             }
 
-            DialogResult dialogResult = ShowSaveFileDialog();
-            if (dialogResult != DialogResult.OK)
+            var folderDialogOptions = new FolderDialogOptions();
+            string selectedPath = FolderDialogService.ShowSelectFolderDialog(folderDialogOptions);
+
+            if (string.IsNullOrEmpty(selectedPath))
             {
                 return DelftDialogResult.Cancel;
             }
+
+            Exporter.ExportDirectoryPath = selectedPath;
             
             if (Exporter.CoreCountDictionary == null)
             {
                 Exporter.CoreCountDictionary = new ConcurrentDictionary<IDimrModel, int>();
             }
-
-            var hydroModel = model as HydroModel;
-            if (hydroModel != null)
+            
+            switch (SelectedModel)
             {
-                List<IDimrModel> dimrModels = hydroModel.CurrentWorkflow.Activities
-                                                        .GetActivitiesOfType<IDimrModel>()
-                                                        .Plus(hydroModel.CurrentWorkflow as IDimrModel)
-                                                        .Where(dm => dm != null)
-                                                        .ToList();
-
-                WarnForModelsWhichCannotBeExportedByDimr(hydroModel, dimrModels);
-
-                foreach (IDimrModel dimrModel in dimrModels)
+                case ICompositeActivity integratedModel:
+                    return ExportSubDimrModels(integratedModel);
+                case IDimrModel dimrModel:
                 {
                     IDimrModelFileExporter dimrModelExporter = GetDimrModelExporter(dimrModel);
-                    DelftDialogResult resultOfSubModelExportDialog = DimrSubModelsExportDialogResult(dimrModelExporter, dimrModel);
-                    if (resultOfSubModelExportDialog == DelftDialogResult.Cancel)
-                    {
-                        return resultOfSubModelExportDialog;
-                    }
+                    return DimrSubModelsExportDialogResult(dimrModelExporter, dimrModel);
                 }
-
-                return DelftDialogResult.OK;
+                default:
+                    return DelftDialogResult.Cancel;
             }
+        }
 
-            if (model is IDimrModel singleDimrModel)
+        private DelftDialogResult ExportSubDimrModels(ICompositeActivity hydroModel)
+        {
+            List<IDimrModel> dimrModels = hydroModel.CurrentWorkflow.Activities
+                                                    .GetActivitiesOfType<IDimrModel>()
+                                                    .Plus(hydroModel.CurrentWorkflow as IDimrModel)
+                                                    .Where(dm => dm != null)
+                                                    .ToList();
+
+            WarnForModelsWhichCannotBeExportedByDimr(hydroModel, dimrModels);
+
+            foreach (IDimrModel dimrModel in dimrModels)
             {
-                IDimrModelFileExporter dimrModelExporter = GetDimrModelExporter(singleDimrModel);
-                return DimrSubModelsExportDialogResult(dimrModelExporter, singleDimrModel);
+                IDimrModelFileExporter dimrModelExporter = GetDimrModelExporter(dimrModel);
+                DelftDialogResult resultOfSubModelExportDialog = DimrSubModelsExportDialogResult(dimrModelExporter, dimrModel);
+                if (resultOfSubModelExportDialog == DelftDialogResult.Cancel)
+                {
+                    return resultOfSubModelExportDialog;
+                }
             }
 
             return DelftDialogResult.OK;
@@ -123,17 +144,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         {
             // Nothing to be done, enforced through IView.
         }
-        
-        protected virtual DialogResult ShowSaveFileDialog()
-        {
-            var saveFileDialog = new SaveFileDialog {Filter = "DIMR config files (*.xml)|*.xml"};
-            DialogResult dialogResult = saveFileDialog.ShowDialog();
 
-            Exporter.ExportFilePath = saveFileDialog.FileName;
-            return dialogResult;
-        }
-
-        private static void WarnForModelsWhichCannotBeExportedByDimr(HydroModel hydroModel, List<IDimrModel> dimrModels)
+        private static void WarnForModelsWhichCannotBeExportedByDimr(ICompositeActivity hydroModel, List<IDimrModel> dimrModels)
         {
             IEnumerable<IActivity> remainingActivities = hydroModel.Activities.Select(UnwrapActivity).Except(dimrModels);
 

@@ -5,9 +5,10 @@ using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
-using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NetTopologySuite.Extensions.Coverages;
@@ -95,6 +96,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Gui
 
             // Assert
             guiCommandHandler.Received().OpenView(hydroModel, Arg.Is<Type>(t => t.Implements(typeof(IView))));
+        }
+        
+        [Test]
+        public void GetViewInfoOBject_ForDHydroConfigXmlExporter_IsCorrectlyConfiguredWhenAfterCreateIsInvoked()
+        {
+            using (var plugin = new HydroModelGuiPlugin())
+            {
+                plugin.Gui = Substitute.For<IGui>();
+                ViewInfo viewInfo = plugin.GetViewInfoObjects()
+                                          .Single(vi => vi.DataType == typeof(DHydroConfigXmlExporter));
+                var exporter = new DHydroConfigXmlExporter();
+                var exportedDialog = new DHydroExporterDialog();
+
+                Assert.That(exportedDialog.Gui, Is.Null);
+                Assert.That(exportedDialog.FolderDialogService, Is.Null);
+
+                viewInfo.AfterCreate.Invoke(exportedDialog, exporter);
+
+                Assert.That(exportedDialog.Gui, Is.SameAs(plugin.Gui));
+                Assert.That(exportedDialog.FolderDialogService, Is.Not.Null);
+            }
         }
     }
 }

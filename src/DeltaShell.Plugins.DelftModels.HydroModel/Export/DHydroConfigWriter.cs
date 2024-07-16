@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -41,11 +42,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
         public IDictionary<IDimrModel, int> CoreCountDictionary { private get; set; }
 
-        public XDocument CreateConfigDocument(ICompositeActivity workFlow)
+        /// <summary>
+        /// Create the DIMR configuration file from the provided integrated model workflow.
+        /// </summary>
+        /// <param name="workFlow"> The integrated model workflow. </param>
+        /// <param name="fileContext">
+        /// The context in which the <see cref="HydroModel"/> was imported.
+        /// Can be <c>null</c> if a DIMR model is exported stand-alone.
+        /// </param>
+        /// <returns>The created <see cref="XDocument"/> for the DIMR configuration file. </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="workFlow"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="workFlow"/> does not contain any activities to be serialized to the DIMR file.
+        /// </exception>
+        public XDocument CreateConfigDocument(ICompositeActivity workFlow, HydroModelFileContext fileContext)
         {
+            Ensure.NotNull(workFlow, nameof(workFlow));
+            
             if (!workFlow.Activities.Any())
             {
-                throw new NotImplementedException(Resources.DHydroConfigWriter_CreateConfigDocument_Empty_model_cannot_generate_a_configuration_file_);
+                throw new ArgumentException(Resources.DHydroConfigWriter_CreateConfigDocument_Empty_model_cannot_generate_a_configuration_file_);
             }
 
             var xDocument = new XDocument {Declaration = new XDeclaration("1.0", Encoding, "yes")};
@@ -59,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             foreach (IDimrModel dHydroActivity in allDHydroActivities)
             {
                 CoreCountDictionary.TryGetValue(dHydroActivity, out int nodeCount);
-                rootNode.Add(CreateComponentNode(dHydroActivity, nodeCount));
+                rootNode.Add(CreateComponentNode(dHydroActivity, nodeCount, fileContext));
             }
 
             foreach (IDimrConfigModelCoupler modelCoupler in modelCouplers)
@@ -85,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             return root;
         }
 
-        private XElement CreateComponentNode(IDimrModel dimrModel, int numCores)
+        private XElement CreateComponentNode(IDimrModel dimrModel, int numCores, HydroModelFileContext fileContext)
         {
             var component = new XElement(DHyd + "component");
             component.Add(new XAttribute("name", dimrModel.Name));
@@ -96,7 +114,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                                            string.Join(" ",
                                                        Enumerable.Range(0, numCores).Select(i => i.ToString(CultureInfo.InvariantCulture)))));
             }
-            component.Add(new XElement(DHyd + "workingDir", dimrModel.DirectoryName));
+            component.Add(new XElement(DHyd + "workingDir", GetModelWorkingDir(dimrModel, fileContext)));
             if (dimrModel.LibraryName.Equals("dflowfm"))
             {
                 XElement setting = new XElement(DHyd + "setting");
@@ -106,6 +124,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             }
             component.Add(new XElement(DHyd + "inputFile", dimrModel.InputFile));
             return component;
+        }
+
+        private static string GetModelWorkingDir(IDimrModel dimrModel, HydroModelFileContext fileContext)
+        {
+            return fileContext == null
+                       ? dimrModel.DirectoryName
+                       : fileContext.GetRelativeModelDirectory(dimrModel);
         }
 
         private XElement CreateControlNode(ICompositeActivity hydroModel)
