@@ -31,11 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             buttonCommands.Add(ButtonAddSource, new MapToolCommand(FlowFMMapViewDecorator.SourceToolName) { LayerType = typeof(HydroAreaLayer) });
             buttonCommands.Add(ButtonAddLateralPolygon, new MapToolCommand(FlowFMMapViewDecorator.LateralToolName) { LayerType = typeof(HydroAreaLayer) });
             buttonCommands.Add(ButtonAddLateralPoint, new MapToolCommand(FlowFMMapViewDecorator.LateralPointToolName) { LayerType = typeof(HydroAreaLayer) });
-            buttonCommands.Add(ButtonReverseLine, new MapToolCommand(FlowFMMapViewDecorator.Reverse2DLineToolName)
-            {
-                LayerType = typeof(HydroAreaLayer),
-                ToolAction = ToolAction.Execute
-            });
+            buttonCommands.Add(ButtonReverseLine, new MapToolCommand(FlowFMMapViewDecorator.Reverse2DLineToolName) { LayerType = typeof(HydroAreaLayer) });
 
             ButtonReverseLine.ToolTip = new ScreenTip
             {
