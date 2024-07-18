@@ -35,6 +35,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var temporaryDirectory = new TemporaryDirectory())
             using (var app = GetConfiguredHydroApplication(temporaryDirectory.Path))
             {
+                IProjectService projectService = app.ProjectService;
+
                 // path setup
                 string relativeModelDataPath = Path.Combine("WavesDirectoryStructureTest", zipName);
                 string modelDataPath = TestHelper.GetTestFilePath(relativeModelDataPath);
@@ -44,9 +46,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string dsprojPath = Path.Combine(temporaryDirectory.Path, "old_model", dsprojName);
 
                 // When
-                app.OpenProject(dsprojPath);
+                projectService.OpenProject(dsprojPath);
                 // Execute SaveAs() manually (migrating through GUI does this already).
-                app.SaveProjectAs(dsprojPath);
+                projectService.SaveProjectAs(dsprojPath);
 
                 // Then
                 var modelWaveFolder =
@@ -151,6 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var temporaryDirectory = new TemporaryDirectory())
             using (var app = GetConfiguredHydroApplication(temporaryDirectory.Path))
             {
+                IProjectService projectService = app.ProjectService;
                 string testData = TestHelper.GetTestFilePath(Path.Combine("WavesDirectoryStructureTest", zipName));
                 ZipFileUtils.Extract(testData, temporaryDirectory.Path);
 
@@ -159,8 +162,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 // When
                 void Call()
                 {
-                    app.OpenProject(dsprojPath);
-                    app.SaveProjectAs(dsprojPath);
+                    projectService.OpenProject(dsprojPath);
+                    projectService.SaveProjectAs(dsprojPath);
                 }
 
                 // Then

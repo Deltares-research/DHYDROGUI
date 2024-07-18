@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
     [Category(TestCategory.Wpf)]
     public class WaveModelNodePresenterTest
     {
-        private static IGui CreateGui()
+        private static IGui CreateRunningGui()
         {
             var pluginsToAdd = new List<IPlugin>()
             {
@@ -33,25 +33,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 new WaveGuiPlugin(),
                 new WaveApplicationPlugin()
             };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
 
+            gui.Run();
+
+            return gui;
         }
+
         [Test]
         public void ShowWaveProjectExplorer()
         {
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             var model = new WaveModel(mdwPath);
-            
-            using (var gui = CreateGui())
+
+            using (IGui gui = CreateRunningGui())
             {
-                IApplication app = gui.Application;
-                
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
                 };
 
@@ -65,16 +65,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             mdwPath = TestHelper.CreateLocalCopy(mdwPath);
 
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
                 IApplication app = gui.Application;
-                gui.Run();
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
                     // Add water flow model to project
-                    Project project = app.Project;
                     project.RootFolder.Add(new WaveModel());
 
                     // Check model name
@@ -102,16 +100,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             mdwPath = TestHelper.CreateLocalCopy(mdwPath);
 
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
                 IApplication app = gui.Application;
-                gui.Run();
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
                 
                 Action mainWindowShown = delegate
                 {
                     // Add new folder to project
-                    Project project = app.Project;
                     project.RootFolder.Add(new Folder("Test Folder"));
 
                     // Check folder name

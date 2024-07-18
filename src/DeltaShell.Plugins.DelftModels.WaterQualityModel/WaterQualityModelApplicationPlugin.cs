@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -115,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 Category = "1D / 2D / 3D Standalone Models",
                 GetParentProjectItem = owner =>
                 {
-                    Folder rootFolder = Application?.Project?.RootFolder;
+                    Folder rootFolder = Application?.ProjectService.Project?.RootFolder;
                     return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                 },
                 AdditionalOwnerCheck =
@@ -160,9 +161,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            IEnumerable<WaterQualityModel> allWaqModels = Application
-                                                          .GetAllModelsInProject()
-                                                          .OfType<WaterQualityModel>();
+            IEnumerable<WaterQualityModel> allWaqModels = Application.ProjectService.Project.RootFolder
+                                                                     .GetAllModelsRecursive()
+                                                                     .OfType<WaterQualityModel>();
             allWaqModels.ForEach(m =>
             {
                 m.SetupModelDataFolderStructure(Application.ProjectService);
@@ -188,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             IEnumerable<WaterQualityModel> allWaqModels =
-                Application.GetAllModelsInProject().OfType<WaterQualityModel>();
+                Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterQualityModel>();
             allWaqModels.ForEach(m => m.SetEnableMarkOutputOutOfSync(false));
         }
 
@@ -242,7 +243,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             var loadList = (IEventedList<WaterQualityLoad>) importActivity.Target;
-            WaterQualityModel model = Application.GetAllModelsInProject().OfType<WaterQualityModel>()
+            WaterQualityModel model = Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterQualityModel>()
                                                  .First(m => Equals(m.Loads, loadList));
 
             loadsImporter.ModelCoordinateSystem = model.CoordinateSystem;
@@ -258,7 +259,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             var obsList = (IEventedList<WaterQualityObservationPoint>) importActivity.Target;
-            WaterQualityModel model = Application.GetAllModelsInProject().OfType<WaterQualityModel>()
+            WaterQualityModel model = Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterQualityModel>()
                                                  .First(m => Equals(m.ObservationPoints, obsList));
 
             observationPointsImporter.ModelCoordinateSystem = model.CoordinateSystem;
@@ -272,7 +273,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 var oberservationAreas = (WaterQualityObservationAreaCoverage) importActivity.Target;
                 WaterQualityModel model =
-                    Application.Project.RootFolder.Models.OfType<WaterQualityModel>()
+                    Application.ProjectService.Project.RootFolder.Models.OfType<WaterQualityModel>()
                                .First(m => Equals(m.ObservationAreas, oberservationAreas));
                 IDataItem observationAreasDataItem =
                     model.GetDataItemByTag(WaterQualityModel.ObservationAreasDataItemMetaData.Tag);
@@ -291,7 +292,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             Project project = e.Value;
             IEnumerable<WaterQualityModel> allWaqModels =
-                Application.GetAllModelsInProject().OfType<WaterQualityModel>().ToList();
+                project.RootFolder.GetAllModelsRecursive().OfType<WaterQualityModel>().ToList();
 
             allWaqModels.ForEach(m => m.SetWorkingDirectoryInModelSettings(() => Application.WorkDirectory));
             allWaqModels.ForEach(ReimportHydFileForWaterQualityModel);

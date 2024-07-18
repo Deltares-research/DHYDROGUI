@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
@@ -30,13 +31,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // setup
             using (var deltaShell = GetRunningDSApplication("path"))
             {
+                IProjectService projectService = deltaShell.ProjectService;
+                Project project = projectService.CreateProject();
                 WaterQualityModel model = CreateWaqModelWithData();
 
                 // call
-                deltaShell.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 // assert
-                StringAssert.StartsWith(deltaShell.ProjectService.ProjectFilePath + "_data", model.ModelDataDirectory);
+                StringAssert.StartsWith(projectService.ProjectFilePath + "_data", model.ModelDataDirectory);
             }
         }
 
@@ -71,6 +74,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 string savePath = Path.Combine(tempDirPath, "RunModel_DeleteMonFile_Save", "project1.dsproj");
                 using (var deltaShell = GetRunningDSApplication(tempDirPath))
                 {
+                    IProjectService projectService = deltaShell.ProjectService;
+                    Project project = projectService.CreateProject();
+
                     string dataDir = TestHelper.GetTestDataDirectory();
                     string realHydFile = Path.Combine(dataDir, "WaterQualityDataFiles", "flow-model", "westernscheldt01.hyd");
 
@@ -78,13 +84,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     WaterQualityModel model = CreateWaqModelWithData(realHydFile, false);
                     model.SetWorkingDirectoryInModelSettings(() => deltaShellWorkingDirectory);
 
-                    deltaShell.CreateNewProject();
-                    deltaShell.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
                     Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
 
-                    string projectDataDir = deltaShell.ProjectService.ProjectFilePath + "_data";
+                    string projectDataDir = projectService.ProjectFilePath + "_data";
                     Assert.IsTrue(Directory.Exists(projectDataDir),
                                   "Couldn't find " + projectDataDir);
 
@@ -93,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     Assert.IsTrue(File.Exists(monFilePath), "Couldn't find " + monFilePath);
                     File.Delete(monFilePath);
 
-                    deltaShell.SaveProjectAs(savePath);
+                    projectService.SaveProjectAs(savePath);
                 }
             }
         }
@@ -164,22 +169,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 using (var gui = CreateGui())
                 {
-                    IApplication app = gui.Application;
-                    
                     gui.Run();
+
+                    IProjectService projectService = gui.Application.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     var waqModel = new WaterQualityModel();
                     var importer = new HydFileImporter();
                     importer.ImportItem(testHydFilePath);
                     waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath = processDefinitionFilePath;
 
-                    app.CreateNewProject();
-                    app.Project.RootFolder.Add(waqModel);
-                    app.SaveProjectAs(testModelDsproj);
+                    project.RootFolder.Add(waqModel);
+                    projectService.SaveProjectAs(testModelDsproj);
                     Assert.IsFalse(File.Exists(processDefinitionFilePath));
 
-                    app.OpenProject(testModelDsproj);
-                    List<IModel> modelsInProject = app.GetAllModelsInProject().ToList();
+                    project = projectService.OpenProject(testModelDsproj);
+                    List<IModel> modelsInProject = project.RootFolder.GetAllModelsRecursive().ToList();
                     Assert.That(modelsInProject.Count, Is.EqualTo(1));
 
                     waqModel = modelsInProject.FirstOrDefault() as WaterQualityModel;
@@ -212,10 +217,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 using (var deltaShell = GetRunningDSApplication(tempDirPath))
                 {
+                    IProjectService projectService = deltaShell.ProjectService;
+                    Project project = projectService.CreateProject();
+                    
                     WaterQualityModel model = CreateWaqModelWithData(createFalseBoundaryData: false);
-                    deltaShell.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
-                    deltaShell.SaveProjectAs(savePath);
+                    projectService.SaveProjectAs(savePath);
 
                     ActivityRunner.RunActivity(model);
                     Assert.IsTrue(model.Status == ActivityStatus.Cleaned);
@@ -241,13 +249,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     string deltaShellWorkingDirectory = deltaShell.WorkDirectory;
                     WaterQualityModel model = CreateWaqModelWithData(createFalseBoundaryData: false);
                     model.SetWorkingDirectoryInModelSettings(() => deltaShellWorkingDirectory);
-                    deltaShell.ProjectService.CreateProject();
-                    deltaShell.ProjectService.Project.RootFolder.Add(model);
+                    IProjectService projectService = deltaShell.ProjectService;
+                    Project project = projectService.CreateProject();
+                    project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
                     Assert.IsTrue(model.Status == ActivityStatus.Cleaned);
 
-                    deltaShell.ProjectService.SaveProjectAs(savePath);
+                    projectService.SaveProjectAs(savePath);
 
                     StringAssert.StartsWith(deltaShellWorkingDirectory, model.ModelSettings.WorkDirectory);
                     StringAssert.StartsWith(projectDataDir, model.ModelSettings.OutputDirectory);
@@ -297,7 +306,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var app = CreateApplication();
             app.UserSettings = userSettings;
             app.Run();
-            app.CreateNewProject();
 
             return app;
         }

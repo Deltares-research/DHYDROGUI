@@ -27,19 +27,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = CreateRunningApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 const string path = "mdw.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaveModel();
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.CloseProject();
+                project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel)project.RootFolder.Items[0];
 
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(model.ModelDefinition.Properties.Count, retrievedModel.ModelDefinition.Properties.Count);
@@ -51,20 +52,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = CreateRunningApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 const string path = "coords.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaveModel();
                 model.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.CloseProject();
+                project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel)project.RootFolder.Items[0];
 
                 Assert.IsNotNull(retrievedModel);
                 Assert.IsNotNull(retrievedModel.CoordinateSystem);
@@ -77,20 +79,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = CreateRunningApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 const string path = "mdw.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 string mdwFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
 
                 var model = new WaveModel(mdwFilePath);
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.CloseProject();
+                project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel)project.RootFolder.Items[0];
 
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(model.ModelDefinition.Properties.Count, retrievedModel.ModelDefinition.Properties.Count);
@@ -104,24 +107,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = CreateRunningApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 const string path = "mdw.dsproj";
-                app.SaveProjectAs(path);
 
                 string mdwFilePath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary/obw.mdw");
 
                 var model = new WaveModel(mdwFilePath);
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 int subscriptionsBefore = TestReferenceHelper.FindEventSubscriptions(model);
 
-                app.SaveProjectAs(path);
-                app.CloseProject();
-                app.OpenProject(path);
-                app.SaveProjectAs(path);
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.SaveProjectAs(path);
+                projectService.CloseProject();
+                projectService.OpenProject(path);
+                projectService.SaveProjectAs(path);
+                projectService.CloseProject();
+                project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel)project.RootFolder.Items[0];
 
                 Assert.AreEqual(retrievedModel.BoundaryContainer.Boundaries.Count, model.BoundaryContainer.Boundaries.Count);
                 Assert.AreEqual(retrievedModel.FeatureContainer.Obstacles.Count, model.FeatureContainer.Obstacles.Count);
@@ -143,11 +147,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = CreateRunningApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 const string path = "mdw.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaveModel();
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 //Set parameter to desired value.
                 DateTime newStartTime = DateTime.Today;
@@ -157,12 +162,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 }
 
                 model.StartTime = newStartTime;
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.CloseProject();
+                project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel)project.RootFolder.Items[0];
                 //Check persistance
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(newStartTime, retrievedModel.StartTime);
@@ -174,11 +179,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = CreateRunningApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 const string path = "mdw.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaveModel();
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 //Set parameter to desired value.
                 DateTime newStopTime = DateTime.Today;
@@ -188,12 +194,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 }
 
                 model.StopTime = newStopTime;
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.CloseProject();
+                project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel)project.RootFolder.Items[0];
 
                 //Check persistence
                 Assert.IsNotNull(retrievedModel);
@@ -206,11 +212,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = CreateRunningApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 const string path = "mdw.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaveModel();
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 //Set parameter to desired value.
                 TimeSpan newTimeStep = TimeSpan.FromHours(1);
@@ -220,12 +227,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 }
 
                 model.TimeStep = newTimeStep;
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.CloseProject();
+                project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel)project.RootFolder.Items[0];
                 //Check persistence
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(newTimeStep, retrievedModel.TimeStep);
@@ -237,17 +244,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = CreateRunningApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 const string path = "mdw_grid.dsproj";
                 const string secondPath = "target_mdw_grid.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 string mdwFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
                 var model = new WaveModel(mdwFilePath);
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path);
-                app.SaveProjectAs(secondPath);
+                projectService.SaveProjectAs(path);
+                projectService.SaveProjectAs(secondPath);
 
                 string targetDir = Path.Combine(secondPath + "_data", model.Name);
                 Assert.IsTrue(File.Exists(Path.Combine(targetDir, "input", model.Name + ".mdw")));
@@ -259,25 +267,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = CreateRunningApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 const string projPath = "modelSaveLoadDomainsTest.dsproj";
-                app.SaveProjectAs(projPath); // save to initialize file repository..
 
                 var model = new WaveModel {Name = "domainSaveLoadTest"};
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 var inner = new WaveDomainData("inner");
                 model.AddSubDomain(model.OuterDomain, inner);
                 model.AddSubDomain(inner, new WaveDomainData("innerior"));
-                app.SaveProjectAs(projPath);
+                projectService.SaveProjectAs(projPath);
 
                 model.DeleteSubDomain(model.OuterDomain, inner);
 
-                app.SaveProjectAs(projPath);
-                app.CloseProject();
+                projectService.SaveProjectAs(projPath);
+                projectService.CloseProject();
 
                 // open
-                app.OpenProject(projPath);
-                var loadedModel = app.Project.RootFolder.Items[0] as WaveModel;
+                project = projectService.OpenProject(projPath);
+                var loadedModel = project.RootFolder.Items[0] as WaveModel;
 
                 Assert.AreEqual(1, WaveDomainHelper.GetAllDomains(loadedModel.OuterDomain).Count);
                 Assert.AreEqual(model.OuterDomain.Name, loadedModel.OuterDomain.Name);
@@ -289,18 +298,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = CreateRunningApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 const string projPath = "bathySaveLoadTest.dsproj";
-                app.SaveProjectAs(projPath); // save to initialize file repository..
 
                 var model = new WaveModel {Name = "bathySaveLoadTest"};
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
-                app.SaveProject();
-                app.CloseProject();
+                projectService.SaveProjectAs(projPath);
+                projectService.CloseProject();
 
-                app.OpenProject(projPath);
-                var loadedModel = app.Project.RootFolder.Items[0] as WaveModel;
+                project = projectService.OpenProject(projPath);
+                var loadedModel = project.RootFolder.Items[0] as WaveModel;
 
                 IEnumerable<IDataItem> bathymetries = loadedModel.DataItems.Where(d => d.Name == loadedModel.OuterDomain.Bathymetry.Name);
                 Assert.AreEqual(1, bathymetries.Count()); // TOOLS-22877: with every save the bathymetry was added as a duplicate
@@ -444,8 +454,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             
             var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             app.Run();
-            app.CreateNewProject();
-            
+
             return app;
         }
 

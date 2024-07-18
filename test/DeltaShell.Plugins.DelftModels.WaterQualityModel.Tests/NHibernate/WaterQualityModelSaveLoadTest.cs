@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
     [Category(TestCategory.DataAccess)]
     public class WaterQualityModelSaveLoadTest
     {
-        private static IApplication CreateApplication()
+        private static IApplication CreateRunningApplication()
         {
             var pluginsToAdd = new List<IPlugin>()
             {
@@ -39,7 +39,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 new SharpMapGisApplicationPlugin(),
                 new WaterQualityModelApplicationPlugin(),
             };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            application.Run();
+
+            return application;
+        }
+
+        private static IApplication CreateRunningApplication(ApplicationSettingsBase userSettings)
+        {
+            IApplication application = CreateRunningApplication();
+            application.UserSettings = userSettings;
+            return application;
         }
         
         [Test]
@@ -57,20 +67,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             try
             {
-                using (var app = CreateApplication())
+                using (IApplication app = CreateRunningApplication())
                 {
-                    app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     var model = new WaterQualityModel();
-                    app.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     model.BoundaryDataManager.CreateNewDataTable("A", "B", "C.d", "E");
                     model.BoundaryDataManager.CreateNewDataTable("F", "G", "H.i", "J");
                     model.LoadsDataManager.CreateNewDataTable("K", "M", "n.o", "P");
                     model.LoadsDataManager.CreateNewDataTable("Q", "R", "S.t", "U");
 
-                    app.SaveProjectAs(saveLocation);
+                    projectService.SaveProjectAs(saveLocation);
 
                     Assert.IsTrue(Directory.Exists(model.BoundaryDataManager.FolderPath),
                                   "Test Precondition: The boundary data folder should exist post-save.");
@@ -148,15 +158,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                var app = CreateApplication();
-                app.UserSettings = userSettings;
-                using (app)
+                using (IApplication app = CreateRunningApplication(userSettings))
                 {
-                    app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     var model = new WaterQualityModel();
-                    app.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     model.BoundaryDataManager.CreateNewDataTable("A", "B", "C.d", "E");
                     model.LoadsDataManager.CreateNewDataTable("F", "G", "H.i", "j");
@@ -171,7 +179,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     Assert.AreEqual(2, Directory.GetFiles(originalLoadsDataFolder).Length);
 
                     // call
-                    app.SaveProjectAs(saveLocation);
+                    projectService.SaveProjectAs(saveLocation);
 
                     // assert
                     string projectDataDirectory = saveLocation + "_data";
@@ -217,15 +225,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                var app = CreateApplication();
-                app.UserSettings = userSettings;
-                using (app)
+                using (IApplication app = CreateRunningApplication(userSettings))
                 {
-                    app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     var model = new WaterQualityModel();
-                    app.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     model.BoundaryDataManager.CreateNewDataTable("A", "B", "C.d", "E");
                     model.LoadsDataManager.CreateNewDataTable("F", "G", "H.i", "j");
@@ -237,18 +243,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     // call
                     string savePath = Path.Combine(saveLocation);
-                    app.SaveProjectAs(savePath);
-                    app.CloseProject();
-                    app.OpenProject(saveLocation);
+                    projectService.SaveProjectAs(savePath);
+                    projectService.CloseProject();
+                    project = projectService.OpenProject(saveLocation);
 
                     // assert
-                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
                     WaterQualityModel retrievedModel = models[0];
 
-                    string projectDataDir = app.ProjectService.ProjectFilePath + "_data";
+                    string projectDataDir = projectService.ProjectFilePath + "_data";
 
                     StringAssert.StartsWith(saveLocation, projectDataDir);
                     StringAssert.StartsWith(projectDataDir, retrievedModel.ModelSettings.OutputDirectory);
@@ -295,30 +301,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 // start deltashell
                 using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
                 {
-                    
                     app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     // create a model
                     var model = new WaterQualityModel();
 
                     new HydFileImporter().ImportItem(localHydFile, model);
 
-                    app.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     // save it
                     string savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject",
                                                    "project1.dsproj");
-                    app.SaveProjectAs(savePath);
-                    app.CloseProject();
+                    projectService.SaveProjectAs(savePath);
+                    projectService.CloseProject();
 
                     // remove the hyd file
                     File.Delete(localHydFile);
 
                     // load the model, what should the hyd file do?
-                    app.OpenProject(savePath);
+                    project = projectService.OpenProject(savePath);
 
-                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
@@ -357,40 +363,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             string moveLocation = Path.Combine(moveFolderPath, projectSaveName);
 
             string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
-            ApplicationSettingsBase application =
+            ApplicationSettingsBase userSettings =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                var app = CreateApplication();
-                app.UserSettings = application;
-                using (app)
+                using (IApplication app = CreateRunningApplication(userSettings))
                 {
-                    app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     var model = new WaterQualityModel();
-                    app.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     model.BoundaryDataManager.CreateNewDataTable("A", "B", "C.d", "E");
                     model.LoadsDataManager.CreateNewDataTable("F", "G", "H.i", "j");
 
                     // call
                     string savePath = Path.Combine(saveLocation);
-                    app.SaveProjectAs(savePath);
-                    app.CloseProject();
+                    projectService.SaveProjectAs(savePath);
+                    projectService.CloseProject();
 
                     FileUtils.CopyAll(new DirectoryInfo(saveFolderPath), new DirectoryInfo(moveFolderPath), null);
 
-                    app.OpenProject(moveLocation);
+                    project = projectService.OpenProject(moveLocation);
 
                     // assert
-                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
                     WaterQualityModel retrievedModel = models[0];
 
-                    string projectDataDir = app.ProjectService.ProjectFilePath + "_data";
+                    string projectDataDir = projectService.ProjectFilePath + "_data";
 
                     StringAssert.StartsWith(moveLocation, projectDataDir);
                     StringAssert.StartsWith(projectDataDir, retrievedModel.ModelSettings.OutputDirectory);
@@ -429,13 +433,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             {
                 string workingDirectoryPath = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
                 ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
-                
-                var app = CreateApplication();
-                app.UserSettings = userSettings;
-                using (app)
+
+                using (IApplication app = CreateRunningApplication(userSettings))
                 {
-                    app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     string hydFileDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(Path.GetDirectoryName(hydFile));
                     string hydFileInTemp = Path.Combine(hydFileDirectoryInTemp, hydFileName);
@@ -447,7 +449,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     new HydFileImporter().ImportItem(hydFileInTemp, model);
 
-                    app.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     new SubFileImporter().Import(model.SubstanceProcessLibrary,
                                                  Path.Combine(dataDir, "ValidWaqModels", "coli_04.sub"));
@@ -459,17 +461,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     // save it
                     string savePath = Path.Combine(hydFileDirectoryInTemp, "savedProject", "project1.dsproj");
-                    app.SaveProjectAs(savePath);
-                    app.CloseProject();
+                    projectService.SaveProjectAs(savePath);
+                    projectService.CloseProject();
 
                     // remove the hyd file
                     File.Delete(hydFileInTemp);
                     File.Move(localHydFileOtherTimestep, hydFileInTemp);
 
                     // load the model, what should the hyd file do?
-                    app.OpenProject(savePath);
+                    project = projectService.OpenProject(savePath);
 
-                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
@@ -497,10 +499,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             try
             {
                 // start deltashell
-                using (var app = CreateApplication())
+                using (IApplication app = CreateRunningApplication())
                 {
-                    app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     // create a model
                     var model = new WaterQualityModel();
@@ -509,18 +511,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     const string locationAliases = "blabla";
                     model.Boundaries[0].LocationAliases = locationAliases;
 
-                    app.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     // save it
                     string savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject",
                                                    "project1.dsproj");
-                    app.SaveProjectAs(savePath);
-                    app.CloseProject();
+                    projectService.SaveProjectAs(savePath);
+                    projectService.CloseProject();
 
                     // load the model, what should the hyd file do?
-                    app.OpenProject(savePath);
+                    project = projectService.OpenProject(savePath);
 
-                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
@@ -549,16 +551,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             try
             {
                 // start deltashell
-                using (var app = CreateApplication())
+                using (IApplication app = CreateRunningApplication())
                 {
-                    app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     // create a model
                     var originalWaqModel = new WaterQualityModel();
 
                     // add to project
-                    app.Project.RootFolder.Items.Add(originalWaqModel);
+                    project.RootFolder.Items.Add(originalWaqModel);
 
                     SubstanceProcessLibrary library = originalWaqModel.SubstanceProcessLibrary;
                     library.ImportedSubstanceFilePath = null;
@@ -568,13 +570,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     // save it and close
                     string savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject", "project1.dsproj");
-                    app.SaveProjectAs(savePath);
-                    app.CloseProject();
+                    projectService.SaveProjectAs(savePath);
+                    projectService.CloseProject();
 
                     // load the model
-                    app.OpenProject(savePath);
+                    project = projectService.OpenProject(savePath);
 
-                    WaterQualityModel reopenedWaqModel = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+                    WaterQualityModel reopenedWaqModel = project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
                     Assert.NotNull(reopenedWaqModel);
 
                     // Expect that the ImportedSubstanceFilePath is not null
@@ -601,10 +603,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             try
             {
                 // start deltashell
-                using (var app = CreateApplication())
+                using (IApplication app = CreateRunningApplication())
                 {
-                    app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     // create a model
                     var model = new WaterQualityModel();
@@ -613,19 +615,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     const string locationAliases = "blabla";
                     model.Boundaries[0].LocationAliases = locationAliases;
 
-                    app.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     // save it
                     string savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject", "project1.dsproj");
-                    app.SaveProjectAs(savePath);
-                    app.CloseProject();
+                    projectService.SaveProjectAs(savePath);
+                    projectService.CloseProject();
 
                     // load the model, what should the hyd file do?
-                    app.OpenProject(savePath);
+                    project = projectService.OpenProject(savePath);
 
                     // check if private method ReimportHydFileForWaterQualityModel is called!
 
-                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
@@ -720,23 +722,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
                 {
                     app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     // create a model
                     WaterQualityModel waqModel = WaterQualityModelWorkDirectoryTest.CreateWaqModelWithData();
-                    app.Project.RootFolder.Add(waqModel);
+                    project.RootFolder.Add(waqModel);
 
                     waqModel.OutputOutOfSync = false;
 
                     // save it
-                    app.SaveProjectAs(savePath);
+                    projectService.SaveProjectAs(savePath);
                     Assert.That(waqModel.OutputOutOfSync, Is.False);
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     // load the model & and check if output is in sync
-                    app.OpenProject(savePath);
+                    project = projectService.OpenProject(savePath);
 
-                    waqModel = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+                    waqModel = project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
                     Assert.That(waqModel, Is.Not.Null);
                     Assert.That(waqModel.OutputOutOfSync, Is.False);
                 }
@@ -771,20 +774,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             // call
             string savePath = Path.Combine(saveLocation);
 
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.OpenProject(projectFileName);
-                Assert.That(app.Project.IsMigrated, Is.True);
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.OpenProject(projectFileName);
+                Assert.That(project.IsMigrated, Is.True);
 
                 // assert
-                List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                List<WaterQualityModel> models = project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                 Assert.AreEqual(1, models.Count);
 
-                app.SaveProjectAs(savePath);
-                app.CloseProject();
+                projectService.SaveProjectAs(savePath);
+                projectService.CloseProject();
             }
 
             try

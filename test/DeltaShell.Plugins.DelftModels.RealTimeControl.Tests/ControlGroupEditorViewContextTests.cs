@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
@@ -20,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             using (var gui = new DeltaShellGuiBuilder().Build())
             {
                 gui.Run();
-                gui.Application.CreateNewProject();
+                gui.Application.ProjectService.CreateProject();
                 
                 var controlGroup = new ControlGroup();
                 controlGroup.Rules.Add(new PIDRule {Name = "testRule"});

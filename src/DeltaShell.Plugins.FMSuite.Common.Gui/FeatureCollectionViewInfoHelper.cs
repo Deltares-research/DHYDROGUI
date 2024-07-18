@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using DelftTools.Controls;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -19,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                 GetViewName = (v, o) => o.Name,
                 AdditionalDataCheck = o =>
                 {
-                    TModel model = getGui().Application.GetAllModelsInProject().OfType<TModel>().FirstOrDefault(m => Equals(o, getCollection(m)));
+                    TModel model = getGui().Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<TModel>().FirstOrDefault(m => Equals(o, getCollection(m)));
                     return model != null;
                 },
                 GetViewData = o =>
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                     return centralMap?.MapView.GetLayerForData(o);
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => getGui().Application.GetAllModelsInProject().OfType<TModel>().FirstOrDefault(m => Equals(o, getCollection(m))),
+                GetCompositeViewData = o => getGui().Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<TModel>().FirstOrDefault(m => Equals(o, getCollection(m))),
                 AfterCreate = (v, o) =>
                 {
                     ProjectItemMapView centralMap =

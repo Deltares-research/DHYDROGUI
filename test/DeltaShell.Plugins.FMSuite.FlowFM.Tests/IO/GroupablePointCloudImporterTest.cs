@@ -54,12 +54,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     IApplication app = gui.Application;
 
                     gui.Run();
-                    app.CreateNewProject();
+
+                    Project project = gui.Application.ProjectService.CreateProject();
 
                     Action mainWindowShown = delegate
                     {
-                        app.Project.RootFolder.Add(new WaterFlowFMModel());
-                        WaterFlowFMModel targetModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                        project.RootFolder.Add(new WaterFlowFMModel());
+                        WaterFlowFMModel targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                         Assert.IsNotNull(targetModel);
 
                         GroupablePointCloudImporter dryPointsImporter =

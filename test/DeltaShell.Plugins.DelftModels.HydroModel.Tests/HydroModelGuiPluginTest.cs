@@ -273,9 +273,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                        .Return(activityRunner);
 
             gui.Application = application;
-
-            application.Stub(a => a.GetAllModelsInProject())
-                       .Return(new List<IModel>());
+            
+            var projectService = Substitute.For<IProjectService>();
+            projectService.Project.Returns(new Project());
+            application.Stub(a => a.ProjectService).Return(projectService);
 
             var mainWindow = MockRepository.GenerateStub<IMainWindow>();
             var projectExplorer = MockRepository.GenerateStub<IProjectExplorer>();

@@ -513,16 +513,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(mduPath);
 
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                IApplication app = gui.Application;
-
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     // open view for boundary condition
@@ -546,16 +542,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(mduPath);
 
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                IApplication app = gui.Application;
-
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     // open view for boundary (note: not the condition!)
@@ -609,8 +601,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             return boundaryData;
         }
-        
-        private static IGui CreateGui()
+
+        private static IGui CreateRunningGui()
         {
             var pluginsToAdd = new List<IPlugin>
             {
@@ -621,7 +613,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 new SharpMapGisGuiPlugin(),
                 new FlowFMGuiPlugin(),
             };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+
+            gui.Run();
+
+            return gui;
         }
     }
 }

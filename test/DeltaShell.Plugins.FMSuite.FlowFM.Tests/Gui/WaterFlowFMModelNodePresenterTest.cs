@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     [TestFixture]
     public class WaterFlowFMModelNodePresenterTest
     {
-        private static IGui CreateGui()
+        private static IGui CreateRunningGui()
         {
             var pluginsToAdd = new List<IPlugin>
             {
@@ -47,7 +47,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 new SharpMapGisGuiPlugin(),
                 new FlowFMGuiPlugin(),
             };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+
+            gui.Run();
+
+            return gui;
         }
         
         [Test]
@@ -60,15 +64,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(mduPath);
 
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                IApplication app = gui.Application;
-                gui.Run();
-                app.CreateNewProject();
-                
+                Project project = gui.Application.ProjectService.CreateProject();
+
                 Action mainWindowShown = delegate
                 {
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
                 };
 
@@ -80,17 +81,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Wpf)]
         public void JumpToSubTabThroughProjectExplorerWithModelViewNotYetOpen()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                IApplication app = gui.Application;
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
                     var model = new WaterFlowFMModel();
 
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     var modelNodePresenter = new WaterFlowFMModelNodePresenter(null);
@@ -113,17 +111,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Wpf)]
         public void JumpToSubTabThroughProjectExplorerWithModelViewAlreadyOpenOpen()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                IApplication app = gui.Application;
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
                     var model = new WaterFlowFMModel();
 
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     var modelNodePresenter = new WaterFlowFMModelNodePresenter(null);
@@ -294,17 +289,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         private void ReopenANewCreatedProjectAndCheckItsProjectTree(TemporaryDirectory tempDirectory, string modelFolder, IGui gui)
         {
-            IApplication app = gui.Application;
-            app.CreateNewProject();
+            IProjectService projectService = gui.Application.ProjectService;
+            projectService.CreateProject();
 
             CreateModelWithOutputCollapsed(modelFolder, gui, out int nrOfDataItems);
 
             string savePath = Path.Combine(tempDirectory.Path, "SaveLocation", "TestProject.dsproj");
-            app.SaveProjectAs(savePath);
+            projectService.SaveProjectAs(savePath);
 
-            app.CloseProject();
+            projectService.CloseProject();
 
-            app.OpenProject(savePath);
+            projectService.OpenProject(savePath);
 
             CheckProjectTree(gui, nrOfDataItems);
         }
@@ -318,7 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             foreach (DataItem dataItem in dataItemsAfterOpening)
             {
-                Assert.AreSame(dataItem.Owner, gui.Application.Project.RootFolder.Models.First());
+                Assert.AreSame(dataItem.Owner, gui.Application.ProjectService.Project.RootFolder.Models.First());
             }
         }
 
@@ -327,7 +322,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(Path.Combine(absoluteModelFolderPath, "input", "FlowFM.mdu"));
 
-            gui.Application.Project.RootFolder.Items.Add(model);
+            Project project = gui.Application.ProjectService.Project;
+            project.RootFolder.Items.Add(model);
 
             ActivityRunner.RunActivity(model);
             Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
@@ -337,7 +333,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             foreach (DataItem dataItem in dataItemsBeforeOpening)
             {
-                Assert.AreSame(dataItem.Owner, gui.Application.Project.RootFolder.Models.First());
+                Assert.AreSame(dataItem.Owner, project.RootFolder.Models.First());
             }
 
             nrOfDataItems = dataItemsBeforeOpening.Count;

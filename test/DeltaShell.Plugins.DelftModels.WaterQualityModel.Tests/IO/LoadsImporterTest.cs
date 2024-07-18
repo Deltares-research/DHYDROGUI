@@ -1,13 +1,15 @@
+using System;
 using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -107,54 +109,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.Integration)]
         public void ImporterGetsConfiguredByApplicationPlugin()
         {
-            var mocks = new MockRepository();
+            var app = Substitute.For<IApplication>();
+            var project = Substitute.For<Project>();
+            var runner = Substitute.For<IActivityRunner>();
+            var modelService = Substitute.For<IModelService>();
 
-            var app = mocks.Stub<IApplication>();
-            var project = mocks.Stub<Project>();
-            var runner = mocks.Stub<IActivityRunner>();
-            var modelService = mocks.Stub<IModelService>();
-
-            var projectService = mocks.Stub<IProjectService>();
-            app.Stub(a => a.ProjectService).Return(projectService);
+            var projectService = Substitute.For<IProjectService>();
+            projectService.Project.Returns(project);
+            app.ProjectService.Returns(projectService);
 
             var loadsImporter = new LoadsImporter();
             var waqModel = new WaterQualityModel();
             var applicationPlugin = new WaterQualityModelApplicationPlugin();
 
+            project.RootFolder.Add(waqModel);
+
             waqModel.Grid.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3857);
 
-            modelService.Expect(ms => ms.GetAllModels(null)).IgnoreArguments().Return(new[]
-            {
-                waqModel
-            }).Repeat.Any();
-
             app.ModelService = modelService;
-            app.Expect(a => a.Project).Return(project).Repeat.Any();
-            app.Expect(a => a.ActivityRunner).Return(runner).Repeat.Any();
-            projectService.Expect(a => a.ProjectOpened += null).IgnoreArguments();
-            projectService.Expect(a => a.ProjectCreated += null).IgnoreArguments();
-            projectService.Expect(a => a.ProjectClosing += null).IgnoreArguments();
-            projectService.Expect(a => a.ProjectSaving += null).IgnoreArguments();
-            projectService.Expect(a => a.ProjectSaved += null).IgnoreArguments();
-            app.Expect(a => a.GetAllModelsInProject()).Return(new[]
-            {
-                waqModel
-            }).Repeat.Any();
+            app.ActivityRunner.Returns(runner);
 
-            var fileImportActivity = mocks.Stub<FileImportActivity>(loadsImporter, waqModel.Loads);
+            var fileImportActivity = new FileImportActivity(loadsImporter, waqModel.Loads);
 
-            mocks.ReplayAll();
             applicationPlugin.Application = app;
 
-            runner.Raise(r => r.ActivityStatusChanged += null, fileImportActivity, new ActivityStatusChangedEventArgs(ActivityStatus.None, ActivityStatus.Initializing));
+            projectService.Received(1).ProjectOpened += Arg.Any<EventHandler<EventArgs<Project>>>();
+            projectService.Received(1).ProjectCreated += Arg.Any<EventHandler<EventArgs<Project>>>();
+            projectService.Received(1).ProjectClosing += Arg.Any<EventHandler<EventArgs<Project>>>();
+            projectService.Received(1).ProjectSaving += Arg.Any<EventHandler<EventArgs<Project>>>();
+            projectService.Received(1).ProjectSaved += Arg.Any<EventHandler<EventArgs<Project>>>();
+
+            runner.ActivityStatusChanged += Raise.EventWith(fileImportActivity,
+                                                            new ActivityStatusChangedEventArgs(ActivityStatus.None, ActivityStatus.Initializing));
 
             Assert.AreEqual(loadsImporter.ModelCoordinateSystem, waqModel.Grid.CoordinateSystem);
             Assert.NotNull(loadsImporter.GetDefaultZValue);
 
             Assert.AreEqual(LayerType.Undefined, waqModel.LayerType);
             Assert.AreEqual(double.NaN, loadsImporter.GetDefaultZValue());
-
-            mocks.VerifyAll();
         }
     }
 }

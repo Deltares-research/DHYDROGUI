@@ -57,11 +57,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             }
 
             // get running DeltaShell application
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
@@ -70,9 +69,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(cellsValue);
 
-                app.Project.RootFolder.Add(fmModel);
+                project.RootFolder.Add(fmModel);
 
-                app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
+                projectService.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
                 fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
 
                 FlowFMNetFileImporter importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
@@ -155,11 +154,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             string dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("output_mapfiles", "dummy.nc"));
 
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
@@ -168,9 +166,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(cellsValue);
 
-                app.Project.RootFolder.Add(fmModel);
+                project.RootFolder.Add(fmModel);
 
-                app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
+                projectService.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
                 fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
 
                 FlowFMNetFileImporter importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
@@ -223,17 +221,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             }
 
             // get running DeltaShell application
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(fmModel);
+                project.RootFolder.Add(fmModel);
 
-                app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
+                projectService.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
                 fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
 
                 FlowFMNetFileImporter importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
@@ -278,14 +275,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             Assert.That(File.Exists(dummyFilePath), Is.False);
         }
 
-        private static IApplication CreateApplication()
+        private static IApplication CreateRunningApplication()
         {
             var pluginsToAdd = new List<IPlugin>()
             {
                 new FlowFMApplicationPlugin(),
             };
-            // get running DeltaShell application
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+
+            application.Run();
+
+            return application;
         }
     }
 }

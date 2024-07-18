@@ -433,11 +433,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             using (var app = CreateApplication())
             {
                 app.Run();
-                app.CreateNewProject();
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
 
                 var importedWaq = (WaterQualityModel) new HydFileImporter().ImportItem(filePath);
 
-                app.Project.RootFolder.Add(importedWaq);
+                project.RootFolder.Add(importedWaq);
 
                 double middleHeight = (importedWaq.ZTop + importedWaq.ZBot) / 2;
                 importedWaq.ObservationPoints.Add(new WaterQualityObservationPoint {Z = middleHeight});
@@ -458,12 +459,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 // call
                 string savePath = Path.GetRandomFileName();
-                app.SaveProjectAs(savePath);
+                projectService.SaveProjectAs(savePath);
 
-                app.CloseProject();
+                projectService.CloseProject();
 
-                app.OpenProject(savePath);
-                WaterQualityModel openedWaq = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+                project = projectService.OpenProject(savePath);
+                WaterQualityModel openedWaq = project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
                 Assert.IsNotNull(openedWaq);
 
                 // assert
@@ -549,7 +550,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var activityRunner = mocks.DynamicMock<IActivityRunner>();
 
             app.Expect(a => a.ActivityRunner).Return(activityRunner);
-            app.Expect(a => a.GetAllModelsInProject()).Return(waqModels);
             
             var projectService = mocks.Stub<IProjectService>();
             app.Expect(a => a.ProjectService).Return(projectService);

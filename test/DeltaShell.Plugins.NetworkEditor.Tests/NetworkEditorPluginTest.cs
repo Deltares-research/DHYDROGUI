@@ -28,14 +28,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var app = mocks.Stub<IApplication>();
             app.DataItemService = dataItemService;
-            app.Expect(a => a.Project).Repeat.Any().Return(project);
 
             var projectService = mocks.Stub<IProjectService>();
             app.Stub(a => a.ProjectService).Return(projectService);
+            projectService.Expect(a => a.Project).Repeat.Any().Return(project);
 
             projectService.ProjectClosing += null;
             LastCall.IgnoreArguments().Repeat.Any();
             projectService.ProjectOpened += null;
+            LastCall.IgnoreArguments().Repeat.Any();
+            projectService.ProjectCreated += null;
             LastCall.IgnoreArguments().Repeat.Any();
 
             mocks.ReplayAll();
@@ -73,14 +75,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var app = mocks.Stub<IApplication>();
             app.DataItemService = dataItemService;
-            app.Expect(a => a.Project).Repeat.Any().Return(project);
 
             var projectService = mocks.Stub<IProjectService>();
             app.Stub(a => a.ProjectService).Return(projectService);
+            projectService.Expect(a => a.Project).Repeat.Any().Return(project);
 
             projectService.ProjectClosing += null;
             LastCall.IgnoreArguments().Repeat.Any();
             projectService.ProjectOpened += null;
+            LastCall.IgnoreArguments().Repeat.Any();
+            projectService.ProjectCreated += null;
             LastCall.IgnoreArguments().Repeat.Any();
 
             mocks.ReplayAll();
@@ -108,10 +112,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             // setup mock app
             var app = mocks.Stub<IApplication>();
-            app.Expect(a => a.Project).Repeat.Any().Return(project);
 
             var projectService = mocks.DynamicMock<IProjectService>();
             app.Stub(a => a.ProjectService).Return(projectService);
+            projectService.Expect(a => a.Project).Repeat.Any().Return(project);
 
             projectService.ProjectClosing += null;
             LastCall.IgnoreArguments().Repeat.Any();
@@ -149,14 +153,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             // setup mock app
             var app = mocks.Stub<IApplication>();
-            app.Expect(a => a.Project).Repeat.Any().Return(project);
 
             var projectService = mocks.Stub<IProjectService>();
             app.Stub(a => a.ProjectService).Return(projectService);
+            projectService.Expect(a => a.Project).Repeat.Any().Return(project);
 
             projectService.ProjectClosing += null;
             LastCall.IgnoreArguments().Repeat.Any();
             projectService.ProjectOpened += null;
+            LastCall.IgnoreArguments().Repeat.Any();
+            projectService.ProjectCreated += null;
             LastCall.IgnoreArguments().Repeat.Any();
 
             mocks.ReplayAll();

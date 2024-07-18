@@ -17,7 +17,7 @@ namespace DeltaShell.NGHS.TestUtils
             using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build() )
             {
                 app.Run();
-                app.CreateNewProject();
+                app.ProjectService.CreateProject();
 
                 var compositeActivity = MockRepository.GenerateStub<ICompositeActivity>();
 
@@ -37,14 +37,14 @@ namespace DeltaShell.NGHS.TestUtils
             using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 app.Run();
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
                 
                 // When
                 ModelInfo modelInfos = applicationPlugin.GetModelInfos().FirstOrDefault();
 
                 // Then
                 Assert.NotNull(modelInfos);
-                Assert.AreSame(app.Project.RootFolder, modelInfos.GetParentProjectItem(null));
+                Assert.AreSame(project.RootFolder, modelInfos.GetParentProjectItem(null));
             }
         }
     }

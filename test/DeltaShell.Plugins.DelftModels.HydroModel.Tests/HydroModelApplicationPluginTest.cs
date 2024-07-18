@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -56,10 +57,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var appPlugin = new HydroModelApplicationPlugin();
             using (var app = CreateAndStartApplication(appPlugin))
             {
+                Project project = app.ProjectService.CreateProject();
+                
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(project.RootFolder), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
@@ -72,10 +75,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var appPlugin = new RealTimeControlApplicationPlugin();
             using (IApplication app = CreateAndStartApplication(appPlugin))
             {
+                Project project = app.ProjectService.CreateProject();
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(project.RootFolder), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
@@ -88,10 +92,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var appPlugin = new HydroModelApplicationPlugin();
             using (IApplication app = CreateAndStartApplication(appPlugin))
             {
+                Project project = app.ProjectService.CreateProject();
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(project.RootFolder), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
@@ -107,12 +112,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 app.Run();
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
 
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(project.RootFolder), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
@@ -125,10 +130,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var appPlugin = new WaveApplicationPlugin();
             using (IApplication app = CreateAndStartApplication(appPlugin))
             {
+                Project project = app.ProjectService.CreateProject();
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(project.RootFolder), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
@@ -164,10 +170,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 var model = new HydroModel();
 
                 application.Run();
-                application.CreateNewProject();
+                Project project = application.ProjectService.CreateProject();
 
                 // Call
-                application.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 // Assert
                 IFileExportService fileExportService = model.HydroModelExporter.FileExportService;
@@ -207,7 +213,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Setup
             using (var app = CreateApplicationWithModel("parent_model"))
             {
-                IModel integratedModel = app.GetAllModelsInProject().Single();
+                Project project = app.ProjectService.Project;
+
+                IModel integratedModel = project.RootFolder.GetAllModelsRecursive().Single();
 
                 var childModel = Substitute.For<IModel>();
                 childModel.Name = "Unique";
@@ -221,7 +229,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 model.Name = "Unique";
 
                 // Call
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 // Assert
                 Assert.That(model.Name, Is.EqualTo("Unique (1)"),
@@ -235,11 +243,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Setup
             using (var app = CreateApplication())
             {
+                Project project = app.ProjectService.CreateProject();
+                
                 var model = Substitute.For<IModel>();
                 model.Name = "  Name  ";
 
                 // Call
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 // Assert
                 Assert.That(model.Name, Is.EqualTo("Name"),
@@ -253,10 +263,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Setup
             using (var app = CreateApplication())
             {
+                Project project = app.ProjectService.CreateProject();
+                
                 // ModelBase implements INotifyPropertyChange
                 var model = Substitute.ForPartsOf<ModelBase>();
                 model.Name = "original_name";
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 // Call
                 model.Name = "  Name  ";
@@ -273,6 +285,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Setup
             using (var app = CreateApplication())
             {
+                Project project = app.ProjectService.CreateProject();
+                
                 var parentModel = Substitute.For<IModel>();
                 parentModel.Name = "  parent  ";
 
@@ -285,7 +299,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 });
 
                 // Call
-                app.Project.RootFolder.Add(parentModel);
+                project.RootFolder.Add(parentModel);
 
                 // Assert
                 Assert.That(parentModel.Name, Is.EqualTo("parent"),
@@ -353,18 +367,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Arrange
             var appPlugin = new HydroModelApplicationPlugin();
             var application = Substitute.For<IApplication>();
+            IProjectService projectService = application.ProjectService;
             const string applicationWorkingDirectory = "TestWorkingDirectory";
             application.WorkDirectory.Returns(applicationWorkingDirectory);
             appPlugin.Application = application;
 
-            var project = new Project();
             var hydroModel = new HydroModel();
-
-            application.Project.Returns(project);
-            application.GetAllModelsInProject().Returns(new List<IModel> {hydroModel});
+            AddToProject(hydroModel, projectService);
 
             // Act
-            application.ProjectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(project));
+            projectService.ProjectOpened += Raise.EventWith(this, new EventArgs<Project>(projectService.Project));
 
             // Assert
             Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
@@ -376,7 +388,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             IApplication app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             
             app.Run();
-            app.CreateNewProject();
             
             return app;
         }
@@ -390,11 +401,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Setup
             using (var app = CreateApplicationWithModel(duplicateModelName))
             {
+                Project project = app.ProjectService.Project;
+                
                 var model = Substitute.For<IModel>();
                 model.Name = duplicateModelName;
 
                 // Call
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 // Assert
                 Assert.That(model.Name, Is.EqualTo(expectedModelName),
@@ -411,11 +424,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Setup
             using (var app = CreateApplicationWithModel(originalName))
             {
+                Project project = app.ProjectService.Project;
+                
                 var model = Substitute.For<IModel>();
                 model.Name = duplicateModelName;
 
                 // Call
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 // Assert
                 Assert.That(model.Name, Is.EqualTo(expectedModelName),
@@ -430,6 +445,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Setup
             using (var app = CreateApplicationWithModel("Unique"))
             {
+                Project project = app.ProjectService.Project;
+                
                 var parentModel = Substitute.For<IModel>();
                 parentModel.Name = "parent_model";
 
@@ -442,7 +459,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 });
 
                 // Call
-                app.Project.RootFolder.Add(parentModel);
+                project.RootFolder.Add(parentModel);
 
                 // Assert
                 Assert.That(childModel.Name, Is.EqualTo("Unique (1)"),
@@ -457,10 +474,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Setup
             using (var app = CreateApplicationWithModel("Unique"))
             {
+                Project project = app.ProjectService.Project;
+                
                 // ModelBase implements INotifyPropertyChange
                 var model = Substitute.ForPartsOf<ModelBase>();
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 // Call
                 model.Name = duplicateName;
@@ -473,11 +492,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static IApplication CreateApplicationWithModel(string modelName)
         {
-            var application = CreateApplication();
+            IApplication application = CreateApplication();
 
             var model = Substitute.For<IModel>();
             model.Name = modelName;
-            application.Project.RootFolder.Add(model);
+
+            Project project = application.ProjectService.CreateProject();
+            project.RootFolder.Add(model);
 
             return application;
         }
@@ -488,9 +509,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             IApplication application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
 
             application.Run();
-            application.CreateNewProject();
             
             return application;
+        }
+        
+        private static void AddToProject(object obj, IProjectService projectService)
+        {
+            var project = new Project();
+            project.RootFolder.Add(obj);
+            projectService.Project.Returns(project);
         }
     }
 }

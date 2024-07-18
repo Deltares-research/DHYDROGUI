@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
@@ -239,13 +239,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
 
             try
             {
-                using (var app = CreateRunningApplication(savePath))
+                using (IApplication app = CreateRunningApplication())
                 {
-                    importer = new WaveGridFileImporter("Waves Model", () => app.Project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>());
+                    IProjectService projectService = app.ProjectService;
+                    importer = new WaveGridFileImporter("Waves Model", () => projectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaveModel>());
 
                     using (var model = new WaveModel())
                     {
-                        Project project = app.Project;
+                        Project project = projectService.CreateProject();
+                        projectService.SaveProjectAs(savePath);
                         project.RootFolder.Add(model);
 
                         model.OuterDomain.Grid = oldGrid;
@@ -300,12 +302,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
             Assert.IsTrue(succes);
         }
 
-        private static IApplication CreateRunningApplication(string savePath)
+        private static IApplication CreateRunningApplication()
         {
             var app = CreateApplication();
             app.Run();
-            app.CreateNewProject();
-            app.SaveProjectAs(savePath);
             return app;
         }
 

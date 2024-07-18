@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string testData = temp.CopyDirectoryToTempDirectory(TestHelper.GetTestFilePath("RealTimeControlDirectoryStructureTest"));
 
                 // Call
-                app.OpenProject(Path.Combine(testData, "rtc_37_project.dsproj"));
+                app.ProjectService.OpenProject(Path.Combine(testData, "rtc_37_project.dsproj"));
 
                 // Assert
                 string expOutputDirPath = Path.Combine(testData, "rtc_37_project.dsproj_data", "rtc_model", "output");

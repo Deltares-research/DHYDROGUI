@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
@@ -87,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             if (data != null)
             {
                 IEventedList<IWindField> list =
-                    GuiPlugin.Gui.Application.GetAllModelsInProject()
+                    GuiPlugin.Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive()
                              .OfType<WaterFlowFMModel>()
                              .First(m => m.WindFields.Contains(data))
                              .WindFields;

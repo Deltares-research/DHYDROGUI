@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
@@ -466,19 +467,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private RealTimeControlModel GetModel(IEventedList<ControlGroup> controlGroups)
         {
-            IEnumerable<RealTimeControlModel> allRtcModels = Gui.Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+            IEnumerable<RealTimeControlModel> allRtcModels = Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<RealTimeControlModel>();
             return allRtcModels.First(m => m.ControlGroups.Equals(controlGroups));
         }
 
         private RealTimeControlModel GetModel(ControlGroup controlGroup)
         {
-            IEnumerable<RealTimeControlModel> allRtcModels = Gui.Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+            IEnumerable<RealTimeControlModel> allRtcModels = Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<RealTimeControlModel>();
             return allRtcModels.First(m => m.ControlGroups.Contains(controlGroup));
         }
 
         private RealTimeControlModel GetModelForFeatureCoverage(IFeatureCoverage featureCoverage)
         {
-            return Gui.Application.GetAllModelsInProject()
+            return Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive()
                       .OfType<RealTimeControlModel>()
                       .FirstOrDefault(m => m.OutputFileFunctionStore != null &&
                                            m.OutputFileFunctionStore.Functions.Contains(featureCoverage));

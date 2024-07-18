@@ -20,7 +20,7 @@ __boat_shape_file_exists = os.path.isfile(__boat_shape_file_path)
 # create a model from a hyd file
 waqModel = CreateWaterQualityModelFromHydFile(__hyd_file_path)
 waqModel.Name = "SF"
-Application.Project.RootFolder.Add(waqModel)
+Application.ProjectService.Project.RootFolder.Add(waqModel)
 
 # set model time steps for this example
 waqModel.TimeStep = ConvertToDotNetTimeSpan(time(0,10))

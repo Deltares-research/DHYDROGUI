@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             using (IGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
-                WaterQualityModel waterQualityModel1D = gui.Application.Project.RootFolder.Items.OfType<WaterQualityModel>().First();
+                WaterQualityModel waterQualityModel1D = gui.Application.ProjectService.Project.RootFolder.Items.OfType<WaterQualityModel>().First();
 
                 // Remove the monitoring output data item
                 waterQualityModel1D.MonitoringOutputDataItemSet.DataItems.Clear();
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             using (IGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
-                WaterQualityModel waterQualityModel1D = gui.Application.Project.RootFolder.Items.OfType<WaterQualityModel>().First();
+                WaterQualityModel waterQualityModel1D = gui.Application.ProjectService.Project.RootFolder.Items.OfType<WaterQualityModel>().First();
 
                 // Remove the monitoring output data item set
                 waterQualityModel1D.DataItems.Remove(waterQualityModel1D.MonitoringOutputDataItemSet);
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             using (IGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
                 // Remove the model
-                gui.Application.Project.RootFolder.Items.Clear();
+                gui.Application.ProjectService.Project.RootFolder.Items.Clear();
 
                 // The dummy MultipleFunctionView should be removed from the document views
                 Assert.AreEqual(0, gui.DocumentViews.Count);
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             using (IGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
                 // Close the current project by creating a new one
-                gui.Application.CreateNewProject();
+                gui.Application.ProjectService.CreateProject();
 
                 // The dummy MultipleFunctionView should be removed from the document views
                 Assert.AreEqual(0, gui.DocumentViews.Count);
@@ -101,12 +101,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var activityRunner = mocks.Stub<ActivityRunner>();
 
             gui.Application = application;
-            application.Stub(a => a.Project).Return(project);
             application.Stub(a => a.ActivityRunner).Return(activityRunner);
             application.Stub(a => a.Plugins).Return(new List<ApplicationPlugin>());
 
             var projectService = mocks.Stub<IProjectService>();
             application.Stub(a => a.ProjectService).Return(projectService);
+            projectService.Stub(a => a.Project).Repeat.Any().Return(project);
             
             projectService.ProjectOpened += null;
             LastCall.Constraints(Is.NotNull()).Repeat.Any();
@@ -179,7 +179,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
 
             gui.Run();
-            gui.Application.CreateNewProject();
+            IProjectService projectService = gui.Application.ProjectService;
+            Project project = projectService.CreateProject();
             
             // Create a WaterQualityModel1D with dummy WaterQualityObservationVariableOutput and add it to the project root folder
             var waterQualityModel1D = new WaterQualityModel {ModelSettings = {MonitoringOutputLevel = MonitoringOutputLevel.Points}};
@@ -190,7 +191,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             });
 
             waterQualityModel1D.MonitoringOutputDataItemSet.DataItems.Add(new DataItem(observationVariableOutput));
-            gui.Application.Project.RootFolder.Add(waterQualityModel1D);
+            project.RootFolder.Add(waterQualityModel1D);
 
             // Create a dummy MultipleFunctionView and add it to the document views
             IEnumerable<IFunction> functions = new List<IFunction>(new[]

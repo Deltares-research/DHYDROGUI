@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
 
                 if (data is IHydroModel hydroModel)
                 {
-                    HydroModel[] allCompositeHydroModels = Gui.Application.GetAllModelsInProject().OfType<HydroModel>().ToArray();
+                    HydroModel[] allCompositeHydroModels = Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<HydroModel>().ToArray();
                     bool isChildModel = allCompositeHydroModels.Any(m => m.Activities.Contains(hydroModel));
 
                     Folder folder = GetFolderContaining(hydroModel);
@@ -369,7 +369,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 return true;
             }
 
-            IModel model = Gui.Application.ModelService.GetModelByDataItem(Gui.Application.Project, dataItem);
+            IModel model = Gui.Application.ModelService.GetModelByDataItem(Gui.Application.ProjectService.Project, dataItem);
             if (model is HydroModel && region.Parent != null && dataItem.LinkedBy.Count > 0)
             {
                 return false; // data item is a sub-region and it is being used - delete model first (unlink)
@@ -456,7 +456,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             }
 
             // model merge
-            List<string> mergeModelNamesInProject = Gui.Application.GetAllModelsInProject().OfType<IModelMerge>().Where(m => m != destinationModel && destinationModel.CanMerge(m)).Select(m => m.Name).ToList();
+            List<string> mergeModelNamesInProject = Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IModelMerge>().Where(m => m != destinationModel && destinationModel.CanMerge(m)).Select(m => m.Name).ToList();
             modelMergeMenuItem.Available = mergeModelNamesInProject.Count != 0;
 
             foreach (object dropDownItem in modelMergeMenuItem.DropDownItems)
@@ -498,7 +498,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 return;
             }
 
-            var sourceModel = (IModelMerge) Gui.Application.GetAllModelsInProject().OfType<IModelMerge>().Cast<IModel>().FirstOrDefault(m => m.Name == modelToMergeWith);
+            var sourceModel = (IModelMerge) Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IModelMerge>().Cast<IModel>().FirstOrDefault(m => m.Name == modelToMergeWith);
             Gui.DocumentViewsResolver.OpenViewForData(new ValidateMergeModelObjects
             {
                 DestinationModel = destinationModel,

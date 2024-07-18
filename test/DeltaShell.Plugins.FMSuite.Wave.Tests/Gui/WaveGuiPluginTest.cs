@@ -111,14 +111,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 gui.Run();
-                gui.Application.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 // reimport model 
                 for (var i = 0; i < 2; i++)
                 {
                     var model = new WaveModel(mdwPath);
 
-                    gui.Application.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
                     Assert.AreEqual(ActivityStatus.Cleaned, model.Status);

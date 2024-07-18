@@ -331,10 +331,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", UnstructuredGridFileHelper.BedLevelLocation.Faces);
 
-                        Project project = app.Project;
-                        project.RootFolder.Add(model);
+                        IProjectService projectService = app.ProjectService;
 
-                        app.SaveProject();
+                        projectService.Project.RootFolder.Add(model);
+
+                        projectService.SaveProject();
 
                         model.ValidateBeforeRun = true;
                         ValidationReport report = model.Validate();
@@ -342,7 +343,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         app.RunActivity(model);
                         Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
-                        app.SaveProject();
+                        projectService.SaveProject();
 
                         model.ExportTo(exportMduFilePath);
 
@@ -373,7 +374,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         Assert.AreEqual(morFileName, morPropValue);
                         Assert.AreEqual(sedFileName, sedPropValue);
 
-                        app.CloseProject();
+                        projectService.CloseProject();
                     }
                 }
             }
@@ -451,12 +452,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         boundaryConditionSet.BoundaryConditions.Add(flowBoundaryCondition);
                         boundaryConditionSet.BoundaryConditions.Add(morphologyBoundaryCondition);
 
-                        Project project = app.Project;
-                        project.RootFolder.Add(model);
+                        IProjectService projectService = app.ProjectService;
 
-                        app.SaveProject();
+                        projectService.Project.RootFolder.Add(model);
 
-                        app.OpenProject(tempProjectFilePath);
+                        projectService.SaveProject();
+
+                        projectService.OpenProject(tempProjectFilePath);
 
                         Assert.That(model.Boundaries.Count, Is.EqualTo(1));
                         Assert.That(model.Boundaries.FirstOrDefault().Name, Is.EqualTo(boundaryName));
@@ -469,7 +471,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         Assert.That(boundaryConditionNames.Contains(flowBoundaryConditionName));
                         Assert.That(boundaryConditionNames.Contains(morphBoundaryConditionName));
 
-                        app.CloseProject();
+                        projectService.CloseProject();
                     }
                 }
             }
@@ -698,8 +700,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             
             app.Run();
-            app.CreateNewProject();
-            app.SaveProjectAs(Path.Combine(savePath));
+
+            IProjectService projectService = app.ProjectService;
+            projectService.CreateProject();
+            projectService.SaveProjectAs(savePath);
+            
             return app;
         }
 

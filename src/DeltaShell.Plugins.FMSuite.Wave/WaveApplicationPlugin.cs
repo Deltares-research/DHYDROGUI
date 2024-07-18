@@ -5,6 +5,7 @@ using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -60,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public IEnumerable<WaveModel> GetModels()
         {
-            return Application.Project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>();
+            return Application.ProjectService.Project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>();
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()
@@ -72,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 Image = Properties.Resources.wave,
                 GetParentProjectItem = owner =>
                 {
-                    Folder rootFolder = Application?.Project?.RootFolder;
+                    Folder rootFolder = Application?.ProjectService.Project?.RootFolder;
                     return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                 },
                 AdditionalOwnerCheck = owner =>
@@ -114,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private void Application_ProjectOpened(object sender, EventArgs<Project> e)
         {
             Project project = e.Value;
-            Application.GetAllModelsInProject().OfType<WaveModel>().ForEach(m =>
+            Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaveModel>().ForEach(m =>
             {
                 m.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
                 m.DimrRunner.FileExportService = Application.FileExportService;

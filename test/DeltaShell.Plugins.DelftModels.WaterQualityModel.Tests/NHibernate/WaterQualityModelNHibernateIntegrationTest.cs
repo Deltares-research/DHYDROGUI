@@ -48,19 +48,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             {
                 app.Run();
 
-                app.CreateNewProject();
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 
                 var model = new WaterQualityModel();
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
-                app.SaveProjectAs(dsprojName); // save to initialize file repository..
+                projectService.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
             using (var app = CreateApplicationWithWAQ())
             {
                 app.Run();
 
-                app.OpenProject(dsprojName);
+                app.ProjectService.OpenProject(dsprojName);
             }
         }
 
@@ -81,16 +82,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                IApplication app = gui.Application;
-
                 gui.Run();
 
-                app.CreateNewProject();
+                IProjectService projectService = gui.Application.ProjectService;
+                Project project = projectService.CreateProject();
                 
                 var model = new WaterQualityModel();
-                gui.Application.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
-                app.SaveProjectAs(dsprojName); // save to initialize file repository..
+                projectService.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
             var pluginsToAdd2 = new List<IPlugin>
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 
                 gui.Run();
 
-                app.OpenProject(dsprojName);
+                app.ProjectService.OpenProject(dsprojName);
             }
         }
 
@@ -143,11 +143,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 {
                     app.Run();
 
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     // model setup
                     var waqModel = new WaterQualityModel();
-                    app.Project.RootFolder.Add(waqModel);
+                    project.RootFolder.Add(waqModel);
                     new HydFileImporter().ImportItem(hydFilePath, waqModel);
                     new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subFilePath);
                     new DataTableImporter().ImportItem(boundaryConditionsFilePath, waqModel.BoundaryDataManager);
@@ -164,12 +165,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     Assert.IsEmpty(waqModel.DataItems.Where(di => isWaqOutputFileDataItem(di)));
 
                     // Save, close and open the project
-                    app.SaveProjectAs(modelFilePath);
-                    app.CloseProject();
-                    app.OpenProject(modelFilePath);
+                    projectService.SaveProjectAs(modelFilePath);
+                    projectService.CloseProject();
+                    project = projectService.OpenProject(modelFilePath);
 
                     // Check that the output data items connected to the .lsp & .mor-files are removed from the model.
-                    var openedWaqModel = app.Project.RootFolder.Models.FirstOrDefault() as WaterQualityModel;
+                    var openedWaqModel = project.RootFolder.Models.FirstOrDefault() as WaterQualityModel;
                     Assert.IsNotNull(openedWaqModel);
                     Assert.IsEmpty(openedWaqModel.DataItems.Where(di => isWaqOutputFileDataItem(di)));
 
@@ -217,9 +218,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 using (var app = CreateRunningApplication(tempDirectory.Path))
                 {
+                    IProjectService projectService = app.ProjectService;
+                    
                     // When
-                    app.OpenProject(projectFilePath);
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.OpenProject(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     // Then
                     Assert.That(Directory.Exists(workingDirectoryPath),
@@ -235,7 +238,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     Assert.That(filesWorkingDirBeforeMigration.Except(filesOutputDirAfterMigration).Any(), Is.False,
                                 "All files that were in the output directory before migrating, should still be there.");
 
-                    WaterQualityModel model = app.Project.RootFolder.GetAllModelsRecursive().OfType<WaterQualityModel>().Single();
+                    WaterQualityModel model = app.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterQualityModel>().Single();
                     Assert.That(model.OutputFolder, Is.Not.Null,
                                 "Output folder should be set after migration.");
                     Assert.That(model.OutputFolder.Path, Is.EqualTo(outputDirectoryPath),
@@ -265,20 +268,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             using (var tempDirectory = new TemporaryDirectory())
             using (var app = CreateRunningApplication(tempDirectory.Path))
             {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
+                
                 try
                 {
-                    app.CreateNewProject();
-                    
                     WaterQualityModel model = CreateValidWaqModel();
                     model.SetWorkingDirectoryInModelSettings(() => app.WorkDirectory);
-                    app.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
 
                     // Run
                     IEnumerable<string> outputFilesAfterRun = RunModelAndGetOutputFiles(model);
 
                     // Save (first time saving from temporary project after running a model)
                     const string save1ProjectFileName = "Save1.dsproj";
-                    app.SaveProjectAs(Path.Combine(tempDirectory.Path, save1ProjectFileName));
+                    projectService.SaveProjectAs(Path.Combine(tempDirectory.Path, save1ProjectFileName));
 
                     string outputFolderAfterSave1Path = model.OutputFolder.FullPath;
                     IList<string> outputFilesAfterSave1 = GetAllFileNames(outputFolderAfterSave1Path);
@@ -293,7 +297,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     // Save as (with unsaved output from a model run)
                     const string saveAs1ProjectFileName = "SaveAs1.dsproj";
-                    app.SaveProjectAs(Path.Combine(tempDirectory.Path, saveAs1ProjectFileName));
+                    projectService.SaveProjectAs(Path.Combine(tempDirectory.Path, saveAs1ProjectFileName));
 
                     string outputFolderAfterSaveAs1Path = model.OutputFolder.FullPath;
                     IList<string> outputFilesAfterSaveAs1 = GetAllFileNames(outputFolderAfterSaveAs1Path);
@@ -307,7 +311,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     // Save as (with saved output)
                     const string saveAs2ProjectFileName = "SaveAs2.dsproj";
-                    app.SaveProjectAs(Path.Combine(tempDirectory.Path, saveAs2ProjectFileName));
+                    projectService.SaveProjectAs(Path.Combine(tempDirectory.Path, saveAs2ProjectFileName));
 
                     string outputFolderAfterSaveAs2Path = model.OutputFolder.FullPath;
                     IList<string> outputFilesAfterSaveAs2 = GetAllFileNames(outputFolderAfterSaveAs2Path);
@@ -320,7 +324,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                                 "After saving a saved project to a new location, all output files that were saved in the previous project should still be there.");
 
                     // Save (with saved output)
-                    app.SaveProject();
+                    projectService.SaveProject();
 
                     string outputFolderAfterSave2Path = model.OutputFolder.FullPath;
                     IList<string> outputFilesAfterSave2 = GetAllFileNames(outputFolderAfterSave2Path);
@@ -334,7 +338,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     outputFilesAfterRun = RunModelAndGetOutputFiles(model);
 
                     // Save (with unsaved output from a model run)
-                    app.SaveProject();
+                    projectService.SaveProject();
 
                     string outputFolderAfterSave3Path = model.OutputFolder.FullPath;
                     IList<string> outputFilesAfterSave3 = GetAllFileNames(outputFolderAfterSave3Path);
@@ -346,7 +350,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 }
                 finally
                 {
-                    app.CloseProject();
+                    projectService.CloseProject();
                 }
             }
         }
@@ -360,10 +364,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             using (var app = CreateRunningApplication(tempDirectory.Path))
             using (WaterQualityModel model = CreateValidWaqModel())
             {
-                app.CreateNewProject();
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
                 
                 model.SetWorkingDirectoryInModelSettings(() => app.WorkDirectory);
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 // Run
                 IEnumerable<string> outputFilesAfterRun = RunModelAndGetOutputFiles(model);
@@ -372,16 +377,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 string savedProjectPath = Path.Combine(tempDirectory.Path, savedProjectFileName);
 
                 // Save 
-                app.SaveProjectAs(savedProjectPath);
+                projectService.SaveProjectAs(savedProjectPath);
                 string outputFolderAfterSavePath = model.OutputFolder.FullPath;
 
                 Assert.AreEqual(outputFilesAfterRun, GetAllFileNames(outputFolderAfterSavePath));
 
                 // Close
-                app.CloseProject();
+                projectService.CloseProject();
 
                 // Open
-                app.OpenProject(savedProjectPath);
+                projectService.OpenProject(savedProjectPath);
 
                 // Optionally, clear model output
                 if (performClearModelOutput)
@@ -390,7 +395,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 }
 
                 // Close
-                app.CloseProject();
+                projectService.CloseProject();
 
                 string errorMessage = performClearModelOutput
                                           ? "After opening, clear model output and closing a project, all output files that were saved in the project should still be there"

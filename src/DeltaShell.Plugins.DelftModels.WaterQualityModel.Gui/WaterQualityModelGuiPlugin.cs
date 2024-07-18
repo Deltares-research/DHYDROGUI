@@ -12,6 +12,7 @@ using DelftTools.Controls.Swf;
 using DelftTools.Controls.Wpf.Services;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -101,9 +102,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     gui.Application.ProjectService.ProjectCreated -= ApplicationProjectOpened;
                     gui.Application.ProjectService.ProjectClosing -= ApplicationProjectClosing;
 
-                    if (gui.Application.Project != null)
+                    if (gui.Application.ProjectService.Project != null)
                     {
-                        gui.Application.Project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
+                        gui.Application.ProjectService.Project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
                     }
 
                     gui.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerActivityStatusChanged;
@@ -125,9 +126,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     gui.Application.ProjectService.ProjectCreated += ApplicationProjectOpened;
                     gui.Application.ProjectService.ProjectClosing += ApplicationProjectClosing;
 
-                    if (gui.Application.Project != null)
+                    if (gui.Application.ProjectService.Project != null)
                     {
-                        gui.Application.Project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
+                        gui.Application.ProjectService.Project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
                     }
 
                     //Subscribe to activities when gui is not null
@@ -240,7 +241,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 AdditionalDataCheck = o => o.Function.IsNetworkCoverage(),
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData =
-                    o => gui.Application.DataItemService.GetDataItemByValue(gui.Application.Project, o.Function),
+                    o => gui.Application.DataItemService.GetDataItemByValue(gui.Application.ProjectService.Project, o.Function),
                 Image = Properties.Resources.LocationFunction,
                 GetViewData = o => (ICoverage)o.Function,
                 GetViewName = (v, o) => o.Name
@@ -583,7 +584,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         /// <returns> The model instance that has the given grid, or null if no match can be found. </returns>
         private WaterQualityModel GetWaqModelForGrid(UnstructuredGrid grid)
         {
-            return gui.Application.Project.RootFolder.GetAllItemsRecursive()
+            return gui.Application.ProjectService.Project.RootFolder.GetAllItemsRecursive()
                       .OfType<WaterQualityModel>()
                       .FirstOrDefault(m => Equals(grid, m.Grid));
         }
@@ -885,7 +886,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
         private IEnumerable<T> GetModelsOfType<T>() where T : IModel
         {
-            return Gui.Application.GetAllModelsInProject().OfType<T>();
+            return Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<T>();
         }
 
         private void RevertInputFileClick(object sender, EventArgs e)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -89,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Category = Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_1D_2D_3D_Integrated_Models,
                     GetParentProjectItem = owner =>
                     {
-                        Folder rootFolder = Application?.Project?.RootFolder;
+                        Folder rootFolder = Application?.ProjectService.Project?.RootFolder;
                         return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                     },
                     AdditionalOwnerCheck = owner => !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
@@ -137,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             Project project = e.Value;
             // relink all dataitems (between rtc and flowFM) for all hydromodels
-            Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
+            Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<HydroModel>().ForEach(hm =>
             {
                 hm.RelinkDataItems();
                 hm.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
@@ -206,7 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         
         private void MakeModelNameUnique(IModel model)
         {
-            IModel[] allModels = Application.Project.GetAllItemsRecursive()
+            IModel[] allModels = Application.ProjectService.Project.GetAllItemsRecursive()
                                             .OfType<IModel>()
                                             .Where(m => m != model)
                                             .ToArray();

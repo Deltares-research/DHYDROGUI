@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Controls;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
@@ -77,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
 
         private IWaveModel GetParentModel(T nodeData) =>
             Gui.Application
-               .GetAllModelsInProject().OfType<IWaveModel>()
+               .ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IWaveModel>()
                .FirstOrDefault(model => IsContainedInModel(nodeData, model));
     }
 }

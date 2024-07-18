@@ -4,7 +4,6 @@ using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -200,8 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private static IApplication GetApplication(Project project)
         {
             var application = Substitute.For<IApplication>();
-            application.Project.Returns(project);
-            application.GetAllModelsInProject().Returns(project.RootFolder.GetAllModelsRecursive());
+            application.ProjectService.Project.Returns(project);
 
             return application;
         }

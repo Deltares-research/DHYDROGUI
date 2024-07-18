@@ -121,12 +121,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 using (var app = CreateApplication())
                 {
                     app.Run();
-                    app.CreateNewProject();
-                    app.SaveProjectAs(Path.Combine(testDir, "BasicWaqProject.dsproj"));
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
+                    projectService.SaveProjectAs(Path.Combine(testDir, "BasicWaqProject.dsproj"));
 
                     var waqModel = new WaterQualityModel();
-                    app.Project.RootFolder.Add(waqModel);
-                    app.SaveProject();
+                    project.RootFolder.Add(waqModel);
+                    projectService.SaveProject();
 
                     //Import hydroDynamics file
                     HydFileImporter hydFileImporter = app.FileImporters.OfType<HydFileImporter>().FirstOrDefault();
@@ -249,15 +250,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             using (WaterQualityModel model = CreateWesternScheldtModel(tempDirectory.Path))
             {
                 app.Run();
-                app.CreateNewProject();
-                app.SaveProjectAs(Path.Combine(tempDirectory.Path, "WAQ_proj"));
+                IProjectService projectService = app.ProjectService;
+                projectService.CreateProject();
+                projectService.SaveProjectAs(Path.Combine(tempDirectory.Path, "WAQ_proj"));
                 
                 //First run
                 ActivityRunner.RunActivity(model);
                 Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
 
                 //save the project
-                app.SaveProject();
+                projectService.SaveProject();
 
                 //Second run
                 ActivityRunner.RunActivity(model);

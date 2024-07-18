@@ -6,6 +6,7 @@ using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Wpf.Services;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
@@ -381,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         }
 
         private IEnumerable<WaveModel> WaveModels => Gui != null
-                                                         ? Gui.Application.GetAllModelsInProject().OfType<WaveModel>()
+                                                         ? Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaveModel>()
                                                          : Enumerable.Empty<WaveModel>();
 
         private bool IsModelObstacle(Feature2D f)
@@ -397,7 +398,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         }
 
         private IEnumerable<WaveModel> GetWaveModels() =>
-            Gui?.Application?.GetAllModelsInProject().OfType<WaveModel>() ??
+            Gui?.Application?.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaveModel>() ??
             Enumerable.Empty<WaveModel>();
 
         private MapView GetActiveMapView()

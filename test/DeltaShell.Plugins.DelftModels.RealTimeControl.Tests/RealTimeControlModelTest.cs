@@ -1235,6 +1235,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             {
                 Action onShown = delegate
                 {
+                    IProjectService projectService = gui.Application.ProjectService;
+                    Project project = projectService.CreateProject();
+                    
                     IProjectExplorer projectExplorer = gui.MainWindow.ProjectExplorer;
                     var realTimeControlModel = new RealTimeControlModel("Test RTC Model");
                     ControlGroup controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
@@ -1242,7 +1245,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                     realTimeControlModel.ControlGroups.Clear();
                     realTimeControlModel.ControlGroups.Add(controlGroup);
 
-                    gui.Application.Project.RootFolder.Add(realTimeControlModel);
+                    project.RootFolder.Add(realTimeControlModel);
 
                     ITreeView treeView = projectExplorer.TreeView;
 
@@ -2547,7 +2550,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
             
             gui.Run();
-            gui.Application.CreateNewProject();
             return gui;
         }
         

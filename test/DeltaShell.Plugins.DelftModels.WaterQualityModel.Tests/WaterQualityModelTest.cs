@@ -1614,15 +1614,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             using (var app = CreateApplication())
             {
                 app.Run();
-                app.CreateNewProject();
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
 
                 // Initialize Project by saving it.
                 string tempDirectory = FileUtils.CreateTempDirectory();
-                app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+                projectService.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
 
                 //Initialize WAQ Model and add it to the project.
                 var model = new WaterQualityModel();
-                app.Project.RootFolder.Items.Add(model);
+                project.RootFolder.Items.Add(model);
 
                 //Change Simulation Timers
                 model.StartTime = DateTime.Now;
@@ -1648,7 +1649,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.AreNotEqual(expectedEndTime, model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
 
                 //Save project
-                app.SaveProject();
+                projectService.SaveProject();
 
                 //Import hyd file
                 importer.ImportItem(hydPath, model);

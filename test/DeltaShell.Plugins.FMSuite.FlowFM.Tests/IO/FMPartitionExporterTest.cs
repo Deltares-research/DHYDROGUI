@@ -25,12 +25,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionStandAloneGrid3Domains()
         {
             const string relativePath = "partition";
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                projectService.CreateProject();
+                projectService.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
 
                 FlowFMNetFileImporter importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(importer);
@@ -63,12 +62,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionStandAloneGrid3DomainsWithPolFile()
         {
             const string relativePath = "partition";
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                projectService.CreateProject();
+                projectService.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
 
                 FlowFMNetFileImporter importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(importer);
@@ -101,12 +99,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingenGrid3Domains()
         {
             const string relativePath = "partition";
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
+                projectService.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
 
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
@@ -114,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var model = new WaterFlowFMModel();
                 model.ImportFromMdu(mduFilePath);
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 FMGridPartitionExporter exporter = app.FileExporters.OfType<FMGridPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -142,12 +139,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingenGridWithInvalidSolverShouldNotCrash()
         {
             const string relativePath = "partition";
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
+                projectService.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
 
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
@@ -156,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 model.ImportFromMdu(mduFilePath);
 
                 model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueFromString("7");
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 FMGridPartitionExporter exporter = app.FileExporters.OfType<FMGridPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -184,12 +180,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingenGrid3DomainsWithPolFile()
         {
             const string relativePath = "partition";
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
+                projectService.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
 
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
@@ -197,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var model = new WaterFlowFMModel();
                 model.ImportFromMdu(mduFilePath);
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 FMGridPartitionExporter exporter = app.FileExporters.OfType<FMGridPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -228,12 +223,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingen3Domains()
         {
             const string relativePath = "partition";
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
+                projectService.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
 
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
@@ -241,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var model = new WaterFlowFMModel();
                 model.ImportFromMdu(mduFilePath);
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 FMModelPartitionExporter exporter = app.FileExporters.OfType<FMModelPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -272,12 +266,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingenWithIncorrectSolverShouldNotCrash()
         {
             const string relativePath = "partition";
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
+                projectService.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
 
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
@@ -286,7 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 model.ImportFromMdu(mduFilePath);
 
                 model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueFromString("7");
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 FMModelPartitionExporter exporter = app.FileExporters.OfType<FMModelPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -317,12 +310,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingen3DomainsWithPolFile()
         {
             const string relativePath = "partition";
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
+                projectService.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
 
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
@@ -330,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var model = new WaterFlowFMModel();
                 model.ImportFromMdu(mduFilePath);
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 FMModelPartitionExporter exporter = app.FileExporters.OfType<FMModelPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -362,13 +354,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionExporterShouldNotLoseValues()
         {
             const string relativePath = "partition";
-            
-            using (var app = CreateApplication())
-            {
-                app.Run();
 
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+            using (IApplication app = CreateRunningApplication())
+            {
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
+                projectService.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
 
                 string mduPath = TestHelper.GetTestFilePath(@"partitionexporter\SongHau.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
@@ -376,7 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var model = new WaterFlowFMModel();
                 model.ImportFromMdu(mduFilePath);
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 FMModelPartitionExporter exporter = app.FileExporters.OfType<FMModelPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -489,14 +480,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        private static IApplication CreateApplication()
+        private static IApplication CreateRunningApplication()
         {
             var pluginsToAdd = new List<IPlugin>()
             {
                 new FlowFMApplicationPlugin(),
             };
 
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+
+            application.Run();
+
+            return application;
         }
     }
 }

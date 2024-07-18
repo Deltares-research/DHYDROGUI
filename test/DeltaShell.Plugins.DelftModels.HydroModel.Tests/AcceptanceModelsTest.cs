@@ -61,24 +61,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 void MainWindowShown()
                 {
                     IApplication app = gui.Application;
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     // Step 2: Import MDU
-                    Assert.True(TryPerformAction(() => ImportFlowFMModelAndAddToProject(app, mduFilePath)), $"Failed to import model: {mduFilePath}");
+                    Assert.True(TryPerformAction(() => ImportFlowFMModelAndAddToProject(project, mduFilePath)), $"Failed to import model: {mduFilePath}");
 
                     // Step 3: Save Project As
                     string projectPath = Path.Combine(tempDir.Path, "ProjectSave", "TestProject.dsproj");
-                    Assert.True(TryPerformAction(() => app.SaveProjectAs(projectPath)), $"Failed to save project before running the model: {projectPath}");
+                    Assert.True(TryPerformAction(() => projectService.SaveProjectAs(projectPath)), $"Failed to save project before running the model: {projectPath}");
 
                     // Step 4: Close Project
-                    Assert.True(TryPerformAction(() => app.CloseProject()), $"Failed to close project after import: {projectPath}");
+                    Assert.True(TryPerformAction(() => projectService.CloseProject()), $"Failed to close project after import: {projectPath}");
 
                     // Step 5: Re-Open Project
-                    Assert.True(TryPerformAction(() => app.OpenProject(projectPath)), $"Failed to reopen project: {projectPath}");
+                    Assert.True(TryPerformAction(() => projectService.OpenProject(projectPath)), $"Failed to reopen project: {projectPath}");
 
                     // Step 6: Validation of the model
                     ITimeDependentModel rootModel = null;
-                    Assert.True(TryPerformAction(() => GetRootModelAndValidate(app, out rootModel)), $"Failed to validate model: {rootModel.Name}");
+                    Assert.True(TryPerformAction(() => GetRootModelAndValidate(projectService, out rootModel)), $"Failed to validate model: {rootModel.Name}");
 
                     // Step 7: Dimr Export of FM model
                     string dimrExportPath = Path.Combine(tempDir.Path, "Dimr_Export", "dimr.xml");
@@ -91,10 +92,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     Assert.True(TryPerformAction(() => RunModel(rootModel)), $"Failed to run model: {rootModel.Name}");
 
                     // Step 10: Save Project
-                    Assert.True(TryPerformAction(() => app.SaveProject()), $"Failed to save project after running the model: {projectPath}");
+                    Assert.True(TryPerformAction(() => projectService.SaveProject()), $"Failed to save project after running the model: {projectPath}");
 
                     // Step 1: Close Project
-                    Assert.True(TryPerformAction(() => app.CloseProject()), $"Failed to close project after running the model: {projectPath}");
+                    Assert.True(TryPerformAction(() => projectService.CloseProject()), $"Failed to close project after running the model: {projectPath}");
                 }
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, MainWindowShown);
@@ -114,7 +115,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 void MainWindowShown()
                 {
                     IApplication app = gui.Application;
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
 
                     // Step 2: Read Dimr config
                     var dimrXmlConfig = new DimrXmlConfig(dimrXmlPath);
@@ -124,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     // Step 4: Validation of the model
                     HydroModel rootModelOriginalDimrXml = null;
-                    Assert.True(TryPerformAction(() => GetHydroModelAndValidate(app, dimrXmlConfig, out rootModelOriginalDimrXml)), $"Failed to validate the original model: {rootModelOriginalDimrXml.Name}");
+                    Assert.True(TryPerformAction(() => GetHydroModelAndValidate(projectService, dimrXmlConfig, out rootModelOriginalDimrXml)), $"Failed to validate the original model: {rootModelOriginalDimrXml.Name}");
 
                     // Step 5: Adjust Time Settings (10 time steps)
                     Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModelOriginalDimrXml)), $"Failed to adjust time settings for the original model: {rootModelOriginalDimrXml.Name}");
@@ -138,7 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     string saveFolderPathWithOutput = Path.Combine(tempDir.Path, @"SaveTestProjectFolder");
                     string projectPathWithOutput = Path.Combine(saveFolderPathWithOutput, "TestProject.dsproj");
 
-                    Assert.True(TryPerformAction(() => app.SaveProjectAs(projectPathWithOutput)), $"Failed to save as original project after running the model: {projectPathWithOutput}");
+                    Assert.True(TryPerformAction(() => projectService.SaveProjectAs(projectPathWithOutput)), $"Failed to save as original project after running the model: {projectPathWithOutput}");
 
                     CheckPersistentFolderStructure(saveFolderPathWithOutput, projectPathWithOutput, rootModelOriginalDimrXml, dimrXmlConfig, 7, out Dictionary<string, DateTime> timeStampsAfterFirstSave);
 
@@ -146,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     Assert.True(TryPerformAction(() => RunIntegratedModel(rootModelOriginalDimrXml, 8)), $"Failed to run model: {rootModelOriginalDimrXml.Name}");
 
                     // Step 9: Save Project 
-                    Assert.True(TryPerformAction(() => app.SaveProject()), $"Failed to save the new output files of the second run: {projectPathWithOutput}");
+                    Assert.True(TryPerformAction(() => projectService.SaveProject()), $"Failed to save the new output files of the second run: {projectPathWithOutput}");
 
                     CheckPersistentFolderStructure(saveFolderPathWithOutput, projectPathWithOutput, rootModelOriginalDimrXml, dimrXmlConfig, 9, out Dictionary<string, DateTime> timeStampsAfterSecondSave);
                     CheckUpToDateFiles(timeStampsAfterFirstSave, timeStampsAfterSecondSave, 9);
@@ -156,26 +158,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     Assert.True(TryPerformAction(() => ExportDimrConfiguration(dimrExportPath, app, rootModelOriginalDimrXml)), $"Failed to export dimr configuration for model: {rootModelOriginalDimrXml.Name}");
 
                     // Step 11: Close Project
-                    Assert.True(TryPerformAction(() => app.CloseProject()), $"Failed to close project after dimr import: {projectPathWithOutput}");
+                    Assert.True(TryPerformAction(() => projectService.CloseProject()), $"Failed to close project after dimr import: {projectPathWithOutput}");
 
-                    app.CreateNewProject();
+                    projectService.CreateProject();
 
                     // Step 12: Import Dimr xml
                     Assert.True(TryPerformAction(() => ImportDimrXmlAndAddToProject(app, dimrExportPath)), $"Failed to import exported dimr xml file: {dimrExportPath}");
 
                     // Step 13: Validation of the model
                     HydroModel rootModelExportedDimrXml = null;
-                    Assert.True(TryPerformAction(() => GetHydroModelAndValidate(app, dimrXmlConfig, out rootModelExportedDimrXml)), $"Failed to validate the imported model after creating a new dimr xml: {rootModelExportedDimrXml.Name}");
+                    Assert.True(TryPerformAction(() => GetHydroModelAndValidate(projectService, dimrXmlConfig, out rootModelExportedDimrXml)), $"Failed to validate the imported model after creating a new dimr xml: {rootModelExportedDimrXml.Name}");
 
                     // Step 14: Close Project
-                    Assert.True(TryPerformAction(() => app.CloseProject()), $"Failed to close project after second import: {projectPathWithOutput}");
+                    Assert.True(TryPerformAction(() => projectService.CloseProject()), $"Failed to close project after second import: {projectPathWithOutput}");
 
                     // Step 15: Re-Open Project
-                    Assert.True(TryPerformAction(() => app.OpenProject(projectPathWithOutput)), $"Failed to reopen project: {projectPathWithOutput}");
+                    Assert.True(TryPerformAction(() => projectService.OpenProject(projectPathWithOutput)), $"Failed to reopen project: {projectPathWithOutput}");
 
                     // Step 16: Validation of the model
                     HydroModel rootModelOpenedProject = null;
-                    Assert.True(TryPerformAction(() => GetHydroModelAndValidate(app, dimrXmlConfig, out rootModelOpenedProject)), $"Failed to validate model after opening the created project: {rootModelOpenedProject.Name}");
+                    Assert.True(TryPerformAction(() => GetHydroModelAndValidate(projectService, dimrXmlConfig, out rootModelOpenedProject)), $"Failed to validate model after opening the created project: {rootModelOpenedProject.Name}");
 
                     // Step 17: Adjust Time Settings (10 time steps)
                     Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModelOpenedProject)), $"Failed to adjust time settings for model after opening the created project: {rootModelOpenedProject.Name}");
@@ -184,13 +186,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     Assert.True(TryPerformAction(() => RunIntegratedModel(rootModelOpenedProject, 18)), $"Failed to run model after opening the created project: {rootModelOpenedProject.Name}");
 
                     //// Step 19: Save Project
-                    Assert.True(TryPerformAction(() => app.SaveProject()), $"Failed to save project after opening and running the model: {projectPathWithOutput}");
+                    Assert.True(TryPerformAction(() => projectService.SaveProject()), $"Failed to save project after opening and running the model: {projectPathWithOutput}");
 
                     CheckPersistentFolderStructure(saveFolderPathWithOutput, projectPathWithOutput, rootModelOpenedProject, dimrXmlConfig, 19, out Dictionary<string, DateTime> timeStampsOutputAfterThirdSave);
                     CheckUpToDateFiles(timeStampsAfterSecondSave, timeStampsOutputAfterThirdSave, 19);
 
                     // Step 20: Close Project
-                    Assert.True(TryPerformAction(() => app.CloseProject()), $"Failed to close project after opening and running the model: {projectPathWithOutput}");
+                    Assert.True(TryPerformAction(() => projectService.CloseProject()), $"Failed to close project after opening and running the model: {projectPathWithOutput}");
                 }
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, (Action)MainWindowShown);
@@ -385,26 +387,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 return false;
             }
         }
-    
-        private static void ImportFlowFMModelAndAddToProject(IApplication app, string mduPath)
+
+        private static void ImportFlowFMModelAndAddToProject(Project project, string mduPath)
         {
             var fmModel = new WaterFlowFMModel();
             fmModel.ImportFromMdu(mduPath);
 
-            app.Project.RootFolder.Items.Add(fmModel);
+            project.RootFolder.Items.Add(fmModel);
         }
 
         private static void ImportDimrXmlAndAddToProject(IApplication app, string dimrXmlPath)
         {
             var integratedModel = new HydroModel();
-            app.Project.RootFolder.Items.Add(integratedModel);
+            app.ProjectService.Project.RootFolder.Items.Add(integratedModel);
             DHydroConfigXmlImporter importer = app.FileImporters.OfType<DHydroConfigXmlImporter>().First();
             importer.ImportItem(dimrXmlPath, integratedModel);
         }
 
-        private static void GetHydroModelAndValidate(IApplication app, DimrXmlConfig dimrXmlConfig, out HydroModel hydroModel)
+        private static void GetHydroModelAndValidate(IProjectService projectService, DimrXmlConfig dimrXmlConfig, out HydroModel hydroModel)
         {
-            hydroModel = GetRootModel<HydroModel>(app);
+            hydroModel = GetRootModel<HydroModel>(projectService);
 
             if (dimrXmlConfig.FMModelIncluded)
             {
@@ -431,9 +433,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CheckValidationErrors(report);
         }
 
-        private static void GetRootModelAndValidate(IApplication app, out ITimeDependentModel timeDependentModel)
+        private static void GetRootModelAndValidate(IProjectService projectService, out ITimeDependentModel timeDependentModel)
         {
-            timeDependentModel = GetRootModel<ITimeDependentModel>(app);
+            timeDependentModel = GetRootModel<ITimeDependentModel>(projectService);
 
             // Unfortunately there is no IValidateable, so instead we handle this for each individual model type...
             ValidationReport report = null;
@@ -467,9 +469,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static T GetRootModel<T>(IApplication app)
+        private static T GetRootModel<T>(IProjectService projectService)
         {
-            T model = app.Project.RootFolder.Models.OfType<T>().FirstOrDefault();
+            T model = projectService.Project.RootFolder.Models.OfType<T>().FirstOrDefault();
             if (model == null)
             {
                 throw new NullReferenceException("Unable to get Model from Project Root Folder");

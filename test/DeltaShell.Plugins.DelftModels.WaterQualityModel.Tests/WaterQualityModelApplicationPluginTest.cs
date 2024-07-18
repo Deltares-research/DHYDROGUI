@@ -88,12 +88,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                
                 app.Run();
 
-                app.CreateNewProject();
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
 
                 string tempDirectory = FileUtils.CreateTempDirectory();
-                app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+                projectService.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
 
-                app.Project.RootFolder.Items.Add(waqModel);
+                project.RootFolder.Items.Add(waqModel);
 
                 string originalOutputDirectory = waqModel.ModelSettings.OutputDirectory;
                 string originalDataDirectory = waqModel.ModelDataDirectory;
@@ -137,16 +138,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 using (var app = GetConfiguredApplication())
                 {
                     app.Run();
-                    app.CreateNewProject();
-                    app.Project.RootFolder.Add(model);
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
+                    project.RootFolder.Add(model);
                     AddCurrentModelPaths(model);
 
                     // When (saving as first time)
-                    app.SaveProjectAs(firstSavePath);
+                    projectService.SaveProjectAs(firstSavePath);
                     AddCurrentModelPaths(model);
 
                     // When (saving as second time)
-                    app.SaveProjectAs(secondSavePath);
+                    projectService.SaveProjectAs(secondSavePath);
                     AddCurrentModelPaths(model);
                 }
 
@@ -255,28 +257,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 model.SetWorkingDirectoryInModelSettings(() => application.WorkDirectory);
                 application.Run();
-                application.CreateNewProject();
-                application.Project.RootFolder.Add(model);
+                IProjectService projectService = application.ProjectService;
+                Project project = projectService.CreateProject();
+                project.RootFolder.Add(model);
 
                 string savePath = Path.Combine(tempDirectory.Path, "test");
 
                 // Create project files
-                application.SaveProjectAs(savePath);
-                application.CloseProject();
+                projectService.SaveProjectAs(savePath);
+                projectService.CloseProject();
 
                 string changedWorkingDirectoryPath = Path.Combine(Path.GetTempPath(), "changedWorkingDirectory");
                 application.UserSettings =
                     ApplicationTestHelper.GetMockedApplicationSettingsBase(changedWorkingDirectoryPath);
 
                 // Act
-                application.OpenProject(savePath);
+                project = projectService.OpenProject(savePath);
 
                 // Assert
                 Assert.AreEqual(Path.Combine(changedWorkingDirectoryPath, model.Name.Replace(" ", "_")),
-                                ((WaterQualityModel) application.Project.RootFolder.Models.First())
+                                ((WaterQualityModel)project.RootFolder.Models.First())
                                 .ModelSettings.WorkDirectory);
 
-                application.CloseProject();
+                projectService.CloseProject();
             }
         }
 
@@ -310,19 +313,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             using (var model = new WaterQualityModel())
             {
                 application.Run();
-                application.CreateNewProject();
-                application.Project.RootFolder.Add(model);
+                IProjectService projectService = application.ProjectService;
+                Project project = projectService.CreateProject();
+                project.RootFolder.Add(model);
 
                 string savePath = Path.Combine(tempDirectory.Path, "test");
 
-                application.SaveProjectAs(savePath);
+                projectService.SaveProjectAs(savePath);
 
                 string persistentOutputFolder = model.ModelSettings.OutputDirectory;
 
                 CreateDirectoryAndAddFiles(persistentOutputFolder);
 
                 // Act
-                application.SaveProjectAs(savePath);
+                projectService.SaveProjectAs(savePath);
 
                 // Assert
                 Assert.IsNull(model.OutputFolder);
@@ -340,12 +344,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             using (var model = new WaterQualityModel())
             {
                 application.Run();
-                application.CreateNewProject();
-                application.Project.RootFolder.Add(model);
+                IProjectService projectService = application.ProjectService;
+                Project project = projectService.CreateProject();
+                project.RootFolder.Add(model);
 
                 string savePath = Path.Combine(tempDirectory.Path, "test");
 
-                application.SaveProjectAs(savePath);
+                projectService.SaveProjectAs(savePath);
 
                 string persistentOutputFolder = model.ModelSettings.OutputDirectory;
 
@@ -353,7 +358,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 model.OutputFolder = new FileBasedFolder();
 
                 // Act
-                application.SaveProjectAs(savePath);
+                projectService.SaveProjectAs(savePath);
 
                 //Assert
                 Assert.IsNotNull(model.OutputFolder);
@@ -403,8 +408,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             var waqModel = new WaterQualityModel();
 
-            application.CreateNewProject();
-            application.Project.RootFolder.Add(waqModel);
+            Project project = application.ProjectService.CreateProject();
+            project.RootFolder.Add(waqModel);
             waqModel.SetWorkingDirectoryInModelSettings(() => application.WorkDirectory);
 
             string originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");

@@ -150,14 +150,14 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                IDataItem parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
+                IDataItem parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.ProjectService.Project, subRegion.Parent);
                 AddChildRegionDataItems(parentRegionDataItem);
                 return;
             }
 
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                IDataItem parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
+                IDataItem parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.ProjectService.Project, subRegion.Parent);
                 IDataItem regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));
                 if (regionDataItem != null)
                 {

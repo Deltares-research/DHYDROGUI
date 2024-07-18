@@ -12,6 +12,7 @@ using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
@@ -504,7 +505,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             get
             {
-                return Gui == null ? Enumerable.Empty<WaterFlowFMModel>() : Gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>();
+                return Gui == null ? Enumerable.Empty<WaterFlowFMModel>() : Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>();
             }
         }
 
@@ -640,7 +641,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectService.ProjectSaving += ApplicationOnProjectSaving;
             base.Gui.Application.ProjectService.ProjectSaved += ApplicationOnProjectSaved;
 
-            Project project = base.Gui.Application.Project;
+            Project project = base.Gui.Application.ProjectService.Project;
             if (project != null)
             {
                 SubscribeToProjectPropertyChanged(project);
@@ -666,7 +667,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectService.ProjectCreated -= SubscribeToProjectPropertyChanged;
             base.Gui.Application.ProjectService.ProjectClosing -= UnsubscribeToProjectPropertyChanged;
 
-            Project project = base.Gui.Application.Project;
+            Project project = base.Gui.Application.ProjectService.Project;
             if (project != null)
             {
                 UnsubscribeToProjectPropertyChanged(project);

@@ -5,8 +5,8 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
@@ -118,13 +118,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
 
             try
             {
-                using (var app = GetRunningApplication(savePath))
+                using (IApplication app = GetRunningApplication())
                 {
-                    importer = new WaveDepthFileImporter("Waves Model", () => app.Project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>());
+                    IProjectService projectService = app.ProjectService;
+                    importer = new WaveDepthFileImporter("Waves Model", () => projectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaveModel>());
 
                     using (var model = new WaveModel())
                     {
-                        Project project = app.Project;
+                        Project project = projectService.CreateProject();
                         project.RootFolder.Add(model);
 
                         model.OuterDomain.Grid = CreateCurvilinearGrid(size, size);
@@ -132,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
 
                         Assert.AreEqual(size, model.OuterDomain.Bathymetry.Size1);
 
-                        app.SaveProjectAs(savePath);
+                        projectService.SaveProjectAs(savePath);
 
                         string depFilePath = Directory.GetFiles(Path.Combine(saveDirPath, projectName + ".dsproj_data"),
                                                                 "*.dep",
@@ -284,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
                 .SetName("CurvilinearCoverage with generic FunctionStore");
         }
 
-        private static IApplication GetRunningApplication(string savePath)
+        private static IApplication GetRunningApplication()
         {
             var pluginsToAdd = new List<IPlugin>()
             {
@@ -295,8 +296,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
             var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             
             app.Run();
-            app.CreateNewProject();
-            app.SaveProjectAs(savePath);
             return app;
         }
 

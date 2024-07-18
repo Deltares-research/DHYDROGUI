@@ -60,6 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     {
         private IGui gui;
         private IApplication app;
+        private Project project;
 
         [SetUp]
         public void SetUp()
@@ -77,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Slow)]
         public void ShowFmModelRunCoupledToRtc()
         {
-            HydroModel hydroModel = CreateFmRtcModel(out WaterFlowFMModel flow, app);
+            HydroModel hydroModel = CreateFmRtcModel(out WaterFlowFMModel flow);
             var mainWindow = (MainWindow) gui.MainWindow;
 
             // wait until gui starts
@@ -127,12 +128,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         gui.CommandHandler.AddItemToProject(waterFlowFmModel);
                         gui.Selection = waterFlowFmModel;
                         gui.CommandHandler.OpenViewForSelection();
-                        gui.Application.Project.RootFolder.Items.Remove(integratedModel2D3D);
-                        Assert.IsTrue(gui.Application.Project.RootFolder.GetAllModelsRecursive()
-                                         .SequenceEqual(new[]
-                                         {
-                                             waterFlowFmModel
-                                         }));
+                        project.RootFolder.Items.Remove(integratedModel2D3D);
+                        Assert.IsTrue(project.RootFolder.GetAllModelsRecursive()
+                                             .SequenceEqual(new[]
+                                             {
+                                                 waterFlowFmModel
+                                             }));
                     }
                 }
             }
@@ -154,7 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     gui.CommandHandler.AddItemToProject(integratedModel);
                     gui.Selection = integratedModel;
                     gui.CommandHandler.OpenViewForSelection();
-                    WaterFlowFMModel waterFlowFmModel = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().First();
+                    WaterFlowFMModel waterFlowFmModel = project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().First();
                     waterFlowFmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(50, 50, 20, 20);
                     waterFlowFmModel.ReloadGrid();
                     gui.Selection = waterFlowFmModel.Grid;
@@ -181,7 +182,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 /* create a integrated model */
                 var hydroModel = HydroModel.BuildModel(ModelGroup.FMWaveRtcModels);
-                Project project = app.Project;
 
                 /* add it to you project */
                 project.RootFolder.Add(hydroModel);
@@ -218,7 +218,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             /* create a integrated model */
             var hydroModel = HydroModel.BuildModel(ModelGroup.FMWaveRtcModels);
-            Project project = app.Project;
 
             /* add it to you project */
             project.RootFolder.Add(hydroModel);
@@ -274,7 +273,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
             app = gui.Application;
             gui.Run();
-            app.CreateNewProject();
+            project = gui.Application.ProjectService.CreateProject();
         }
 
         private void DisposeGui()
@@ -325,7 +324,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static HydroModel CreateFmRtcModel(out WaterFlowFMModel flow, IApplication application)
+        private HydroModel CreateFmRtcModel(out WaterFlowFMModel flow)
         {
             flow = new WaterFlowFMModel {Name = "flow"};
             var rtc = new RealTimeControlModel("rtc");
@@ -338,7 +337,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     flow
                 }
             };
-            application.Project.RootFolder.Add(hydroModel);
+            project.RootFolder.Add(hydroModel);
 
             hydroModel.StopTime = hydroModel.StartTime.AddHours(0.5);
             hydroModel.TimeStep = new TimeSpan(0, 0, 1, 0);

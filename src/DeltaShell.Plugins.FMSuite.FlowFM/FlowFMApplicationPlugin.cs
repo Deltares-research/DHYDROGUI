@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Image = Properties.Resources.unstrucModel,
                 GetParentProjectItem = owner =>
                 {
-                    Folder rootFolder = Application?.Project?.RootFolder;
+                    Folder rootFolder = Application?.ProjectService.Project?.RootFolder;
                     return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                 },
                 AdditionalOwnerCheck = owner =>
@@ -558,7 +558,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void Application_ProjectOpened(object sender, EventArgs<Project> e)
         {
             Project project = e.Value;
-            Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().ForEach(m =>
+            Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().ForEach(m =>
             {
                 m.WorkingDirectoryPathFunc = () => application.WorkDirectory;
                 m.DimrRunner.FileExportService = Application.FileExportService;
@@ -576,7 +576,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors)
             where T : IFeature
         {
-            return Application?.Project?.RootFolder.GetAllModelsRecursive()
+            return Application?.ProjectService.Project?.RootFolder.GetAllModelsRecursive()
                               .OfType<WaterFlowFMModel>()
                               .FirstOrDefault(m => listSelectors.Any(s => Equals(s(m.Area), target)));
         }
@@ -633,7 +633,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return false;
         }
 
-        private IEnumerable<WaterFlowFMModel> GetWaterFlowFMModels() => Application.GetAllModelsInProject().OfType<WaterFlowFMModel>();
+        private IEnumerable<WaterFlowFMModel> GetWaterFlowFMModels() => Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>();
         
         private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {

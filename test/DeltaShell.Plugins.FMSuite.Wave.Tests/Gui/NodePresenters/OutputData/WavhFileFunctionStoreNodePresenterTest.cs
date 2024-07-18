@@ -54,10 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var model = Substitute.For<IWaveModel>();
 
             var application = Substitute.For<IApplication>();
-            application.GetAllModelsInProject().Returns(new[]
-            {
-                model
-            });
+            AddToProject(model, application.ProjectService);
 
             var gui = Substitute.For<IGui>();
             gui.Application = application;
@@ -86,6 +83,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
 
             // Assert 
             Assert.That(result.Count, Is.EqualTo(2));
+        }
+        
+        private static void AddToProject(object obj, IProjectService projectService)
+        {
+            var project = new Project();
+            project.RootFolder.Add(obj);
+            projectService.Project.Returns(project);
         }
     }
 }

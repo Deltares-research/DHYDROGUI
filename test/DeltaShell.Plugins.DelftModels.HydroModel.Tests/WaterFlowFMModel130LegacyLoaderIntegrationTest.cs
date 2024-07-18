@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string tempDir = temp.CopyDirectoryToTempDirectory(testData);
 
                 // Call
-                app.OpenProject(Path.Combine(tempDir, "fm_130_project.dsproj"));
+                app.ProjectService.OpenProject(Path.Combine(tempDir, "fm_130_project.dsproj"));
 
                 // Assert
                 string inputDir = Path.Combine(tempDir, "fm_130_project.dsproj_data", "FlowFM", "input");

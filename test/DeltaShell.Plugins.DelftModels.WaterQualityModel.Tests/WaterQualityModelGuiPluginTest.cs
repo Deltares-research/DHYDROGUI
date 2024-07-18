@@ -184,9 +184,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 Action mainWindowShown = delegate
                 {
-                    app.CreateNewProject();
-                    
-                    WaterQualityModel waqModel = AddWaterQualityModelToProject(app);
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
+
+                    WaterQualityModel waqModel = AddWaterQualityModelToProject(project);
                     //First call to initialize the view.
                     gui.CommandHandler.OpenView(waqModel, typeof(ProjectItemMapView));
 
@@ -256,10 +257,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
-        private static WaterQualityModel AddWaterQualityModelToProject(IApplication app)
+        private static WaterQualityModel AddWaterQualityModelToProject(Project project)
         {
             // Add WaterQualityModel to project
-            Project project = app.Project;
             project.RootFolder.Add(new WaterQualityModel());
 
             //Check model name

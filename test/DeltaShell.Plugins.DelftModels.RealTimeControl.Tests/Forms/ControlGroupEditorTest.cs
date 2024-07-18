@@ -16,7 +16,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
@@ -463,7 +462,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             using (var gui = new DeltaShellGuiBuilder().Build())
             {
                 gui.Run();
-                gui.Application.CreateNewProject();
+                gui.Application.ProjectService.CreateProject();
 
                 // setup mock model / control group
                 var controlGroup = new ControlGroup();

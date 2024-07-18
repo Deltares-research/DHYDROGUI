@@ -287,8 +287,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         private static IApplication GetApplication(Project project, string workingDir)
         {
             var application = Substitute.For<IApplication>();
-            application.Project.Returns(project);
-            application.GetAllModelsInProject().Returns(project.RootFolder.GetAllModelsRecursive());
+            application.ProjectService.Project.Returns(project);
             application.WorkDirectory.Returns(workingDir);
 
             return application;

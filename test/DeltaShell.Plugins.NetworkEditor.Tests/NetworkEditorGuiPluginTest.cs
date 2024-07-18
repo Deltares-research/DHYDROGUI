@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Controls;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -56,19 +55,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 IApplication app = gui.Application;
+                IProjectService projectService = app.ProjectService;
 
                 gui.Run();
 
-                app.CreateNewProject();
+                Project project = projectService.CreateProject();
                 
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
 
                 var networkCoverage = new NetworkCoverage {Name = "coverage1"};
-                app.Project.RootFolder.Add(networkCoverage);
+                project.RootFolder.Add(networkCoverage);
 
                 Action afterShow = () =>
                 {
-                    IDataItem networkCoverageDataItem = app.Project.RootFolder.DataItems.Last();
+                    IDataItem networkCoverageDataItem = project.RootFolder.DataItems.Last();
 
                     ITreeView treeView = ProjectExplorerGuiPlugin.Instance.ProjectExplorer.TreeView;
                     treeView.Refresh();

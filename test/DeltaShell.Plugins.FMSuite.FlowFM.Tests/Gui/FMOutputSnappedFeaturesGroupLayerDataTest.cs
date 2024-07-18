@@ -45,15 +45,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             filePath = TestHelper.CreateLocalCopy(filePath);
             using (var gui = CreateGui())
             {
-                IApplication app = gui.Application;
+                IProjectService projectService = gui.Application.ProjectService;
                 gui.Run();
                 
-                app.OpenProject(filePath); // save to initialize file repository..
-                var model = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                Project project = projectService.OpenProject(filePath); // save to initialize file repository..
+                var model = (WaterFlowFMModel)project.RootFolder.Items[0];
                 Assert.NotNull(model);
 
                 var secondModel = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(secondModel);
+                project.RootFolder.Add(secondModel);
 
                 //Open view
                 gui.CommandHandler.OpenView(secondModel, typeof(ProjectItemMapView));
@@ -81,11 +81,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             filePath = TestHelper.CreateLocalCopy(filePath);
             using (var gui = CreateGui())
             {
+                IProjectService projectService = gui.Application.ProjectService;
                 IApplication app = gui.Application;
                 gui.Run();
 
-                app.OpenProject(filePath); // save to initialize file repository..
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                Project project = projectService.OpenProject(filePath); // save to initialize file repository..
+                var loadedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
 
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
@@ -136,12 +137,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             filePath = TestHelper.CreateLocalCopy(filePath);
             using (var gui = CreateGui())
             {
-                IApplication app = gui.Application;
+                IProjectService projectService = gui.Application.ProjectService;
                 gui.Run();
 
-                app.OpenProject(filePath); // save to initialize file repository..
-                app.SaveProject();
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                Project project = projectService.OpenProject(filePath); // save to initialize file repository..
+                projectService.SaveProject();
+                var loadedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
 
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
@@ -224,23 +225,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             filePath = TestHelper.CreateLocalCopy(filePath);
 
             string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
-            ApplicationSettingsBase application = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+            ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             
-            var app = CreateApplication();
-            app.UserSettings = application;
-            using (app)
+            using (IApplication app = CreateApplication(userSettings))
             {
-                
-                app.Run();
+                IProjectService projectService = app.ProjectService;
 
-                app.OpenProject(filePath); // save to initialize file repository..
+                Project project = projectService.OpenProject(filePath); // save to initialize file repository..
                 /*Prevent overwritting existent data used for other tests */
                 if (saving)
                 {
-                    app.SaveProjectAs(newSavePath);
+                    projectService.SaveProjectAs(newSavePath);
                 }
 
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
 
                 try
                 {
@@ -265,7 +263,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 outputSnappedLayers.ForEach(l => l.Dispose());
 
-                app.CloseProject();
+                projectService.CloseProject();
             }
 
             try
@@ -294,24 +292,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             filePath = TestHelper.CreateLocalCopy(filePath);
 
             string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
-            ApplicationSettingsBase application =
+            ApplicationSettingsBase userSettings =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
 
-            var app = CreateApplication();
-            app.UserSettings = application;
-            using (app)
+            using (IApplication app = CreateApplication(userSettings))
             {
-                
-                app.Run();
+                IProjectService projectService = app.ProjectService;
 
-                app.OpenProject(filePath); // save to initialize file repository..
+                Project project = projectService.OpenProject(filePath); // save to initialize file repository..
                 /*Prevent overwritting existent data used for other tests */
                 if (saving)
                 {
-                    app.SaveProjectAs(newSavePath);
+                    projectService.SaveProjectAs(newSavePath);
                 }
 
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
@@ -351,7 +346,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 //Limitation from the tests. CreateLayers do not get disposed properly
                 outputSnappedLayers.ForEach(l => l.Dispose());
 
-                app.CloseProject();
+                projectService.CloseProject();
             }
 
             try
@@ -381,23 +376,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             filePath = TestHelper.CreateLocalCopy(filePath);
 
             string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
-            ApplicationSettingsBase application =
+            ApplicationSettingsBase userSettings =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             
-            var app = CreateApplication();
-            app.UserSettings = application;
-            using (app)
+            using (IApplication app = CreateApplication(userSettings))
             {
-                
-                app.Run();
+                IProjectService projectService = app.ProjectService;
 
-                app.OpenProject(filePath); // save to initialize file repository..
+                Project project = projectService.OpenProject(filePath); // save to initialize file repository..
                 if (initialize)
                 {
-                    app.SaveProject();
+                    projectService.SaveProject();
                 }
 
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
@@ -435,7 +427,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 //Limitation from the tests. CreateLayers do not get disposed properly
                 outputSnappedLayers.ForEach(l => l.Dispose());
 
-                app.CloseProject();
+                projectService.CloseProject();
             }
 
             try
@@ -450,7 +442,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static IApplication CreateApplication()
+        private static IApplication CreateApplication(ApplicationSettingsBase userSettings)
         {
             var pluginsToAdd = new List<IPlugin>()
             {
@@ -460,7 +452,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 new FlowFMApplicationPlugin(),
                 new NetworkEditorApplicationPlugin(),
             };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            application.UserSettings = userSettings;
+            application.Run();
+            return application;
         }
 
         private static IGui CreateGui()

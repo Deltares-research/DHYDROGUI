@@ -44,14 +44,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string projPath = Path.Combine(tempDir.Path, "testProj", "Project1.dsproj");
 
                 // Call
-                application.OpenProject(projPath);
+                Project project = application.ProjectService.OpenProject(projPath);
 
                 // Assert
                 RealTimeControlModel rtcModel =
-                    application.Project.RootFolder.Items
-                               .OfType<HydroModel>().Single()
-                               .Activities
-                               .OfType<RealTimeControlModel>().Single();
+                    project.RootFolder.Items
+                           .OfType<HydroModel>().Single()
+                           .Activities
+                           .OfType<RealTimeControlModel>().Single();
 
                 IDataItem relevantDataItem = rtcModel.DataItems.Single(x => x.Name == "Control Group 1")
                                                      .Children.Single(x => x.Role == DataItemRole.Output);
@@ -79,19 +79,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (IApplication application = GetApplication())
             using (HydroModel hydroModel = CreateHydroModelWithFMAndRTCAndDataItemsWithSameName(dataItemName))
             {
-                application.ProjectService.CreateProject();
-                application.Project.RootFolder.Add(hydroModel);
+                IProjectService projectService = application.ProjectService;
+                Project project = projectService.CreateProject();
+                project.RootFolder.Add(hydroModel);
 
                 // Call
                 string projPath = Path.Combine(tempDir.Path, "testProj", "Project1.dsproj");
-                application.SaveProjectAs(projPath);
-                application.CloseProject();
-                bool successfullyOpenedProject = application.OpenProject(projPath);
+                projectService.SaveProjectAs(projPath);
+                projectService.CloseProject();
+                project = application.ProjectService.OpenProject(projPath);
 
                 // Assert
-                Assert.That(successfullyOpenedProject);
+                Assert.That(project, Is.Not.Null);
 
-                HydroModel loadedHydroModel = application.Project.RootFolder.Items.OfType<HydroModel>().Single();
+                HydroModel loadedHydroModel = project.RootFolder.Items.OfType<HydroModel>().Single();
                 AssertThatDataItemsAreLinkedCorrectly(loadedHydroModel);
             }
         }

@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 gui.DocumentViews.Returns(documentViews);
                 gui.ToolWindowViews.Returns(documentViews);
                 application.ActivityRunner.Returns(activityRunner);
-                application.Project.Returns(project);
+                application.ProjectService.Project.Returns(project);
 
                 RealTimeControlGuiPlugin pluginGui = CreatePlugin();
                 pluginGui.Activate();

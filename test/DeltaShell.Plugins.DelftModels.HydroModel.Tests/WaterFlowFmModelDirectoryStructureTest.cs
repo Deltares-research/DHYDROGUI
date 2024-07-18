@@ -11,6 +11,7 @@ using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -19,7 +20,6 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Core.Services;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
@@ -236,6 +236,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -253,11 +255,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     AssertProjectFileAndFolderExist();
                     AssertModelDirectoryExists();
@@ -276,6 +278,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -295,11 +299,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     AssertProjectFileAndFolderExist();
                     AssertModelDirectoryExists();
@@ -319,6 +323,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -337,11 +343,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     AdjustSettingsOutputParameters(model);
 
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     AssertProjectFileAndFolderExist();
                     AssertModelDirectoryExists();
@@ -361,6 +367,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -378,13 +386,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     ValidateAndRunModel(model, app);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
                     Assert.That(workDirInfo.Exists, "The working directory does not exist.");
@@ -409,6 +417,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -428,13 +438,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     ValidateAndRunModel(model, app);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
                     Assert.That(workDirInfo.Exists, "The working directory does not exist.");
@@ -460,6 +470,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -477,13 +489,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     ValidateAndRunModel(model, app);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
                     Assert.That(workDirInfo.Exists, "The working directory does not exist.");
@@ -509,6 +521,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -526,9 +540,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     ValidateAndRunModel(model, app);
 
@@ -540,11 +554,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AssertWorkingDirectoryWithOutputExists(workingDirectoryPath, workingOutputDirectoryPath);
 
-                    app.SaveProject();
+                    projectService.SaveProject();
 
                     AssertWorkingDirectoryIsCleaned(workingDirectoryPath, workingOutputDirectoryPath);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputPersistentDirStructure = GetDirectoryStructure(outputDirPath, ".", true);
                     AssertEqualDirectoryStructure(".", ref outputWorkingDirStructure,
@@ -565,6 +579,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -582,9 +598,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     AssertProjectFileAndFolderExist();
 
@@ -594,7 +610,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     DHydroConfigXmlExporter exporter = GetDimrFileExporter();
                     exporter.Export(model, exportDimrFilePath);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     Assert.IsTrue(File.Exists(exportDimrFilePath));
                     var expectedFileCount = 1;
@@ -620,6 +636,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -639,9 +657,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     AssertProjectFileAndFolderExist();
 
@@ -651,7 +669,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     DHydroConfigXmlExporter exporter = GetDimrFileExporter();
                     exporter.Export(model, exportDimrFilePath);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     Assert.IsTrue(File.Exists(exportDimrFilePath));
                     const int expectedFileCount = 1;
@@ -678,6 +696,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -695,9 +715,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     AssertProjectFileAndFolderExist();
 
@@ -717,7 +737,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     AssertFilesExtensionsExistInDirectory(filtersInputWithWind,
                                                           dflowfmDirPath);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
                 }
             }
         }
@@ -732,6 +752,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -749,22 +771,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     ValidateAndRunModel(model, app);
 
-                    app.SaveProject();
+                    projectService.SaveProject();
 
                     model.ClearOutput();
 
                     Assert.IsFalse(FileUtils.IsDirectoryEmpty(outputDirPath),
                                    $"Expected: Output folder '{outputDirPath}' should not be emptied after ClearModelOutput.");
 
-                    app.SaveProject();
+                    projectService.SaveProject();
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     AssertProjectFileAndFolderExist();
                     AssertModelDirectoryExists();
@@ -784,6 +806,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -801,9 +825,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     model.ValidateBeforeRun = true;
                     ValidationReport report = model.Validate();
@@ -812,7 +836,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     app.RunActivity(model);
                     Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
-                    app.SaveProject();
+                    projectService.SaveProject();
 
                     Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectFolderBeforeRename =
                         GetDirectoryStructure(
@@ -825,9 +849,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     //Rename
                     model.Name = "FlowFM2";
 
-                    app.SaveProject();
+                    projectService.SaveProject();
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     AssertProjectFileAndFolderExist();
 
@@ -863,6 +887,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 using (var model = new WaterFlowFMModel())
                 {
                     AddFeaturesToModel(model);
@@ -880,9 +906,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AdjustSettingsOutputParameters(model);
                     UpdateBedLevel(model);
-                    AddModelToProject(model, app);
+                    AddModelToProject(model, projectService.Project);
 
-                    app.SaveProjectAs(projectFilePath);
+                    projectService.SaveProjectAs(projectFilePath);
 
                     model.ValidateBeforeRun = true;
                     ValidationReport report = model.Validate();
@@ -891,7 +917,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     app.RunActivity(model);
                     Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
-                    app.SaveProject();
+                    projectService.SaveProject();
 
                     AssertProjectFileAndFolderExist();
                     AssertModelDirectoryExists();
@@ -904,9 +930,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                       Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
                     string newSaveAsProjectFilePath = Path.Combine(newSaveAsDestinationDirPath, projectFileName);
 
-                    app.SaveProjectAs(newSaveAsProjectFilePath);
+                    projectService.SaveProjectAs(newSaveAsProjectFilePath);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
                     Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectDirStructureAfterSaveAs =
                         GetDirectoryStructure(projectDirPath, ".", true);
                     Dictionary<string, Tuple<Tuple<string, string>[], string[]>> newDirStructureAfterSaveAs = GetDirectoryStructure(
@@ -933,13 +959,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 using (var app = GetConfiguredHydroApplication())
                 {
-                    app.OpenProject(projectFilePath);
-                    // Execute SaveAs() manually (migrating through GUI does this already).
-                    app.SaveProjectAs(projectFilePath);
+                    IProjectService projectService = app.ProjectService;
 
-                    var integratedModel = app.GetAllModelsInProject().FirstOrDefault(m => m is HydroModel) as HydroModel;
+                    Project project = projectService.OpenProject(projectFilePath);
+                    // Execute SaveAs() manually (migrating through GUI does this already).
+                    projectService.SaveProjectAs(projectFilePath);
+
+                    HydroModel integratedModel = project.RootFolder.GetAllModelsRecursive().OfType<HydroModel>().FirstOrDefault();
                     Assert.NotNull(integratedModel, "Expected: one integrated model (hydromodel) in the project.");
-                    var fmModel = (WaterFlowFMModel) app.GetAllModelsInProject().FirstOrDefault(m => m is WaterFlowFMModel);
+                    WaterFlowFMModel fmModel = project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.NotNull(fmModel, "Expected: one waterflow fm model in the project.");
 
                     app.RunActivity(integratedModel);
@@ -956,11 +984,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     AssertCorrectOutputIsLinked(outputWorkingDirectoryPath, fmModel);
 
-                    app.SaveProject();
+                    projectService.SaveProject();
 
                     AssertCorrectOutputIsLinked(outputDirPath, fmModel);
 
-                    app.CloseProject();
+                    projectService.CloseProject();
 
                     AssertProjectFileAndFolderExist();
                     AssertModelDirectoryExists();
@@ -1004,8 +1032,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 // Given
-                CreateExportedFmModel(app, exportPath, out WaterFlowFMModel fmModel);
+                CreateExportedFmModel(app, projectService, exportPath, out WaterFlowFMModel fmModel);
                 string exportFilePath = Path.Combine(exportPath,
                                                      Path.GetFileName(fmModel.MduFilePath));
 
@@ -1015,17 +1045,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Dictionary<string, Tuple<Tuple<string, string>[], string[]>> originalInputDirStructure = GetDirectoryStructure(originalInputFolder, ".");
 
                 // When
-                app.CreateNewProject();
+                Project project = projectService.CreateProject();
                 IFileImporter relevantImporter = app.FileImporters
                                                     .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
 
                 var importedModel = relevantImporter.ImportItem(exportFilePath) as WaterFlowFMModel;
                 Assert.That(importedModel, Is.Not.Null,
                             "Expected the imported model to exist.");
-                AddModelToProject(importedModel, app);
+                AddModelToProject(importedModel, project);
 
                 string newSaveFilePath = Path.Combine(newSavePath, "Project1.dsproj");
-                app.SaveProjectAs(newSaveFilePath);
+                projectService.SaveProjectAs(newSaveFilePath);
 
                 // Then
                 // The import location does not change.
@@ -1078,8 +1108,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 // Given
-                CreateExportedFmModel(app, exportPath, out WaterFlowFMModel fmModel);
+                CreateExportedFmModel(app, projectService, exportPath, out WaterFlowFMModel fmModel);
                 string exportFilePath = Path.Combine(exportPath,
                                                      Path.GetFileName(fmModel.MduFilePath));
 
@@ -1091,10 +1123,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                                                                                ignoreFileExtension: "meta"); // The restart.meta file is ignored, as it should not be present in the HydroModel.
 
                 // When
-                app.CreateNewProject();
+                Project project = projectService.CreateProject();
                 var newIntegratedModel = new HydroModel() {Name = "Blastoise"};
 
-                AddModelToProject(newIntegratedModel, app);
+                AddModelToProject(newIntegratedModel, project);
 
                 IFileImporter relevantImporter = app.FileImporters
                                                     .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
@@ -1102,7 +1134,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 relevantImporter.ImportItem(exportFilePath, newIntegratedModel);
 
                 string newSaveFilePath = Path.Combine(newSavePath, "Project1.dsproj");
-                app.SaveProjectAs(newSaveFilePath);
+                projectService.SaveProjectAs(newSaveFilePath);
 
                 // Then
                 // A new model is created in the integrated model
@@ -1160,6 +1192,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
                 List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
@@ -1172,7 +1206,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 // When
                 string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                WaterFlowFMModel importedModel = ImportModelIntoProject(app, projectService, mduPath, dsprojSave);
 
                 // Then
                 Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1211,6 +1245,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
                 List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
@@ -1226,7 +1262,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 // When
                 string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                WaterFlowFMModel importedModel = ImportModelIntoProject(app, projectService, mduPath, dsprojSave);
 
                 // Then
                 Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1265,13 +1301,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
                 List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
                 string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
-                MigrateModel(app, projectFilePath);
+                MigrateModel(projectService, projectFilePath);
                 MoveOutputDirToCustomLocation(modelDirImport);
 
                 Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1280,7 +1318,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 // When
                 string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                WaterFlowFMModel importedModel = ImportModelIntoProject(app, projectService, mduPath, dsprojSave);
 
                 // Then
                 Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1319,13 +1357,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
                 List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
                 string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
-                MigrateModel(app, projectFilePath);
+                MigrateModel(projectService, projectFilePath);
                 UpdateOutputDirInMDUTo(mduPath, "../" + customOutputFolder);
                 MoveOutputDirToCustomLocation(modelDirImport);
 
@@ -1335,7 +1375,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 // When
                 string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                WaterFlowFMModel importedModel = ImportModelIntoProject(app, projectService, mduPath, dsprojSave);
 
                 // Then
                 Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1374,13 +1414,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
                 List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
                 string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
-                MigrateModel(app, projectFilePath);
+                MigrateModel(projectService, projectFilePath);
 
                 Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
                                                                                                                            ".",
@@ -1388,7 +1430,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 // When
                 string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                HydroModel integratedModel = ImportModelIntoIntegratedModel(app, mduPath, dsprojSave);
+                HydroModel integratedModel = ImportModelIntoIntegratedModel(app, projectService, mduPath, dsprojSave);
 
                 // Then
 
@@ -1439,9 +1481,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
-                app.OpenProject(projectFilePath);
+                IProjectService projectService = app.ProjectService;
 
-                app.CloseProject();
+                projectService.OpenProject(projectFilePath);
+
+                projectService.CloseProject();
 
                 AssertProjectFileAndFolderExist();
                 AssertModelDirectoryExists();
@@ -1455,9 +1499,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 AssertFilesExtensionsExistInDirectory(filtersOutputFM_OldModel, outputDirPath);
                 Assert.IsTrue(Directory.Exists(snappedDirPath));
 
-                app.OpenProject(projectFilePath);
+                Project project = projectService.OpenProject(projectFilePath);
 
-                var model = (WaterFlowFMModel) app.GetAllModelsInProject().FirstOrDefault();
+                WaterFlowFMModel model = project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().FirstOrDefault();
 
                 Assert.NotNull(model);
 
@@ -1465,7 +1509,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
-                app.CloseProject();
+                projectService.CloseProject();
             }
         }
 
@@ -1486,13 +1530,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             using (var app = GetConfiguredApplication())
             {
+                IProjectService projectService = app.ProjectService;
+                
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
                 List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
                 string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
-                MigrateModel(app, projectFilePath);
+                MigrateModel(projectService, projectFilePath);
                 UpdateOutputDirInMDUTo(mduPath, outputDirValue);
 
                 Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1501,7 +1547,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 // When
                 string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                WaterFlowFMModel importedModel = ImportModelIntoProject(app, projectService, mduPath, dsprojSave);
 
                 // Then
                 Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1524,14 +1570,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static void MigrateModel(IApplication app, string dsProjPath)
+        private static void MigrateModel(IProjectService projectService, string dsProjPath)
         {
-            bool hasOpened = app.OpenProject(dsProjPath);
-            Assert.That(hasOpened, Is.True,
+            Project project = projectService.OpenProject(dsProjPath);
+            Assert.That(project != null, Is.True,
                         $"Could not open project at {dsProjPath}");
 
-            app.SaveProject();
-            app.CloseProject();
+            projectService.SaveProject();
+            projectService.CloseProject();
         }
 
         private static void UpdateOutputDirInMDUTo(string mduPath, string newOutputDirPath)
@@ -1569,35 +1615,35 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                            Path.Combine(outputParentDirectory, customOutputFolder));
         }
 
-        private static WaterFlowFMModel ImportModelIntoProject(IApplication app, string mduPath, string DsprojSave)
+        private static WaterFlowFMModel ImportModelIntoProject(IApplication app, IProjectService projectService, string mduPath, string DsprojSave)
         {
-            app.CreateNewProject();
+            Project project = projectService.CreateProject();
             IFileImporter relevantImporter = app.FileImporters
                                                 .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
 
             var importedModel = relevantImporter.ImportItem(mduPath) as WaterFlowFMModel;
             Assert.That(importedModel, Is.Not.Null,
                         "Expected the imported model to exist.");
-            AddModelToProject(importedModel, app);
+            AddModelToProject(importedModel, project);
 
-            app.SaveProjectAs(DsprojSave);
+            projectService.SaveProjectAs(DsprojSave);
             return importedModel;
         }
 
-        private static HydroModel ImportModelIntoIntegratedModel(IApplication app, string mduPath, string DsprojSave)
+        private static HydroModel ImportModelIntoIntegratedModel(IApplication app, IProjectService projectService, string mduPath, string DsprojSave)
         {
             // When
-            app.CreateNewProject();
+            Project project = projectService.CreateProject();
             var newIntegratedModel = new HydroModel() {Name = "Blastoise"};
 
-            AddModelToProject(newIntegratedModel, app);
+            AddModelToProject(newIntegratedModel, project);
 
             IFileImporter relevantImporter = app.FileImporters
                                                 .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
 
             relevantImporter.ImportItem(mduPath, newIntegratedModel);
 
-            app.SaveProjectAs(DsprojSave);
+            projectService.SaveProjectAs(DsprojSave);
             return newIntegratedModel;
         }
 
@@ -1630,15 +1676,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         private static void CreateExportedFmModel(IApplication app,
+                                                  IProjectService projectService,
                                                   string exportPath,
                                                   out WaterFlowFMModel fmModel)
         {
-            bool hasOpened = app.OpenProject(projectFilePath);
-            Assert.That(hasOpened, Is.True,
+            Project project = projectService.OpenProject(projectFilePath);
+            Assert.That(project != null, Is.True,
                         $"Could not open project at {projectFilePath}");
 
-            fmModel = app.GetAllModelsInProject()
-                         .FirstOrDefault(item => item is WaterFlowFMModel) as WaterFlowFMModel;
+            fmModel = project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().SingleOrDefault();
             Assert.That(fmModel, Is.Not.Null,
                         "Expected the FlowFM Model to be not null.");
 
@@ -1653,7 +1699,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.That(hasExported, Is.True,
                         "Expected the export to succeed.");
 
-            app.CloseProject();
+            projectService.CloseProject();
         }
 
         private static void AssertInputImportedModelIsCorrect(string fmModelPath,
@@ -1705,7 +1751,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.UserSettings = applicationSettingsMock;
             
             app.Run();
-            app.CreateNewProject();
+            app.ProjectService.CreateProject();
             return app;
         }
 
@@ -1730,7 +1776,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.UserSettings = applicationSettingsMock;
 
             app.Run();
-            app.CreateNewProject();
+            app.ProjectService.CreateProject();
             return app;
         }
         
@@ -2104,9 +2150,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
         }
 
-        private static void AddModelToProject(IHydroModel model, IApplication app)
+        private static void AddModelToProject(IHydroModel model, Project project)
         {
-            Project project = app.Project;
             project.RootFolder.Add(model);
         }
 

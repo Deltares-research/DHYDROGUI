@@ -290,7 +290,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     return centralMap?.MapView.GetLayerForData(o);
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => Gui.Application.ModelService.GetModelsByData(Gui.Application.Project, o).FirstOrDefault(),
+                GetCompositeViewData = o => Gui.Application.ModelService.GetModelsByData(Gui.Application.ProjectService.Project, o).FirstOrDefault(),
                 AfterCreate = (view, features) =>
                 {
                     ProjectItemMapView centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(features) != null);
@@ -463,7 +463,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (featureCoverage.Features.Any())
             {
                 IFeature firstFeature = featureCoverage.Features[0];
-                IEnumerable<IRegion> allRegions = Gui.Application.Project.GetAllItemsRecursive().OfType<IRegion>();
+                IEnumerable<IRegion> allRegions = Gui.Application.ProjectService.Project.GetAllItemsRecursive().OfType<IRegion>();
                 IRegion matchingRegion = allRegions.FirstOrDefault(hr => hr.GetDirectChildren().Contains(firstFeature));
                 return GetRootRegion(matchingRegion);
             }

@@ -64,26 +64,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(mduPath);
 
-            var pluginsToAdd = new List<IPlugin>()
+            using (IGui gui = CreateRunningGui())
             {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                IApplication app = gui.Application;
-                
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
@@ -122,25 +108,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (IGui gui = CreateRunningGui())
             {
                 IApplication app = gui.Application;
-
-                gui.Run();
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
                     // Add water flow model to project
-                    Project project = app.Project;
                     project.RootFolder.Add(new WaterFlowFMModel());
 
                     // Check model name
@@ -169,25 +144,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (IGui gui = CreateRunningGui())
             {
                 IApplication app = gui.Application;
-
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
                     // Add new folder to project
-                    Project project = app.Project;
                     project.RootFolder.Add(new Folder("Test Folder"));
 
                     // Check folder name
@@ -226,27 +190,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var model = new WaterFlowFMModel();
 
-            var pluginsToAdd = new List<IPlugin>()
+            using (IGui gui = CreateRunningGui())
             {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                IApplication app = gui.Application;
-
-                gui.Run();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
-                    app.CreateNewProject();
-                    
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     // set the heat flux model to excess temperature
@@ -277,25 +226,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(mduPath);
 
-            var pluginsToAdd = new List<IPlugin>()
+            using (IGui gui = CreateRunningGui())
             {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                IApplication app = gui.Application;
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
@@ -329,26 +265,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel { ShowModelRunConsole = true };
             model.ImportFromMdu(mduPath);
 
-            var pluginsToAdd = new List<IPlugin>()
+            using (IGui gui = CreateRunningGui())
             {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new CommonToolsGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                IApplication app = gui.Application;
-
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
@@ -383,25 +305,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel {ShowModelRunConsole = true};
             model.ImportFromMdu(mduPath);
 
-            var pluginsToAdd = new List<IPlugin>()
+            using (IGui gui = CreateRunningGui())
             {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                IApplication app = gui.Application;
-
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     // open central map view
@@ -430,25 +339,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel { ShowModelRunConsole = true };
             model.ImportFromMdu(mduPath);
 
-            var pluginsToAdd = new List<IPlugin>()
+            using (IGui gui = CreateRunningGui())
             {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                IApplication app = gui.Application;
-
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
-                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
@@ -473,21 +369,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.VerySlow)]
         public void ImportModelWithBigNetfileGridIntoProject()
         {
-            var pluginsToAdd = new List<IPlugin>()
+            using (IGui gui = CreateRunningGui())
             {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                IApplication app = gui.Application;
-
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -512,7 +396,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         StopTimer(timer);
 
                         timer.Restart();
-                        app.Project.RootFolder.Add(model);
+                        project.RootFolder.Add(model);
 
                         StopTimer(timer);
                     });
@@ -527,21 +411,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.VerySlow)]
         public void ImportModelWithBigUgridIntoProject()
         {
-            var pluginsToAdd = new List<IPlugin>()
+            using (IGui gui = CreateRunningGui())
             {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                IApplication app = gui.Application;
-                
-                gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -566,7 +438,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         StopTimer(timer);
 
                         timer.Restart();
-                        app.Project.RootFolder.Add(model);
+                        project.RootFolder.Add(model);
 
                         StopTimer(timer);
                     });
@@ -581,24 +453,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void ImportingOfDryPointsWithProjectItemMapViewOpenShouldBeFast()
         {
-            var pluginsToAdd = new List<IPlugin>()
+            using (IGui gui = CreateRunningGui())
             {
-                new CommonToolsApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                IApplication app = gui.Application;
-
-                gui.Run();
-
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 //create and add a HydroRegion with a HydroArea with DryPoints
                 var area = new HydroArea();
@@ -611,9 +468,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 var waterFlowFMModel = new WaterFlowFMModel();
                 waterFlowFMModel.Area = area;
-                
-                app.Project.RootFolder.Add(waterFlowFMModel);
-                app.Project.RootFolder.Add(hydroRegion);
+
+                project.RootFolder.Add(waterFlowFMModel);
+                project.RootFolder.Add(hydroRegion);
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, () =>
                 {
@@ -679,11 +536,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             // 2. Set up test action
             Action<IGui> testAction = gui =>
             {
-                WaterFlowFMModel[] models = gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>().ToArray();
+                Project project = gui.Application.ProjectService.Project;
+                WaterFlowFMModel[] models = project.RootFolder.Models.OfType<WaterFlowFMModel>().ToArray();
                 Assert.That(models.Any(), Is.True, "No WaterFlowFMModels were added to the project.");
                 foreach (WaterFlowFMModel waterFlowFmModel in models)
                 {
-                    gui.Application.Project.RootFolder.Items.Remove(waterFlowFmModel);
+                    project.RootFolder.Items.Remove(waterFlowFmModel);
                 }
             };
 
@@ -696,21 +554,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void GivenAWaterFlowFmModelWithoutOutputHisFileStore_WithMultipleFunctionViewInGui_WhenDeleteModel_ThenDoesNotThrowException()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                // Given
-                IApplication app = gui.Application;
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 using (var model = new WaterFlowFMModel())
                 {
-                    app.Project.RootFolder.Add(model);
+                    project.RootFolder.Add(model);
                     gui.DocumentViews.Add(new MultipleFunctionView());
                     Assert.That(model.OutputHisFileStore, Is.Null);
 
                     // When
                     void TextAction()
                     {
-                        app.Project.RootFolder.Items.Remove(model);
+                        project.RootFolder.Items.Remove(model);
                     }
 
                     // Then
@@ -741,7 +598,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 Assert.That(gui, Is.Not.Null, "Gui not initialized correctly.");
 
-                Project project = gui.Application?.Project;
+                Project project = gui.Application?.ProjectService.Project;
                 Assert.That(project, Is.Not.Null, "Project was not initialized");
                 Assert.That(project.GetAllItemsRecursive().Contains(testFmModel), Is.True,
                             "Fm Model was not loaded correctly");
@@ -767,11 +624,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             using (var dsProjLocation = new TemporaryDirectory())
             {
                 string tempFileLocation = dsProjLocation.CopyTestDataFileToTempDirectory(testFileLocation);
-                using (var gui = CreateGui())
+                using (IGui gui = CreateRunningGui())
                 {
+                    Project project = gui.Application.ProjectService.CreateProject();
+                    
                     Action mainWindowShown = () =>
                     {
-                        prepareTestProject(gui.Application.Project);
+                        prepareTestProject(project);
                         verifyInitialExpectations(gui);
                         PliFileImporterExporter<SourceAndSink, Feature2D> importer = getImporter(gui);
                         var fileImportActivity = new FileImportActivity(importer, testFmModel.SourcesAndSinks)
@@ -795,9 +654,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenWaterFlowFMModelWithEmptyBoundarySet_WhenOpeningBoundaryConditionsEditor_ThenEditorCorrectlyConfigured()
         {
             // Given
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             using (var model = new WaterFlowFMModel())
             {
+                Project project = gui.Application.ProjectService.CreateProject();
+                
                 var boundaryConditionSet = new BoundaryConditionSet
                 {
                     Feature = new Feature2D
@@ -808,7 +669,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 };
                 model.BoundaryConditionSets.Add(boundaryConditionSet);
 
-                gui.Application.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 Action mainWindowShown = () =>
                 {
@@ -838,7 +699,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenWaterFlowFMModelWithBoundarySet_WhenOpeningBoundaryConditionsEditor_ThenEditorCorrectlyConfigured()
         {
             // Given
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             using (var model = new WaterFlowFMModel())
             {
                 var boundaryConditionSet = new BoundaryConditionSet
@@ -862,7 +723,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 boundaryConditionSet.BoundaryConditions.AddRange(boundaryConditions);
                 model.BoundaryConditionSets.Add(boundaryConditionSet);
 
-                gui.Application.Project.RootFolder.Add(model);
+                Project project = gui.Application.ProjectService.CreateProject();
+                project.RootFolder.Add(model);
 
                 Action mainWindowShown = () =>
                 {
@@ -893,12 +755,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             IEnumerable<BoundaryConditionSet> boundaryConditionSets)
         {
             // Given
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             using (var model = new WaterFlowFMModel())
             {
                 model.BoundaryConditionSets.AddRange(boundaryConditionSets);
 
-                gui.Application.Project.RootFolder.Add(model);
+                Project project = gui.Application.ProjectService.CreateProject();
+                project.RootFolder.Add(model);
 
                 Action mainWindowShown = () =>
                 {
@@ -932,16 +795,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Assert.That(File.Exists(mduFilePath));
                 // 2. Prepare Test Project
-                using (var gui = CreateGui())
+                using (IGui gui = CreateRunningGui())
                 using(var fmModel = new WaterFlowFMModel())
                 {
-                    IApplication app = gui.Application;
+                    Project project = gui.Application.ProjectService.CreateProject();
 
                     fmModel.LoadFromMdu(mduFilePath);
-                    app.Project.RootFolder.Add(fmModel);
-
-                    // 3. Verify initial expectations
-                    Assert.That(app.Project, Is.Not.Null);
+                    project.RootFolder.Add(fmModel);
 
                     // 3.1. Verify data loaded correctly.
                     Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
@@ -990,7 +850,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         #region Helper methods
 
-        private static IGui CreateGui()
+        private static IGui CreateRunningGui()
         {
             var pluginsToAdd = new List<IPlugin>()
             {
@@ -1008,11 +868,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 new FlowFMGuiPlugin(),
                 
             };
-            var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
             
-            // Run gui
             gui.Run();
-            gui.Application.CreateNewProject();
 
             return gui;
         }

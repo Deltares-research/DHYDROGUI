@@ -165,7 +165,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
             if ((operation & DragOperations.Move) != 0)
             {
                 gui.CopyPasteHandler.Cut(model);
-                gui.CopyPasteHandler.Paste(gui.Application.Project, target, position);
+                gui.CopyPasteHandler.Paste(gui.Application.ProjectService.Project, target, position);
             }
             else if ((operation & DragOperations.Copy) != 0)
             {
