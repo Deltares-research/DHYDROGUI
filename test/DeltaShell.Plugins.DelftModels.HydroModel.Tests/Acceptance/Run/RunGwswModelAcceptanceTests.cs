@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             // [Given]
             using (IGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
-                HydroModel hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
+                HydroModel hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.ProjectService.Project.RootFolder);
 
                 Console.WriteLine("Importing model");
                 GwswAcceptanceModelTestHelper.ImportGwswModelAndAssertPreconditions(

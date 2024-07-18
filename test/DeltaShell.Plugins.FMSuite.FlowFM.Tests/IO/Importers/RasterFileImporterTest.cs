@@ -44,11 +44,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
                 {
                     app.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
                     
                     using (var fmModel = new WaterFlowFMModel(mduFilePath))
                     {
-                        app.Project.RootFolder.Add(fmModel);
+                        project.RootFolder.Add(fmModel);
 
                         var rasterFileImporter = new RasterFileImporter();
                         rasterFileImporter.RegisterGetModelFunction<UnstructuredGrid>(grid => fmModel);
@@ -231,13 +232,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 var app = gui.Application;
                 gui.Run();
 
-                app.CreateNewProject();
-
                 Action mainWindowShown = delegate
                 {
                     using (var model = new WaterFlowFMModel())
                     {
-                        var project = app.Project;
+                        Project project = app.ProjectService.CreateProject();
                         project.RootFolder.Add(model);
                         var facesValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
                         model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(facesValue);
@@ -265,20 +264,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             
             using (var gui = CreateGui())
             {
-                var app = gui.Application;
-
                 gui.Run();
-
-                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
                     using (var model = new WaterFlowFMModel())
                     {
-                        var project = app.Project;
+                        var project = gui.Application.ProjectService.CreateProject();
                         project.RootFolder.Add(model);
-                        //var facesValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
-                        //model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(facesValue);
 
                         // open view for model
                         gui.CommandHandler.OpenView(model);
@@ -321,17 +314,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             using (var gui = CreateGui())
             {
-                var app = gui.Application;
-
                 gui.Run();
-
-                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
                     using (var model = new WaterFlowFMModel())
                     {
-                        var project = app.Project;
+                        Project project = gui.Application.ProjectService.CreateProject();
                         project.RootFolder.Add(model);
                         var facesValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
                         model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(facesValue);

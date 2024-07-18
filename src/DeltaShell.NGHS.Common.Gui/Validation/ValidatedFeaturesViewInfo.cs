@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Validators;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Gui;
 using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -66,7 +67,7 @@ namespace DeltaShell.NGHS.Common.Gui.Validation
 
         private IHydroModel GetModel(ValidatedFeatures validatedFeatures)
         {
-            IEnumerable<IHydroModel> models = Gui.Application.GetAllModelsInProject().OfType<IHydroModel>();
+            IEnumerable<IHydroModel> models = Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IHydroModel>();
             return models.First(m =>
                                     m.Region.Equals(validatedFeatures.FeatureRegion) ||
                                     Enumerable.Contains<IComplexFeature>(m.Region.AllRegions, validatedFeatures.FeatureRegion));

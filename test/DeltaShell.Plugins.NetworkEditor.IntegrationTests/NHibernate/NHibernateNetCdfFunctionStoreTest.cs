@@ -14,7 +14,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
@@ -634,16 +633,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveProjectNCToNetCdfNoValues()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
-                gui.Run();
-                
-                var app = gui.Application;
-                
-                app.CreateNewProject();
-                
-                var project = app.Project;
+                IProjectService projectService = GetProjectServiceWithProject(gui);
+
+                Project project = projectService.Project;
 
                 // create test network
                 var network = NHibernateTestsHelper.CreateDummyNetwork();
@@ -655,10 +649,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 // save project in test directory
                 //don't use CurrentMethodName it is too long for the build server
                 var projectPath = "1.dsproj";
-                app.SaveProjectAs(projectPath);
-                
-                app.OpenProject(projectPath);
-                var retrievedProject = app.Project;
+                projectService.SaveProjectAs(projectPath);
+
+                Project retrievedProject = projectService.OpenProject(projectPath);
                 INetworkCoverage networkCoverageReOpend = (INetworkCoverage)retrievedProject.RootFolder.DataItems.First(di => di.ValueType == typeof(NetworkCoverage)).Value;
 
                 // set values
@@ -672,16 +665,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectUnlocksNetCdfFiles()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
-                gui.Run();
-                
-                var app = gui.Application;
-                
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(gui);
 
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // add a coverage to the project.
                 var network = NHibernateTestsHelper.CreateDummyNetwork();
@@ -696,7 +684,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 {
                     Directory.Delete(dataPath, true);
                 }
-                app.SaveProjectAs(projectPath);
+
+                projectService.SaveProjectAs(projectPath);
 
                 //define some values in the coverage forcing a write
                 var branch1 = network.Branches[0];
@@ -706,7 +695,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Assert.AreEqual(1, Directory.GetFiles(dataPath).Length);
 
                 //close the project 
-                app.CloseProject();
+                projectService.CloseProject();
 
                 //delete the files
                 Directory.Delete(dataPath, true);
@@ -716,20 +705,16 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectDeletesUnsavedNetCdfFiles()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                var app = gui.Application;
-                
-                gui.Run();
+                IProjectService projectService = GetProjectServiceWithProject(gui);
 
-                app.CreateNewProject();
-                
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // save the project
                 var projectPath = "ci1.dsproj";
                 string dataPath = projectPath + "_data";
-                app.SaveProjectAs(projectPath);
+                projectService.SaveProjectAs(projectPath);
                 
                 // add a coverage to the project.
                 var network = NHibernateTestsHelper.CreateDummyNetwork();
@@ -745,7 +730,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Assert.AreEqual(1, Directory.GetFiles(dataPath).Length);
                 
                 // close the project 
-                app.CloseProject();
+                projectService.CloseProject();
 
                 // assert file does not exist anymore
                 Assert.AreEqual(0, Directory.GetFiles(dataPath).Length, "file still exists");
@@ -755,22 +740,16 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveAsProjectDeletesUnsavedNetCdfFilesInSourceFolder()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
-                gui.Run();
-                
-                var app = gui.Application;
-                
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(gui);
 
-                
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // save the project
                 var projectPath = "si2.dsproj";
                 string dataPath = projectPath + "_data";
-                app.SaveProjectAs(projectPath);
+                projectService.SaveProjectAs(projectPath);
 
                 // add a coverage to the project.
                 var network = NHibernateTestsHelper.CreateDummyNetwork();
@@ -786,7 +765,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Assert.AreEqual(1, Directory.GetFiles(dataPath).Length);
 
                 // save the project under new name
-                app.SaveProjectAs("newpath.dsproj");
+                projectService.SaveProjectAs("newpath.dsproj");
 
                 // assert file does not exist anymore in old directory
                 Assert.AreEqual(0, Directory.GetFiles(dataPath).Length, "file still exists");
@@ -796,16 +775,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveProjectDeletesDeletedNetCdfFilesInSourceFolder()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
-                gui.Run();
-                
-                var app = gui.Application;
-                
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(gui);
 
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // save the project
                 var projectPath = "si1.dsproj";
@@ -822,7 +796,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
                 // save project
-                app.SaveProjectAs(projectPath);
+                projectService.SaveProjectAs(projectPath);
 
                 // assert a file has been written
                 Assert.AreEqual(1, Directory.GetFiles(dataPath).Length);
@@ -831,7 +805,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 project.RootFolder.Items.Remove(dataItem);
 
                 // save the project under same name
-                app.SaveProject();
+                projectService.SaveProject();
 
                 // assert file does not exist anymore
                 Assert.AreEqual(0, Directory.GetFiles(dataPath).Length, "file still exists");
@@ -841,16 +815,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectKeepsDeletedNetCdfFilesInSourceFolder()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
-                gui.Run();
-                
-                var app = gui.Application;
-                
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(gui);
 
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // save the project
                 var projectPath = "ci2.dsproj";
@@ -867,7 +836,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
                 // save project
-                app.SaveProjectAs(projectPath);
+                projectService.SaveProjectAs(projectPath);
 
                 // assert a file has been written
                 Assert.AreEqual(1, Directory.GetFiles(dataPath).Length);
@@ -876,7 +845,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 project.RootFolder.Items.Remove(dataItem);
 
                 // close the project
-                app.CloseProject();
+                projectService.CloseProject();
 
                 // assert file still exists
                 Assert.AreEqual(1, Directory.GetFiles(dataPath).Length, "file still exists");
@@ -886,16 +855,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectRollbacksDeletedNetCdfStoreInTransaction()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
-                gui.Run();
-                
-                var app = gui.Application;
-                
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(gui);
 
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // save the project
                 var projectPath = "ci3.dsproj";
@@ -912,7 +876,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
                 // save project
-                app.SaveProjectAs(projectPath);
+                projectService.SaveProjectAs(projectPath);
 
                 // force changes file by modifying
                 networkCoverage.Clear();
@@ -925,7 +889,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 project.RootFolder.Items.Remove(dataItem);
 
                 // close the project
-                app.CloseProject();
+                projectService.CloseProject();
 
                 // assert file still exists
                 var numFiles = Directory.GetFiles(dataPath).Length;
@@ -943,16 +907,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectDoesNotLockDeletedNetCdfStore()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
-                gui.Run();
-                
-                var app = gui.Application;
-                
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(gui);
 
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // save the project
                 var projectPath = "ci3.dsproj";
@@ -969,7 +928,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
                 
                 // save project
-                app.SaveProjectAs(projectPath);
+                projectService.SaveProjectAs(projectPath);
 
                 // force changes file by modifying
                 networkCoverage.Clear();
@@ -982,7 +941,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 project.RootFolder.Items.Remove(dataItem);
 
                 // close the project
-                app.CloseProject();
+                projectService.CloseProject();
 
                 // assert file still exists
                 var fileNames = Directory.GetFiles(dataPath);
@@ -1001,16 +960,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void ModifyingNetCdfFunctionStoreAfterSaveShouldCreateChangesFile()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
-                gui.Run();
-                
-                var app = gui.Application;
-                
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(gui);
 
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // add a coverage to the project.
                 var network = NHibernateTestsHelper.CreateDummyNetwork();
@@ -1025,7 +979,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 {
                     Directory.Delete(dataPath, true);
                 }
-                app.SaveProjectAs(projectPath);
+
+                projectService.SaveProjectAs(projectPath);
 
                 //assert file has been written
                 Assert.AreEqual(0, Directory.GetFiles(dataPath,"*.nc.changes").Length);
@@ -1041,7 +996,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Assert.AreEqual(1, Directory.GetFiles(dataPath, "*.nc").Length);
 
                 //close the project 
-                app.CloseProject();
+                projectService.CloseProject();
 
                 //assert changes file has been removed
                 Assert.AreEqual(0, Directory.GetFiles(dataPath, "*.nc.changes").Length);
@@ -1052,16 +1007,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveAsProjectThreeTimesWithChangesInNetCdfCopiesFile()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
-                gui.Run();
-                
-                var app = gui.Application;
-                
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(gui);
 
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // add a coverage to the project.
                 var network = NHibernateTestsHelper.CreateDummyNetwork();
@@ -1077,14 +1027,14 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 var projectPath2 = folder + "\\changesfiles2.dsproj";
                 var projectPath3 = folder + "\\changesfiles3.dsproj";
 
-                app.SaveProjectAs(projectPath1);
+                projectService.SaveProjectAs(projectPath1);
 
                 networkCoverage.Clear();
                 var branch1 = network.Branches[0];
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
-                app.SaveProjectAs(projectPath2);
-                app.SaveProjectAs(projectPath3);
+                projectService.SaveProjectAs(projectPath2);
+                projectService.SaveProjectAs(projectPath3);
 
                 //assert files has been written
                 Assert.AreEqual(1, Directory.GetFiles(projectPath1 + "_data", "*.nc").Length, "No NC file in path1");
@@ -1096,16 +1046,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveAsProjectTwiceWithNetCdfCopiesFile()
         {
-            using (var gui = CreateGui())
+            using (IGui gui = CreateRunningGui())
             {
-                gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
-                gui.Run();
-                
-                var app = gui.Application;
-                
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(gui);
 
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // add a coverage to the project.
                 var network = NHibernateTestsHelper.CreateDummyNetwork();
@@ -1120,8 +1065,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 var projectPath1 = folder + "\\changesfiles1.dsproj";
                 var projectPath2 = folder + "\\changesfiles2.dsproj";
 
-                app.SaveProjectAs(projectPath1);
-                app.SaveProjectAs(projectPath2);
+                projectService.SaveProjectAs(projectPath1);
+                projectService.SaveProjectAs(projectPath2);
 
                 //assert files has been written
                 Assert.AreEqual(1, Directory.GetFiles(projectPath1 + "_data", "*.nc").Length);
@@ -1129,7 +1074,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             }
         }
 
-        private static IGui CreateGui()
+        private static IGui CreateRunningGui()
         {
             var pluginsToAdd = new List<IPlugin>()
             {
@@ -1139,7 +1084,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 new SharpMapGisApplicationPlugin(),
                 new NetworkEditorApplicationPlugin(),
             };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+
+            gui.Run();
+
+            return gui;
         }
         
         private static NHibernateProjectRepository CreateProjectRepository()
@@ -1149,6 +1098,14 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 new NetworkEditorApplicationPlugin(),
             };
             return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
+        }
+
+        private static IProjectService GetProjectServiceWithProject(IGui gui)
+        {
+            IProjectService projectService = gui.Application.ProjectService;
+            projectService.CreateProject();
+
+            return projectService;
         }
     }
 }

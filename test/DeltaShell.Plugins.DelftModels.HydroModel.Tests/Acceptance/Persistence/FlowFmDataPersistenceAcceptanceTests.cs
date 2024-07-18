@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -87,16 +88,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             // [Given]
             using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
+                IProjectService projectService = gui.Application.ProjectService;
                 Console.WriteLine("Importing model");
                 ImportFlowFmModelAndAssertPreconditions(
                     acceptanceModelName,
                     acceptanceModelFileName,
                     actualCountFunc,
-                    gui,
+                    projectService,
                     preconditionExpectedBranchFeaturesCount);
 
                 // [When]
-                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
+                AcceptanceModelTestHelper.SaveLoadAndResaveProject(projectService, firstSaveProjectPath, secondSaveProjectPath);
 
                 // [Then]
                 Console.WriteLine("Comparing saved data");
@@ -124,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             string acceptanceModelName,
             string acceptanceModelFileName,
             ActualCountFuncDelegate actualCountFunc,
-            IGui gui,
+            IProjectService projectService,
             int expectedBranchFeaturesCount)
         {
             var importer = new WaterFlowFMFileImporter(()=> TestHelper.GetTestWorkingDirectory());
@@ -137,7 +139,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             var errorMessages = TestHelper.GetAllRenderedMessages(() => model = importer.ImportItem(pathToMduFile) as WaterFlowFMModel, Level.Error);
 
             Assert.IsNotNull(model);
-            gui.Application.Project.RootFolder.Add(model);
+            projectService.Project.RootFolder.Add(model);
 
             // [Precondition]
             Assert.IsEmpty(errorMessages, $"[Precondition failure] Received unexpected error messages during the import of the FlowFM model:{Environment.NewLine}{errorMessages}");

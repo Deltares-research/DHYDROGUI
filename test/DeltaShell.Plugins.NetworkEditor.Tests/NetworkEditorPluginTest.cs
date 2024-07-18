@@ -24,24 +24,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             // setup mock app
             var dataItemService = mocks.Stub<IDataItemService>();
-            dataItemService.Expect(s => s.GetDataItemByValue(project, parentRegion)).Return(project.RootFolder.DataItems.First());
+            dataItemService.Stub(s => s.GetDataItemByValue(project, parentRegion)).Return(project.RootFolder.DataItems.First());
 
+            var projectService = mocks.Stub<IProjectService>();
+            projectService.Stub(s => s.Project).Return(project);
+            
             var app = mocks.Stub<IApplication>();
             app.DataItemService = dataItemService;
-            app.Expect(a => a.Project).Repeat.Any().Return(project);
-
-            var projectService = mocks.DynamicMock<IProjectService>();
+            
             app.Stub(a => a.ProjectService).Return(projectService);
 
             projectService.ProjectClosing += null; LastCall.IgnoreArguments().Repeat.Any();
             projectService.ProjectOpened += null; LastCall.IgnoreArguments().Repeat.Any();
+            projectService.ProjectCreated += null; LastCall.IgnoreArguments().Repeat.Any();
             
             mocks.ReplayAll();
 
             // create plugin
             var plugin = new NetworkEditorApplicationPlugin { Application = app };
             plugin.Activate();
-            projectService.Raise(x => x.ProjectOpened += null, this, new EventArgs<Project>(project)); // makes sure plugin subscribes to project events
+            projectService.Raise(x => x.ProjectOpened += null, this, new EventArgs<Project>(project));  // makes sure plugin subscribes to project events
+            projectService.Raise(x => x.ProjectCreated += null, this, new EventArgs<Project>(project)); // makes sure plugin subscribes to project events
 
             // add sub region
             var subRegion = new HydroRegion();
@@ -67,14 +70,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             // setup mock app
             var dataItemService = mocks.Stub<IDataItemService>();
-            dataItemService.Expect(s => s.GetDataItemByValue(project, parentRegion)).Return(project.RootFolder.DataItems.First());
+            dataItemService.Stub(s => s.GetDataItemByValue(project, parentRegion)).Return(project.RootFolder.DataItems.First());
 
+            var projectService = mocks.Stub<IProjectService>();
+            projectService.Stub(s => s.Project).Return(project);
+            
             var app = mocks.Stub<IApplication>();
             app.DataItemService = dataItemService;
-            app.Expect(a => a.Project).Return(project).Repeat.Any();
-            var projectService = mocks.Stub<IProjectService>();
-            app.Expect(a => a.ProjectService).Return(projectService).Repeat.Any();
+            
+            app.Stub(a => a.ProjectService).Return(projectService);
 
+            projectService.ProjectClosing += null; LastCall.IgnoreArguments().Repeat.Any();
+            projectService.ProjectOpened += null; LastCall.IgnoreArguments().Repeat.Any();
+            projectService.ProjectCreated += null; LastCall.IgnoreArguments().Repeat.Any();
+            
             mocks.ReplayAll();
 
             // create plugin
@@ -100,7 +109,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             // setup mock app
             var app = mocks.Stub<IApplication>();
-            app.Expect(a => a.Project).Repeat.Any().Return(project);
+            app.Expect(a => a.ProjectService.Project).Repeat.Any().Return(project);
 
             var projectService = mocks.DynamicMock<IProjectService>();
             app.Stub(a => a.ProjectService).Return(projectService);
@@ -139,7 +148,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             // setup mock app
             var app = mocks.Stub<IApplication>();
-            app.Expect(a => a.Project).Repeat.Any().Return(project);
+            app.Expect(a => a.ProjectService.Project).Repeat.Any().Return(project);
 
             var projectService = mocks.DynamicMock<IProjectService>();
             app.Stub(a => a.ProjectService).Return(projectService);

@@ -130,8 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         private static IApplication GetApplication(Project project)
         {
             var application = Substitute.For<IApplication>();
-            application.Project.Returns(project);
-            application.GetAllModelsInProject().Returns(project.RootFolder.GetAllModelsRecursive());
+            application.ProjectService.Project.Returns(project);
 
             return application;
         }

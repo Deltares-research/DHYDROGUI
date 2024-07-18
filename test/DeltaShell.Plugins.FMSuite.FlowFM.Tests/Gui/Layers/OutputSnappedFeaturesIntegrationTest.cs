@@ -62,12 +62,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 IApplication app = gui.Application;
 
                 gui.Run();
-                app.OpenProject(filePath); // save to initialize file repository..
-                var model = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                Project project = app.ProjectService.OpenProject(filePath);
+                var model = (WaterFlowFMModel)project.RootFolder.Items[0];
                 Assert.NotNull(model);
 
                 var secondModel = new WaterFlowFMModel("SecondModel");
-                app.Project.RootFolder.Add(secondModel);
+                project.RootFolder.Add(secondModel);
                 
                 //Open view
                 gui.CommandHandler.OpenView(secondModel, typeof(ProjectItemMapView));
@@ -98,8 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 IApplication app = gui.Application;
                 gui.Run();
 
-                app.OpenProject(filePath); // save to initialize file repository..
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                Project project = app.ProjectService.OpenProject(filePath);
+                var loadedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
 
                 // Should re-run activity since this project may be migrated (clears output)
                 app.RunActivity(loadedModel);
@@ -140,13 +140,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             filePath = TestHelper.CreateLocalCopy(filePath);
             using (var gui = CreateGui())
             {
-                IApplication app = gui.Application;
+                IProjectService projectService = gui.Application.ProjectService;
 
                 gui.Run();
 
-                app.OpenProject(filePath); // save to initialize file repository..
-                app.SaveProject();
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                Project project = projectService.OpenProject(filePath);
+                projectService.SaveProject();
+                var loadedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
 
                 gui.CommandHandler.OpenView(loadedModel, typeof(ProjectItemMapView));
                 ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();

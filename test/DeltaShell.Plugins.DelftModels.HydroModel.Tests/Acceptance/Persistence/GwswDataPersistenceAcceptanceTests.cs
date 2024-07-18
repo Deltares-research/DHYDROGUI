@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             // [Given]
             using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
-                HydroModel hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
+                HydroModel hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.ProjectService.Project.RootFolder);
 
                 Console.WriteLine("Importing model");
                 GwswAcceptanceModelTestHelper.ImportGwswModelAndAssertPreconditions(
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 SetModelSettings(hydroModel);
                 
                 // [When]
-                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
+                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application.ProjectService, firstSaveProjectPath, secondSaveProjectPath);
 
                 // [Then]
                 Console.WriteLine("Comparing saved data");

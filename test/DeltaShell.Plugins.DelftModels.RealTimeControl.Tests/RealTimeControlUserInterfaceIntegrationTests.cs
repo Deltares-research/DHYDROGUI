@@ -33,21 +33,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void SaveAndLoadModelResultsInValidModel()
         {
             using (var tempDir = new TemporaryDirectory())
-            using (IGui gui = CreateGuiWithPlugins())
+            using (IGui gui = CreateRunningGuiWithPlugins())
             {
-                gui.Run();
-                gui.Application.CreateNewProject();
+                IProjectService projectService = gui.Application.ProjectService;
+                projectService.CreateProject();
 
-                Project project = gui.Application.Project;
+                Project project = projectService.Project;
 
                 project.RootFolder.Add(RealTimeControlTestHelper.GenerateTestModel(false));
 
                 string projectPath = Path.Combine(tempDir.Path, "SaveAndLoad.dsproj");
-                gui.Application.SaveProjectAs(projectPath);
-                gui.Application.CloseProject();
+                projectService.SaveProjectAs(projectPath);
+                projectService.CloseProject();
 
-                gui.Application.OpenProject(projectPath);
-                project = gui.Application.Project;
+                project = projectService.OpenProject(projectPath);
 
                 IModel model = project.RootFolder.Models.First();
 
@@ -75,14 +74,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void SaveAndLoadRestoresShapeLocationsAndSizes()
         {
             using (var tempDir = new TemporaryDirectory())
-            using (IGui gui = CreateGuiWithPlugins())
+            using (IGui gui = CreateRunningGuiWithPlugins())
             {
-                gui.Run();
-                gui.Application.CreateNewProject();
+                IProjectService projectService = gui.Application.ProjectService;
+                Project project = projectService.CreateProject();
 
                 // Create model
                 RealTimeControlModel model = CreateModelWithControlGroupAndRtcObjects();
-                gui.Application.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 // Open graph view
                 gui.DocumentViewsResolver.OpenViewForData(model.ControlGroups[0]);
@@ -94,11 +93,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // Save/load project
                 string projectPath = Path.Combine(tempDir.Path, "SaveAndLoad.dsproj");
-                gui.Application.SaveProjectAs(projectPath);
-                gui.Application.CloseProject();
-                gui.Application.OpenProject(projectPath);
+                projectService.SaveProjectAs(projectPath);
+                projectService.CloseProject();
+                project = projectService.OpenProject(projectPath);
 
-                var loadedModel = (RealTimeControlModel)gui.Application.Project.RootFolder.Models.First();
+                var loadedModel = (RealTimeControlModel)project.RootFolder.Models.First();
 
                 // Open restored graph view
                 gui.DocumentViewsResolver.OpenViewForData(loadedModel.ControlGroups[0]);
@@ -116,14 +115,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void ExportAndImportRestoresShapeLocationsAndSizes()
         {
             using (var tempDir = new TemporaryDirectory())
-            using (IGui gui = CreateGuiWithPlugins())
+            using (IGui gui = CreateRunningGuiWithPlugins())
             {
-                gui.Run();
-                gui.Application.CreateNewProject();
+                IProjectService projectService = gui.Application.ProjectService;
+                projectService.CreateProject();
 
                 // Create model
                 RealTimeControlModel model = CreateModelWithControlGroupAndRtcObjects();
-                gui.Application.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 // Open graph view
                 gui.DocumentViewsResolver.OpenViewForData(model.ControlGroups[0]);
@@ -138,12 +137,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 exporter.Export(model, tempDir.Path);
 
                 // Import model into new project
-                gui.Application.CloseProject();
-                gui.Application.CreateNewProject();
+                projectService.CloseProject();
+                projectService.CreateProject();
 
                 RealTimeControlModelImporter importer = gui.Application.FileImporters.OfType<RealTimeControlModelImporter>().First();
                 var newModel = (RealTimeControlModel)importer.ImportItem(tempDir.Path);
-                gui.Application.Project.RootFolder.Add(newModel);
+                projectService.Project.RootFolder.Add(newModel);
 
                 // Open restored graph view
                 gui.DocumentViewsResolver.OpenViewForData(newModel.ControlGroups[0]);
@@ -155,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
         }
 
-        private static IGui CreateGuiWithPlugins()
+        private static IGui CreateRunningGuiWithPlugins()
         {
             var pluginsToAdd = new List<IPlugin>()
             {
@@ -167,7 +166,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 new ProjectExplorerGuiPlugin(),
                 new RealTimeControlGuiPlugin()
             };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+
+            gui.Run();
+
+            return gui;
         }
 
         private static RealTimeControlModel CreateModelWithControlGroupAndRtcObjects()

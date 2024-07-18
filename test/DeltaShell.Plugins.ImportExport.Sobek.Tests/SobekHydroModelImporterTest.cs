@@ -181,9 +181,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             
             HydroModel hydroModel = CreateHydroModel();
             var application = Substitute.For<IApplication>();
-            application.Project.Returns((Project)null);
+            var projectService = Substitute.For<IProjectService>();
+            application.ProjectService.Returns(projectService);
+
             var project = new Project();
-            application.When(app => app.CreateNewProject()).Do(_ => application.Project.Returns(project));
+            projectService.CreateProject().Returns(project);
+            projectService.When(s => s.CreateProject()).Do(_ => projectService.Project.Returns(project));
             
             IPartialSobekImporter importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
             var sobekModelImporter = new SobekHydroModelImporter(false)
@@ -198,7 +201,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             sobekModelImporter.ImportItem(pathToSobekModel, hydroModel);
 
             // Assert
-            application.Received(1).CreateNewProject();
+            projectService.Received(1).CreateProject();
             IEnumerable<WaterFlowFMModel> waterFlowFmModels = hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>();
             Assert.That(waterFlowFmModels.Count(), Is.EqualTo(1));
         }

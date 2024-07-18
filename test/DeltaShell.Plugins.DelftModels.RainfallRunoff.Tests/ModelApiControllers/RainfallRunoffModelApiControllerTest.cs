@@ -14,7 +14,6 @@ using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
 using GeoAPI.Extensions.Coverages;
 using NSubstitute;
 using NUnit.Framework;
@@ -58,16 +57,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Category(TestCategory.Slow)]
         public void RunModelTwiceAndGetBoundariesOutputCoverage()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
+            using (var model = CreateModel())
             {
-                var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.BoundaryElmSet).IsEnabled = true;
                 model.OutputSettings.GetEngineParameter(QuantityType.CumInNonLinks_m3, ElementSet.BalanceNodeElmSet).IsEnabled = true;
                 model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
-                
                 var catchment = new Catchment
                     {
                         Name = "c1",
@@ -100,15 +95,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Category(TestCategory.Slow)]
         public void RunModelWithoutBoundaryAndExpectFakeBoundaryAndLink()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
+            using (var model = CreateModel())
             {
-                var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.BoundaryElmSet).IsEnabled = true;
                 model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.LinkElmSet).IsEnabled = true;
                 model.OutputSettings.AggregationOption = AggregationOptions.Current;
-
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
 
                 var catchment = new Catchment
                 {
@@ -143,12 +134,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Category(TestCategory.Slow)]
         public void RunModelWithMeteoPerStation()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
+            using (var model = CreateModel())
             {
-                var model = CreateModel();
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
-
                 // add first catchment
                 var c1 = new Catchment
                 {
@@ -215,17 +202,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Test]
         public void RunModelForSeveralCatchmentsAndGetOutputCoverage()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
+            using (var model = CreateModel())
             {
-                var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.UnpavedElmSet).
                     IsEnabled = true;
 
                 model.OutputSettings.AggregationOption = AggregationOptions.Current;
-
-                app.CreateNewProject();
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
 
                 ConfigureSimpleModel(model);
                 var catchment = model.GetAllModelData().ElementAt(0).Catchment;
@@ -249,18 +231,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Test]
         public void RunModelWithWWTPAndGetOutputCoverage()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
+            using (var model = CreateModel())
             {
-                var model = CreateModel();
                 var runoffBoundary = new RunoffBoundary() { Name = "WWTP_boundary", Basin = model.Basin};
                 model.BoundaryData.Add(new RunoffBoundaryData(runoffBoundary) {Series = new RainfallRunoffBoundaryData() {IsConstant = true, IsTimeSeries = false, Value = 123.4} });
                 
                 model.OutputSettings.GetEngineParameter(QuantityType.FlowIn, ElementSet.WWTPElmSet).IsEnabled = true;
                 model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.WWTPElmSet).IsEnabled = true;
                 model.OutputSettings.AggregationOption = AggregationOptions.Current;
-
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
 
                 model.StartTime = new DateTime(2000, 1, 1);
                 model.StopTime = new DateTime(2000, 1, 2, 0, 0, 0);
@@ -298,18 +276,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Test]
         public void RunModelForSeveralCatchmentsAndGetWaterBalance()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
+            using (var model = CreateModel())
             {
-                var model = CreateModel();
-                
                 model.OutputSettings.GetEngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceModelElmSet).IsEnabled = true;
                 model.OutputSettings.GetEngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceNodeElmSet).IsEnabled = true;
 
                 model.OutputSettings.AggregationOption = AggregationOptions.Current;
-
-                app.CreateNewProject();
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
 
                 ConfigureSimpleModel(model);
 
@@ -329,14 +301,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Test]
         public void RunModelForSeveralCatchmentsAndGetOutputCoverageOnSingleBoundary()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
+            using (var model = CreateModel())
             {
-                var model = CreateModel();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
-
                 ConfigureSimpleModel(model);
                 var boundary = model.Basin.Boundaries.First();
                 
@@ -479,14 +445,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Test]
         public void RunModelForSeveralCatchmentsAndGetOutputOnLinks()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
+            using (var model = CreateModel())
             {
-                var model = CreateModel();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
-                
                 ConfigureSimpleModel(model);
                 
                 model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.LinkElmSet).IsEnabled = true;
@@ -514,15 +474,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Category(TestCategory.Slow)]
         public void RunModelForSeveralCatchmentsAndGetBalanceOutputOnNodes()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
+            using (var model = CreateModel())
             {
-                var model = CreateModel();
-
                 model.OutputSettings.GetEngineParameter(QuantityType.CumInNonLinks_m3, ElementSet.BalanceNodeElmSet).IsEnabled = true;
                 model.OutputSettings.AggregationOption = AggregationOptions.Current;
-
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
 
                 ConfigureSimpleModel(model);
 
@@ -575,9 +530,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Test]
         public void RunModelWithEmptyEvapAndBigPrecipitation()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
+            using (var model = CreateModel())
             {
-                var model = CreateModel();
                 ConfigureSimpleModel(model);
 
                 model.StartTime = new DateTime(2005, 12, 30, 0, 0, 0);
@@ -593,10 +547,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                     model.Evaporation.Data[precipitationTime] = 1.0;
                     precipitationTime = precipitationTime.AddHours(1);
                 }
-
-                app.CreateNewProject();
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
 
                 ActivityRunner.RunActivity(model);
                 System.Threading.Thread.Sleep(15); // Give kernel a chance to die and release file handles

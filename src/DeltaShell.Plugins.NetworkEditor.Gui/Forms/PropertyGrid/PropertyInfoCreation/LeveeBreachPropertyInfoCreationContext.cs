@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid.PropertyInfoCr
 
         private static HydroArea GetHydroArea(GuiContainer guiContainer, ILeveeBreach feature)
         {
-            IEnumerable<object> projectItems = guiContainer.Gui.Application.Project.GetAllItemsRecursive();
+            IEnumerable<object> projectItems = guiContainer.Gui.Application.ProjectService.Project.GetAllItemsRecursive();
             return projectItems.OfType<HydroArea>().FirstOrDefault(c => IsContainerData(c, feature));
         }
 

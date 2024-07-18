@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid.PropertyInfoCr
             Ensure.NotNull(properties, nameof(properties));
             Ensure.NotNull(guiContainer, nameof(guiContainer));
 
-            IEnumerable<IHydroRegion> hydroRegions = guiContainer.Gui.Application.Project.GetAllItemsRecursive().OfType<IHydroRegion>();
+            IEnumerable<IHydroRegion> hydroRegions = guiContainer.Gui.Application.ProjectService.Project.GetAllItemsRecursive().OfType<IHydroRegion>();
             IHydroRegion hydroRegionWithLink = hydroRegions.First(region => region.Links.Contains(properties.Data));
             properties.NameValidator.AddValidator(new UniqueNameValidator(hydroRegionWithLink.Links));
         }

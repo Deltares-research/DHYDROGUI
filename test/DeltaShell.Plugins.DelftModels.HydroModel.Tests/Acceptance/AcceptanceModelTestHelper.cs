@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
             gui.Run();
 
-            app.CreateNewProject();
+            app.ProjectService.CreateProject();
             
             return gui;
         }
@@ -108,24 +108,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         /// <summary>
-        /// Saves, loads and resaves the project that is part of <paramref name="application"/>.
+        /// Saves, closes, loads and resaves the project within the <paramref name="projectService"/>.
         /// </summary>
-        /// <param name="application">The application containing the project.</param>
+        /// <param name="projectService"> The project service.</param>
         /// <param name="tempProjectPath1">The temporary project file path to be used for the first save action.</param>
         /// <param name="tempProjectPath2">The temporary project file path to be used for the second save action.</param>
-        public static void SaveLoadAndResaveProject(IApplication application, string tempProjectPath1, string tempProjectPath2)
+        public static void SaveLoadAndResaveProject(IProjectService projectService, string tempProjectPath1, string tempProjectPath2)
         {
             Console.WriteLine("Saving (first time): " + tempProjectPath1);
-            application.SaveProjectAs(tempProjectPath1);
+            projectService.SaveProjectAs(tempProjectPath1);
 
             Console.WriteLine("Closing model");
-            application.CloseProject();
+            projectService.CloseProject();
 
             Console.WriteLine("Opening");
-            application.OpenProject(tempProjectPath1);
+            projectService.OpenProject(tempProjectPath1);
 
             Console.WriteLine("Saving (second time: " + tempProjectPath2);
-            application.SaveProjectAs(tempProjectPath2);
+            projectService.SaveProjectAs(tempProjectPath2);
         }
         
         /// <summary>

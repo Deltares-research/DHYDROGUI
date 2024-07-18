@@ -38,6 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             {
                 var hydroNetworkEditorMapTool = mocks.DynamicMock<IHydroNetworkEditorMapTool>();
                 var application = mocks.DynamicMock<IApplication>();
+                var projectService = mocks.DynamicMock<IProjectService>();
                 var project = new Project();//project is pretty lightweight don't need to mock here
                 var sideViewDataBuilder = new MockSideViewDataBuilder();
                 var guiCommandHandler = mocks.DynamicMock<IGuiCommandHandler>();
@@ -62,7 +63,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(pluginGui.Gui).Return(gui).Repeat.Any();
                 Expect.Call(gui.Application).Return(application).Repeat.Any();
-                Expect.Call(application.Project).Return(project).Repeat.Any();
+                Expect.Call(projectService.Project).Return(project).Repeat.Any();
+                Expect.Call(application.ProjectService).Return(projectService).Repeat.Any();
                 Expect.Call(gui.CommandHandler).Return(guiCommandHandler).Repeat.Any();
                 Expect.Call(hydroNetworkEditorMapTool.MapControl).SetPropertyAndIgnoreArgument().Repeat.Any();
                 Expect.Call(()=>guiCommandHandler.OpenView(null,null)).IgnoreArguments();
@@ -112,6 +114,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             {
                 var hydroNetworkEditorMapTool = mocks.DynamicMock<IHydroNetworkEditorMapTool>();
                 var application = mocks.DynamicMock<IApplication>();
+                var projectService = mocks.DynamicMock<IProjectService>();
                 var project = new Project(); //project is pretty lightweight don't need to mock here
                 var sideViewDataBuilder = new MockSideViewDataBuilder();
 
@@ -138,7 +141,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(pluginGui.Gui).Return(gui).Repeat.Any();
                 Expect.Call(gui.Application).Return(application).Repeat.Any();
-                Expect.Call(application.Project).Return(project).Repeat.Any();
+                Expect.Call(projectService.Project).Return(project).Repeat.Any();
+                Expect.Call(application.ProjectService).Return(projectService).Repeat.Any();
                 Expect.Call(gui.CommandHandler).Return(guiCommandHandler).Repeat.Any();
                 Expect.Call(hydroNetworkEditorMapTool.MapControl).SetPropertyAndIgnoreArgument().Repeat.Any();
                 Expect.Call(() => guiCommandHandler.OpenView(null, null)).IgnoreArguments();

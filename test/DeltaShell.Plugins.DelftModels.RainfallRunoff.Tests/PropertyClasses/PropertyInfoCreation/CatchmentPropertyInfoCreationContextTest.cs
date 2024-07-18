@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.PropertyClasses.Pr
             var project = new Project();
 
             gui.Application = application;
-            application.Project.Returns(project);
+            application.ProjectService.Project.Returns(project);
             project.RootFolder.Add(newObject);
 
             return gui;

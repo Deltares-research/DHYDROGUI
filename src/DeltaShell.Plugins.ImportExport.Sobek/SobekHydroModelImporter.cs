@@ -140,14 +140,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 targetObjectWasSetExternal = true;
             }
 
-            if (Application != null && Application.Project == null)
+            IProjectService projectService = Application?.ProjectService;
+            if (projectService != null && !projectService.IsProjectOpen)
             {
-                Application.CreateNewProject();
+                projectService.CreateProject();
             }
 
-            if (Application != null && Application.GetAllModelsInProject().Contains(targetObjectInternal))
+            if (projectService != null && projectService.Project.RootFolder.GetAllModelsRecursive().Contains(targetObjectInternal))
             {
-                Application.Project.RootFolder.Items.Remove((HydroModel)targetObjectInternal);
+                projectService.Project.RootFolder.Items.Remove((HydroModel)targetObjectInternal);
             }
             
             if (ShouldCancel)
@@ -180,9 +181,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             finally
             {
                 importer = null; // make sure we keep no more references to the partial importers
-                if (Application != null && !Application.GetAllModelsInProject().Contains(targetObjectInternal) && target is HydroModel)
+                if (projectService != null && !projectService.Project.RootFolder.GetAllModelsRecursive().Contains(targetObjectInternal) && target is HydroModel)
                 {
-                    Application.Project.RootFolder.Items.Add((HydroModel)targetObjectInternal);
+                    projectService.Project.RootFolder.Items.Add((HydroModel)targetObjectInternal);
                 }
             }
         }

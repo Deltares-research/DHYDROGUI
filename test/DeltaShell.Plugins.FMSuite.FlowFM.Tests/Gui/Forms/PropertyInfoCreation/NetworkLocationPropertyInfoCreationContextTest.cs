@@ -67,10 +67,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Forms.PropertyInfoCreation
         private static IGui CreateGuiWithModel(IModel model)
         {
             var gui = Substitute.For<IGui>();
-            var application = Substitute.For<IApplication>();
 
-            gui.Application = application;
-            application.GetAllModelsInProject().Returns(new[] { model });
+            var project = new Project();
+            project.RootFolder.Add(model);
+            gui.Application.ProjectService.Project.Returns(project);
+            gui.Application.ProjectService.IsProjectOpen.Returns(true);
 
             return gui;
         }

@@ -5,6 +5,7 @@ using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -44,11 +45,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
 
             using (var gui = CreateGui())
             {
-                IApplication app = gui.Application;
-                
                 gui.Run();
 
-                WaterFlowFMModel fmModel = AddFMModelToProject(app);
+                WaterFlowFMModel fmModel = AddFMModelToProject(gui.Application.ProjectService);
 
                 gui.CommandHandler.OpenView(fmModel, typeof(ProjectItemMapView));
                 ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
@@ -220,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 Envelope gridExtent = model.GridExtent;
@@ -254,7 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             
             gui.Run();
 
-            WaterFlowFMModel fmModel = AddFMModelToProject(app);
+            WaterFlowFMModel fmModel = AddFMModelToProject(app.ProjectService);
 
             //Add a basic grid
             ImportGrid(app, netFile, fmModel);
@@ -288,12 +287,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             return layers.Any() && layers.Any(l => ((SnappedFeatureCollection) l.DataSource).SnapApiFeatureType == operationApiName && l.Name == layerName);
         }
-        private static WaterFlowFMModel AddFMModelToProject(IApplication app)
+        private static WaterFlowFMModel AddFMModelToProject(IProjectService projectService)
         {
-            app.CreateNewProject();
+            Project project = projectService.CreateProject();
 
             // Add water flow model to project
-            Project project = app.Project;
             project.RootFolder.Add(new WaterFlowFMModel());
 
             // Check model name

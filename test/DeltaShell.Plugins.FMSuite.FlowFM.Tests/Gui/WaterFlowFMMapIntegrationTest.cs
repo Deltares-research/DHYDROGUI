@@ -42,17 +42,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = CreateGui())
             {
-                var app = gui.Application;
-                
                 gui.Run();
 
                 gui.MainWindow.Show();
 
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
                 
                 var model = new WaterFlowFMModel(mduPath);
 
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 var sw = new Stopwatch();
                 sw.Start();
@@ -79,14 +77,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = CreateGuiMinimal())
             {
-                var app = gui.Application;
                 gui.Run();
-
-                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = gui.Application.ProjectService.CreateProject();
                     project.RootFolder.Add(model);
 
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView)); //open central map
@@ -109,15 +104,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = CreateGuiMinimal())
             {
-                var app = gui.Application;
-
                 gui.Run();
-
-                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = gui.Application.ProjectService.CreateProject();
                     project.RootFolder.Add(model);
 
                     // check subscribers
@@ -161,20 +152,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                var app = gui.Application;
-
                 gui.Run();
-
-                app.CreateNewProject();
 
                 Action mainWindowShown = () =>
                 {
-                    var project = app.Project;
+                    var projectService = gui.Application.ProjectService;
+                    Project project = projectService.CreateProject();
                     var model = new WaterFlowFMModel(mduPath);
                     project.RootFolder.Add(model);
                     gui.CommandHandler.OpenView(model, typeof (ProjectItemMapView));
                     var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-                    app.SaveProjectAs("test.dsproj");
+                    projectService.SaveProjectAs("test.dsproj");
                     gui.CommandHandler.OpenView(model, typeof (ValidationView));
                     gui.DocumentViews.ActiveView = mapView;
 

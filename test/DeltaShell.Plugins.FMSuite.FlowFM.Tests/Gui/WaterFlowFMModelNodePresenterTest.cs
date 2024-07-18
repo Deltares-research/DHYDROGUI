@@ -43,15 +43,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                var app = gui.Application;
-                
                 gui.Run();
-
-                app.CreateNewProject();
                 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = gui.Application.ProjectService.CreateProject();
                     project.RootFolder.Add(model);
                 };
 

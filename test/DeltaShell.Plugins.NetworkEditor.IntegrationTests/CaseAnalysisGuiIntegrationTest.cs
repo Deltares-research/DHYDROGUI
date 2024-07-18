@@ -5,7 +5,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.NetCDF;
@@ -53,13 +52,12 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                var app = gui.Application;
-
                 gui.Run();
 
-                app.CreateNewProject();
+                IProjectService projectService = gui.Application.ProjectService;
+                projectService.CreateProject();
 
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // create (fake) discharge coverage & add to project
                 var discharge = CreateNetworkCoverage();

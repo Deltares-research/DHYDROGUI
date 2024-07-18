@@ -61,12 +61,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Run();
 
-                app.CreateNewProject();
-
                 Action mainWindowShown = delegate
                 {
                     // Add water flow model to project
-                    var project = app.Project;
+                    Project project = app.ProjectService.CreateProject();
                     project.RootFolder.Add(new WaterFlowFMModel());
 
                     // Check model name
@@ -110,12 +108,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Run();
 
-                app.CreateNewProject();
-
                 Action mainWindowShown = delegate
                 {
                     // Add new folder to project
-                    var project = app.Project;
+                    Project project = app.ProjectService.CreateProject();
                     project.RootFolder.Add(new Folder("Test Folder"));
 
                     // Check folder name
@@ -157,15 +153,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = CreateGuiMinimal())
             {
-                var app = gui.Application;
-
                 gui.Run();
-
-                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = gui.Application.ProjectService.CreateProject();
                     project.RootFolder.Add(model);
 
                     // set the heat flux model to excess temperature
@@ -199,15 +191,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = CreateGuiMinimal())
             {
-                var app = gui.Application;
-
                 gui.Run();
-
-                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = gui.Application.ProjectService.CreateProject();
                     project.RootFolder.Add(model);
 
                     // open central map view
@@ -237,15 +225,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = CreateGuiMinimal())
             {
-                var app = gui.Application;
-
                 gui.Run();
-
-                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = gui.Application.ProjectService.CreateProject();
                     project.RootFolder.Add(model);
                     
                     ActivityRunner.RunActivity(model);
@@ -284,15 +268,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                //setup env
-                var app = gui.Application;
-                
                 gui.Run();
 
-                app.CreateNewProject();
-
                 //create and add a HydroRegion with a HydroArea with DryPoints
-                var project = app.Project;
+                Project project = gui.Application.ProjectService.CreateProject();
                 var area = new HydroArea();
                 var hydroRegion = new HydroRegion
                 {
@@ -360,15 +339,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 var app = gui.Application;
 
                 gui.Run();
-
-                app.CreateNewProject();
                 
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
                 Action formVisibleChangedAction = () =>
                 {
                     using (var model = new WaterFlowFMModel())
                     {
-                        app.Project.RootFolder.Add(model);
+                        Project project = gui.Application.ProjectService.CreateProject();
+                        project.RootFolder.Add(model);
                         gui.CommandHandler.OpenView(model);
                         var network = model.Network;
 
@@ -413,11 +391,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             using (var gui = CreateGuiMinimal())
             {
-                var app = gui.Application;
-
                 gui.Run();
 
-                app.CreateNewProject();
+                gui.Application.ProjectService.CreateProject();
 
                 var mainWindow = (Control)gui.MainWindow;
 

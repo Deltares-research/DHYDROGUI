@@ -8,7 +8,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -41,12 +40,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                var app = gui.Application;
                 gui.Run();
 
-                app.CreateNewProject();
-
-                var project = app.Project;
+                Project project = gui.Application.ProjectService.CreateProject();
                 var network = new HydroNetwork();
                 var area = new HydroArea();
                 project.RootFolder.Add(new IHydroRegion[] {network, area});
@@ -103,13 +99,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                var app = gui.Application;
-                
                 gui.Run();
 
-                app.CreateNewProject();
-
-                var project = app.Project;
+                Project project = gui.Application.ProjectService.CreateProject();
                 var network = new HydroNetwork();
                 var area = new HydroArea();
                 project.RootFolder.Add(new IHydroRegion[] { network, area });

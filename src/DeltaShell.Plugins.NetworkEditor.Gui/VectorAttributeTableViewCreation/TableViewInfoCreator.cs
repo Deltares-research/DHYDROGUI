@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation
 
         private IEnumerable<IDataItem> GetDataItems()
         {
-            return guiContainer.Gui.Application.Project.GetAllItemsRecursive().OfType<IDataItem>();
+            return guiContainer.Gui.Application.ProjectService.Project.GetAllItemsRecursive().OfType<IDataItem>();
         }
 
         private ILayer GetDataLayer(object data)

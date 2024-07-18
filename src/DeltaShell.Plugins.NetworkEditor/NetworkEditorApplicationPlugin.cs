@@ -184,8 +184,9 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         private void ApplicationOnProjectOpened(object sender, EventArgs<Project> e)
         {
-            ((INotifyCollectionChanged) Application.Project).CollectionChanged += OnProjectCollectionChanged;
-            FixOwnersOnChildDataItems(e.Value.RootFolder);
+            Project project = e.Value;
+            ((INotifyCollectionChanged) project).CollectionChanged += OnProjectCollectionChanged;
+            FixOwnersOnChildDataItems(project.RootFolder);
         }
 
         private void FixOwnersOnChildDataItems(Folder folder)
@@ -273,14 +274,14 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
+                var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.ProjectService.Project, subRegion.Parent);
                 AddChildRegionDataItems(parentRegionDataItem);
                 return;
             }
 
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
+                var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.ProjectService.Project, subRegion.Parent);
                 var regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));
                 if (regionDataItem != null)
                 {

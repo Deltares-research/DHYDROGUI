@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             IEnumerable<string> errorMessages = TestHelper.GetAllRenderedMessages(() => model = importer.ImportItem(pathToMduFile) as WaterFlowFMModel, Level.Error);
 
             Assert.IsNotNull(model);
-            gui.Application.Project.RootFolder.Add(model);
+            gui.Application.ProjectService.Project.RootFolder.Add(model);
 
             // [Precondition]
             Assert.IsEmpty(errorMessages, $"[Precondition failure] Received unexpected error messages during the import of the FlowFM model:{Environment.NewLine}{errorMessages}");

@@ -99,8 +99,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     Name = FlowFlexibleMeshModelModelInfoName,
                     Category = "1D / 2D / 3D Standalone Models",
                     Image = Properties.Resources.unstrucModel,
-                    AdditionalOwnerCheck = owner => !(Application?.Project != null &&
-                                                      Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().Any()), // Don't allow multiple flow models
+                    AdditionalOwnerCheck = owner => !(Application?.ProjectService.Project != null &&
+                                                      Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().Any()), // Don't allow multiple flow models
                     CreateModel = owner => new WaterFlowFMModel{ WorkingDirectoryPathFunc = () => Application?.WorkDirectory }
                 };
         }
@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 GetBaseFolder = list =>
                 {
-                    var model = Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault(m => Equals(m.Area.DryPoints, list));
+                    var model = Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().FirstOrDefault(m => Equals(m.Area.DryPoints, list));
                     return model == null ? string.Empty : Path.GetDirectoryName(model.MduFilePath);
                 }
             };
@@ -432,7 +432,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors) where T : IFeature, INameable
         {
-            return Application?.Project?.RootFolder.GetAllModelsRecursive()
+            return Application?.ProjectService.Project?.RootFolder.GetAllModelsRecursive()
                 .OfType<WaterFlowFMModel>()
                 .FirstOrDefault(m => listSelectors.Any(s => Equals(s(m.Area),target)));
         }
@@ -627,7 +627,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private IEnumerable<WaterFlowFMModel> FlowModels
         {
-            get { return Application != null ? Application.GetAllModelsInProject().OfType<WaterFlowFMModel>() : Enumerable.Empty<WaterFlowFMModel>(); }
+            get { return Application != null ? Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>() : Enumerable.Empty<WaterFlowFMModel>(); }
         }
 
         private static bool GetAvailableLists(WaterFlowFMModel model, IEnumerable list)
@@ -642,13 +642,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         private void Application_ProjectOpened(object sender, EventArgs<Project> e)
         {
-            Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().ForEach(m =>
+            Project project = e.Value;
+            Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().ForEach(m =>
             {
                 m.WorkingDirectoryPathFunc = () => application.WorkDirectory;
                 m.DimrRunner.FileExportService = Application.FileExportService;
             });
             
-            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+            project.CollectionChanging += OnProjectCollectionChanging;
         }
 
         private void Application_ProjectClosing(object sender, EventArgs<Project> e)

@@ -93,10 +93,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string file = temp.CopyTestDataFileAndDirectoryToTempDirectory(Path.Combine("BackwardCompatibility", "ProjectWithHydrolinksCreatedWith2022.04.dsproj"));
 
                 // Call
-                app.OpenProject(file);
+                Project project = app.ProjectService.OpenProject(file);
                 
                 // Assert
-                HydroModel integratedModel = app.Project.GetAllItemsRecursive().OfType<HydroModel>().FirstOrDefault();
+                HydroModel integratedModel = project.GetAllItemsRecursive().OfType<HydroModel>().FirstOrDefault();
                 Assert.That(integratedModel, Is.Not.Null);
                 
                 IEventedList<HydroLink> links = integratedModel.Region.Links;

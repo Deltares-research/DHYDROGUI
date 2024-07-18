@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Utils.Validation.NameValidation;
 using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Gui;
@@ -28,8 +28,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PropertyGrid.PropertyInfoCreatio
 
         private static WaterFlowFMModel GetWaterFlowFMModel(GuiContainer guiContainer, INetworkLocation feature)
         {
-            IEnumerable<IModel> models = guiContainer.Gui.Application.GetAllModelsInProject();
-            return models.OfType<WaterFlowFMModel>().FirstOrDefault(m => IsWaterFlowFMModelData(m, feature));
+            IEnumerable<WaterFlowFMModel> models = guiContainer.Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>();
+            return models.FirstOrDefault(m => IsWaterFlowFMModelData(m, feature));
         }
 
         private static bool IsWaterFlowFMModelData(WaterFlowFMModel container, INetworkLocation feature)

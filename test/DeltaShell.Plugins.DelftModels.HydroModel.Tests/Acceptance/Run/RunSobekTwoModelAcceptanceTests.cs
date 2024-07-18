@@ -79,11 +79,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 if (isFmOnly)
                 {
                     hydroModel = new WaterFlowFMModel();
-                    gui.Application.Project.RootFolder.Add(hydroModel);
+                    gui.Application.ProjectService.Project.RootFolder.Add(hydroModel);
                 }
                 else
                 {
-                    hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
+                    hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.ProjectService.Project.RootFolder);
                 }
 
                 SobekAcceptanceModelTestHelper.ImportSobekTwoModelAndAssertPreconditions(acceptanceModelName,

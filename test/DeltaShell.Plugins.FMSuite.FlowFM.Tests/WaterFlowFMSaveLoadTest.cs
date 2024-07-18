@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             return TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
         }
 
-        private static IApplication CreateApplication()
+        private static IApplication CreateRunningApplication()
         {
             var pluginsToAdd = new List<IPlugin>()
             {
@@ -44,30 +44,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new FlowFMApplicationPlugin(),
                 new NetworkEditorApplicationPlugin(),
             };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+
+            app.Run();
+
+            return app;
+        }
+
+        private static IProjectService GetProjectServiceWithProject(IApplication app)
+        {
+            IProjectService projectService = app.ProjectService;
+            projectService.CreateProject();
+
+            return projectService;
         }
 
         [Test]
         public void SaveLoadModelEmptyModel()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.CloseProject();
+                Project project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
 
                 Assert.IsTrue(retrievedModel.NetFilePath.EndsWith("_net.nc"));
                 Assert.AreEqual(0, retrievedModel.BoundaryConditions.Count());
@@ -77,19 +86,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveLoadModelVerifyStartTimeIsSaved()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu_time.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var mduPath = GetBendProfPath();
                 mduPath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduPath);
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 var newStartTime = new DateTime(2000, 1, 2, 11, 15, 5, 2); //time with milliseconds!
                 model.StartTime = newStartTime;
@@ -97,11 +103,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var dtUserTimeSpan = new TimeSpan(0, 1, 0, 1, 430);
                 model.TimeStep = dtUserTimeSpan;
 
-                app.SaveProjectAs(path);
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.SaveProjectAs(path);
+                projectService.CloseProject();
+                Project project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
 
                 Assert.AreEqual(newStartTime, retrievedModel.StartTime);
                 Assert.AreEqual(dtUserTimeSpan, retrievedModel.TimeStep);
@@ -111,26 +117,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveLoadModelVerifyHeatFluxModelTypeIsSaved()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdutemp.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
                 Assert.AreEqual(true, model.UseTemperature);
 
-                app.SaveProjectAs(path);
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.SaveProjectAs(path);
+                projectService.CloseProject();
+                Project project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
 
                 Assert.AreEqual(HeatFluxModelType.ExcessTemperature, retrievedModel.HeatFluxModelType);
                 Assert.AreEqual(true, retrievedModel.UseTemperature);
@@ -138,11 +141,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 retrievedModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
                 Assert.AreEqual(false, retrievedModel.UseTemperature);
 
-                app.SaveProjectAs(path);
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.SaveProjectAs(path);
+                projectService.CloseProject();
+                project = projectService.OpenProject(path);
 
-                retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
 
                 Assert.AreEqual(HeatFluxModelType.None, retrievedModel.HeatFluxModelType);
                 Assert.AreEqual(false, retrievedModel.UseTemperature);
@@ -152,17 +155,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ExportImportModelVerifyHeatFluxModelTypeIsExported()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdutemp.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
                 Assert.AreEqual(true, model.UseTemperature);
@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 model.ExportTo("tempexport1\\mdutemp1.mdu", false);
 
                 var retrievedModel = new WaterFlowFMModel("tempexport1\\mdutemp1.mdu");
-                app.Project.RootFolder.Add(retrievedModel);
+                projectService.Project.RootFolder.Add(retrievedModel);
 
                 Assert.AreEqual(HeatFluxModelType.ExcessTemperature, retrievedModel.HeatFluxModelType);
                 Assert.AreEqual(true, retrievedModel.UseTemperature);
@@ -190,25 +190,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveLoadModelVerifyMduIsReloaded()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-                
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var mduPath = GetBendProfPath();
                 mduPath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduPath);
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path);
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.SaveProjectAs(path);
+                projectService.CloseProject();
+                Project project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
 
                 Assert.IsTrue(retrievedModel.NetFilePath.EndsWith("bend1_net.nc"));
                 Assert.AreEqual(2, retrievedModel.BoundaryConditions.Count());
@@ -218,29 +215,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveLoadModelVerifyMduIsReloadedAndModelDoesNotLeakEventSubscriptions()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var mduPath = GetBendProfPath();
                 mduPath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduPath);
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 int subscriptionsBefore = TestReferenceHelper.FindEventSubscriptions(model);
 
-                app.SaveProjectAs(path);
-                app.SaveProject();
-                app.SaveProject();
+                projectService.SaveProjectAs(path);
+                projectService.SaveProject();
+                projectService.SaveProject();
 
-                app.OpenProject(path);
+                Project project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Models.First();
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Models.First();
 
                 int subscriptionsAfter = TestReferenceHelper.FindEventSubscriptions(retrievedModel);
 
@@ -251,20 +245,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ImportIntoProjectVerifyGridFileIsDirectlyCopiedToDeltaShellDataDir()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu.dsproj";
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
                 var mduPath = GetBendProfPath();
                 mduPath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduPath);
 
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 var netFile = Path.GetFullPath(Path.Combine(Path.Combine(path + "_data", "bendprof", "input"), "bend1_net.nc"));
                 Assert.IsTrue(File.Exists(netFile), "grid file should be in the data directory after import (for rgfgrid)");
@@ -274,21 +266,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ImportIntoProjectVerifyFilesNotYetSupportedInUiButReferencedInMduAreCopiedAlong()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "copyalong.dsproj";
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
                 var mduPath = TestHelper.GetTestFilePath(@"copyalong\manholes_1d2d.mdu");
                 mduPath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduPath);
 
                 // upon adding to project, non-memory based stuff should be copied to the project temp directory
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
                 var tempSaveDir = Path.GetFullPath(Path.Combine(path + "_data", "manholes_1d2d", "input"));
 
                 // check various files are copied along (even though they aren't supported yet by the UI):
@@ -309,32 +299,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveAsLoadModelVerifyMduIsCopiedAlong()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu.dsproj";
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
                 const string path2 = "mdu_save_as.dsproj";
 
                 var mduPath = GetBendProfPath();
                 mduPath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduPath);
-                    
-                app.Project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path);
+                projectService.Project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path2);
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
+                projectService.SaveProjectAs(path2);
 
-                app.OpenProject(path2);
-                
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                projectService.CloseProject();
+
+                Project project = projectService.OpenProject(path2);
+
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
                 Assert.AreEqual(
                     Path.GetFullPath(Path.Combine(Path.Combine(path2 + "_data", "bendprof","input"), "bend1_net.nc")),
                     retrievedModel.NetFilePath);
@@ -344,14 +332,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveModelVerifyGridObjectIsNotReplaced()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu_grid.dsproj";
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
                 string mduPath = GetBendProfPath();
                 mduPath = TestHelper.CreateLocalCopy(mduPath);
@@ -359,9 +345,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 
                 UnstructuredGrid gridBeforeSaving = model.Grid;
 
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
-                app.SaveProject();
+                projectService.SaveProject();
 
                 Assert.AreSame(gridBeforeSaving, model.Grid);
             }
@@ -370,15 +356,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveAsLoadModelVerifyGridIsCopiedAlong()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu_grid.dsproj";
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
                 const string path2 = "mdu_save_as_grid.dsproj";
 
@@ -386,14 +369,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 mduPath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduPath);
 
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
-                app.SaveProjectAs(path2);
+                projectService.SaveProjectAs(path2);
 
                 Assert.IsTrue(File.Exists("mdu_save_as_grid.dsproj_data\\bendprof\\input\\bend1_net.nc"), "grid file does not exist");
-                var retrievedModel = ((WaterFlowFMModel) app.Project.RootFolder.Items[0]);
+                var retrievedModel = (WaterFlowFMModel)projectService.Project.RootFolder.Items[0];
                 Assert.AreEqual(451, retrievedModel.Grid.Vertices.Count);
             }
         }
@@ -401,28 +384,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void CreateModelFromScratchModifySaveAsAndReload()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu_obs.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 // add obs point
                 model.Area.ObservationPoints.Add(new ObservationPoint2D { Name = "obs1", Geometry = new Point(15, 15) });
 
                 // save & reload
-                app.SaveProjectAs(path);
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.SaveProjectAs(path);
+                projectService.CloseProject();
+                Project project = projectService.OpenProject(path);
 
                 // check obs point still exists
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
                 Assert.AreEqual(1, retrievedModel.Area.ObservationPoints.Count, "#obs points");
             }
         }
@@ -430,30 +410,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void CreateModelFromScratchSaveModifySaveAndReload()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu_resave.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path); // save
+                projectService.SaveProjectAs(path); // save
 
                 // add obs point
                 model.Area.ObservationPoints.Add(new ObservationPoint2D { Name = "obs1", Geometry = new Point(15, 15) });
 
                 // save & reload
-                app.SaveProject(); //this only works if nhibernate is aware that something changed and actually does something
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.SaveProject(); //this only works if nhibernate is aware that something changed and actually does something
+                projectService.CloseProject();
+                Project project = projectService.OpenProject(path);
 
                 // check obs point still exists
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
                 Assert.AreEqual(1, retrievedModel.Area.ObservationPoints.Count, "#obs points");
             }
         }
@@ -461,46 +438,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveLoadBathymetryDefinitions()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu_resave.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
-                var polygon = new Polygon(new LinearRing(new[]
-                    {
-                        new Coordinate(-135, -105), new Coordinate(-85, -100), new Coordinate(-75, -205),
-                        new Coordinate(-125, -200), new Coordinate(-135, -105)
-                    }));
-                
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
+                projectService.CloseProject();
 
-                app.OpenProject(path);
+                projectService.OpenProject(path);
             }
         }
 
         [Test]
         public void CreateFromScratchAddBoundarySaveAndReload()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu_drt.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel { Name = "mdu_drt" };
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 var line = new LineString(new [] { new Coordinate(15, 15), new Coordinate(20, 20) });
 
@@ -511,11 +476,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 model.BoundaryConditions.First().AddPoint(0);
 
                 // save & reload
-                app.SaveProjectAs(path);
-                app.CloseProject();
-                app.OpenProject(path);
+                projectService.SaveProjectAs(path);
+                projectService.CloseProject();
+                Project project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
                 Assert.AreEqual(1, retrievedModel.Boundaries.Count, "#boundaries");
                 Assert.AreEqual(1, retrievedModel.BoundaryConditions.Count(), "#bcs");
             }
@@ -524,30 +489,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ImportHarlingenRunSaveAsLoadCheckOutput()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 // import
                 const string path = "har.dsproj";
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduFilePath);
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
                 // run
                 ActivityRunner.RunActivity(model);
                 // save
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
                 
                 // close
-                app.CloseProject();
+                projectService.CloseProject();
 
                 // reopen
-                app.OpenProject(path);
+                Project project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
                 Assert.That(retrievedModel.OutputHisFileStore.Functions[0].Components[0].Values.Count > 0);
                 Assert.That(retrievedModel.OutputMapFileStore.Functions[0].Components[0].Values.Count > 0);
             }
@@ -556,29 +519,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ImportHarlingenSaveRunCloseLoadCheckOutput()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 // import
                 const string path = "har.dsproj";
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduFilePath);
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 ActivityRunner.RunActivity(model);
                 
                 // close
-                app.SaveProjectAs(path);
-                app.CloseProject();
+                projectService.SaveProjectAs(path);
+                projectService.CloseProject();
 
                 //reopen
-                app.OpenProject(path);
+                Project project = projectService.OpenProject(path);
 
-                var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaterFlowFMModel)project.RootFolder.Items[0];
                 Assert.IsNotNull(retrievedModel.OutputMapFileStore);
             }
         }
@@ -587,27 +548,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         // Test related to issue FM1D2D-2077.
         public void ImportHarlingenRunSaveAsLoadCheckLogsDoesNotContainNetworkChangedClearingResults()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 // import
                 const string path = "har.dsproj";
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduFilePath);
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
                 // run
                 ActivityRunner.RunActivity(model);
                 // save
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
                 
                 // close
-                app.CloseProject();
+                projectService.CloseProject();
 
                 // reopen
-                IEnumerable<string> logMessages = TestHelper.GetAllRenderedMessages(() => _ = app.OpenProject(path));
+                IEnumerable<string> logMessages = TestHelper.GetAllRenderedMessages(() => _ = projectService.OpenProject(path));
                 Assert.That(logMessages, Does.Not.Contain("Network has changed, clearing results."));
             }
         }
@@ -615,17 +575,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void DeleteDataPointSaveLoadShouldNotKeepDataPoint()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-
-                app.Run();
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu.dsproj";
                 
                 var model = new WaterFlowFMModel();
 
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 var feature2D = new Feature2D
                 {
@@ -645,11 +603,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var waterLevelBoundaryCondition = model.BoundaryConditions.First();
                 waterLevelBoundaryCondition.AddPoint(0);
                 waterLevelBoundaryCondition.AddPoint(1);
-                app.SaveProjectAs(path);
-                app.CloseProject();
+                projectService.SaveProjectAs(path);
+                projectService.CloseProject();
 
-                app.OpenProject(path);
-                var loadedModel = app.Project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
+                Project project = projectService.OpenProject(path);
+                var loadedModel = project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
 
                 Assert.IsNotNull(loadedModel);
                 Assert.AreEqual(1, loadedModel.BoundaryConditionSets.Count);
@@ -657,11 +615,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.AreEqual(new[] {0, 1}, loadedModel.BoundaryConditions.First().DataPointIndices);
 
                 loadedModel.BoundaryConditions.First().RemovePoint(0);
-                app.SaveProject();
-                app.CloseProject();
+                projectService.SaveProject();
+                projectService.CloseProject();
 
-                app.OpenProject(path);
-                var secondLoadedModel = app.Project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
+                project = projectService.OpenProject(path);
+                var secondLoadedModel = project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
 
                 Assert.IsNotNull(secondLoadedModel);
                 Assert.AreEqual(1, secondLoadedModel.BoundaryConditionSets.Count);
@@ -673,25 +631,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveModelBuiltFromScratchWithWind()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel();
 
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 model.WindFields.Add(SpiderWebWindField.Create(TestHelper.GetTestFilePath(@"windtest\wind.spw")));
 
-                app.SaveProjectAs("windtest.dsproj");
-                app.CloseProject();
+                projectService.SaveProjectAs("windtest.dsproj");
+                projectService.CloseProject();
 
-                app.OpenProject("windtest.dsproj");
-                var loadedModel = app.Project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
+                Project project = projectService.OpenProject("windtest.dsproj");
+                var loadedModel = project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
 
                 Assert.IsNotNull(loadedModel);
                 Assert.AreEqual("wind.spw", Path.GetFileName(loadedModel.WindFields.OfType<SpiderWebWindField>().First().Path));
@@ -702,42 +658,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveLoadSaveAsSaveShouldCopyWindFiles()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-                app.CreateNewProject();
-
-                const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 var model = new WaterFlowFMModel();
-                
-                app.Project.RootFolder.Add(model);
+
+                projectService.Project.RootFolder.Add(model);
                 model.WindFields.Add(SpiderWebWindField.Create(TestHelper.GetTestFilePath(@"windtest\wind.spw")));
 
-                app.SaveProjectAs("windtest.dsproj");
-                app.CloseProject();
+                projectService.SaveProjectAs("windtest.dsproj");
+                projectService.CloseProject();
 
-                app.OpenProject("windtest.dsproj");
-                var loadedModel = app.Project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
+                Project project = projectService.OpenProject("windtest.dsproj");
+                var loadedModel = project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
 
                 Assert.IsNotNull(loadedModel);
 
                 loadedModel.WindFields.RemoveAt(0);
                 loadedModel.WindFields.Add(SpiderWebWindField.Create(TestHelper.GetTestFilePath(@"windtest\wind2.spw")));
-                
-                app.SaveProjectAs("windtest2.dsproj");
-                app.CloseProject();
 
-                app.OpenProject("windtest.dsproj");
-                loadedModel = app.Project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
+                projectService.SaveProjectAs("windtest2.dsproj");
+                projectService.CloseProject();
+
+                project = projectService.OpenProject("windtest.dsproj");
+                loadedModel = project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
 
                 Assert.IsNotNull(loadedModel);
                 Assert.AreEqual("wind.spw", Path.GetFileName(loadedModel.WindFields.OfType<SpiderWebWindField>().First().WindFilePath));
                 Assert.IsTrue(File.Exists(@"windtest.dsproj_data\FlowFM\input\wind.spw"));
 
-                app.OpenProject("windtest2.dsproj");
-                loadedModel = app.Project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
+                project = projectService.OpenProject("windtest2.dsproj");
+                loadedModel = project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
 
                 Assert.IsNotNull(loadedModel);
                 Assert.AreEqual("wind2.spw", Path.GetFileName(loadedModel.WindFields.OfType<SpiderWebWindField>().First().WindFilePath));
@@ -748,13 +700,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveLoadVerifyAreaFeatures()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-                app.CreateNewProject();
-
-                const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 var model = new WaterFlowFMModel();
 
@@ -764,14 +712,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Thin Dams are written to file and file only
                 model.Area.ThinDams.Add(new ThinDam2D {Name = "thin", Geometry = new LineString(new []{new Coordinate(0,0), new Coordinate(1,1)})});
 
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
-                app.SaveProjectAs("saveLoadAreaFeaturesTest.dsproj");
-                app.CloseProject();
+                projectService.SaveProjectAs("saveLoadAreaFeaturesTest.dsproj");
+                projectService.CloseProject();
 
-                app.OpenProject("saveLoadAreaFeaturesTest.dsproj");
+                Project project = projectService.OpenProject("saveLoadAreaFeaturesTest.dsproj");
 
-                var loadedModel = app.Project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
+                var loadedModel = project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
                 Assert.AreEqual(1, loadedModel.Area.Embankments.Count);
                 Assert.AreEqual(1, loadedModel.Area.ThinDams.Count);
             }
@@ -780,17 +728,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveLoadFixedWeirTest()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 var fixedWeir = new FixedWeir
                 {
@@ -803,13 +748,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 model.Area = hydroArea;
                 hydroArea.FixedWeirs.Add(fixedWeir);
                 model.FixedWeirsProperties[0].DataColumns[0].ValueList[0] = 0.9876;
-                app.SaveProject();
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
+                projectService.CloseProject();
 
-                app.OpenProject(path);
+                Project project = projectService.OpenProject(path);
 
-                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel loadedModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
 
                 Assert.IsNotNull(loadedModel);
                 Assert.IsNotNull(loadedModel.Area.FixedWeirs.First());
@@ -820,27 +765,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveLoadDeleteGridTest()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu_grid.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var mduPath = GetBendProfPath();
                 mduPath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduPath);
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
-                app.CloseProject();
+                projectService.CloseProject();
 
-                app.OpenProject(path);
+                Project project = projectService.OpenProject(path);
 
-                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel loadedModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
 
                 Assert.NotNull(loadedModel);
 
@@ -854,21 +796,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveAndLoadMorphologySedimentSimpleModel()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel();
                 //Enable Morphology and Sediment
                 model.ModelDefinition.UseMorphologySediment = true;
-                app.Project.RootFolder.Add(model);
-                
-                app.SaveProjectAs(path);
+                projectService.Project.RootFolder.Add(model);
+
+                projectService.SaveProjectAs(path);
 
                 //Check sed and mor files exist
                 var morFile = model.MorFilePath;
@@ -876,11 +815,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 Assert.IsTrue(File.Exists(morFile));
                 Assert.IsTrue(File.Exists(sedFile));
-                app.CloseProject();
+                projectService.CloseProject();
 
-                app.OpenProject(path);
+                Project project = projectService.OpenProject(path);
 
-                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel loadedModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
 
                 Assert.IsNotNull(loadedModel);
                 
@@ -921,19 +860,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SaveAndLoadMorphologySedimentParametersSimpleModel()
         {
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaterFlowFMModel();
                 //Enable Morphology and Sediment
                 model.ModelDefinition.UseMorphologySediment = true;
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 model.SedimentOverallProperties.Add(new SedimentProperty<double>("MyOverall Property", 0,0, false, 1, false, string.Empty,string.Empty, false) {Value = 0.5});
                 var fraction = new SedimentFraction();
@@ -944,8 +880,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var sedTypeFirstDoubleProperty = new SedimentProperty<double>("MySediment Property", 2, 1.5, false, 2.5, false, string.Empty, String.Empty, false);
                 sedTypeFirstDoubleProperty.Value = new Random().NextDouble() * (sedTypeFirstDoubleProperty.MaxValue - sedTypeFirstDoubleProperty.MinValue) + sedTypeFirstDoubleProperty.MinValue;
 
-
-                app.SaveProjectAs(path);
+                projectService.SaveProjectAs(path);
 
                 //Check sed and mor files exist
                 var morFile = model.MorFilePath;
@@ -953,11 +888,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 Assert.IsTrue(File.Exists(morFile));
                 Assert.IsTrue(File.Exists(sedFile));
-                app.CloseProject();
+                projectService.CloseProject();
 
-                app.OpenProject(path);
+                Project project = projectService.OpenProject(path);
 
-                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel loadedModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
 
                 Assert.IsNotNull(loadedModel);
                 
@@ -1011,23 +946,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduPath = TestHelper.GetTestFilePath(testModelPath);
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var app = CreateApplication())
+            using (IApplication app = CreateRunningApplication())
             {
-                app.Run();
-
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 var model = new WaterFlowFMModel(mduPath);
                 //Enable Morphology and Sediment
                 model.ModelDefinition.UseMorphologySediment = true;
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
-                app.SaveProjectAs(mduPath);
-                app.CloseProject();
+                projectService.SaveProjectAs(mduPath);
+                projectService.CloseProject();
 
-                app.OpenProject(mduPath);
+                Project project = projectService.OpenProject(mduPath);
 
-                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel loadedModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
 
                 Assert.IsNotNull(loadedModel);
 

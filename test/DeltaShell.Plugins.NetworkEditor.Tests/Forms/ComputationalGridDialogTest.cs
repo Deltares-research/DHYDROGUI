@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
             
                 gui.Run();
 
-                app.CreateNewProject(); 
+                Project project = app.ProjectService.CreateProject();
                 
                 IDiscretization defaultDiscretization = null;
                 var network = new HydroNetwork();
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
 
                 network.Branches.Add(channel);
 
-                app.Project.RootFolder.Add(network);
+                project.RootFolder.Add(network);
 
                 var calculationGridWizard = new ComputationalGridDialog
                     {

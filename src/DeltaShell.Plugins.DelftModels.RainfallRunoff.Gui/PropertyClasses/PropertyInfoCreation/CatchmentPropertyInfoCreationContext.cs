@@ -1,5 +1,6 @@
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Utils.Validation.NameValidation;
 using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Gui;
@@ -24,8 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses.Prop
 
         private static CatchmentModelData GetCatchmentData(CatchmentProperties properties, GuiContainer guiContainer)
         {
-            return guiContainer.Gui.Application.GetAllModelsInProject()
-                               .OfType<IRainfallRunoffModel>()
+            return guiContainer.Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IRainfallRunoffModel>()
                                .SelectMany(m => m.ModelData)
                                .FirstOrDefault(d => ReferenceEquals(d.Catchment, properties.Data));
         }

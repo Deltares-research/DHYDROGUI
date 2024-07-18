@@ -83,15 +83,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 };
                 using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
                 {
-                    var app = gui.Application;
-
                     gui.Run();
 
-                    app.CreateNewProject();
+                    Project project = gui.Application.ProjectService.CreateProject();
                     
                     // Create a network coverage and add it to the root folder
                     var networkCoverage = new NetworkCoverage {Network = new HydroNetwork {Name = "HydroNetwork 1"}};
-                    app.Project.RootFolder.Add(networkCoverage);
+                    project.RootFolder.Add(networkCoverage);
 
                     // Create two view contexts and add them to the gui context manager
                     var coverageViewViewContext1 = new CoverageViewViewContext
@@ -143,16 +141,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 
                 gui.Run();
 
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
                 
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
 
                 var networkCoverage = new NetworkCoverage { Name = "coverage1" };
-                app.Project.RootFolder.Add(networkCoverage);
+                project.RootFolder.Add(networkCoverage);
 
                 Action afterShow = () =>
                                        {
-                                           var networkCoverageDataItem = app.Project.RootFolder.DataItems.Last();
+                                           var networkCoverageDataItem = app.ProjectService.Project.RootFolder.DataItems.Last();
 
                                            var treeView = ProjectExplorerGuiPlugin.Instance.ProjectExplorer.TreeView;
                                            treeView.Refresh();
@@ -187,19 +185,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 
                 gui.Run();
 
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
 
                 var network = new HydroNetwork();
-                app.Project.RootFolder.Add(network);
+                project.RootFolder.Add(network);
 
                 var treeView = gui.ToolWindowViews.AllViews.OfType<HydroRegionTreeView>().First().TreeView;
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow,
                     () =>
                         {
-                            gui.Selection = app.Project.RootFolder.DataItems.First(di => di.Value == network);
+                            gui.Selection = app.ProjectService.Project.RootFolder.DataItems.First(di => di.Value == network);
                             Assert.AreEqual(network, treeView.Data);
                             treeView.SelectedNode = treeView.AllLoadedNodes.First(n => n.Text == "Shared Cross Section Definitions");
                             Assert.AreEqual(network, treeView.Data);
@@ -235,7 +233,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                     Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                     Expect.Call(gui.ToolWindowViews).Return(documentViews).Repeat.Any();
                     Expect.Call(gui.Application).Return(application).Repeat.Any();
-                    Expect.Call(application.Project).Return(project).Repeat.Any();
+                    Expect.Call(projectService.Project).Return(project).Repeat.Any();
 
                     projectService.ProjectClosing += null;
                     var projectClosingRaiser = LastCall.IgnoreArguments().GetEventRaiser();
@@ -274,12 +272,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 
                 gui.Run();
 
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
                 
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
 
                 var network = new HydroNetwork();
-                app.Project.RootFolder.Add(network);
+                project.RootFolder.Add(network);
                 var branch1 = new Branch
                                   {
                                       Geometry = new LineString(new [] {new Coordinate(0, 0), new Coordinate(100, 0)})
@@ -359,7 +357,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 gui.Run();
 
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
                 
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
                 var mocks = new MockRepository();
@@ -383,7 +381,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 };
                 model.Expect(m => m.RoughnessSections).Return(RoughnessSections).Repeat.Any();
                 mocks.ReplayAll();
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 WpfTestHelper.ShowModal(
                     (Control)gui.MainWindow,

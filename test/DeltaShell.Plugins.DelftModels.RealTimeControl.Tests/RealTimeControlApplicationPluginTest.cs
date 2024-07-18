@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Utils;
 using Deltares.Infrastructure.API.DependencyInjection;
@@ -113,8 +112,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         private static IApplication GetApplication(Project project)
         {
             var application = Substitute.For<IApplication>();
-            application.Project.Returns(project);
-            application.GetAllModelsInProject().Returns(project.RootFolder.GetAllModelsRecursive());
+            application.ProjectService.Project.Returns(project);
+            application.ProjectService.IsProjectOpen.Returns(true);
 
             return application;
         }

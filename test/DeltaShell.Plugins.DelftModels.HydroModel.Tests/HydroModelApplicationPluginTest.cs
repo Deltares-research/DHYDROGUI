@@ -31,16 +31,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void AdditionalOwnerCheckTest_HydroModel()
         {
             var appPlugin = new HydroModelApplicationPlugin();
-            
-            using (var app = CreateApplication(appPlugin))
+
+            using (IApplication app = CreateRunningApplication(appPlugin))
             {
-                app.Run();
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
                 
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(projectService.Project.RootFolder), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
@@ -52,16 +51,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void AdditionalOwnerCheckTest_RainfallRunoff()
         {
             var appPlugin = new RainfallRunoffApplicationPlugin();
-            
-            using (var app = CreateApplication(appPlugin))
+
+            using (IApplication app = CreateRunningApplication(appPlugin))
             {
-                app.Run();
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
                 
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(projectService.Project.RootFolder), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
@@ -73,16 +71,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void AdditionalOwnerCheckTest_RealTimeControl()
         {
             var appPlugin = new RealTimeControlApplicationPlugin();
-            
-            using (var app = CreateApplication(appPlugin))
+
+            using (IApplication app = CreateRunningApplication(appPlugin))
             {
-                app.Run();
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
                 
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(projectService.Project.RootFolder), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
@@ -95,16 +92,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void AdditionalOwnerCheckTest_FlowFM()
         {
             var appPlugin = new FlowFMApplicationPlugin();
-            
-            using (var app = CreateApplication(appPlugin))
+
+            using (IApplication app = CreateRunningApplication(appPlugin))
             {
-                app.Run();
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
                 
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(projectService.Project.RootFolder), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), true);
@@ -151,16 +147,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Setup
             var appPlugin = new HydroModelApplicationPlugin();
-            using (var app = CreateApplication(appPlugin))
+            using (IApplication app = CreateRunningApplication(appPlugin))
             {
                 // Given
                 var model = new HydroModel();
 
-                app.Run();
-                app.CreateNewProject();
+                IProjectService projectService = GetProjectServiceWithProject(app);
 
                 // Call
-                app.Project.RootFolder.Add(model);
+                projectService.Project.RootFolder.Add(model);
 
                 // Assert
                 IFileExportService fileExportService = model.HydroModelExporter.FileExportService;
@@ -176,12 +171,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Given
             var hydroModelAppPlugin = new HydroModelApplicationPlugin();
             var flowFMApplicationPlugin = new FlowFMApplicationPlugin();
-            
-            using (var app = CreateApplication(hydroModelAppPlugin, flowFMApplicationPlugin))
-            {
-                app.Run();
-                app.CreateNewProject();
 
+            using (IApplication _ = CreateRunningApplication(hydroModelAppPlugin, flowFMApplicationPlugin))
+            {
                 // When 
                 IEnumerable<IFileImporter> applicationFileImporters = hydroModelAppPlugin.GetFileImporters().ToArray();
                 int fileImportersCounter = applicationFileImporters.Count();
@@ -270,8 +262,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(modelSettings.ModelName,model.Name);
             Assert.AreEqual(projectName, project.Name);
         }
-        
-        private static IApplication CreateApplication(params IPlugin[] pluginsToAdd)
+
+        private static IApplication CreateRunningApplication(params IPlugin[] pluginsToAdd)
         {
             var plugins = new List<IPlugin>
             {
@@ -287,8 +279,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             plugins.AddRange(pluginsToAdd);
             
             IApplication application = new DeltaShellApplicationBuilder().WithPlugins(plugins).Build();
+
+            application.Run();
             
             return application;
+        }
+
+        private static IProjectService GetProjectServiceWithProject(IApplication application)
+        {
+            IProjectService projectService = application.ProjectService;
+            projectService.CreateProject();
+            return projectService;
         }
     }
 }

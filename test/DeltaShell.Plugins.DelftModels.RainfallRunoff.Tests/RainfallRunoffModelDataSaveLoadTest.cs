@@ -42,6 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             {
                 using (var application = CreateRunningApplication())
                 {
+                    IProjectService projectService = application.ProjectService;
                     var firstCatchment = new Catchment
                         {Name = ORIGINAL_CATCHMENT_NAME, CatchmentType = CatchmentType.GreenHouse};
 
@@ -60,13 +61,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         greenhouseData.UseSubsoilStorage = true;
                         greenhouseData.AreaPerGreenhouse[GreenhouseEnums.AreaPerGreenhouseType.from2500to3000] =
                             expected;
-                        application.Project.RootFolder.Items.Add(model);
-                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
+                        projectService.Project.RootFolder.Items.Add(model);
+                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
                     }
 
-                    application.OpenProject(path);
-
-                    var retrievedProject = application.Project;
+                    var retrievedProject = projectService.OpenProject(path);
                     var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                         .OfType<RainfallRunoffModel>()
                         .FirstOrDefault();
@@ -106,7 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             {
                 using (var app = CreateRunningApplication())
                 {
-                    
+                    IProjectService projectService = app.ProjectService;
                     var firstCatchment = new Catchment
                         {Name = ORIGINAL_CATCHMENT_NAME, CatchmentType = CatchmentType.Hbv};
 
@@ -116,12 +115,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         model.Basin.Catchments.Add(firstCatchment);
                         hbvData = (HbvData) model.GetCatchmentModelData(firstCatchment);
                         ReflectionTestHelper.FillRandomValuesForValueTypeProperties(hbvData);
-                        app.Project.RootFolder.Items.Add(model);
-                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), app);
+                        projectService.Project.RootFolder.Items.Add(model);
+                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
                     }
-
-                    app.OpenProject(path);
-                    var retrievedProject = app.Project;
+                    
+                    Project retrievedProject = projectService.OpenProject(path);
                     var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                         .OfType<RainfallRunoffModel>().FirstOrDefault();
                     Assert.NotNull(retrievedModel);
@@ -154,9 +152,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             {
                 using (var application = CreateRunningApplication())
                 {
+                    IProjectService projectService = application.ProjectService;
                     using (var model = GetRRModel())
                     {
-                        application.Project.RootFolder.Add(model);
+                        projectService.Project.RootFolder.Add(model);
                         model.Precipitation.DataDistributionType = MeteoDataDistributionType.PerStation;
                         model.Evaporation.DataDistributionType = MeteoDataDistributionType.PerStation;
                         model.Temperature.DataDistributionType = MeteoDataDistributionType.PerStation;
@@ -171,11 +170,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         model.Evaporation.Data[new DateTime(2001, 2, 4), "Station B"] = 80.2;
                         model.Temperature.Data[new DateTime(2001, 2, 3), "Station B"] = 18.1;
                         model.Temperature.Data[new DateTime(2001, 2, 4), "Station C"] = 27.3;
-                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
+                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
                     }
 
-                    application.OpenProject(path);
-                    var retrievedProject = application.Project;
+                    Project retrievedProject = projectService.OpenProject(path);
                     var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                         .OfType<RainfallRunoffModel>()
                         .FirstOrDefault();
@@ -239,11 +237,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 using (var application = CreateRunningApplication())
                 {
-                    application.Project.RootFolder.Items.Add(model1);
-                    path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
-                
-                    application.OpenProject(path);
-                    var retrievedProject = application.Project;
+                    IProjectService projectService = application.ProjectService;
+                    projectService.Project.RootFolder.Items.Add(model1);
+                    path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
+                    
+                    Project retrievedProject = projectService.OpenProject(path);
                     var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                         .OfType<RainfallRunoffModel>().FirstOrDefault();
                     Assert.NotNull(retrievedModel);
@@ -314,11 +312,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 using (var application = CreateRunningApplication())
                 {
-                    application.Project.RootFolder.Items.Add(model1);
-                    path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
+                    IProjectService projectService = application.ProjectService;
+                    projectService.Project.RootFolder.Items.Add(model1);
+                    path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
 
-                    application.OpenProject(path);
-                    var retrievedProject = application.Project;
+                    Project retrievedProject = projectService.OpenProject(path);
                     var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                         .OfType<RainfallRunoffModel>().FirstOrDefault();
                     Assert.NotNull(retrievedModel);
@@ -373,6 +371,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 using (var application = CreateRunningApplication())
                 {
+                    IProjectService projectService = application.ProjectService;
+                    
                     SacramentoData sacramentoData;
                     var rng = new Random();
 
@@ -389,12 +389,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                             sacramentoData.HydrographValues[i] = rng.NextDouble();
                         }
 
-                        application.Project.RootFolder.Items.Add(model);
-                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
+                        projectService.Project.RootFolder.Items.Add(model);
+                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
                     }
 
-                    application.OpenProject(path);
-                    var retrievedProject = application.Project;
+                    Project retrievedProject = projectService.OpenProject(path);
                     var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                         .OfType<RainfallRunoffModel>().FirstOrDefault();
                     Assert.NotNull(retrievedModel);
@@ -432,6 +431,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             {
                 using (var application = CreateRunningApplication())
                 {
+                    IProjectService projectService = application.ProjectService;
                     var boundary = new RunoffBoundary {Name = "Boundary1"};
 
                     using (var model = GetRRModel())
@@ -441,12 +441,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         boundaryData.Series.Data[new DateTime(2005, 1, 1)] = 15.0;
                         boundaryData.Series.Value = 11.0;
 
-                        application.Project.RootFolder.Items.Add(model);
-                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
+                        projectService.Project.RootFolder.Items.Add(model);
+                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
                     }
 
-                    application.OpenProject(path);
-                    var retrievedProject = application.Project;
+                    Project retrievedProject = projectService.OpenProject(path);
                     var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                         .OfType<RainfallRunoffModel>().FirstOrDefault();
                     Assert.NotNull(retrievedModel);
@@ -479,6 +478,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 using (var application = CreateRunningApplication())
                 {
+                    IProjectService projectService = application.ProjectService;
                     TimeSeries sewerPumpVariableCapacitySeries;
                     TimeSeries mixedSewerPumpVariableCapacitySeries;
                     Function variableWaterUseFunction;
@@ -534,13 +534,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         pavedData.VariableWaterUseFunction = variableWaterUseFunction;
                         pavedData.WaterUse = variableWaterUseFunction.GetValues<double>().Sum();
                         pavedData.IsSewerPumpCapacityFixed = false;
-                        application.Project.RootFolder.Items.Add(model);
-                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
+                        projectService.Project.RootFolder.Items.Add(model);
+                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
                     }
 
-
-                    application.OpenProject(path);
-                    var retrievedProject = application.Project;
+                    Project retrievedProject = projectService.OpenProject(path);
                     var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                         .OfType<RainfallRunoffModel>()
                         .FirstOrDefault();
@@ -602,6 +600,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             {
                 using (var application = CreateRunningApplication())
                 {
+                    IProjectService projectService = application.ProjectService;
                     using (var model = GetRRModel())
                     {
                         model.AreaUnit = RainfallRunoffEnums.AreaUnit.ha;
@@ -619,12 +618,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         model.SaveStateTimeStep = model.TimeStep;
                         model.SaveStateStopTime = model.StopTime;
 
+                        projectService.Project.RootFolder.Items.Add(model);
+                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
 
-                        application.Project.RootFolder.Items.Add(model);
-                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
-                        
-                        application.OpenProject(path);
-                        var retrievedProject = application.Project;
+                        Project retrievedProject = projectService.OpenProject(path);
                         var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                             .OfType<RainfallRunoffModel>()
                             .FirstOrDefault();
@@ -655,16 +652,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             {
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
             }
-        }
-
-        [Test]
-        public void SaveAndLoadWWTP()
-        {
-        }
-
-        [Test]
-        public void SaveAndLoadNwrW()
-        {
         }
 
         [Test]
@@ -773,11 +760,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 using (var application = CreateRunningApplication())
                 {
-                    application.Project.RootFolder.Items.Add(rrModel);
-                    path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
-                
-                    application.OpenProject(path);
-                    var retrievedProject = application.Project;
+                    IProjectService projectService = application.ProjectService;
+                    projectService.Project.RootFolder.Items.Add(rrModel);
+                    path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
+
+                    Project retrievedProject = projectService.OpenProject(path);
                     var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                                                          .OfType<RainfallRunoffModel>().FirstOrDefault();
                     Assert.NotNull(retrievedModel);
@@ -809,11 +796,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 using (IApplication application = CreateRunningApplication())
                 {
-                    application.Project.RootFolder.Items.Add(rrModel);
-                    Assert.DoesNotThrow(() => path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application));
-                
-                    application.OpenProject(path);
-                    Project retrievedProject = application.Project;
+                    IProjectService projectService = application.ProjectService;
+                    projectService.Project.RootFolder.Items.Add(rrModel);
+                    Assert.DoesNotThrow(() => path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService));
+
+                    Project retrievedProject = projectService.OpenProject(path);
                     RainfallRunoffModel retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
                                                                          .OfType<RainfallRunoffModel>().FirstOrDefault();
                     Assert.NotNull(retrievedModel);
@@ -835,16 +822,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             return model;
         }
 
-        private string SaveAndCloseProjectWithThisRrModel(string methodName, IApplication application)
+        private string SaveAndCloseProjectWithThisRrModel(string methodName, IProjectService projectService)
         {
             var tempFolder = FileUtils.CreateTempDirectory();
 
             var path = Path.Combine(tempFolder, methodName + ".dsproj");
-            application.SaveProjectAs(path);
-            var rrModels = application.GetAllModelsInProject().OfType<RainfallRunoffModel>().ToList();
+            projectService.SaveProjectAs(path);
+            List<RainfallRunoffModel> rrModels = projectService.Project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>().ToList();
 
-            rrModels.ForEach(rrModel => application.Project.RootFolder.Items.Remove(rrModel));
-            application.CloseProject();;
+            rrModels.ForEach(rrModel => projectService.Project.RootFolder.Items.Remove(rrModel));
+            projectService.CloseProject();
+            ;
             return path;
         }
 
@@ -863,7 +851,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             };
             var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             app.Run();
-            app.CreateNewProject();
+            app.ProjectService.CreateProject();
             return app;
         }
 
@@ -882,6 +870,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             {
                 using (var application = CreateRunningApplication())
                 {
+                    IProjectService projectService = application.ProjectService;
                     using (var model = new RainfallRunoffModel())
                     {
 
@@ -891,7 +880,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                                 var catchment = o as Catchment;
                                 if (catchment != null)
                                 {
-                                    application.Project.RootFolder.Add(model);
+                                    projectService.Project.RootFolder.Add(model);
                                     model.Basin.Catchments.Add(catchment);
                                 }
 
@@ -900,7 +889,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                                 var basin = o as DrainageBasin;
                                 if (basin != null)
                                 {
-                                    application.Project.RootFolder.Add(model);
+                                    projectService.Project.RootFolder.Add(model);
                                     model.Basin = basin;
                                 }
 
@@ -909,22 +898,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                                 var wwtp = o as WasteWaterTreatmentPlant;
                                 if (wwtp != null)
                                 {
-                                    application.Project.RootFolder.Add(model);
+                                    projectService.Project.RootFolder.Add(model);
                                     model.Basin.WasteWaterTreatmentPlants.Add(wwtp);
                                 }
 
                                 break;
                             default:
-                                application.Project.RootFolder.Add(o);
+                                projectService.Project.RootFolder.Add(o);
                                 break;
                         }
 
-                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
+                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), projectService);
                     }
 
-                    application.OpenProject(path);
-                    var retrievedModel = application.GetAllModelsInProject().OfType<RainfallRunoffModel>()
-                        .FirstOrDefault();
+                    Project retrievedProject = projectService.OpenProject(path);
+                    RainfallRunoffModel retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>()
+                                                                         .FirstOrDefault();
                     Assert.IsNotNull(retrievedModel);
                     switch (onThis)
                     {
@@ -954,7 +943,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                             break;
                     }
 
-                    return (T) ((DataItem) application.Project.RootFolder.Items[0]).Value;
+                    return (T)((DataItem)retrievedProject.RootFolder.Items[0]).Value;
                 }
             }
             finally

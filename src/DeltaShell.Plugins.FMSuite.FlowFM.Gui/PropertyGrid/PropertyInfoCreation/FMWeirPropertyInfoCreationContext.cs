@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PropertyGrid.PropertyInfoCreatio
 
         private static HydroArea GetHydroArea(GuiContainer guiContainer, Weir2D feature)
         {
-            IEnumerable<object> projectItems = guiContainer.Gui.Application.Project.GetAllItemsRecursive();
+            IEnumerable<object> projectItems = guiContainer.Gui.Application.ProjectService.Project.GetAllItemsRecursive();
             return projectItems.OfType<HydroArea>().FirstOrDefault(c => IsHydroAreaData(c, feature));
         }
 

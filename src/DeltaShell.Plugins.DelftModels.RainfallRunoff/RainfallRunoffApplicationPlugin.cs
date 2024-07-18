@@ -94,6 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private void Application_ProjectOpened(object sender, EventArgs<Project> e)
         {
+            Project project = e.Value;
             foreach (var rainfallRunoffModel in GetModels(e.Value))
             {
                 rainfallRunoffModel.WorkingDirectoryPathFunc = () => Application?.WorkDirectory;
@@ -102,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 UpdateDataAfterOpened(rainfallRunoffModel);
             }
             
-            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+            project.CollectionChanging += OnProjectCollectionChanging;
         }
         
         private void Application_ProjectClosing(object sender, EventArgs<Project> e)
@@ -137,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             Project project = e.Value;
             if (project == null || project.RootFolder == null) return;
 
-            var projectDataFolderDirectory = Application.ProjectFilePath + "_data";
+            var projectDataFolderDirectory = Application.ProjectService.ProjectFilePath + "_data";
             var rrModels = GetModels(project);
             var exporter = new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer(), evaporationExporter);
 

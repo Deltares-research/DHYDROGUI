@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var project = new Project();
 
             gui.Application = application;
-            application.Project.Returns(project);
+            application.ProjectService.Project.Returns(project);
             project.RootFolder.Add(newObject);
 
             return gui;

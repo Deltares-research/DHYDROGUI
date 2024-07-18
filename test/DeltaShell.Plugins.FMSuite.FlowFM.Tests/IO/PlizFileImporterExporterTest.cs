@@ -166,11 +166,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //methods for the bridgepillars in the Importer/Exporter.
                 app.Run();
 
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
 
                 //Setup new model and pillars.
                 var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 //Create some dummy bridge pillaras
                 var pillar = new BridgePillar()
@@ -253,11 +253,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //methods for the bridgepillars in the Importer/Exporter.
                 app.Run();
 
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
 
                 //Setup new model and pillars.
                 var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 //Create some dummy bridge pillaras
                 var pillar1 = new BridgePillar()
@@ -371,11 +371,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridgepillars in the Importer/Exporter.
                 app.Run();
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
 
                 //Setup new model and pillars.
                 var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 var importer =
                     app.FileImporters.First(fi => fi is PlizFileImporterExporter<BridgePillar, BridgePillar>) as

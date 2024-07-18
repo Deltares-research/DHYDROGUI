@@ -144,15 +144,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                var app = gui.Application;
+                IProjectService projectService = gui.Application.ProjectService;
                 
                 gui.Run();
 
-                app.CreateNewProject();
+                Project project = projectService.CreateProject();
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
                     //step 1: User adds an empty D - FlowFM
                     using (var model = new WaterFlowFMModel())
                     {
@@ -489,15 +488,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = CreateGui())
             {
-                var app = gui.Application;
-
                 gui.Run();
 
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
                 
                 Action mainWindowShown = delegate
                     {
-                        var project = app.Project;
                         project.RootFolder.Add(model);
 
                         // open view for boundary condition

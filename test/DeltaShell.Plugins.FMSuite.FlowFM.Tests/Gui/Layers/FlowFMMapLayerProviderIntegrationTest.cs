@@ -72,16 +72,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             {
                 var fmModel = new WaterFlowFMModel();
                 TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputClassMapFileStore), store);
-                var app = gui.Application;
-                
+
                 gui.Application.UserSettings["ShowStartUpScreen"] = false;
                 gui.Run();
 
-                app.CreateNewProject();
-
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = gui.Application.ProjectService.CreateProject();
                     project.RootFolder.Add(fmModel);
                     gui.CommandHandler.OpenView(fmModel);
                     
@@ -110,21 +107,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             {
                 var fmModel = new WaterFlowFMModel(){Area = area,Network = network};
                 TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputHisFileStore), store);
-                var app = gui.Application;
                 gui.Application.UserSettings["ShowStartUpScreen"] = false;
                 gui.Run();
 
-                app.CreateNewProject();
-
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = gui.Application.ProjectService.CreateProject();
                     project.RootFolder.Add(fmModel);
                     gui.CommandHandler.OpenView(fmModel);
                     var mapView = gui.DocumentViews.GetViewsOfType<MapView>().FirstOrDefault();
                     mapView.MapControl.SelectTool.Select(pump);
-
-                    //mapView.MapControl.GetToolByType<QueryTimeSeriesMapTool>().Execute();
 
                     var timeSeriesList = new List<IFunction>();
                     var coverages = GetTimeDependentCoverages(new[] {pump});
@@ -151,7 +143,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                     {
                         SharpMapGisGuiPlugin.Instance.Gui.CommandHandler.OpenView(timeSeriesList);
                     }
-                    //SharpMapGisGuiPlugin.Instance.Gui.CommandHandler.OpenView(coverages);
                 };
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
@@ -176,22 +167,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             using (var gui = CreateGui())
             {
                 var fmModel = new WaterFlowFMModel(){Area = area,Network = network};
-                TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputHisFileStore), store); 
-                var app = gui.Application;
+                TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputHisFileStore), store);
                 gui.Application.UserSettings["ShowStartUpScreen"] = false;
                 gui.Run();
-                
-                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = gui.Application.ProjectService.CreateProject();
                     project.RootFolder.Add(fmModel);
                     gui.CommandHandler.OpenView(fmModel);
                     var mapView = gui.DocumentViews.GetViewsOfType<MapView>().FirstOrDefault();
                     mapView.MapControl.SelectTool.Select(culvert);
-
-                    //mapView.MapControl.GetToolByType<QueryTimeSeriesMapTool>().Execute();
 
                     var timeSeriesList = new List<IFunction>();
                     var coverages = GetTimeDependentCoverages(new[] {culvert});
@@ -218,7 +204,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                     {
                         SharpMapGisGuiPlugin.Instance.Gui.CommandHandler.OpenView(timeSeriesList);
                     }
-                    //SharpMapGisGuiPlugin.Instance.Gui.CommandHandler.OpenView(coverages);
                 };
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
@@ -246,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             var app = SharpMapGisGuiPlugin.Instance.Gui.Application;
             var networks = selectedFeatures.OfType<INetworkFeature>().Select(nf => nf.Network).Distinct();
 
-            return app.Project.GetAllItemsRecursive()
+            return app.ProjectService.Project.GetAllItemsRecursive()
                 .OfType<ICoverage>()
                 .Where(c => IsValidCoverage(c, networks, selectedFeatures));
         }
@@ -320,12 +305,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             var plugins = new List<IPlugin>() { fmGuiPlugin };
             using (var gui = CreateGui(plugins))
             {
-                var app = gui.Application;
                 gui.Run();
 
-                app.CreateNewProject();
-
-                var project = app.Project;
+                Project project = gui.Application.ProjectService.CreateProject();
                 project.RootFolder.Add(model);
 
                 var enclosureFeature =
@@ -354,12 +336,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             };
             using (var gui = CreateGui(plugins))
             {
-                var app = gui.Application;
                 gui.Run();
 
-                app.CreateNewProject();
-                
-                var project = app.Project;
+                Project project = gui.Application.ProjectService.CreateProject();
                 project.RootFolder.Add(model);
 
                 //Create a new layer
@@ -383,13 +362,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             var plugins = new List<IPlugin>() { fmGuiPlugin };
             using (var gui = CreateGui(plugins))
             {
-                var app = gui.Application;
-
                 gui.Run();
 
-                app.CreateNewProject();
-
-                Project project = app.Project;
+                Project project = gui.Application.ProjectService.CreateProject();
                 project.RootFolder.Add(model);
 
                 const string featureName = "Enclosure01";

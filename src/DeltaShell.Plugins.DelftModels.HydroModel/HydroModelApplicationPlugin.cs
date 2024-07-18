@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 {
                     Name = modelGroupNameLookUp[modelGroup],
                     Category = DelftTools.Hydro.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_1D_2D_3D_Integrated_Models,
-                    AdditionalOwnerCheck = owner => (Application.Project != null && !Application.GetAllModelsInProject().Any()) &&
+                    AdditionalOwnerCheck = owner => (Application.ProjectService.Project != null && !Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().Any()) &&
                         !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
                     CreateModel = owner =>
                     {
@@ -214,13 +214,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void ApplicationProjectOpened(object sender, EventArgs<Project> e)
         {
-            Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
+            Project project = e.Value;
+            project.RootFolder.GetAllModelsRecursive().OfType<HydroModel>().ForEach(hm =>
             {
                 hm.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
                 hm.HydroModelExporter.FileExportService = Application.FileExportService;
             });
 
-            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+            project.CollectionChanging += OnProjectCollectionChanging;
 
             DoWithHydroModels(e.Value, Properties.Resources.Linking_items_in_the_integrated_model_after_loading_the_project, RelinkHydroModelItems);
         }

@@ -27,14 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 
         private static Project GetProject(IGui gui)
         {
-            var app = gui.Application;
-
-            if (app == null)
-            {
-                return null;
-            }
-
-            return app.Project;
+            return gui.Application.ProjectService.Project;
         }
 
         public IGui Gui { get; set; }

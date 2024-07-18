@@ -34,9 +34,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 app.Run();
 
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
-
                 var importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(importer);
                 var importedNetFileDataItem =
@@ -70,9 +67,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 app.Run();
 
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
-
                 var importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(importer);
                 var importedNetFileDataItem =
@@ -105,15 +99,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             using (var app = CreateApplication())
             {
                 app.Run();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                Project project = app.ProjectService.CreateProject();
 
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
                 var model = new WaterFlowFMModel(mduFilePath);
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 var exporter = app.FileExporters.OfType<FMGridPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -143,15 +135,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 app.Run();
 
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
 
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
                 var model = new WaterFlowFMModel(mduFilePath);
                 model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueAsString("7");
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 var exporter = app.FileExporters.OfType<FMGridPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -181,14 +173,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 app.Run();
 
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
 
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
                 var model = new WaterFlowFMModel(mduFilePath);
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 var exporter = app.FileExporters.OfType<FMGridPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -221,14 +213,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 app.Run();
 
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
 
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
                 var model = new WaterFlowFMModel(mduFilePath);
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 var exporter = app.FileExporters.OfType<FMModelPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -261,15 +253,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 app.Run();
 
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
 
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
                 var model = new WaterFlowFMModel(mduFilePath);
                 model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueAsString("7");
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 var exporter = app.FileExporters.OfType<FMModelPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
@@ -302,14 +294,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 app.Run();
 
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
+                IProjectService projectService = app.ProjectService;
+                Project project = projectService.CreateProject();
 
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
                 var model = new WaterFlowFMModel(mduFilePath);
-                app.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 var exporter = app.FileExporters.OfType<FMModelPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);

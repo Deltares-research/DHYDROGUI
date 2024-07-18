@@ -412,10 +412,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", UGridFileHelper.BedLevelLocation.Faces);
 
-                        var project = app.Project;
-                        project.RootFolder.Add(model);
+                        IProjectService projectService = app.ProjectService;
+                        projectService.Project.RootFolder.Add(model);
 
-                        app.SaveProject();
+                        projectService.SaveProject();
 
                         model.ValidateBeforeRun = true;
                         var report = model.Validate();
@@ -423,7 +423,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         app.RunActivity(model);
                         Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
-                        app.SaveProject();
+                        projectService.SaveProject();
 
                         model.ExportTo(exportMduFilePath);
 
@@ -455,7 +455,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         Assert.AreEqual(morFileName, morPropValue);
                         Assert.AreEqual(sedFileName, sedPropValue);
 
-                        app.CloseProject();
+                        projectService.CloseProject();
                     }
                 }
             }
@@ -478,8 +478,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
             var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             app.Run();
-            app.CreateNewProject();
-            app.SaveProjectAs(Path.Combine(savePath));
+            app.ProjectService.CreateProject();
+            app.ProjectService.SaveProjectAs(Path.Combine(savePath));
             return app;
         }
 
@@ -541,6 +541,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 using (var app = GetConfiguredApplication(tempProjectFilePath))
                 {
+                    IProjectService projectService = app.ProjectService;
+                    
                     using (var model = new WaterFlowFMModel())
                     {
                         model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
@@ -581,12 +583,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         boundaryConditionSet.BoundaryConditions.Add(flowBoundaryCondition);
                         boundaryConditionSet.BoundaryConditions.Add(morphologyBoundaryCondition);
 
-                        var project = app.Project;
-                        project.RootFolder.Add(model);
+                        projectService.Project.RootFolder.Add(model);
 
-                        app.SaveProject();
+                        projectService.SaveProject();
 
-                        app.OpenProject(tempProjectFilePath);
+                        projectService.OpenProject(tempProjectFilePath);
 
                         Assert.That(model.Boundaries.Count, Is.EqualTo(1));
                         Assert.That(model.Boundaries.FirstOrDefault().Name, Is.EqualTo(boundaryName));
@@ -599,7 +600,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         Assert.That(boundaryConditionNames.Contains(flowBoundaryConditionName));
                         Assert.That(boundaryConditionNames.Contains(morphBoundaryConditionName));
 
-                        app.CloseProject();
+                        projectService.CloseProject();
                     }
                 }
             }

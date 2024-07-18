@@ -44,14 +44,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                var app = gui.Application;
-
-                
                 gui.Run();
+                IProjectService projectService = gui.Application.ProjectService;
+                projectService.CreateProject();
 
-                app.CreateNewProject();
-
-                var project = app.Project;
+                Project project = projectService.Project;
 
                 // add data
                 var network = new HydroNetwork

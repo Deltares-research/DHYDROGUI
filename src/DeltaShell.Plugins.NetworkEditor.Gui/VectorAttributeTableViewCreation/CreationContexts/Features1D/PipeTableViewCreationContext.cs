@@ -7,6 +7,7 @@ using DelftTools.Controls.Swf.Editors;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Utils.Validation.NameValidation;
 using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Gui;
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
         /// <inheritdoc/>
         public void CustomizeTableView(VectorLayerAttributeTableView view, IEnumerable<IPipe> data, GuiContainer guiContainer)
         {
-            IModelWithNetwork networkModel = guiContainer.Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Equals(data));
+            IModelWithNetwork networkModel = guiContainer.Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Equals(data));
             SetSharedCrossSectionDefinitionsComboBoxTypeEditor(view, networkModel);
 
             view.TableView.FocusedRowChanged += (sender, args) => { SetSharedCrossSectionDefinitionsComboBoxTypeEditor(view, networkModel); };

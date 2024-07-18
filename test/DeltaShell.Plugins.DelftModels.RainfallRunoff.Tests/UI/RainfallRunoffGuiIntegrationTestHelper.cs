@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
-using DelftTools.Utils.Collections;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -30,33 +29,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             };
             
             var deltaShell = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
-            
-            deltaShell.Application.Plugins.ForEach(p => p.Application = deltaShell.Application);
             deltaShell.Run();
 
-            deltaShell.Application.CreateNewProject();
+            deltaShell.Application.ProjectService.CreateProject();
 
             return deltaShell;
-        }
-
-        internal static IApplication GetDeltaShellApplicationWithRRPlugins()
-        {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NetCdfApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new RainfallRunoffApplicationPlugin(),
-            };
-            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
-            
-            app.Run();
-            app.CreateNewProject();
-
-            return app;
         }
     }
 }

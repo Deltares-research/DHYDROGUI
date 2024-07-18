@@ -280,7 +280,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 var hydroModel = data as IHydroModel;
                 if (hydroModel != null)
                 {
-                    var allCompositeHydroModels = Gui.Application.GetAllModelsInProject().OfType<HydroModel>().ToArray();
+                    var allCompositeHydroModels = Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<HydroModel>().ToArray();
                     var isChildModel = allCompositeHydroModels.Any(m => m.Activities.Contains(hydroModel));
                     
                     var folder = GetFolderContaining(hydroModel);
@@ -429,7 +429,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             var destinationModel = nodeData as IModelMerge;
             if (destinationModel == null) return null;
             // model merge
-            var mergeModelNamesInProject = Gui.Application.GetAllModelsInProject().OfType<IModelMerge>().Where(m => m != destinationModel && destinationModel.CanMerge(m)).Select(m => m.Name).ToList();
+            var mergeModelNamesInProject = Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IModelMerge>().Where(m => m != destinationModel && destinationModel.CanMerge(m)).Select(m => m.Name).ToList();
             modelMergeMenuItem.Available = mergeModelNamesInProject.Count != 0;
 
             foreach (var dropDownItem in modelMergeMenuItem.DropDownItems)
@@ -462,7 +462,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
 
             var destinationModel = Gui.Selection as IModelMerge;
             if (destinationModel == null) return;
-            var sourceModel = (IModelMerge)Gui.Application.GetAllModelsInProject().OfType<IModelMerge>().Cast<IModel>().FirstOrDefault(m => m.Name == modelToMergeWith);
+            var sourceModel = (IModelMerge)Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IModelMerge>().Cast<IModel>().FirstOrDefault(m => m.Name == modelToMergeWith);
             Gui.DocumentViewsResolver.OpenViewForData(new ValidateMergeModelObjects { DestinationModel = destinationModel, SourceModel = sourceModel }, typeof(MergeModelValidationView));
         }
         private static Folder GetFolderContaining(IProjectItem projectItem)
@@ -571,7 +571,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 return true;
             }
 
-            var model = Gui.Application.ModelService.GetModelByDataItem(Gui.Application.Project, dataItem);
+            var model = Gui.Application.ModelService.GetModelByDataItem(Gui.Application.ProjectService.Project, dataItem);
             if(model is HydroModel && region.Parent != null && dataItem.LinkedBy.Count > 0)
             {
                 return false; // data item is a sub-region and it is being used - delete model first (unlink)

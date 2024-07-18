@@ -4,6 +4,7 @@ using System.ComponentModel;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Validators;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Validation;
@@ -55,10 +56,7 @@ namespace DeltaShell.NGHS.Common.Gui.Tests.Validation
             var feature = Substitute.For<IFeature>();
             IMap map = CreateMap();
 
-            gui.Application.GetAllModelsInProject().Returns(new[]
-            {
-                model
-            });
+            AddToProject(model, gui.Application.ProjectService);
 
             model.Region.Returns(region);
 
@@ -107,6 +105,13 @@ namespace DeltaShell.NGHS.Common.Gui.Tests.Validation
             map.Layers = new EventedList<ILayer>();
 
             return map;
+        }
+
+        private static void AddToProject(object obj, IProjectService projectService)
+        {
+            var project = new Project();
+            project.RootFolder.Add(obj);
+            projectService.Project.Returns(project);
         }
     }
 }

@@ -469,7 +469,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             {
                 gui.Run();
 
-                gui.Application.CreateNewProject();
+                gui.Application.ProjectService.CreateProject();
 
                 // setup mock model / control group
                 var controlGroup = new ControlGroup();

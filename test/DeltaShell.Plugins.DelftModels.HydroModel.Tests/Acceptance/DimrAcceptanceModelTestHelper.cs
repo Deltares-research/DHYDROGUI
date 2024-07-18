@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             string[] messages = TestHelper.GetAllRenderedMessages(() => hydroModel = (HydroModel)dimrImporter.ImportItem(xmlFilePath)).ToArray();
             
             Assert.That(hydroModel, Is.Not.Null, string.Join(Environment.NewLine, messages));
-            app.Project.RootFolder.Add(hydroModel);
+            app.ProjectService.Project.RootFolder.Add(hydroModel);
 
             // [Precondition]
             IHydroNetwork hydroNetwork = hydroModel.Region.SubRegions.OfType<IHydroNetwork>().Single();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
@@ -73,6 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             // [Given]
             using (IGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
+                IProjectService projectService = gui.Application.ProjectService;
                 Console.WriteLine("Importing model");
                 HydroModel hydroModel = DimrAcceptanceModelTestHelper.ImportDimrModelAndAssertPreconditions(acceptanceModelName,
                                                                                                             acceptanceModelsDirectory,
@@ -90,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 }
                 
                 // [When]
-                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
+                AcceptanceModelTestHelper.SaveLoadAndResaveProject(projectService, firstSaveProjectPath, secondSaveProjectPath);
                 
                 // [Then]
                 Console.WriteLine("Comparing saved data");

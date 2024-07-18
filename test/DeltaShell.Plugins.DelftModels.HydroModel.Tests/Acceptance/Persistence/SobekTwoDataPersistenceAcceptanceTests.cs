@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -79,15 +80,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             // [Given]
             using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
+                IProjectService projectService = gui.Application.ProjectService;
                 IHydroModel hydroModel;
                 if (isFmOnly)
                 {
                     hydroModel = new WaterFlowFMModel();
-                    gui.Application.Project.RootFolder.Add(hydroModel);
+                    gui.Application.ProjectService.Project.RootFolder.Add(hydroModel);
                 }
                 else
                 {
-                    hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
+                    hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(projectService.Project.RootFolder);
                 }
 
                 Console.WriteLine("Importing model");
@@ -109,7 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 }
                 
                 // [When]
-                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
+                AcceptanceModelTestHelper.SaveLoadAndResaveProject(projectService, firstSaveProjectPath, secondSaveProjectPath);
 
                 // [Then]
                 Console.WriteLine("Comparing saved data");

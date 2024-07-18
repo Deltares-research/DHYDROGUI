@@ -15,6 +15,7 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -215,17 +216,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o =>
                 {
-                    return Gui.Application.GetAllModelsInProject()
-                        .OfType<IModelWithRoughnessSections>()
-                        .FirstOrDefault(m => m.RoughnessSections.Contains(o));
+                    return Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IModelWithRoughnessSections>()
+                              .FirstOrDefault(m => m.RoughnessSections.Contains(o));
                 },
             };
             yield return new ViewInfo<RoughnessNetworkCoverage, RoughnessSection, RoughnessSectionCoverageTableView>
             {
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, o) ?? new DataItem(o),
-                GetViewData = coverage => Gui.Application.GetAllModelsInProject()
-                    .OfType<IModelWithRoughnessSections>()
+                GetCompositeViewData = o => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.ProjectService.Project, o) ?? new DataItem(o),
+                GetViewData = coverage => Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IModelWithRoughnessSections>()
                     .SelectMany(m => m.RoughnessSections)
                     .FirstOrDefault(rs => Equals(rs.RoughnessNetworkCoverage, coverage))
             };
@@ -274,7 +273,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Description = "Attribute Table",
                     AdditionalDataCheck = o => o.All(weir => weir.Branch != null),
                     CompositeViewType = typeof(ProjectItemMapView),
-                    GetCompositeViewData = o => gui.Application.Project.GetAllItemsRecursive()
+                    GetCompositeViewData = o => gui.Application.ProjectService.Project.GetAllItemsRecursive()
                                                     .OfType<IDataItem>()
                                                     .FirstOrDefault(d => d.Value is IHydroNetwork && 
                                                                          (((IHydroNetwork)d.Value).Weirs == o || ((IHydroNetwork)d.Value).Orifices == o)),
@@ -304,7 +303,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 Description = "Attribute Table",
                 AdditionalDataCheck = o => o.All(gate => gate.Branch != null),
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => gui.Application.Project.GetAllItemsRecursive()
+                GetCompositeViewData = o => gui.Application.ProjectService.Project.GetAllItemsRecursive()
                                                 .OfType<IDataItem>()
                                                 .FirstOrDefault(d => d.Value is IHydroNetwork &&
                                                                      ((IHydroNetwork)d.Value).Gates == o),
@@ -344,7 +343,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
                             
                             //get the network that has this definition.
-                            var network = Gui.Application.Project.GetAllItemsRecursive().OfType<IHydroNetwork>().FirstOrDefault(n => n.SharedCrossSectionDefinitions.Contains(o));
+                            var network = Gui.Application.ProjectService.Project.GetAllItemsRecursive().OfType<IHydroNetwork>().FirstOrDefault(n => n.SharedCrossSectionDefinitions.Contains(o));
                             var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(o, network);
                             viewModel.IsCurrentlyOnChannel = network.SharedCrossSectionDefinitions.Contains(o) 
                                                              && network.CrossSections.Any(cs => cs.Definition.IsProxy && ((CrossSectionDefinitionProxy)cs.Definition).InnerDefinition == o);
@@ -357,7 +356,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     AdditionalDataCheck = r => r.Locations.Values.Count > 1,
                     AfterCreate = (v, o) =>
                         {
-                            var project = Gui.Application.Project;
+                            var project = Gui.Application.ProjectService.Project;
                             var coverages = project.GetAllItemsRecursive().OfType<ICoverage>().Distinct();
                             var manager = new NetworkSideViewCoverageManager(o, project, coverages)
                                 {
@@ -405,9 +404,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new ViewInfo<Route, CoverageTableView>
             {
                 Description = "Map (spatial data)",
-                AdditionalDataCheck = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, route.Network) != null,
+                AdditionalDataCheck = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.ProjectService.Project, route.Network) != null,
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, route.Network),
+                GetCompositeViewData = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.ProjectService.Project, route.Network),
             };
 
             yield return tableViewInfoCreator.Create(new Pump2DTableViewCreationContext());
@@ -445,7 +444,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     if (sewerConnection is IPipe pipe)
                     {
                         var defaultSewerCrossSectionSectionType = pipe.CrossSection?.Definition?.Sections?.FirstOrDefault()?.SectionType;
-                        var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(pipe)) as IModelWithRoughnessSections;
+                        var roughnessSectionModel = Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(pipe)) as IModelWithRoughnessSections;
                         var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
 
                         return sewerRoughnessSection != null;
@@ -456,7 +455,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 AfterCreate = (view, sewerConnection) =>
                 {
                     var defaultSewerCrossSectionSectionType = sewerConnection.CrossSection?.Definition.Sections.FirstOrDefault()?.SectionType;
-                    var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(sewerConnection)) as IModelWithRoughnessSections;
+                    var roughnessSectionModel = Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(sewerConnection)) as IModelWithRoughnessSections;
                     var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
 
                     view.DataContext = new SewerConnectionViewModel(sewerConnection, sewerRoughnessSection);
@@ -558,10 +557,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             
-            if (Gui.Application.Project != null)
+            if (Gui.Application.ProjectService.Project != null)
             {
                 // if project already exist call registered handler
-                ApplicationProjectOpened(this, new EventArgs<Project>(Gui.Application.Project));
+                ApplicationProjectOpened(this, new EventArgs<Project>(Gui.Application.ProjectService.Project));
             }
             
             ImportBranchesFromSelectionMapTool.BeforeExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = true;
@@ -728,7 +727,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             Project project = e.Value;
             project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
             project.RootFolder.PropertyChanged += RootFolderPropertyChanged;
-            ((INotifyPropertyChanged)Gui.Application.Project).PropertyChanged += ProjectPropertyChanged;
+            ((INotifyPropertyChanged)project).PropertyChanged += ProjectPropertyChanged;
         }
 
         private void ProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -1001,7 +1000,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (featureCoverage.Features.Any())
             {
                 var firstFeature = featureCoverage.Features[0];
-                var allRegions = Gui.Application.Project.GetAllItemsRecursive().OfType<IRegion>();
+                var allRegions = Gui.Application.ProjectService.Project.GetAllItemsRecursive().OfType<IRegion>();
                 var matchingRegion = allRegions.FirstOrDefault(hr => hr.GetDirectChildren().Contains(firstFeature));
                 return GetRootRegion(matchingRegion);
             }
@@ -1212,7 +1211,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private string GetModelNameForCoverage(ICoverage coverage)
         {
-            var allModels = Gui.Application.GetAllModelsInProject();
+            var allModels = Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive();
             var models = allModels.Where(m => m.GetAllItemsRecursive().Any(obj => obj is IFunction &&
                                                                       coverage.IsEqualOrDescendant(obj as IFunction))).ToList();
 

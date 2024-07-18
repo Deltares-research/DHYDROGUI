@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
@@ -256,9 +257,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                         {
                             var model = o.Any()
                             ? GetModelForCatchment(o.First(), rainfallRunoffGuiPlugin.Gui)
-                            : rainfallRunoffGuiPlugin.Gui.Application.GetAllModelsInProject()
-                                .OfType<RainfallRunoffModel>()
-                                .FirstOrDefault(rrm => rrm.Basin.Catchments == o);
+                            : rainfallRunoffGuiPlugin.Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>()
+                                                     .FirstOrDefault(rrm => rrm.Basin.Catchments == o);
                             return model != null;
                         },
                 ViewDataContainsData = (v, o) => v.Data is IEnumerable<IDataRowProvider> dataRowProviders && dataRowProviders.All(drp => ReferenceEquals(drp.Model, o)),
@@ -266,9 +266,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     {
                         var model = o.Any()
                             ? GetModelForCatchment(o.First(), rainfallRunoffGuiPlugin.Gui)
-                            : rainfallRunoffGuiPlugin.Gui.Application.GetAllModelsInProject()
-                                .OfType<RainfallRunoffModel>()
-                                .FirstOrDefault(rrm => rrm.Basin.Catchments == o);
+                            : rainfallRunoffGuiPlugin.Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>()
+                                                     .FirstOrDefault(rrm => rrm.Basin.Catchments == o);
                         if (!ReferenceEquals(multipleDataEditorData.Item1, model))
                         {
                             multipleDataEditorData = Tuple.Create(model, RainfallRunoffDataRowProviderFactory.GetDataRowProviders(model, new Catchment[] { }).AsEnumerable());
@@ -280,8 +279,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                 {
                     var model = o.Any()
                         ? GetModelForCatchment(o.First(), rainfallRunoffGuiPlugin.Gui)
-                        : rainfallRunoffGuiPlugin.Gui.Application.GetAllModelsInProject()
-                            .OfType<RainfallRunoffModel>()
+                        : rainfallRunoffGuiPlugin.Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>()
                             .FirstOrDefault(rrm => rrm.Basin.Catchments == o);
                     if (model != null)
                         model.GetRainfallRunoffMDEData = () => Enumerable.Repeat(multipleDataEditorData.Item2, 1);
@@ -331,8 +329,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 
         private static RainfallRunoffModel GetModelForFeatureCoverage(IFeatureCoverage featureCoverage, IGui gui)
         {
-            return gui.Application.GetAllModelsInProject()
-                .OfType<RainfallRunoffModel>()
+            return gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>()
                 .FirstOrDefault(m =>
                     m.OutputCoverages != null &&
                     m.OutputCoverages.Contains(featureCoverage));
@@ -437,8 +434,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
         private static RainfallRunoffModel GetModelByPredicate(Func<RainfallRunoffModel, bool> modelPredicate, IGui gui)
         {
             return gui?.Application
-                      ?.GetAllModelsInProject()
-                      .OfType<RainfallRunoffModel>()
+                      ?.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>()
                       .FirstOrDefault(modelPredicate);
         }
 

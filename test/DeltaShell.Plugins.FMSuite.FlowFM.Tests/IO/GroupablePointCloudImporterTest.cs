@@ -50,12 +50,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 {
                     var app = gui.Application;
                     gui.Run();
-                    app.CreateNewProject();
+                    IProjectService projectService = app.ProjectService;
+                    Project project = projectService.CreateProject();
                     
                     Action mainWindowShown = delegate
                     {
-                        app.Project.RootFolder.Add(new WaterFlowFMModel());
-                        var targetModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                        project.RootFolder.Add(new WaterFlowFMModel());
+                        var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                         Assert.IsNotNull(targetModel);
 
                         var dryPointsImporter =

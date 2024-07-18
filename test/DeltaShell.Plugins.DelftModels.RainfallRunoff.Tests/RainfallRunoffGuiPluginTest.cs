@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Hydro;
@@ -8,7 +7,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses;
@@ -29,12 +27,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             var catchmentData = new UnpavedData(catchment);
 
             var model = Substitute.For<IRainfallRunoffModel>();
-            var app = Substitute.For<IApplication>();
             var gui = Substitute.For<IGui>();
             var modelData = new EventedList<CatchmentModelData>(){catchmentData};
-            
-            gui.Application.Returns(app);
-            app.GetAllModelsInProject().Returns(new List<IModel>(new []{model}));
+
+            AddToProject(model, gui.Application.ProjectService);
 
             model.ModelData.Returns(modelData);
 
@@ -78,6 +74,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             // Assert
             guiCommandHandler.Received().OpenView(rainfallRunoffModel, Arg.Is<Type>(t => t.Implements(typeof(IView))));
+        }
+
+        private static void AddToProject(object obj, IProjectService projectService)
+        {
+            var project = new Project();
+            project.RootFolder.Add(obj);
+            projectService.Project.Returns(project);
         }
     }
 }

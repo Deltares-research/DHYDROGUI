@@ -62,13 +62,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                var app = gui.Application;
                 gui.Run();
-                app.CreateNewProject();
+                Project project = gui.Application.ProjectService.CreateProject();
 
                 var model = new WaterFlowFMModel();
 
-                gui.Application.Project.RootFolder.Add(model);
+                project.RootFolder.Add(model);
 
                 var importer = (PliFileImporterExporter<FixedWeir, FixedWeir>) gui.Application.FileImporters.First(fi => fi is PliFileImporterExporter<FixedWeir, FixedWeir>);
 

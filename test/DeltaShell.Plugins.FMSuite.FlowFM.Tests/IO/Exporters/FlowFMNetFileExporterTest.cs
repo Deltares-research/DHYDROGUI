@@ -5,7 +5,6 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
@@ -72,13 +71,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             using (var app = CreateApplication())
             {
                 app.Run();
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(fmModel);
+                project.RootFolder.Add(fmModel);
 
-                app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
                 fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
 
                 FlowFMNetFileImporter importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
@@ -123,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             using (var app = CreateApplication())
             {
                 app.Run();
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
@@ -132,9 +130,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 var cellsValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
                 
-                app.Project.RootFolder.Add(fmModel);
+                project.RootFolder.Add(fmModel);
 
-                app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
                 fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
 
                 var importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
@@ -211,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             using (var app = CreateApplication())
             {
                 app.Run();
-                app.CreateNewProject();
+                Project project = app.ProjectService.CreateProject();
 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
@@ -220,9 +217,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 var cellsValue = ((int) UGridFileHelper.BedLevelLocation.Faces).ToString();
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
 
-                app.Project.RootFolder.Add(fmModel);
+                project.RootFolder.Add(fmModel);
                 
-                app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
                 fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
 
                 var importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();

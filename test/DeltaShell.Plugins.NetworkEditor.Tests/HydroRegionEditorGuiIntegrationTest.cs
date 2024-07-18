@@ -58,13 +58,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 new CommonToolsGuiPlugin(),
             };
             gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
-            var app = gui.Application;
             
             gui.Run();
-
-            app.CreateNewProject();
             
-            project = app.Project;
+            project = gui.Application.ProjectService.CreateProject();
 
             // add data
 

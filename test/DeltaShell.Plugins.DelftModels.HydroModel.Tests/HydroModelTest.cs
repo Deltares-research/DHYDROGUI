@@ -436,23 +436,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             };
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                var app = gui.Application;
+                IProjectService projectService = gui.Application.ProjectService;
 
                 gui.Run();
 
-                app.CreateNewProject();
+                Project project = projectService.CreateProject();
                 
                 Action mainWindowShown = delegate
                 {
                     const string path = "mdu.dsproj";
-                    app.SaveProjectAs(path); // save to initialize file repository..
+                    projectService.SaveProjectAs(path); // save to initialize file repository..
                     var builder = new HydroModelBuilder();
                     var integratedModel = builder.BuildModel(ModelGroup.Empty);
-                    app.Project.RootFolder.Add(integratedModel);
+                    project.RootFolder.Add(integratedModel);
                     using (var model = new WaterFlowFMModel())
                     {
                         model.NetworkDiscretization.Name = "mesh1d";
-                        model.MoveModelIntoIntegratedModel(app.Project.RootFolder, integratedModel);
+                        model.MoveModelIntoIntegratedModel(project.RootFolder, integratedModel);
                         HydroNetworkHelper.AddSnakeHydroNetwork(model.Network,
                             new[] {new Point(0, 0), new Point(1, 1), new Point(2, 4)});
                         var targetHydroNode1 = model.Network.Nodes[1];
@@ -499,15 +499,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         Assert.DoesNotThrow(() => gui.DocumentViewsResolver.OpenViewForData(pipe1), "Could not open PipeView for pipe1");
                         Assert.DoesNotThrow(() => gui.DocumentViewsResolver.OpenViewForData(pipe2), "Could not open PipeView for pipe2");
                         Assert.That(gui.DocumentViews.OfType<SewerConnectionView>().Count(), Is.EqualTo(2));
-                        app.SaveProject();
-                        app.CloseProject();
+                        projectService.SaveProject();
+                        projectService.CloseProject();
                         Assert.That(gui.DocumentViews.OfType<SewerConnectionView>().Count(), Is.EqualTo(0));
                     }
                     
-                    app.OpenProject(path);
+                    project = projectService.OpenProject(path);
 
-                    var retrievedModel = app.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>()
-                        .FirstOrDefault();
+                    var retrievedModel = project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>()
+                                                .FirstOrDefault();
                     Assert.That(retrievedModel, Is.Not.Null);
                     var retrievedTargetHydroNodeOfPipe1 = retrievedModel.Network.Nodes.ElementAtOrDefault(1);
                     Assert.That(retrievedTargetHydroNodeOfPipe1, Is.Not.Null);
@@ -662,15 +662,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (IApplication app = GetConfiguredApplication())
             using (HydroModel integratedModel = CreateIntegratedModelWithTwoCatchmentsLinkedToSameLateral(catchmentType))
             {
-                app.Project.RootFolder.Add(integratedModel);
+                IProjectService projectService = app.ProjectService;
+                projectService.Project.RootFolder.Add(integratedModel);
 
                 string dsprojPath = Path.Combine(temp.Path, "randomName.dsproj");
-                app.SaveProjectAs(dsprojPath);
-                app.CloseProject();
+                projectService.SaveProjectAs(dsprojPath);
+                projectService.CloseProject();
 
                 // Call
-                app.OpenProject(dsprojPath);
-                HydroModel loadedIntegratedModel = app.Project.GetAllItemsRecursive().OfType<HydroModel>().FirstOrDefault();
+                Project project = projectService.OpenProject(dsprojPath);
+                HydroModel loadedIntegratedModel = project.GetAllItemsRecursive().OfType<HydroModel>().FirstOrDefault();
 
                 // Assert
                 Assert.That(loadedIntegratedModel, Is.Not.Null);
@@ -960,15 +961,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (IApplication app = GetConfiguredApplication())
             using (HydroModel integratedModel = CreateIntegratedModel())
             {
-                app.Project.RootFolder.Add(integratedModel);
+                IProjectService projectService = app.ProjectService;
+                projectService.Project.RootFolder.Add(integratedModel);
 
                 string dsprojPath = Path.Combine(temp.Path, "randomName.dsproj");
-                app.SaveProjectAs(dsprojPath);
-                app.CloseProject();
+                projectService.SaveProjectAs(dsprojPath);
+                projectService.CloseProject();
 
                 // Call
-                app.OpenProject(dsprojPath);
-                HydroModel loadedIntegratedModel = app.Project.GetAllItemsRecursive().OfType<HydroModel>().FirstOrDefault();
+                Project project = projectService.OpenProject(dsprojPath);
+                HydroModel loadedIntegratedModel = project.GetAllItemsRecursive().OfType<HydroModel>().FirstOrDefault();
                 
                 // Assert
                 Assert.That(loadedIntegratedModel, Is.Not.Null);
@@ -1095,7 +1097,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             IApplication app = CreateApplication();
             app.Run();
-            app.CreateNewProject();
+            app.ProjectService.CreateProject();
             return app;
         }
 

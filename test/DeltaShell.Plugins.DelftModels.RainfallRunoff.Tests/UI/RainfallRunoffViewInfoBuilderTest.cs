@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
@@ -203,9 +202,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             // Setup
             var gui = Substitute.For<IGui>();
             var projectFileDialogService = Substitute.For<IProjectFileDialogService>();
+            var projectService = Substitute.For<IProjectService>();
             var rainfallRunoffModel = new RainfallRunoffModel();
             ViewResolver viewResolver = GenerateViewResolver(expectedCatchmentDataType, gui, rainfallRunoffModel, out Catchment catchment, out CatchmentModelData _);
-            var guiCommandHandler = new GuiCommandHandler(gui, projectFileDialogService);
+            var guiCommandHandler = new GuiCommandHandler(gui, projectFileDialogService, projectService);
 
             // Call
             bool viewForDataOpened = viewResolver.OpenViewForData(catchment);
@@ -235,9 +235,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             // Setup
             var gui = Substitute.For<IGui>();
             var projectFileDialogService = Substitute.For<IProjectFileDialogService>();
+            var projectService = Substitute.For<IProjectService>();
             var rainfallRunoffModel = new RainfallRunoffModel();
             ViewResolver viewResolver = GenerateViewResolver(expectedCatchmentDataType, gui, rainfallRunoffModel, out Catchment _, out CatchmentModelData modelDataObject);
-            var guiCommandHandler = new GuiCommandHandler(gui, projectFileDialogService);
+            var guiCommandHandler = new GuiCommandHandler(gui, projectFileDialogService, projectService);
 
             // Call
             bool viewForDataOpened = viewResolver.OpenViewForData(modelDataObject);
@@ -274,15 +275,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             var viewResolver = Substitute.For<ViewResolver>(documentViewManager, viewInfos);
             gui.DocumentViewsResolver.Returns(viewResolver);
             gui.DocumentViews.Returns(documentViewManager);
-            var app = Substitute.For<IApplication>();
 
             catchment = new Catchment() { CatchmentType = expectedCatchmentDataType };
             data = catchment.CreateDefaultModelData();
 
             rainfallRunoffModel.ModelData.Add(data);
             catchment.Basin = rainfallRunoffModel.Basin;
-            app.GetAllModelsInProject().Returns(info => Enumerable.Repeat(rainfallRunoffModel, 1));
-            gui.Application.Returns(app);
+            AddToProject(rainfallRunoffModel, gui.Application.ProjectService);
             return viewResolver;
         }
         [Test]
@@ -325,13 +324,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
         {
             // Setup
             var model = new RainfallRunoffModel();
-            IModel[] models = { model };
-
-            var application = Substitute.For<IApplication>();
-            application.GetAllModelsInProject().Returns(models);
 
             var gui = Substitute.For<IGui>();
-            gui.Application.Returns(application);
+            AddToProject(model, gui.Application.ProjectService);
 
             var plugin = Substitute.For<IRainfallRunoffGuiPlugin>();
             plugin.Gui.Returns(gui);
@@ -361,6 +356,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
                 // Assert: DataContext has been set.
                 Assert.That(view.DataContext, Is.Not.Null);
             }
+        }
+
+        private static void AddToProject(object obj, IProjectService projectService)
+        {
+            var project = new Project();
+            project.RootFolder.Add(obj);
+            projectService.Project.Returns(project);
         }
     }
 }

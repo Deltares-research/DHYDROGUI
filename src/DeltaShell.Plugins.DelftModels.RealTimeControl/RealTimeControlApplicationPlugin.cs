@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 Category = "1D / 2D / 3D Standalone Models",
                 GetParentProjectItem = owner =>
                 {
-                    Folder rootFolder = Application?.Project?.RootFolder;
+                    Folder rootFolder = Application?.ProjectService.Project?.RootFolder;
                     return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                 },
                 AdditionalOwnerCheck = owner =>
@@ -114,7 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => 
-            Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+            Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<RealTimeControlModel>();
 
         private void ApplicationProjectOpening(object sender, EventArgs<string> e)
         {
@@ -202,14 +203,15 @@ PRAGMA foreign_keys = on;
 
         private void ApplicationProjectOpened(object sender, EventArgs<Project> e)
         {
-            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+            Project project = e.Value;
+            project.CollectionChanging += OnProjectCollectionChanging;
 
             /*
                 Note: it was not possible to do this in RtcDataAccessListener.OnPostLoad() 
                 DataItems for Inputs and Outputs are not re-linked until the whole HydroModel has been imported
              */
 
-            List<RealTimeControlModel> rtcModels = Application.GetAllModelsInProject().OfType<RealTimeControlModel>().ToList();
+            List<RealTimeControlModel> rtcModels = Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<RealTimeControlModel>().ToList();
             rtcModels.ForEach(m => m.DimrRunner.FileExportService = Application.FileExportService);
                 
             List<RealTimeControlModel> rtcModelsWithControlGroups = rtcModels.Where(m => m.ControlGroups.Any()).ToList();

@@ -13,6 +13,7 @@ using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
@@ -157,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private IEnumerable<WaterFlowFMModel> FlowModels =>
             Gui == null ? Enumerable.Empty<WaterFlowFMModel>()
-                        : Gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>();
+                        : Gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>();
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
@@ -865,7 +866,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectService.ProjectSaved += ApplicationOnProjectSaved;
             base.Gui.Application.FileImporters.OfType<RasterFileImporter>().ForEach(rfi => rfi.MakeLayerVisibleAfterImport = MakeLayerVisibleAfterImport);
 
-            var project = base.Gui.Application.Project;
+            var project = base.Gui.Application.ProjectService.Project;
             if (project != null)
             {
                 SubscribeToProjectPropertyChanged(project);
@@ -885,7 +886,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectService.ProjectClosing -= UnsubscribeToProjectPropertyChanged;
             base.Gui.Application.ProjectService.ProjectSaving -= ApplicationOnProjectSaving;
             base.Gui.Application.ProjectService.ProjectSaved -= ApplicationOnProjectSaved;
-            var project = base.Gui.Application.Project;
+            var project = base.Gui.Application.ProjectService.Project;
             if (project != null)
             {
                 UnsubscribeToProjectPropertyChanged(project);

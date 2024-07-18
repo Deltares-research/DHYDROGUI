@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid.PropertyInfoCr
             }
 
             // 2D gate
-            IEnumerable<HydroArea> hydroAreas = guiContainer.Gui.Application.Project.GetAllItemsRecursive().OfType<HydroArea>();
+            IEnumerable<HydroArea> hydroAreas = guiContainer.Gui.Application.ProjectService.Project.GetAllItemsRecursive().OfType<HydroArea>();
             return hydroAreas.First(region => region.Gates.Contains(gate)).Gates;
         }
     }

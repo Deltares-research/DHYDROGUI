@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             {
                 var model = new RainfallRunoffModel {Name = "model1"};
                 model.Basin.Catchments.Add(new Catchment { Name = "Catchment001" });
-                gui.Application.Project.RootFolder.Add(model);
+                gui.Application.ProjectService.Project.RootFolder.Add(model);
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow);
             }
