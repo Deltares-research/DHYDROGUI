@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -65,6 +66,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         public const string GridPropertyName = "Grid";
         
+        private readonly FileSystem fileSystem;
+
         private DepthLayerDefinition depthLayerDefinition;
         private WaterFlowFMModelDefinition modelDefinition;
         private bool disposing;
@@ -96,7 +99,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             var hydroAreaParent = Area.Parent;
             var hydroNetworkParent = Network.Parent;
-            
+
+            fileSystem = new FileSystem();
             fmRegion = new HydroRegion{Name = Name, SubRegions = new EventedList<IRegion>{ Area, Network}};
 
             Area.Parent = hydroAreaParent;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
+using Deltares.Infrastructure.IO;
 using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             string sourceOutputDirectoryPath = sourceOutputDirectory.FullName;
             string targetOutputDirectoryPath = targetOutputDirectory.FullName;
 
-            bool sourceIsWorkingDir = sourceOutputDirectoryPath == WorkingOutputDirectoryPath;
+            bool sourceIsWorkingDir = fileSystem.ArePathsEqual(sourceOutputDirectoryPath, WorkingOutputDirectoryPath);
 
             if (OutputIsEmpty && !HasOpenFunctionStores)
             {

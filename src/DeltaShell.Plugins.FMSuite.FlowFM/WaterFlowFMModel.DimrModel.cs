@@ -41,8 +41,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public virtual string InputFile => $"{Name}{FileConstants.MduFileExtension}";
 
         /// <inheritdoc/>
-        public virtual string DirectoryName 
-            => Path.Combine("dflowfm", GetMduSubDirectoryFromModelDirectory());
+        public virtual string DirectoryName
+        {
+            get
+            {
+                string directory = GetMduSubDirectoryFromModelDirectory();
+                return string.IsNullOrWhiteSpace(directory) ? "dflowfm" : directory;
+            }
+        }
 
         /// <inheritdoc/>
         public virtual bool IsMasterTimeStep => true;
