@@ -618,6 +618,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
             RoughnessSections.Add(roughnessSection);
         }
+        
         private void SynchronizeRoughnessSectionsWithNetwork()
         {
             if (Network == null) return;

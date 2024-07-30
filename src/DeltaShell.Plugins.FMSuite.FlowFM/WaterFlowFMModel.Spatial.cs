@@ -6,6 +6,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
@@ -18,15 +19,21 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Spatial;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using SharpMap;
 using SharpMap.Api;
 using SharpMap.Api.GridGeom;
+using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -499,6 +506,101 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 finally
                 {
                     InitialFractions = initialFracts;
+                }
+            }
+        }
+        
+        private void ImportSpatialOperationsAfterCreating(IEventedList<IDataItem> modelDataItems)
+        {
+            foreach (var spatialOperation in ModelDefinition.SpatialOperations)
+            {
+                var dataItemName = spatialOperation.Key;
+                var spatialOperationList = spatialOperation.Value;
+                var dataItem = modelDataItems.FirstOrDefault(di => di.Name == dataItemName);
+
+                if (!spatialOperationList.Any()) continue;
+
+                if (dataItem == null)
+                {
+                    Log.Error("No data item found with name " + dataItemName);
+                    continue;
+                }
+
+                if (dataItem.ValueConverter == null)
+                {
+                    dataItem.ValueConverter = SpatialOperationValueConverterFactory.Create(dataItem.Value, dataItem.ValueType);
+                }
+                var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
+                if (valueConverter == null) continue;
+
+                valueConverter.SpatialOperationSet.Operations.Clear();
+
+                foreach (var operation in spatialOperationList)
+                {
+                    // samples should directly be applied to the coverage with an interpolate operation
+                    var importSamplesSpatialOperationExtension = operation as ImportSamplesOperationImportData;
+                    if (importSamplesSpatialOperationExtension != null)
+                    {
+                        var operations = importSamplesSpatialOperationExtension.CreateOperations();
+                        valueConverter.SpatialOperationSet.AddOperation(operations.First);
+                        valueConverter.SpatialOperationSet.AddOperation(operations.Second);
+                    }
+                    else
+                    {
+                        valueConverter.SpatialOperationSet.AddOperation(operation);
+                    }
+                }
+                
+                SpatialOperationHelper.MakeNamesUniquePerSet(valueConverter.SpatialOperationSet);
+            }
+        }
+        
+        internal void ImportSpatialOperationsAfterLoading()
+        {
+            foreach (KeyValuePair<string, IList<ISpatialOperation>> spatialOperation in ModelDefinition.SpatialOperations)
+            {
+                string dataItemName = spatialOperation.Key;
+                IList<ISpatialOperation> spatialOperationList = spatialOperation.Value;
+                IDataItem dataItem = DataItems.FirstOrDefault(di => di.Name == dataItemName);
+
+                // when only one operation is found and it has the same name as when you would generate it from saving,
+                // it will not override the operations found in the database. Assuming that we are loading a dsproj file.
+                // Goes wrong when you change the file name of the quantity and you only have one quantity.
+                if (spatialOperationList.Count != 1 || !(spatialOperationList[0] is ImportSamplesOperation) ||
+                    dataItem == null || dataItem.ValueConverter != null || !(dataItem.Value is UnstructuredGridCoverage))
+                {
+                    continue;
+                }
+
+                IEnumerable<double> valuesToSet;
+                var coverage = (UnstructuredGridCoverage)dataItem.Value;
+                if (spatialOperationList[0] is ImportRasterSamplesOperationImportData samplesOperation)
+                {
+                    List<IPointValue> rasterFile = RasterFile.ReadPointValues(samplesOperation.FilePath).ToList();
+
+                    int componentValueCount = coverage.Arguments.Aggregate(0,
+                                                                           (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
+
+                    valuesToSet = rasterFile.Count != componentValueCount
+                                      ? new InterpolateOperation().InterpolateToGrid(rasterFile, coverage, coverage.Grid)
+                                      : rasterFile.Select(p => p.Value);
+                }
+                else
+                {
+                    var importSamplesOperation = (ImportSamplesOperation)spatialOperationList[0];
+                    List<IPointValue> xyzFile = XyzFile.Read(importSamplesOperation.FilePath).ToList();
+
+                    int componentValueCount = coverage.Arguments.Aggregate(0,
+                                                                           (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
+
+                    valuesToSet = xyzFile.Count != componentValueCount
+                                      ? new InterpolateOperation().InterpolateToGrid(xyzFile, coverage, coverage.Grid)
+                                      : xyzFile.Select(p => p.Value);
+                }
+
+                if (valuesToSet.Any())
+                {
+                    coverage.SetValues(valuesToSet);
                 }
             }
         }

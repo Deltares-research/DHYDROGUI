@@ -1,13 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using BasicModelInterface;
-using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
@@ -17,60 +13,44 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
-using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
-using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.Extensions;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
-using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.NGHS.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Helpers.CopyHandlers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.FMSuite.FlowFM.Spatial;
-using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Geometries;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
@@ -89,8 +69,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (WaterFlowFMModel));
         
-        public const string CellsToFeaturesName = "CellsToFeatures";
-        public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
         public const string GridPropertyName = "Grid";
         
         private DepthLayerDefinition depthLayerDefinition;
@@ -109,13 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IDataItem networkDataItem;
 
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
-        private double previousProgress;
-        private DateTime? cachedEndTime;
-        private DateTime? cachedStartTime;
-        private string progressText;
         private bool useLocalApi;
-
-        private CacheFile cacheFile = null;
 
         public WaterFlowFMModel() : this(null)
         {
@@ -166,14 +138,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Dispose(false);
         }
 
-        private void CreateDataItemsNotAvailableInPreviousVersion()
-        {
-            if (GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag) == null)
-            {
-                AddNetworkToModel();
-            }
-        }
-
         private void AddNetworkToModel()
         {
             // network
@@ -205,6 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
             ((INotifyPropertyChanged) area).PropertyChanged += HydroAreaPropertyChanged;
         }
+        
         private void InitializeModelProperties()
         {
             SedimentModelDataItem = new SedimentModelDataItem();
@@ -227,9 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ChannelInitialConditionDefinitions = new EventedList<ChannelInitialConditionDefinition>();
             RoughnessSections = new EventedList<RoughnessSection>();
         }
-
-        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
-
+        
         public WaterFlowFMModelDefinition ModelDefinition
         {
             get { return modelDefinition; }
@@ -250,6 +213,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
         }
+        
+        public bool DisableFlowNodeRenumbering { get; set; }
         
         public IList<ModelFeatureCoordinateData<BridgePillar>> BridgePillarsDataModel { get; private set; }
 
@@ -293,11 +258,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                       $" {string.Join(Environment.NewLine, linkInformation)}");
 
             linksToRemove.ForEach(l => Links.Remove(l));
-        }
-        
-        public override IBasicModelInterface BMIEngine
-        {
-            get { return DimrRunner.Api; }
         }
 
         public DepthLayerDefinition DepthLayerDefinition
@@ -424,40 +384,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             set { useLocalApi = !value; }
         }
 
-        protected override void OnAfterDataItemsSet()
-        {
-            base.OnAfterDataItemsSet();
-
-            var areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
-            if (areaDataItem != null)
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
-            }
-            networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
-            if (networkDataItem != null)
-            {
-                SubscribeToNetwork(networkDataItem.Value as IHydroNetwork);
-            }
-        }
-
-        protected override void OnBeforeDataItemsSet()
-        {
-            base.OnBeforeDataItemsSet();
-
-            areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
-            if (areaDataItem != null)
-            {
-                ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
-            }
-            networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
-            if (networkDataItem != null)
-            {
-                UnSubscribeFromNetwork(networkDataItem.Value as IHydroNetwork);
-            }
-        }
-
         private void SynchronizeModelDefinitions()
         {
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type; // sync the heat flux model
@@ -477,74 +403,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             syncers.Add(new FeatureDataSyncer<Feature2D, BoundaryConditionSet>(Boundaries, BoundaryConditionSets, CreateBoundaryCondition));
             syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(Pipes, SourcesAndSinks, CreateSourceAndSink));
-        }
-
-        private void SyncFractionsAndTracers(SourceAndSink sourceAndSink)
-        {
-            SedimentFractions.ForEach(sf => sourceAndSink.SedimentFractionNames.Add(sf.Name));
-
-            BoundaryConditionSets.ForEach(bcs =>
-            {
-                bcs.BoundaryConditions.ForEach(bc =>
-                {
-                    var flowCondition = bc as FlowBoundaryCondition;
-                    if (flowCondition != null && flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                    {
-                        var tracerName = flowCondition.TracerName;
-                        if (!sourceAndSink.TracerNames.Contains(tracerName))
-                            sourceAndSink.TracerNames.Add(tracerName);
-                    }
-                });
-            });
-        }
-
-        private void RemoveTracerFromSourcesAndSink(string name)
-        {
-            if(BoundaryConditions.OfType<FlowBoundaryCondition>().All(bc => bc.TracerName != name))
-                SourcesAndSinks.ForEach(ss => ss.TracerNames.Remove(name));
-        }
-
-        private void AddTracerToSourcesAndSink(string name)
-        {
-            SourcesAndSinks.ForEach(ss =>
-            {
-                if(!ss.TracerNames.Contains(name))
-                    ss.TracerNames.Add(name);
-            });
-        }
-
-        private void AssembleTracerDefinitions()
-        {
-            foreach (var boundaryCondition in BoundaryConditions)
-            {
-                var flowCondition = boundaryCondition as FlowBoundaryCondition;
-                if (flowCondition != null && flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                {
-                    if(!TracerDefinitions.Contains(flowCondition.TracerName))
-                    {
-                        TracerDefinitions.Add(flowCondition.TracerName);
-                    }
-                    AddTracerToSourcesAndSink(flowCondition.TracerName);
-                }
-            }
-            var sp = SedimentFractions.SelectMany(sf => sf.GetAllActiveSpatiallyVaryingPropertyNames()).Distinct();
-            foreach (var quantity in ModelDefinition.SpatialOperations.Keys.Except(WaterFlowFMModelDefinition.SpatialDataItemNames).Except(sp))
-            {
-                if (!TracerDefinitions.Contains(quantity))
-                {
-                    TracerDefinitions.Add(quantity);
-                }
-            }
-        }
-
-        private void AssembleSpatiallyVaryingSedimentProperties()
-        {
-            var spatiallyVaryingSedimentProperties = SedimentFractions.SelectMany(f => f.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().Where(sp => sp.IsSpatiallyVarying)).ToList();
-            spatiallyVaryingSedimentProperties.AddRange(SedimentFractions.Where(f=> f.CurrentFormulaType != null ).SelectMany(f => f.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().Where(sp => sp.IsSpatiallyVarying)));
-            foreach (var spatiallyVaryingSedimentProperty in spatiallyVaryingSedimentProperties)
-            {
-                AddToIntialFractions(spatiallyVaryingSedimentProperty.SpatiallyVaryingName);
-            }
         }
 
         private void AddToIntialFractions(string spatiallyVaryingName)
@@ -577,20 +435,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         InitialFractions.Add(unstrGridCellCoverage);
                     }
                 }
-            }
-        }
-        
-        private void RemoveAllSedimentFractionsFromBoundaryConditionSets()
-        {
-            foreach (var set in BoundaryConditionSets)
-            {
-                set.BoundaryConditions.RemoveAllWhere(bc =>
-                {
-                    var flowCondition = bc as FlowBoundaryCondition;
-                    return flowCondition != null &&
-                           (flowCondition.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration
-                            || flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
-                });
             }
         }
 
@@ -671,49 +515,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 });
             }
         }
-
-        private void ImportSpatialOperationsAfterCreating(IEventedList<IDataItem> modelDataItems)
+        
+        private void RemoveAllSedimentFractionsFromBoundaryConditionSets()
         {
-            foreach (var spatialOperation in ModelDefinition.SpatialOperations)
+            foreach (var set in BoundaryConditionSets)
             {
-                var dataItemName = spatialOperation.Key;
-                var spatialOperationList = spatialOperation.Value;
-                var dataItem = modelDataItems.FirstOrDefault(di => di.Name == dataItemName);
-
-                if (!spatialOperationList.Any()) continue;
-
-                if (dataItem == null)
+                set.BoundaryConditions.RemoveAllWhere(bc =>
                 {
-                    Log.Error("No data item found with name " + dataItemName);
-                    continue;
-                }
-
-                if (dataItem.ValueConverter == null)
-                {
-                    dataItem.ValueConverter = SpatialOperationValueConverterFactory.Create(dataItem.Value, dataItem.ValueType);
-                }
-                var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
-                if (valueConverter == null) continue;
-
-                valueConverter.SpatialOperationSet.Operations.Clear();
-
-                foreach (var operation in spatialOperationList)
-                {
-                    // samples should directly be applied to the coverage with an interpolate operation
-                    var importSamplesSpatialOperationExtension = operation as ImportSamplesOperationImportData;
-                    if (importSamplesSpatialOperationExtension != null)
-                    {
-                        var operations = importSamplesSpatialOperationExtension.CreateOperations();
-                        valueConverter.SpatialOperationSet.AddOperation(operations.First);
-                        valueConverter.SpatialOperationSet.AddOperation(operations.Second);
-                    }
-                    else
-                    {
-                        valueConverter.SpatialOperationSet.AddOperation(operation);
-                    }
-                }
-                
-                SpatialOperationHelper.MakeNamesUniquePerSet(valueConverter.SpatialOperationSet);
+                    var flowCondition = bc as FlowBoundaryCondition;
+                    return flowCondition != null &&
+                           (flowCondition.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration
+                            || flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
+                });
             }
         }
         
@@ -774,343 +587,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
         }
-
-        public override IEnumerable<IDataItem> AllDataItems
-        {
-            get
-            {
-                var lateralDataItems = LateralSourcesData.Select(d => d.SeriesDataItem);
-
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(lateralDataItems);
-            }
-        }
-
-        /// <summary>
-        /// Sync properties that are both in the model and the model definition.
-        /// </summary>
-        private void OnModelDefinitionChanged()
-        {
-            HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
-            WindFields = ModelDefinition.WindFields;
-            UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
-        }
-
-        #region TimedependentModelBase
-
-        /// <inheritdoc />
-        public override IEnumerable<object> GetDirectChildren()
-        {
-            foreach (var item in base.GetDirectChildren())
-                yield return item;
-
-            foreach (var boundary in Boundaries)
-            {
-                yield return boundary;
-            }
-            foreach (var model1DBoundaryNodeData in BoundaryConditions1D)
-            {
-                yield return model1DBoundaryNodeData;
-            }
-            foreach (var model1DLateralSourceData in LateralSourcesData)
-            {
-                yield return model1DLateralSourceData;
-            }
-            foreach (var pipe in Pipes)
-            {
-                yield return pipe;
-            }
-
-            foreach (var boundaryConditionSet in BoundaryConditionSets)
-            {
-                yield return boundaryConditionSet;
-            }
-
-            foreach (var sourcesAndSink in SourcesAndSinks)
-            {
-                yield return sourcesAndSink;
-            }
-
-            if (ModelDefinition.HeatFluxModel.MeteoData != null)
-            {
-                yield return ModelDefinition.HeatFluxModel;
-            }
-
-            yield return WindFields;
-
-            foreach (var windField in WindFields)
-            {
-                yield return windField;
-            }
-
-            yield return Links;
-
-            foreach (var link in Links)
-            {
-                yield return link;
-            }
-
-            yield return InitialSalinity;
-            yield return Viscosity;
-            yield return Diffusivity;
-            yield return Roughness;
-            yield return Infiltration;
-            yield return InitialWaterLevel;
-            yield return InitialTemperature;
-            yield return InitialTracers;
-            yield return InitialFractions;
-            yield return Network;
-
-            // for QueryTimeSeries tool:
-            if (OutputHisFileStore != null)
-                foreach (var featureCoverage in OutputHisFileStore.Functions)
-                    yield return featureCoverage;
-
-            if (OutputMapFileStore != null)
-                foreach (var function in OutputMapFileStore.Functions)
-                    yield return function;
-            if (Output1DFileStore != null)
-                foreach (var function in Output1DFileStore.Functions)
-                    yield return function;
-            if (OutputClassMapFileStore != null)
-            {
-                foreach (IFunction function in OutputClassMapFileStore.Functions)
-                {
-                    yield return function;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets all 1D and 2D data items for a given role.
-        /// </summary>
-        /// <param name="role">The role to get the data items for.</param>
-        /// <returns>The collection of data items.</returns>
-        public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
-        {
-            if (role.HasFlag(DataItemRole.Input) || role.HasFlag(DataItemRole.Output))
-            {
-                foreach (IFeature feature in GetFeatures())
-                {
-                    yield return feature;
-                }
-            }
-
-            if (role.HasFlag(DataItemRole.Output))
-            {
-                foreach (IFeature outputFeature in GetOutputSpecificFeatures())
-                {
-                    yield return outputFeature;
-                }
-            }
-        }
-
-        private IEnumerable<IFeature> GetOutputSpecificFeatures()
-        {
-            return OutputFeatureCollections.OfType<IEnumerable>()
-                                           .SelectMany(l => l.OfType<IFeature>());
-        }
-
-        private IEnumerable<IFeature> GetFeatures()
-        {
-            return FeatureCollections.OfType<IEnumerable>()
-                                     .SelectMany(l => l.OfType<IFeature>());
-        }
-
-        /// <inheritdoc />
-        public override IEnumerable<IDataItem> GetChildDataItems(IFeature location)
-        {
-            if (location == null) yield break;
-
-            areaDataItems.TryGetValue(location, out List<IDataItem> items);
-
-            if (items != null)
-            {
-                foreach (var di in items)
-                {
-                    yield return di;
-                }
-            }
-
-            if (location.Geometry is Point)
-            {
-                IDataItem networkAsDataItem = GetDataItemByValue(Network);
-                // Engine parameters that can be set by RTC
-                foreach (EngineParameter engineParameter in GetEngineParametersForLocation(location))
-                {
-                    // search it first in existing data items
-                    IDataItem existingDataItem = networkAsDataItem.Children
-                                                                .FirstOrDefault(di => di.ValueType == typeof(double)
-                                                                                      && di.ValueConverter is Model1DBranchFeatureValueConverter valueConverter
-                                                                                      && IsValueConverterForEngineParameter(location, valueConverter, engineParameter));
-
-                    if (existingDataItem != null)
-                    {
-                        yield return existingDataItem;
-                    }
-                    else
-                    {
-                        yield return new DataItem(location)
-                        {
-                            Name = location.ToString(),
-                            Role = engineParameter.Role,
-                            Tag = engineParameter.Name,
-                            ValueType = typeof(double),
-                            Parent = networkAsDataItem,
-                            ShouldBeRemovedAfterUnlink = true,
-                            ValueConverter =
-                                new Model1DBranchFeatureValueConverter(
-                                    this,
-                                    location,
-                                    engineParameter.Name,
-                                    engineParameter.QuantityType,
-                                    engineParameter.ElementSet,
-                                    engineParameter.Role,
-                                    engineParameter.Unit.Symbol)
-                        };
-                    }
-                }
-            }
-        }
-
-        private static bool IsValueConverterForEngineParameter(IFeature location, Model1DBranchFeatureValueConverter valueConverter, EngineParameter engineParameter)
-        {
-            return valueConverter.ParameterName == engineParameter.Name
-                   && valueConverter.Role == engineParameter.Role
-                   && valueConverter.ElementSet == engineParameter.ElementSet 
-                   && valueConverter.QuantityType == engineParameter.QuantityType
-                   && Equals(valueConverter.Location, location);
-        }
-
-        private IEnumerable<EngineParameter> GetEngineParametersForLocation(IFeature location)
-        {
-            if (location is IHydroNode)
-            {
-                var boundary = BoundaryConditions1D.FirstOrDefault(boundaryNodeData => boundaryNodeData.Node.Equals(location));
-                if (boundary == null) yield break;
-
-                switch (boundary.DataType)
-                {
-                    case Model1DBoundaryNodeDataType.WaterLevelConstant:
-                    case Model1DBoundaryNodeDataType.WaterLevelTimeSeries:
-                        yield return new EngineParameter(QuantityType.WaterLevel, ElementSet.HBoundaries,
-                            DataItemRole.Input, FunctionAttributes.StandardNames.WaterLevel,
-                            new Unit("Meter above reference level", "m AD"));
-                        yield return new EngineParameter(QuantityType.Discharge, ElementSet.HBoundaries,
-                            DataItemRole.Output, FunctionAttributes.StandardNames.WaterDischarge,
-                            new Unit("Cubic meter", Resources.WaterFlowFMModel_GetEngineParametersForLocation_CubicMeter));
-                        break;
-                    case Model1DBoundaryNodeDataType.FlowConstant:
-                    case Model1DBoundaryNodeDataType.FlowTimeSeries:
-                        yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
-                            DataItemRole.Input, FunctionAttributes.StandardNames.WaterDischarge,
-                            new Unit("Cubic meter", Resources.WaterFlowFMModel_GetEngineParametersForLocation_CubicMeter));
-                        yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
-                            DataItemRole.Output, FunctionAttributes.StandardNames.WaterLevel,
-                            new Unit("Meter above reference level", "m AD"));
-                        break;
-                }
-            }
-            else
-            {
-                foreach (EngineParameter exchangeableParameter in EngineParameters.GetExchangeableParameters(
-                             EngineParameters.EngineMapping(), location, UseSalinity, UseTemperature))
-                {
-                    yield return exchangeableParameter;
-                }
-            }
-        }
-
-        [NoNotifyPropertyChange]
-        /// <inheritdoc />
-        public override DateTime StartTime
-        {
-            get
-            {
-                if (cachedStartTime.HasValue)
-                {
-                    return cachedStartTime.Value;
-                }
-
-                return (DateTime)ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-            }
-            set
-            {
-                ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value = value;
-                cachedStartTime = null;
-                // This base model setting is made to make the base logic right
-                base.StartTime = value;
-            }
-        }
-
-        [NoNotifyPropertyChange]
-        /// <inheritdoc />
-        public override DateTime StopTime
-        {
-            get
-            {
-                if (cachedEndTime.HasValue)
-                {
-                    return cachedEndTime.Value;
-                }
-                return (DateTime)ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
-            }
-            set
-            {
-                ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value = value;
-                cachedEndTime = null;
-                // This base model setting is made to make the base logic right
-                base.StopTime = value;
-            }
-        }
-
-        /// <inheritdoc />
-        public override TimeSpan TimeStep
-        {
-            get { return (TimeSpan) ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value; }
-            set
-            {
-                ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value = value;
-                // This base model setting is made to make the base logic right
-                base.TimeStep = value;
-            }
-        }
-
-        protected override void OnClearOutput() => DisconnectOutput();
-
-        private void ClearFunctionStore(PropertyInfo property)
-        {
-            if (!(property.GetValue(this) is IFunctionStore functionStore))
-            {
-                return;
-            }
-
-            // FunctionStores are cleared, but NetworkCoverages still listen to Network changes,
-            // so the Network should be set to null.
-            foreach (INetworkCoverage function in functionStore.Functions.OfType<INetworkCoverage>())
-            {
-                function.Network = null;
-            }
-            functionStore.Functions.Clear();
-
-            if (functionStore is IFileBased fileBasedFunctionStore)
-            {
-                fileBasedFunctionStore.Close();
-            }
-
-            property.SetValue(this, null);
-        }
-
-        public override IProjectItem DeepClone()
-        {
-            var tempDir = FileUtils.CreateTempDirectory();
-            var mduFileName = MduFilePath != null ? Path.GetFileName(MduFilePath) : "some_temp.mdu";
-            var tempFilePath = Path.Combine(tempDir, mduFileName);
-            ExportTo(tempFilePath, false);
-
-            return new WaterFlowFMModel(tempFilePath);
-        }
-
-        #endregion
 
         #region IHasCoordinateSystem
 
@@ -1293,22 +769,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #endregion
 
-        public virtual string WorkingDirectory
-        {
-            get { return Path.Combine(WorkingDirectoryPathFunc(), Name); }
-        }
-
-        public string HydFilePath
-        {
-            get
-            {
-                var projectName = Path.GetFileNameWithoutExtension(MduFilePath);
-                return Path.Combine(WorkingDirectory, string.Format("DFM_DELWAQ_{0}", projectName),String.Format("{0}.hyd", projectName));
-            }
-        }
-
-        public bool HydFileOutput { get; set; } // always on ??
-
         #region Spatial data
 
         public bool InitialCoverageSetChanged { get; set; }
@@ -1316,187 +776,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         #endregion
 
         #region Mdu file
-
-        private readonly MduFile mduFile = new MduFile();
-
-        public string MduSavePath
-        {
-            get { return GetMduPathFromDeltaShellPath(RecursivelyGetModelDirectoryPathFromMduFile()); }
-        }
-
-        private string RecursivelyGetModelDirectoryPathFromMduFile()
-        {
-            if (string.IsNullOrEmpty(MduFilePath))
-            {
-                return Name;
-            }
-
-            string modelDirectoryName = Path.GetFileNameWithoutExtension(MduFilePath);
-            var modelDir = new DirectoryInfo(MduFilePath);
-            while (modelDir != null && modelDir.Name != modelDirectoryName)
-            {
-                modelDir = modelDir.Parent;
-            }
-
-            return modelDir?.Parent == null // should never happen, unless the file-based repository is corrupted
-                       ? Path.GetDirectoryName(
-                           Path.GetDirectoryName(MduFilePath)) // default behaviour (e.g. model renamed)
-                       : modelDir.FullName;
-        }
-
-        public string HisSavePath
-        {
-            get
-            {
-                if (ModelDefinition == null) return null;
-                if (ModelDefinition.ModelName.Equals(Name))
-                    return HisFilePath;
-                return Name + "_his.nc";
-            }
-        }
-
-        public string MapSavePath
-        {
-            get
-            {
-                if (ModelDefinition == null) return null;
-                if (ModelDefinition.ModelName.Equals(Name))
-                    return MapFilePath;
-                return Name + "_map.nc";
-            }
-        }
-
-        public IEnumerable<KeyValuePair<WaterFlowFMProperty, string>> SubFiles
-        {
-            get
-            {
-                if (ModelDefinition == null) yield break;
-
-                var modelDefinitionName = ModelDefinition.ModelName;
-
-                var modelNameBasedFiles = new Dictionary<string, string>
-                {
-                    {KnownProperties.NetFile, NetFile.FullExtension},
-                    {KnownProperties.ExtForceFile, ExtForceFile.Extension},
-                    {KnownProperties.BndExtForceFile, ExtForceFile.Extension},
-                    {KnownProperties.LandBoundaryFile, MduFile.LandBoundariesExtension},
-                    {KnownProperties.ThinDamFile, MduFile.ThinDamExtension},
-                    {KnownProperties.FixedWeirFile, MduFile.FixedWeirExtension},
-                    {KnownProperties.StructuresFile, MduFile.StructuresExtension},
-                    {KnownProperties.ObsFile, MduFile.ObsExtension},
-                    {KnownProperties.ObsCrsFile, MduFile.ObsCrossExtension},
-                    {KnownProperties.DryPointsFile, MduFile.DryPointExtension}
-                };
-
-                foreach (var pair in modelNameBasedFiles)
-                {
-                    var property = ModelDefinition.GetModelProperty(pair.Key);
-                    var propertyValue = property.GetValueAsString();
-                    if (pair.Key != KnownProperties.NetFile && pair.Key != KnownProperties.ExtForceFile &&
-                        string.IsNullOrEmpty(propertyValue)) //skip default (empty) paths
-                    {
-                        continue;
-                    }
-                    var currentFileName = Path.GetFileName(propertyValue);
-                    if (modelDefinitionName == null ||
-                        (modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile)
-                    {
-                        propertyValue = Name + pair.Value;
-                    }
-                    yield return new KeyValuePair<WaterFlowFMProperty, string>(property, propertyValue);
-                }
-            }
-        }
-
-        public virtual string MduFilePath { get; set; }
-
-        public MduFile MduFile { get { return mduFile; } }
-
-        public string ExtFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.ExtForceFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile));
-                return null;
-            }
-        }
-
-        public string BndExtFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.BndExtForceFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile));
-                return null;
-            }
-        }
-
-        public string NetFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.NetFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.NetFile));
-                return null;
-            }
-        }
-
-        public string StorageNodeFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.StorageNodeFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
-                return null;
-            }
-        }
-
-        private string MapFilePath
-        {
-            get
-            {
-                return !String.IsNullOrEmpty(MduFilePath)
-                    ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeMapFilePath)
-                    : null;
-            }
-        }
-
-        public string MorFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.MorFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.MorFile));
-                return null;
-            }
-        }
-
-        public string SedFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.SedFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.SedFile));
-                return null;
-            }
-        }
-
-        private string HisFilePath
-        {
-            get
-            {
-                return !String.IsNullOrEmpty(MduFilePath)
-                    ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeHisFilePath)
-                    : null;
-            }
-        }
 
         public bool WriteHisFile
         {
@@ -1569,91 +848,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value; }
         }
 
-        private void LoadOutputStateFromMdu(string mduFilePath)
-        {
-            if(!File.Exists(mduFilePath)) return;
-            string existingOutputDirectory = RetrieveOutputDirectory(mduFilePath);
-            ReconnectOutputFiles(existingOutputDirectory);
-        }
-
-        public string ModelDirectoryPath => Path.GetDirectoryName(Path.GetDirectoryName(MduFilePath));
-
-        public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, DirectoryNameConstants.OutputDirectoryName);
-
-        private string RetrieveOutputDirectory(string mduFilePath)
-        {
-            currentOutputDirectoryPath = PersistentOutputDirectoryPath;
-
-            if (ModelDefinition.ContainsProperty(KnownProperties.OutDir))
-            {
-                string mduOutputDir =
-                    ModelDefinition.GetModelProperty(KnownProperties.OutDir).GetValueAsString()?.Trim();
-
-                if (!string.IsNullOrEmpty(mduOutputDir))
-                {
-                    // We currently assume all OutputDirectoryNames are relative.
-                    string mduOutputDirPath = Path.Combine(Path.GetDirectoryName(mduFilePath), mduOutputDir);
-                    if (Directory.Exists(mduOutputDirPath))
-                    {
-                        currentOutputDirectoryPath = mduOutputDirPath;
-                    }
-                }
-                else
-                {
-                    // try default path
-                    string defaultName = "DFM_OUTPUT_" + modelDefinition.ModelName;
-                    string mduOutputDirPath = Path.Combine(Path.GetDirectoryName(mduFilePath), defaultName);
-                    if (Directory.Exists(mduOutputDirPath))
-                    {
-                        currentOutputDirectoryPath = mduOutputDirPath;
-                    }
-                }
-            }
-
-            string existingOutputDirectory = Directory.Exists(currentOutputDirectoryPath)
-                                                 ? currentOutputDirectoryPath
-                                                 : Path.GetDirectoryName(
-                                                     mduFilePath); // backwards Compatibility (output next to mdu file)
-            return existingOutputDirectory;
-        }
-
-        #region Output
-
-        private void SetOutputDirProperty()
-        {
-            WaterFlowFMProperty outputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.OutDir);
-
-            string existingOutputDir = outputDirProperty.GetValueAsString();
-            if (!existingOutputDir.StartsWith(DirectoryNameConstants.OutputDirectoryName))
-            {
-                outputDirProperty.SetValueFromString(DirectoryNameConstants.OutputDirectoryName);
-                Log.InfoFormat("Running this model requires the OutputDirectory to be overwritten to: {0}",
-                               DirectoryNameConstants.OutputDirectoryName);
-            }
-        }
-        #endregion
-        internal void SyncModelTimesWithBase()
-        {
-            base.StartTime = StartTime;
-            base.StopTime = StopTime;
-            base.TimeStep = TimeStep;
-        }
-
-        private void InitializeAreaDataColumns()
-        {
-            MduFile.SetBridgePillarAttributes(Area.BridgePillars, BridgePillarsDataModel);
-        }
-
-        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = DirectoryNameConstants.InputDirectoryName)
-        {
-            var directoryName = path != null
-                ? Path.GetDirectoryName(path) ?? ""
-                : "";
-
-            // dsproj_data/<model name>/<model name>.mdu
-            return Path.Combine(directoryName, Name, subFoldersFromModelFolder, Name + ".mdu");
-        }
-
         #endregion
 
         private void AddOrRenameDataItems(CoverageDepthLayersList coverageDepthLayersList, string name)
@@ -1667,18 +861,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AddOrRenameDataItem(coverage, numberedName);
             }
         }
-
-        private int dirtyCounter; //tells NHibernate we need to be saved
-        private void MarkDirty()
-        {
-            unchecked { dirtyCounter++; } //unchecked is default, but its here to declare intent
-        }
         
-        private FMMapFileFunctionStore outputMapFileStore;
         private IEventedList<string> tracerDefinitions;
         private bool isLoading;
         private IEventedList<ILink1D2D> links;
-        private FM1DFileFunctionStore output1DFileStore;
         private HeatFluxModelType heatFluxModelType;
         private IHydroRegion fmRegion;
         private ValidationReport report;
@@ -1686,610 +872,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public const int TOTALSTEPS = 32;
         private int currentStep = 0;
 
-        #region Output
-        private string outputSnappedFeaturesPath;
-        public string OutputSnappedFeaturesPath
-        {
-            get => outputSnappedFeaturesPath;
-            set
-            {
-                if (outputSnappedFeaturesPath == value)
-                {
-                    return;
-                }
-
-                outputSnappedFeaturesPath = value;
-
-                OnOutputSnappedFeaturesPathPropertyChanged(nameof(OutputSnappedFeaturesPath));
-            }
-        }
-
-        public event PropertyChangedEventHandler OutputSnappedFeaturesPathPropertyChanged;
-
-        protected void OnOutputSnappedFeaturesPathPropertyChanged(string name)
-        {
-            OutputSnappedFeaturesPathPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-        public TimeSpan OutputTimeStep
-        {
-            get { return (TimeSpan)ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value; }
-            set { ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = value; }
-        }
-
-        public UnstructuredGridCellCoverage OutputWaterLevel
-        {
-            get
-            {
-                if (OutputMapFileStore != null)
-                {
-                    return OutputMapFileStore.Functions.OfType<UnstructuredGridCellCoverage>()
-                        .FirstOrDefault(f => f.Components[0].Name.EndsWith("s1"));
-                }
-                return null;
-            }
-        }
-
-        public virtual FMMapFileFunctionStore OutputMapFileStore
-        {
-            get { return outputMapFileStore; }
-            protected set
-            {
-                outputMapFileStore = value;
-            }
-        }
-
-        public virtual FM1DFileFunctionStore Output1DFileStore
-        {
-            get { return output1DFileStore; }
-            protected set
-            {
-                output1DFileStore = value;
-            }
-        }
-
-        public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
-        
-        public virtual FMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
-
-        public virtual FouFileFunctionStore OutputFouFileStore { get; protected set; }
-
-        public const string DiaFileDataItemTag = "DiaFile";
-
-        private string currentOutputDirectoryPath;
-        private bool runsInIntegratedModel;
-
-        public string WorkingOutputDirectoryPath =>
-            Path.Combine(WorkingDirectory, DirectoryName, DirectoryNameConstants.OutputDirectoryName);
-
-        private bool HasOpenFunctionStores =>
-            OutputMapFileStore != null || OutputHisFileStore != null || OutputClassMapFileStore != null;
-
-        /// <summary>
-        /// Saves the output by either moving or copying the source output to the target output directory.
-        /// </summary>
-        /// <remarks> When a file is locked, we report an error and return. </remarks>
-        private void SaveOutput()
-        {
-            if (string.IsNullOrEmpty(currentOutputDirectoryPath))
-            {
-                return;
-            }
-
-            var sourceOutputDirectory = new DirectoryInfo(currentOutputDirectoryPath);
-            if (!sourceOutputDirectory.Exists)
-            {
-                currentOutputDirectoryPath = PersistentOutputDirectoryPath;
-                return;
-            }
-
-            var targetOutputDirectory = new DirectoryInfo(PersistentOutputDirectoryPath);
-            string sourceOutputDirectoryPath = sourceOutputDirectory.FullName;
-            string targetOutputDirectoryPath = targetOutputDirectory.FullName;
-
-            bool sourceIsWorkingDir = sourceOutputDirectoryPath == WorkingOutputDirectoryPath;
-
-            if (OutputIsEmpty && !HasOpenFunctionStores)
-            {
-                CleanDirectory(PersistentOutputDirectoryPath);
-
-                if (sourceIsWorkingDir)
-                {
-                    CleanDirectory(WorkingDirectory);
-                }
-
-                currentOutputDirectoryPath = PersistentOutputDirectoryPath;
-
-                return;
-            }
-
-            if (sourceOutputDirectory.EqualsDirectory(targetOutputDirectory))
-            {
-                return;
-            }
-
-            //copy all files and subdirectories from source directory "output" to persistent directory "output"
-            if (!FileUtils.IsDirectoryEmpty(sourceOutputDirectoryPath))
-            {
-                FileUtils.CreateDirectoryIfNotExists(targetOutputDirectoryPath);
-
-                if (sourceIsWorkingDir)
-                {
-                    List<string> lockedFiles = GetLockedFiles(WorkingDirectory).ToList();
-
-                    if (lockedFiles.Any())
-                    {
-                        ReportLockedFiles(lockedFiles);
-                        return;
-                    }
-
-                    CleanDirectory(targetOutputDirectoryPath);
-                    MoveAllContentDirectory(sourceOutputDirectory, targetOutputDirectoryPath);
-                }
-                else
-                {
-                    CleanDirectory(targetOutputDirectoryPath);
-                    FileUtils.CopyAll(sourceOutputDirectory, targetOutputDirectory, string.Empty);
-                }
-            }
-
-            currentOutputDirectoryPath = targetOutputDirectoryPath;
-            ReconnectOutputFiles(currentOutputDirectoryPath, true);
-
-            if (sourceIsWorkingDir)
-            {
-                CleanDirectory(WorkingDirectory);
-            }
-        }
-
-        private void MoveAllContentDirectory(DirectoryInfo sourceDirectory, string targetDirectoryPath)
-        {
-            foreach (FileInfo file in sourceDirectory.EnumerateFiles())
-            {
-                string targetPath = Path.Combine(targetDirectoryPath, file.Name);
-                file.MoveTo(targetPath);
-            }
-
-            bool onSameVolume = Directory.GetDirectoryRoot(sourceDirectory.FullName)
-                                         .Equals(Directory.GetDirectoryRoot(targetDirectoryPath));
-
-            foreach (DirectoryInfo directory in sourceDirectory.EnumerateDirectories())
-            {
-                MoveDirectory(directory, targetDirectoryPath, onSameVolume);
-            }
-        }
-
-        private static void ReportLockedFiles(IEnumerable<string> filePaths)
-        {
-            string separator = Environment.NewLine + "- ";
-            string lockedFilesMessage = separator + string.Join(separator, filePaths);
-            Log.Error("There are one or more files locked, please close the following file(s) and save again:" +
-                      lockedFilesMessage);
-        }
-
-        private IEnumerable<string> GetLockedFiles(string sourceDirectoryPath)
-        {
-            var sourceDirectory = new DirectoryInfo(sourceDirectoryPath);
-
-            foreach (FileInfo file in sourceDirectory.EnumerateFiles("*", SearchOption.AllDirectories))
-            {
-                string path = file.FullName;
-                string parentDirectoryName = Path.GetFileName(Path.GetDirectoryName(path));
-
-                // Snapped feature files are locked when the map in the GUI is open, so we ignore and copy snapped files instead.
-                if (parentDirectoryName != SnappedFeaturesDirectoryName && FileUtils.IsFileLocked(path))
-                {
-                    yield return path;
-                }
-            }
-        }
-
-        private void MoveDirectory(DirectoryInfo sourceDirectoryInfo, string targetParentDirectoryPath,
-                                   bool onSameVolume)
-        {
-            var targetDirectoryInfo = new DirectoryInfo(Path.Combine(targetParentDirectoryPath, sourceDirectoryInfo.Name));
-
-            if (onSameVolume && sourceDirectoryInfo.Name != SnappedFeaturesDirectoryName)
-            {
-                sourceDirectoryInfo.MoveTo(targetDirectoryInfo.FullName);
-            }
-            else
-            {
-                FileUtils.CopyAll(sourceDirectoryInfo, targetDirectoryInfo, string.Empty);
-            }
-        }
-
-        /// <summary>
-        /// Removes all files and directories from the directory.
-        /// </summary>
-        /// <param name="directoryPath"> The directory path of the directory that needs to be cleaned. </param>
-        private static void CleanDirectory(string directoryPath)
-        {
-            var directoryInfo = new DirectoryInfo(directoryPath);
-
-            if (!directoryInfo.Exists)
-            {
-                return;
-            }
-
-            foreach (FileInfo file in directoryInfo.GetFiles())
-            {
-                file.Delete();
-            }
-
-            foreach (DirectoryInfo directory in directoryInfo.EnumerateDirectories())
-            {
-                try
-                {
-                    directory.Delete(true);
-                }
-                // Do NOT remove: when File Explorer is opened in the directory, an IO exeption is thrown.
-                // There is no way of checking for this case, so we have to catch it. The second time it is called, it works fine.
-                // https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
-                catch (IOException)
-                {
-                    directory.Delete(true);
-                }
-            }
-        }
-        
-        public string DelwaqHydFolderName
-        {
-            get { return "DFM_DELWAQ_" + Name; }
-        }
-        /// <summary>
-        /// Representation of the output directory for a D-Flow FM model.
-        /// </summary>
-        private class FmOutputDirectory
-        {
-            private readonly DirectoryInfo outputDirectoryInfo;
-
-            /// <summary>
-            /// Creates a new instance of <see cref="FmOutputDirectory"/>.
-            /// </summary>
-            /// <param name="directoryPath"></param>
-            public FmOutputDirectory(string directoryPath)
-            {
-                outputDirectoryInfo = new DirectoryInfo(directoryPath);
-            }
-
-            /// <summary>
-            /// Determines whether the output directory exists.
-            /// </summary>
-            public bool Exists => outputDirectoryInfo.Exists;
-
-            /// <summary>
-            /// Determines whether the output directory contains output.
-            /// </summary>
-            public bool ContainsOutput => File.Exists(DiaFilePath)
-                                          || File.Exists(MapFilePath)
-                                          || File.Exists(HisFilePath)
-                                          || File.Exists(ClassMapFilePath)
-                                          || File.Exists(WaqOutputDirectoryPath)
-                                          || File.Exists(SnappedOutputDirectoryPath)
-                                          || RestartFilePaths.Any();
-
-            /// <summary>
-            /// The file path to the diagnostics file.
-            /// </summary>
-            /// <remarks> Returns null in case the file was not found. </remarks>
-            public string DiaFilePath => FindFileThatEndsWith(FileConstants.DiaFileExtension);
-            
-            /// <summary>
-            /// The file path to the map file.
-            /// </summary>
-            /// <remarks> Returns null in case the file was not found. </remarks>
-            public string MapFilePath => FindFileThatEndsWith(FileConstants.MapFileExtension);
-
-            /// <summary>
-            /// The file path to the his file.
-            /// </summary>
-            /// <remarks> Returns null in case the file was not found. </remarks>
-            public string HisFilePath => FindFileThatEndsWith(FileConstants.HisFileExtension);
-
-            /// <summary>
-            /// The file path to the class map file.
-            /// </summary>
-            /// <remarks> Returns null in case the file was not found. </remarks>
-            public string ClassMapFilePath => FindFileThatEndsWith(FileConstants.ClassMapFileExtension);
-
-            /// <summary>
-            /// The file path to the fou file.
-            /// </summary>
-            /// <remarks> Returns null in case the file was not found. </remarks>
-            public string FouFilePath => FindFileThatEndsWith(FileConstants.FouFileExtension); 
-
-            /// <summary>
-            /// The path to the waq output directory.
-            /// </summary>
-            /// <remarks> Returns null in case the directory was not found. </remarks>
-            public string WaqOutputDirectoryPath => GetDirectoryPathStartingWith(FileConstants.PrefixDelwaqDirectoryName);
-
-            /// <summary>
-            /// The path to the snapped output directory.
-            /// </summary>
-            /// <remarks> Returns null in case the directory was not found. </remarks>
-            public string SnappedOutputDirectoryPath => GetDirectoryPathStartingWith(FileConstants.SnappedFeaturesDirectoryName);
-
-            /// <summary>
-            /// The paths of the restart files.
-            /// </summary>
-            public IEnumerable<string> RestartFilePaths => FindFilesThatEndWith(FileConstants.RestartFileExtension);
-
-            private string GetDirectoryPathStartingWith(string directoryNameStart)
-            {
-                return outputDirectoryInfo.EnumerateDirectories()
-                                          .FirstOrDefault(d => d.Name.StartsWith(directoryNameStart, StringComparison.Ordinal))?
-                                          .FullName;
-            }
-
-            private string FindFileThatEndsWith(string extension)
-            {
-                return outputDirectoryInfo.EnumerateFiles()
-                                          .FirstOrDefault(f => f.Name.EndsWith(extension, StringComparison.Ordinal))?
-                                          .FullName;
-            }
-
-            private IEnumerable<string> FindFilesThatEndWith(string extension)
-            {
-                return outputDirectoryInfo.EnumerateFiles()
-                                          .Where(f => f.Name.EndsWith(extension, StringComparison.Ordinal))?
-                                          .Select(f => f.FullName);
-            }
-        }
-
-        protected virtual void ReconnectOutputFiles(string outputDirectoryPath, bool switchTo = false)
-        {
-            if (string.IsNullOrEmpty(outputDirectoryPath))
-            {
-                return;
-            }
-
-            var outputDirectory = new FmOutputDirectory(outputDirectoryPath);
-            if (!outputDirectory.Exists || !outputDirectory.ContainsOutput)
-            {
-                return;
-            }
-            
-            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectOutputFiles_Reading_output_files);
-
-            using (this.InEditMode(DelftTools.Hydro.Properties.Resources.Reconnect_output_files_edit_action))
-            {
-                ReadDiaFile(outputDirectory.DiaFilePath);
-                ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
-                ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);
-                ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
-                ReconnectFouFile(outputDirectory.FouFilePath, switchTo);
-                ReconnectWaterQualityOutputDirectory(outputDirectory.WaqOutputDirectoryPath);
-                ReconnectSnappedOutputDirectory(outputDirectory.SnappedOutputDirectoryPath);
-                ReconnectRestartFiles(outputDirectory.RestartFilePaths);
-                FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectOutputFiles_Reading_output_files___done);
-                ReportProgressText();
-
-                OutputIsEmpty = false;
-            }
-        }
-
-        private void ReconnectMapFile(string mapFilePath, bool switchTo)
-        {
-            // deal with issue that kernel doesn't understand any coordinate systems other than RD & WGS84 :
-            if (mapFilePath != null)
-            {
-                ReportProgressText("Reading map file");
-                var cs = UGridFileHelper.ReadCoordinateSystem(mapFilePath);
-
-                // update map file coordinate system:
-                if (!Grid.IsEmpty)
-                {
-                    FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectMapFile_Reading_output_files___Reading_map_2d_file);
-                    if (CoordinateSystem != null && cs != CoordinateSystem)
-                        NetFile.WriteCoordinateSystem(mapFilePath, CoordinateSystem);
-                    if (switchTo && OutputMapFileStore != null)
-                    {
-                        OutputMapFileStore.SetPathWithoutLoadingData(mapFilePath);
-                        Log.Debug($"Set the path of the output 2D map file function store to: {mapFilePath}");
-                    }
-                    else
-                    {
-                        OutputMapFileStore = new FMMapFileFunctionStore();
-
-                        // don't change this to a property setter, because the timing is of great importance.
-                        // elsewise, there will be no subscription to the read and Path triggers the Read().
-                        try
-                        {
-                            Log.Debug($"Begin loading the output 2D map file data from: {mapFilePath}");
-                            OutputMapFileStore.Path = mapFilePath;
-                            Log.Debug($"End loading the output 2D map file data from: {mapFilePath}");
-                        }
-                        catch (Exception e)
-                        {
-                            Log.Error($"Error reading map file {e.Message}");
-                            OutputMapFileStore = null;
-                        }
-                    }
-                }
-
-                if (Network != null && !Network.IsEdgesEmpty && !Network.IsVerticesEmpty)
-                {
-                    FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectMapFile_Reading_output_files___Reading_map_1d_file);
-
-                    if (switchTo && Output1DFileStore != null)
-                    {
-                        Output1DFileStore.SetPathWithoutLoadingData(mapFilePath);
-                        Log.Debug($"Set the path of the output 1D map file function store to: {mapFilePath}");
-                    }
-                    else
-                    {
-                        Output1DFileStore = new FM1DFileFunctionStore(Network);
-                        // don't change this to a property setter, because the timing is of great importance.
-                        // elsewise, there will be no subscription to the read and Path triggers the Read().
-                        Log.Debug($"Begin loading the output 1D map file data from: {mapFilePath}");
-                        Output1DFileStore.Path = mapFilePath;
-                        Log.Debug($"End loading the output 1D map file data from: {mapFilePath}");
-                    }
-                }
-            }
-        }
-
-        private void ReconnectHistoryFile(string hisFilePath, bool switchTo)
-        {
-            if (OutputMapFileStore != null && OutputMapFileStore.Grid == null)
-            {
-                Log.Warn("Associated output files are unsupported, these will not be loaded");
-                OutputMapFileStore = null;
-                return;
-            }
-
-            if (hisFilePath != null)
-            {
-                ReportProgressText("Reading his file");
-                FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectHistoryFile_Reading_output_files___Reading_His_file);
-                if (switchTo && OutputHisFileStore != null)
-                {
-                    OutputHisFileStore.SetPathWithoutLoadingData(hisFilePath);
-                    Log.Debug($"Set the path of the output his file function store to: {hisFilePath}");
-                }
-                else
-                {
-                    OutputHisFileStore = new FMHisFileFunctionStore(Network, Area);
-                    Log.Debug($"Begin loading the output his file data from: {hisFilePath}");
-                    OutputHisFileStore.Path = hisFilePath;
-                    Log.Debug($"End loading the output his file data from: {hisFilePath}");
-                    OutputHisFileStore.CoordinateSystem = CoordinateSystem;
-                }
-            }
-        }
-
-        private void ReconnectClassMapFile(string classMapFilePath, bool switchTo)
-        {
-            if (classMapFilePath == null)
-            {
-                return;
-            }
-
-            ReportProgressText("Reading class map file");
-            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectClassMapFile_Reading_output_files___Reading_Class_Map_file);
-            if (switchTo && OutputClassMapFileStore != null)
-            {
-                OutputClassMapFileStore.SetPathWithoutLoadingData(classMapFilePath);
-                Log.Debug($"Set the path of the output class map file function store to: {classMapFilePath}");
-            }
-            else
-            {
-                Log.Debug($"Begin loading the output class map file data from: {classMapFilePath}");
-                OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
-                Log.Debug($"End loading the output class map file data from: {classMapFilePath}");
-            }
-        }
-
-        private void ReconnectFouFile(string fouFilePath, bool switchTo)
-        {
-            if (fouFilePath == null)
-            {
-                return;
-            }
-
-            ReportProgressText("Reading fou file");
-            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectFouFile_Reading_output_files___Reading_Fou_file);
-            if (switchTo && OutputFouFileStore != null)
-            {
-                OutputFouFileStore.Path = fouFilePath;
-            }
-            else
-            {
-                OutputFouFileStore = new FouFileFunctionStore {Path = fouFilePath};
-            }
-        }
-
-        /// <summary>
-        /// Gets the cache file.
-        /// </summary>
-        /// <value>
-        /// The cache file.
-        /// </value>
-        public CacheFile CacheFile =>
-            cacheFile ?? (cacheFile = new CacheFile(this, new OverwriteCopyHandler()));
-        
-        public string DelwaqOutputDirectoryName => FileConstants.PrefixDelwaqDirectoryName + Name;
-        
-        public string DelwaqOutputDirectoryPath { get; set; }
-
-        private void ReconnectWaterQualityOutputDirectory(string waqOutputDirectoryPath)
-        {
-            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectWaterQualityOutputDirectory_Reading_output_files___Reconnect_WAQ_output_dir); 
-            if (waqOutputDirectoryPath != null)
-            {
-                DelwaqOutputDirectoryPath = waqOutputDirectoryPath;
-            }
-        }
-        
-        private void ClearWaqOutputDirProperty()
-        {
-            ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir).SetValueFromString(string.Empty);
-        }
-        
-        private void SetWaqOutputDirProperty()
-        {
-            if (!SpecifyWaqOutputInterval)
-            {
-                return;
-            }
-
-            string relativeDWaqOutputDirectory = Path.Combine(DirectoryNameConstants.OutputDirectoryName, DelwaqOutputDirectoryName);
-            WaterFlowFMProperty waqOutputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir);
-            waqOutputDirProperty.SetValueFromString(relativeDWaqOutputDirectory);
-        }
-        
-        private void ReconnectSnappedOutputDirectory(string snappedOutputDirectoryPath)
-        {
-            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectSnappedOutputDirectory_Reading_output_files___Reconnect_snapped_output_dir);
-            if (snappedOutputDirectoryPath != null)
-            {
-                OutputSnappedFeaturesPath = snappedOutputDirectoryPath;
-            }
-        }
-
-        public IEnumerable<RestartFile> RestartOutput { get; private set; } = Enumerable.Empty<RestartFile>();
-
-        private void ReconnectRestartFiles(IEnumerable<string> restartFilePaths)
-        {
-            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectRestartFiles_Reading_output_files___connect_restart_files);
-            RestartOutput = restartFilePaths.Select(p => new RestartFile(p)).ToList();
-        }
-        #endregion
-
         #region Coupling
-
-        private IEnumerable<object> FeatureCollections
-        {
-            get
-            {
-                yield return Area.Pumps;
-                yield return Area.Weirs;
-                yield return Area.Gates;
-                yield return SourcesAndSinks.Select(ss => ss.Feature).ToList();
-                yield return Network.Pumps;
-                yield return Network.Weirs;
-                yield return Network.Orifices;
-                yield return Network.Gates;
-                yield return Network.Culverts;
-                yield return Network.LateralSources;
-            }
-        }
-
-        /// <summary>
-        /// Gets the output data item feature collections.
-        /// </summary>
-        private IEnumerable<object> OutputFeatureCollections
-        {
-            get
-            {
-                yield return Area.LeveeBreaches.OfType<LeveeBreach>().ToList();
-                yield return Area.ObservationPoints;
-                yield return Area.ObservationCrossSections;
-                yield return Network.ObservationPoints;
-            }
-        }
 
         private void CreatePointFeatureOfThisLeveeBreach(ILeveeBreach leveeFeature, LeveeBreachPointLocationType leveeBreachPointLocationType, IGeometry leveeFeatureBreachLocation)
         {
@@ -2331,128 +914,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             modelFeatureCoordinateData.UpdateDataColumns();
 
             return modelFeatureCoordinateData;
-        }
-        
-        private void RemoveAreaFeature(IFeature feature)
-        {
-            if (areaDataItems.TryGetValue(feature, out var dataItemsToBeRemoved))
-            {
-                foreach (var dataItem in dataItemsToBeRemoved)
-                {
-                    UnSubscribeFromDataItem(dataItem, true);
-                    OnDataItemRemoved(dataItem);
-                }
-            }
-            areaDataItems.Remove(feature);
-        }
-
-        private void AddAreaItem(IFeature feature)
-        {
-            List<IDataItem> listToAdd = GetDataItemListForFeature(feature);
-            areaDataItems.Add(feature, listToAdd);
-        }
-
-        private void UpdateAreaDataItems(IFeature feature)
-        {
-            if(areaDataItems.ContainsKey(feature))
-            {
-                var listToReplace = GetDataItemListForFeature(feature);
-                areaDataItems[feature] = listToReplace;
-            }
-        }
-
-        private List<IDataItem> GetDataItemListForFeature(IFeature feature)
-        {
-            IEnumerable<string> quantities = QuantityGenerator.GetQuantitiesForFeature(
-                feature, UseSalinity, UseTemperature, TracerDefinitions, SourcesAndSinks);
-            return quantities.Select(quantity => new DataItem(feature)
-            {
-                Name = feature.ToString(),
-                Tag = quantity,
-                Role = GetDataItemRole(feature),
-                ValueType = typeof(double),
-                ValueConverter = new WaterFlowFMFeatureValueConverter(this, feature, quantity, String.Empty)
-            }).OfType<IDataItem>().ToList();
-        }
-        
-        private DataItemRole GetDataItemRole(IFeature feature)
-        {
-            if (IsInputOrOutputFeature(feature))
-            {
-                return DataItemRole.Input | DataItemRole.Output;
-            }
-
-            if (IsOutputFeature(feature))
-            {
-                return DataItemRole.Output;
-            }
-
-            return DataItemRole.None;
-        }
-
-        private bool IsInputOrOutputFeature(IFeature feature)
-        {
-            return feature is Pump2D || feature is Weir2D || feature is Gate2D || IsSourcesAndSinksFeature(feature);
-        }
-
-        private static bool IsOutputFeature(IFeature feature)
-        {
-            return feature is ObservationCrossSection2D || feature is ObservationPoint2D || feature is LeveeBreach;
-        }
-
-        private bool IsSourcesAndSinksFeature(IFeature feature)
-        {
-            return SourcesAndSinks?.Any(ss => ss.Feature.Equals(feature)) ?? false;
-        }
-
-        public double GetValueFromModelApi(IFeature feature, string parameterName)
-        {
-            string featureCategory = GetFeatureCategory(feature);
-            if (featureCategory == null)
-            {
-                return Double.NaN;
-            }
-
-            // temporary fix for DELFT3DFM-1302 (this should be done in Dimr)
-            if (featureCategory == "weirs" && parameterName == "crest_level")
-            {
-                var weir = (Weir)feature;
-                if (!weir.UseCrestLevelTimeSeries)
-                {
-                    return weir.CrestLevel;
-                }
-
-                if (weir.CrestLevelTimeSeries.GetValues<double>().Any())
-                {
-                    return weir.CrestLevelTimeSeries.GetValues<double>().FirstOrDefault();
-                }
-            }
-
-            if (DimrRunner.Api == null)
-            {
-                return Double.NaN;
-            }
-
-            var nameable = feature as INameable;
-            if (nameable == null)
-                return Double.NaN;
-
-            return ((double[])GetVar(featureCategory, nameable.Name, parameterName))[0];
-        }
-
-        public void SetToModelApi(IFeature feature, string parameterName, double value)
-        {
-            string featureCategory = GetFeatureCategory(feature);
-            if (featureCategory == null)
-            {
-                return;
-            }
-
-            var nameable = feature as INameable;
-            if (nameable == null)
-                return;
-
-            SetVar(new [] { value }, featureCategory, nameable.Name, parameterName);
         }
 
         public virtual string GetFeatureCategory(IFeature feature)
@@ -2526,32 +987,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get { return fmRegion; }
         }
-
-        public bool IsActivityOfEnumType(ModelType type)
-        {
-            return type == ModelType.DFlowFM;
-        }
-
-        public void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath)
-        {
-            if ((bool)ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value)
-            {
-                // Actions, which should be done in the IDimrModel after a successful integrated model
-                // run.
-
-                // We know the cache file will either exist at the runMduPath because it 
-                // was copied here, or it will be generated by the kernel during the run.
-                string runMduPath = Path.Combine(hydroModelWorkingDirectoryPath, DirectoryName,
-                                                 $"{Name}{FileConstants.MduFileExtension}");
-
-                CacheFile.UpdatePathToMduLocation(runMduPath);
-            }
-        }
-
-        public ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory =>
-            CacheFile.UseCaching && CacheFile.Path.StartsWith(WorkingDirectory)
-                ? new HashSet<string> { CacheFile.Path }
-                : new HashSet<string>();
         
         public IEventedList<string> TracerDefinitions
         {
@@ -2671,374 +1106,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         #endregion
 
-        #region IDimrModel
-
-        public virtual string LibraryName
-        {
-            get { return "dflowfm"; }
-        }
-
-        public virtual string InputFile
-        {
-            get { return Path.GetFileName(MduSavePath); }
-        }
-
-        public virtual string DirectoryName
-        {
-            get { return "dflowfm"; }
-        }
-
-        public virtual string SnappedFeaturesDirectoryName
-        {
-            get { return "snapped"; }
-        }
-
-        public virtual bool IsMasterTimeStep { get { return true; } }
-
-        public virtual string ShortName
-        {
-            get { return "flow"; }
-        }
-
-        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.OutputDirectoryName);
-
-        public virtual string GetItemString(IDataItem dataItem)
-        {
-            var category = GetFeatureCategory(dataItem.GetFeature());
-
-            var dataItemName = dataItem.ValueConverter.OriginalValue is INetworkFeature networkFeature ? networkFeature.Name : dataItem.Name;
-
-            var parameterName = GetConvertedParameterName(dataItem.GetParameterName(), category);
-            string nameWithoutHashTags = dataItemName.Replace("##", "~~");
-
-            var concatNames = new List<string>(new[] { category, nameWithoutHashTags, parameterName });
-
-            concatNames.RemoveAll(s => s == null);
-
-            return string.Join("/", concatNames);
-        }
-
-        private static string GetConvertedParameterName(string parameterName, string category, bool lookForValue = false)
-        {
-            var namesLookup = WaterFlowFMModelDataSet.GetDictionaryForCategory(category);
-            if (namesLookup == null)
-            {
-                return parameterName;
-            }
-
-            if (!lookForValue)
-            {
-                string dhydroParameterName;
-                return namesLookup.TryGetValue(parameterName, out dhydroParameterName)
-                    ? dhydroParameterName
-                    : parameterName;
-            }
-
-            return namesLookup.ContainsValue(parameterName)
-                ? namesLookup.First(kvp => kvp.Value == parameterName).Key
-                : parameterName;
-        }
-
-        public virtual Type ExporterType
-        {
-            get { return typeof(WaterFlowFMFileExporter); }
-        }
-
-        public virtual string GetExporterPath(string directoryName)
-        {
-            return Path.Combine(directoryName, InputFile == null ? Name + ".mdu" : Path.GetFileName(InputFile));
-        }
-
-        public virtual bool CanRunParallel
-        {
-            get { return true; }
-        }
-
-        public virtual string MpiCommunicatorString
-        {
-            get { return "DFM_COMM_DFMWORLD"; }
-        }
-
-        public virtual string KernelDirectoryLocation
-        {
-            get { return DimrApiDataSet.DFlowFmDllDirectory; }
-        }
-
-        public virtual void DisconnectOutput()
-        {
-            var storeNames = new[]
-            {
-                nameof(OutputMapFileStore),
-                nameof(Output1DFileStore),
-                nameof(OutputHisFileStore),
-                nameof(OutputClassMapFileStore),
-                nameof(OutputFouFileStore)
-            };
-
-            var properties = storeNames.Select(n => GetType().GetProperty(n)).ToArray();
-
-            if (properties.Any(p => p.GetValue(this) != null))
-            {
-                using (this.InEditMode(DelftTools.Hydro.Properties.Resources.Disconnect_output_files_edit_action))
-                {
-                    properties.ForEach(ClearFunctionStore);
-                }
-            }
-
-            OutputSnappedFeaturesPath = null;
-            OutputIsEmpty = true;
-        }
-
-        public virtual void ConnectOutput(string outputPath)
-        {
-            currentOutputDirectoryPath = outputPath;
-            ReconnectOutputFiles(outputPath);
-            ClearWaqOutputDirProperty();
-        }
-
-        private void ReadDiaFile(string diaFilePath)
-        {
-            ReportProgressText("Reading dia file");
-            FireImportProgressChanged(Resources.WaterFlowFMModel_ReadDiaFile_Reading_output_files___Reading_dia_file);
-            var diaFileName = Path.GetFileName(diaFilePath);
-            if (File.Exists(diaFilePath))
-            {
-                try
-                {
-                    var logDataItem = DataItems.FirstOrDefault(di => di.Tag == WaterFlowFMModelDataSet.DiaFileDataItemTag);
-                    if (logDataItem == null)
-                    {
-                        // add logfile dataitem if not exists
-                        var textDocument = new TextDocument(true) { Name = diaFileName };
-                        logDataItem = new DataItem(textDocument, DataItemRole.Output, WaterFlowFMModelDataSet.DiaFileDataItemTag);
-                        DataItems.Add(logDataItem);
-                    }
-
-                    var log = DiaFileReader.Read(diaFilePath);
-                    ((TextDocument)logDataItem.Value).Content = log;
-                }
-                catch (Exception ex)
-                {
-                    Log.ErrorFormat(Resources.WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_, diaFileName, ex.Message);
-                }
-            }
-            else
-            {
-                Log.WarnFormat(Resources.WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_, diaFileName, diaFilePath);
-            }
-        }
-
-        public virtual ValidationReport Validate()
-        {
-            if (Status == ActivityStatus.Initializing && !ValidateBeforeRun)
-            {
-                return null;
-            }
-
-            return WaterFlowFmModelValidationExtensions.Validate(this);
-        }
-
-        public virtual ValidationReport ValidationReport
-        {
-            get { return report == null ? (report = Validate()) : report.Equals(Validate()) ? report : (report = Validate()); }
-        }
-        public new virtual ActivityStatus Status
-        {
-            get { return base.Status; }
-            set { base.Status = value; }
-        }
-
-        public virtual bool RunsInIntegratedModel
-        {
-            get
-            {
-                return runsInIntegratedModel;
-            }
-            set
-            {
-                runsInIntegratedModel = value;
-                if (runsInIntegratedModel)
-                {
-                    CacheTimes();
-                }
-                else
-                {
-                    CleanCacheTimes();
-                }
-            }
-        }
-        
-        /// <inheritdoc/>
-        public virtual DimrRunner DimrRunner { get; }
-
-        public virtual string DimrExportDirectoryPath => WorkingDirectory;
-
-        [NoNotifyPropertyChange]
-        public new virtual DateTime CurrentTime
-        {
-            get { return base.CurrentTime; }
-            set
-            {
-                // prevent base class event bubbling
-                EventingHelper.DoWithoutEvents(() =>
-                {
-                    base.CurrentTime = value;
-                });
-
-                OnProgressChanged();
-            }
-        }
-
-        public virtual Array GetVar(string category, string itemName = null, string parameter = null)
-        {
-            if (category == CellsToFeaturesName)
-            {
-                if (OutputMapFileStore != null && OutputMapFileStore.BoundaryCellValues != null)
-                    return OutputMapFileStore.BoundaryCellValues.ToArray();
-                return null;
-            }
-
-            if (category == GridPropertyName)
-            {
-                return new[] { grid };
-            }
-
-            if (DimrRunner.CanCommunicateWithDimrApi)
-            {
-                var itemText = string.IsNullOrEmpty(itemName) ? "" : $"/{itemName}";
-                var parameterText = string.IsNullOrEmpty(itemName) || string.IsNullOrEmpty(parameter) ? "" : $"/{parameter}";
-                
-                return DimrRunner.GetVar($"{Name}/{category}{itemText}{parameterText}");
-            }
-
-            IFeature feature = null;
-            switch (category)
-            {
-                case Model1DParametersCategories.Weirs:
-                    feature = Network.GetBranchFeatureByName<IWeir>(itemName);
-                    break;
-                case Model1DParametersCategories.Culverts:
-                    feature = Network.GetBranchFeatureByName<ICulvert>(itemName);
-                    break;
-                case Model1DParametersCategories.Pumps:
-                    feature = Network.GetBranchFeatureByName<IPump>(itemName);
-                    break;
-                case Model1DParametersCategories.Laterals:
-                    feature = Network.GetBranchFeatureByName<ILateralSource>(itemName);
-                    break;
-            }
-
-            return new[] { EngineParameters.GetInitialValue(feature, parameter) };
-        }
-        public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
-        {
-            if (category == DisableFlowNodeRenumberingPropertyName)
-            {
-                var boolArray = values as bool[];
-                if (boolArray != null && boolArray.Length > 0)
-                    DisableFlowNodeRenumbering = boolArray[0];
-                return;
-            }
-            if (!string.IsNullOrEmpty(itemName))
-            {
-                if (!string.IsNullOrEmpty(parameter))
-                {
-                    DimrRunner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
-                    return;
-                }
-                DimrRunner.SetVar(string.Format("{0}/{1}/{2}", Name, category, itemName), values);
-                return;
-            }
-            DimrRunner.SetVar(string.Format("{0}/{1}", Name, category), values);
-        }
-        public bool DisableFlowNodeRenumbering { get; set; }
-        
-        #endregion
-
-        #region TimeDependentModelBase
-
-        protected override void OnInitialize()
-        {
-            previousProgress = 0;
-            CacheTimes();
-            DataItems.RemoveAllWhere(di => di.Tag == WaterFlowFMModelDataSet.DiaFileDataItemTag);
-            boundaryConditionDataList = BoundaryConditions1D.ToList();
-
-            ReportProgressText("Initializing");
-            SetOutputDirProperty();
-            SetWaqOutputDirProperty();
-            if (Directory.Exists(WorkingOutputDirectoryPath))
-            {
-                DisconnectOutput();
-                FileUtils.DeleteIfExists(WorkingOutputDirectoryPath);
-                FileUtils.CreateDirectoryIfNotExists(WorkingOutputDirectoryPath);
-            }
-
-            DimrRunner.OnInitialize();
-            
-            ReportProgressText();
-        }
-
-        protected override void OnCleanup()
-        {
-            if (boundaryConditionDataList != null)
-                foreach (var bc in boundaryConditionDataList)
-                {
-                    var data = bc.Data;
-                    if (data != null)
-                    {
-                        data.SkipArgumentValidationInEvaluate = false;
-                    }
-                }
-
-            boundaryConditionDataList = null;
-
-            snapApiInErrorMode = false;
-            base.OnCleanup();
-            DimrRunner.OnCleanup();
-            
-            ReportProgressText();
-            previousProgress = 0;
-            CleanCacheTimes();
-        }
-
-        protected override void OnExecute()
-        {
-            DimrRunner.OnExecute();
-        }
-
-        protected override void OnFinish()
-        {
-            DimrRunner.OnFinish();
-            currentOutputDirectoryPath = WorkingOutputDirectoryPath;
-
-            // We know the cache file will either exist at the runMduPath because it 
-            // was copied here, or it will be generated by the kernel during the run.
-            string runMduPath = Path.Combine(WorkingDirectory,
-                                             "dflowfm",
-                                             $"{Name}{FileConstants.MduFileExtension}");
-
-            CacheFile.UpdatePathToMduLocation(runMduPath);
-        }
-        #endregion
-
-        protected override void OnProgressChanged()
-        {
-            // Only update gui for every 1 percent progress (performance)
-            double percentage = ProgressPercentage;
-
-            if (percentage - previousProgress < 0.01) return;
-
-            previousProgress = percentage;
-            DimrRunner.OnProgressChanged();
-            base.OnProgressChanged();
-        }
-
-        public override string ProgressText
-        {
-            get { return string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText; }
-        }
-
         private void CacheTimes()
         {
             cachedStartTime = StartTime;
@@ -3051,125 +1118,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             cachedEndTime = null;
         }
 
-        private void ReportProgressText(string text = null)
-        {
-            progressText = text;
-            base.OnProgressChanged();
-        }
-
-        private void CopyRestartFile(string targetDir)
-        {
-            string sourceDirectory = ModelDefinition.ModelDirectory;
-            if (String.IsNullOrWhiteSpace(sourceDirectory))
-                return;
-
-            var restartFileName = ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
-            if (String.IsNullOrWhiteSpace(restartFileName))
-                return;
-            string sourcePath = Path.Combine(sourceDirectory, restartFileName);
-            if (File.Exists(sourcePath))
-            {
-                string targetPath = Path.Combine(targetDir, restartFileName);
-                FileUtils.CopyFile(sourcePath, targetPath);
-            }
-        }
-
-        internal void OnPropertyChanged(string propertyName)
-        {
-            OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public IEnumerable<IDataItem> GetDataItemsUsedForCouplingModel(DataItemRole role)
         {
             return GetChildDataItemLocations(role).SelectMany(GetChildDataItems);
-        }
-
-        private static readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
-        {
-            {"levelcenter", KnownStructureProperties.CrestLevel},
-            {"sill_level", KnownStructureProperties.CrestLevel},
-            {"crest_level", KnownStructureProperties.CrestLevel},
-            {"gateheight", KnownStructureProperties.GateLowerEdgeLevel},
-            {"lower_edge_level", KnownStructureProperties.GateLowerEdgeLevel},
-            {"door_opening_width", KnownStructureProperties.GateOpeningWidth},
-            {"opening_width", KnownStructureProperties.GateOpeningWidth}
-        };
-
-        /// <summary>
-        /// Gets the data item by item string.
-        /// </summary>
-        /// <param name="itemString"> The item string. </param>
-        /// <returns> The matching data item. </returns>
-        /// <remarks>
-        /// <paramref name="itemString"/> cannot be null.
-        /// </remarks>
-        /// <exception cref="ArgumentException">
-        /// Thrown when
-        /// - <paramref name="itemString"/> does not contain 3 elements
-        /// - category in <paramref name="itemString"/> is unknown
-        /// - feature in <paramref name="itemString"/> is unknown
-        /// - parameter name in <paramref name="itemString"/> is unknown.
-        /// </exception>
-        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString, string itemString2)
-        {
-            string[] stringParts = itemString.Split('/');
-
-            if (stringParts.Length != 3)
-            {
-                throw new ArgumentException(string.Format("{0} should contain a category, feature name and a parameter name.",
-                                                          itemString));
-            }
-
-            string category = stringParts[0];
-            string featureName = stringParts[1];
-            string parameterName = stringParts[2];
-
-            IFeature feature = GetAreaFeature(category, featureName);
-
-            if (feature == null)
-            {
-                throw new ArgumentException(string.Format("feature {0} in {1} cannot be found in the FM model.",
-                                                          featureName, itemString));
-            }
-            
-            string parameterName2 = itemString2.Split('/').LastOrDefault() ?? string.Empty;
-            IDataItem dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
-            {
-                var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
-                return parameterValueConverter != null &&
-                       (parameterValueConverter.ParameterName.EqualsCaseInsensitive(parameterName) || 
-                       parameterValueConverter.ParameterName.EqualsCaseInsensitive(parameterName2));
-            });
-            
-            if (dataItem == null)
-            {
-                return null;
-            }
-
-            return new[]
-            {
-                dataItem
-            };
-        }
-
-        /// <summary>
-        /// The dimr coupling for this <see cref="WaterFlowFMModel"/>.
-        /// </summary>
-        /// <remarks>
-        /// Always returns an up-to-date <see cref="IHydroCoupling"/>.
-        /// Does not return <c>null</c>.
-        /// </remarks>
-        public IHydroCoupling DimrCoupling
-        {
-            get
-            {
-                if (dimrCoupling == null || dimrCoupling.HasEnded)
-                {
-                    dimrCoupling = new WaterFlowFmDimrCoupling(Network);
-                }
-
-                return dimrCoupling;
-            }
         }
         
         /// <summary>
@@ -3190,18 +1141,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 return hydroCoupling;
             }
-        }
-
-        private IFeature GetAreaFeature(string featureCategory, string featureName)
-        {
-
-            IEnumerable<INameable> featuresFromCategory = Area.GetFeaturesFromCategory(featureCategory)
-                                                              .Concat(Network.GetFeaturesFromCategory(featureCategory))
-                                                              .Concat(featureCategory == Model1DParametersCategories.SourceSinks ? SourcesAndSinks.Select(sas => sas.Feature) : Enumerable.Empty<IFeature>())
-                                                              .Concat(featureCategory == Model1DParametersCategories.BoundaryConditions ? BoundaryConditions1D : Enumerable.Empty<IFeature>())
-                                                              .OfType<INameable>();
-
-            return (IFeature)featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
         }
 
         protected virtual void Dispose(bool disposing)
