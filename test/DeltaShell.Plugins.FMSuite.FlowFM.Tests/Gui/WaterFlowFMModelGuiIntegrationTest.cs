@@ -269,9 +269,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 gui.Run();
-
+                gui.Application.ProjectService.CreateProject();
+                
                 //create and add a HydroRegion with a HydroArea with DryPoints
-                Project project = gui.Application.ProjectService.CreateProject();
                 var area = new HydroArea();
                 var hydroRegion = new HydroRegion
                 {
@@ -279,7 +279,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     SubRegions = { area }
                 };
                 var dataItem = new DataItem(hydroRegion);
-                project.RootFolder.Add(hydroRegion);
+
+                var waterFlowFMModel = new WaterFlowFMModel();
+                waterFlowFMModel.Area = area;
+                
+                gui.Application.ProjectService.Project.RootFolder.Add(waterFlowFMModel);
+                gui.Application.ProjectService.Project.RootFolder.Add(hydroRegion);
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, () =>
                 {

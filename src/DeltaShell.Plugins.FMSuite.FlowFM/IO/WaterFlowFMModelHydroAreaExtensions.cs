@@ -85,8 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        
-
         #region RemoveDuplicateFeatures
 
         public static void RemoveDuplicateFeatures(object features, IGroupableFeature addedFeature, string modelName)
@@ -181,12 +179,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static void UpdateGroupName(this IGroupableFeature groupableFeature, WaterFlowFMModel model)
         {
             groupableFeature.RenameStructureGroupNameToStructureFilePath(model);
-            groupableFeature.MakeGroupNameRelative(model.MduFilePath);
+            groupableFeature.MakeGroupNameRelative(model.GetModelDirectory(), model.GetMduDirectory());
         }
 
         private static void RenameStructureGroupNameToStructureFilePath(this IGroupableFeature hydroAreaFeature, WaterFlowFMModel model)
         {
-            if (!(hydroAreaFeature is Gate2D) && !(hydroAreaFeature is Weir2D) && !(hydroAreaFeature is Pump2D)) return;
+            if (!(hydroAreaFeature is Gate2D) && !(hydroAreaFeature is Weir2D) && !(hydroAreaFeature is Pump2D))
+            {
+                return;
+            }
+            
             ChangeStructureGroupName<Gate2D>(hydroAreaFeature, model);
             ChangeStructureGroupName<Weir2D>(hydroAreaFeature, model);
             ChangeStructureGroupName<Pump2D>(hydroAreaFeature, model);
@@ -197,27 +199,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var structure = hydroAreaFeature as TFeat;
             if(structure == null) return;
 
-            var strucGroupName = structure.GroupName;
-            if (string.IsNullOrEmpty(strucGroupName) || !Path.IsPathRooted(strucGroupName) || strucGroupName.EndsWith(".ini")) return;
+            var groupName = structure.GroupName;
+            if (string.IsNullOrEmpty(groupName) || !Path.IsPathRooted(groupName) || groupName.EndsWith(FileConstants.IniFileExtension))
+            {
+                return;
+            }
 
-            var iniFiles = Directory.GetFiles(Path.GetDirectoryName(strucGroupName), "*.ini");
-            var strucFile = new StructuresFile
+            string[] iniFiles = Directory.GetFiles(Path.GetDirectoryName(groupName), $"*{FileConstants.IniFileExtension}");
+            
+            var structuresFile = new StructuresFile
             {
                 StructureSchema = model.ModelDefinition.StructureSchema,
                 ReferenceDate = model.ModelDefinition.GetReferenceDateAsDateTime()
             };
 
-            foreach (var file in iniFiles)
+            foreach (string file in iniFiles)
             {
-                var structures = strucFile.Read(file);
-                var numberOfMatchingStructureNames = structures.Count(s => s.Name == Path.GetFileNameWithoutExtension(strucGroupName));
+                var structures = structuresFile.Read(file);
+                var numberOfMatchingStructureNames = structures.Count(s => s.Name == Path.GetFileNameWithoutExtension(groupName));
                 if (numberOfMatchingStructureNames > 0)
                 {
                     structure.GroupName = file;
                     return;
                 }
             }
-            structure.GroupName = Path.Combine(Path.GetDirectoryName(structure.GroupName), model.Name + "_structures.ini");
+            
+            structure.GroupName = Path.Combine(Path.GetDirectoryName(structure.GroupName), model.Name + FileConstants.StructuresFileExtension);
         }
     }
 }

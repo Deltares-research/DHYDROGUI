@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,36 +6,48 @@ using GeoAPI.Extensions.Feature;
 
 namespace DelftTools.Hydro
 {
+    /// <summary>
+    /// Provides <see cref="IGroupableFeature"/> extension methods.
+    /// </summary>
     public static class GroupableFeatureExtensions
     {
-        public static void MakeGroupNameRelative(this IGroupableFeature groupableFeature, string mduFilePath)
+        /// <summary>
+        /// Makes the group name of the <see cref="IGroupableFeature"/> relative to the specified base directory.
+        /// If the path goes beyond the root directory, the group name is changed to just the file name.
+        /// </summary>
+        /// <param name="groupableFeature">The <see cref="IGroupableFeature"/> object whose group name is to be made relative.</param>
+        /// <param name="rootDirectory">The root directory to which the group name should be constrained.</param>
+        /// <param name="baseDirectory">The base directory used to calculate the relative path if the group name is absolute.</param>
+        public static void MakeGroupNameRelative(this IGroupableFeature groupableFeature, string rootDirectory, string baseDirectory)
         {
-            if (groupableFeature == null) return;
+            string groupName = groupableFeature.GroupName;
 
-            var directory = Path.GetDirectoryName(mduFilePath);
-            var originalGroupName = groupableFeature.GroupName;
+            if (string.IsNullOrEmpty(groupName))
+            {
+                return;
+            }
+            
+            if (!FileUtils.PathIsRelative(groupName))
+            {
+                groupName = FileUtils.GetRelativePath(baseDirectory, groupName);
+            }
 
-            var relativePathToFile = FileUtils.GetRelativePath(directory, originalGroupName);
-            if (String.IsNullOrEmpty(relativePathToFile)) return;
-            groupableFeature.GroupName = GetNewGroupName(relativePathToFile, directory, originalGroupName);
+            string normalizedRoot = Path.GetFullPath(rootDirectory);
+            string fullGroupPath = Path.GetFullPath(Path.Combine(baseDirectory, groupName));
+
+            groupableFeature.GroupName = fullGroupPath.StartsWith(normalizedRoot) ? groupName : Path.GetFileName(groupName);
         }
-
-        public static string GetNewGroupName(string relativePathToFile, string directory, string originalGroupName)
-        {
-            var isInSubDirectory = !relativePathToFile.Contains("..") &&
-                                   (!Path.IsPathRooted(originalGroupName) || Path.GetPathRoot(directory) == Path.GetPathRoot(originalGroupName));
-
-            return isInSubDirectory ? relativePathToFile : Path.GetFileName(relativePathToFile);
-        }
-
+        
         public static void TrySetGroupName(this IFeature feature, string filePath)
         {
-            var groupableFeature = feature as IGroupableFeature;
-            if (groupableFeature == null) return;
+            if (!(feature is IGroupableFeature groupableFeature))
+            {
+                return;
+            }
 
             groupableFeature.GroupName = filePath;
         }
-
+        
         public static bool HasDefaultGroupName(this IGroupableFeature feature, string featureExtension, string defaultGroupName)
         {
             var featureGroupName = feature.GroupName;
@@ -44,24 +55,27 @@ namespace DelftTools.Hydro
         }
     }
 
+    /// <summary>
+    /// Provides <see cref="IGroupableFeature"/> collection extension methods.
+    /// </summary>
     public static class GroupableFeaturesExtensions
     {
         public static void RemoveUngroupedItems<TFeature>(this IList<TFeature> featureList)
         {
-            var itemsToRemove = featureList.OfType<IGroupableFeature>()
-                .Where(g => string.IsNullOrWhiteSpace(g.GroupName))
-                .OfType<TFeature>()
-                .ToList();
+            List<TFeature> itemsToRemove = featureList.OfType<IGroupableFeature>()
+                                                      .Where(g => string.IsNullOrWhiteSpace(g.GroupName))
+                                                      .OfType<TFeature>()
+                                                      .ToList();
 
             itemsToRemove.ForEach(f => featureList.Remove(f));
         }
-
+        
         public static void RemoveGroup<TFeature>(this IList<TFeature> eventedList, string group)
         {
-            var itemsToRemove = eventedList.OfType<IGroupableFeature>()
-                .Where(g => g.GroupName == group)
-                .OfType<TFeature>()
-                .ToList();
+            List<TFeature> itemsToRemove = eventedList.OfType<IGroupableFeature>()
+                                                      .Where(g => g.GroupName == group)
+                                                      .OfType<TFeature>()
+                                                      .ToList();
 
             itemsToRemove.ForEach(f => eventedList.Remove(f));
         }

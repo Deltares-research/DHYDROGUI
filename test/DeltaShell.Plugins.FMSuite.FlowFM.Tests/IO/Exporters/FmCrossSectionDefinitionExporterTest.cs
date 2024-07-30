@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void GivenArrayOfCrossSectionDefinitions_WhenWritingToFile_ThenIniFileIsWritten()
         {
-            var filePath = Path.Combine(FileUtils.CreateTempDirectory(), FeatureFile1D2DWriter.CROSS_SECTION_DEFINITION_FILE_NAME);
+            var filePath = Path.Combine(FileUtils.CreateTempDirectory(), FeatureFile1D2DConstants.DefaultCrossDefFileName);
 
             var fmModel = new WaterFlowFMModel();
             var channelFrictionDefinitionPerBranchLookup = fmModel.ChannelFrictionDefinitions.ToDictionary(cfd => (IBranch) cfd.Channel, cfd => cfd);

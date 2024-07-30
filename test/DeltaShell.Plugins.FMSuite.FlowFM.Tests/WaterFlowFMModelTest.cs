@@ -21,6 +21,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.Grid;
@@ -254,8 +255,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
         
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void TestImportSimpleModelWith_SourceAndSink_Tracer_Morphology_CorrectlyUpdatesSourceAndSinkComponents()
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
@@ -285,8 +286,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void TestAddingSourceAndSinkCorrectlyUpdatesSedimentFractionAndTracerNamesForSourceAndSink()
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
@@ -320,8 +321,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void TestRemovingTracerBoundaryCondition_OnlyRemovesTracerNameFromSourceAndSink_IfNoOtherTracerBoundaryConditionsExistsForSameTracer()
         {
             var model = new WaterFlowFMModel();
@@ -372,8 +373,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void TestRemovingBoundaryConditionSet_OnlyRemovesTracerNameFromSourceAndSink_IfNoOtherTracerBoundaryConditionsExistsForSameTracer()
         {
             var model = new WaterFlowFMModel();
@@ -572,7 +573,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Slow)]
         public void CheckFileBasedStatesofFMModel()
         {
             var model1 = new WaterFlowFMModel();
@@ -617,7 +618,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Slow)]
         public void TransformCoordinateSystemTest()
         {
             string mduPath = TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu");
@@ -654,8 +655,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void TestDiaFileIsRetrievedAfterModelRun()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
@@ -727,8 +728,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void SetCoordinateSystemOnModelAndExportAdjustsNetFile()
         {
             var mduPath =
@@ -752,8 +753,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.DataAccess)]
         public void CheckIfBcmFileIsReferencedInMorFileAfterRunningAnImportedMduFile()
         {
             //arrange
@@ -808,20 +809,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Feature = boundary,
                 TracerName = tracer01
             });
-            var exportPath = Path.Combine(tempDir, "export");
+            var exportPath = Path.Combine(tempDir, "export.mdu");
             var mduExportPath = Path.Combine(exportPath, "cs.mdu");
             model.ExportTo(mduExportPath);
 
             var modelAfterImport = new WaterFlowFMModel(mduExportPath);
             ActivityRunner.RunActivity(modelAfterImport);
-            var mduFilePathAfterExport = modelAfterImport.MduFilePath;
 
-            File.Exists(Path.Combine(mduFilePathAfterExport, "cs.mdu"));
-            File.Exists(Path.Combine(mduFilePathAfterExport, "cs.mor"));
-            File.Exists(Path.Combine(mduFilePathAfterExport, "cs.sed"));
-
-            var morFilePath = Path.Combine(exportPath, "cs.mor");
-            File.Exists(morFilePath);
+            var morFilePath = Path.Combine(exportPath, "bendprof.mor");
+            Assert.That(morFilePath, Does.Exist);
 
             //act
             var lines = File.ReadLines(morFilePath);
@@ -829,12 +825,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
          
             //assert
             Assert.AreEqual(countedLines, 1);
-
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void CheckStartTime()
         {
             var mduPath =
@@ -851,8 +846,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void CheckCoordinateSystemBendProf()
         {
             var mduPath =
@@ -864,8 +859,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void CheckCoordinateSystemIvoorkust()
         {
             var mduPath = TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
@@ -878,8 +873,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ImportIvoorkustModel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
@@ -894,8 +889,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ImportHarlingen3DModel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen_model_3d\har.mdu");
@@ -904,10 +899,79 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.That(model.DepthLayerDefinition.NumLayers, Is.EqualTo(10), "depth layers");
         }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportExportHarlingenModelWithOrganizedFileStructure()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string testData = TestHelper.GetTestFilePath(@"harlingen\OrganizedModel");
+                string modelDir = tempDir.CopyDirectoryToTempDirectory(testData);
+                string mduImportPath = Path.Combine(modelDir, @"har\computations\test\har.mdu");
+                string mduExportPath = Path.Combine(tempDir.Path, @"export\computations\test\har.mdu");
+
+                var model = new WaterFlowFMModel(mduImportPath);
+                model.ExportTo(mduExportPath);
+                
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\network_bounds_d3d.pol"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\network_bounds_d3d_add.pol"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\001.ext"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\001_bnd.ext"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\071_01.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\071_02.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\071_03.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\Discharge.bc"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\L1.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\Salinity.bc"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\WaterLevel.bc"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\computations\test\fm_003_net.nc"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\computations\test\har.mdu"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\computations\test\roughness-Channels.ini"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\computations\test\roughness-Main.ini"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\computations\test\roughness-Manning_0.01667.ini"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\computations\test\roughness-Sewer.ini"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\computations\test\roughness-Strickler_15.0.ini"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\general\fourier_max.fou"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\cross_sections\har_crs_V2_crs.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\fixedweir_fxw.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\har_enc.pol"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\Harlingen_haven.ldb"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\output_locations\har_fine_V3_obs.xyn"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\thindam_thd.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\initial_conditions\test\InitialWaterdepth.ini"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\initial_conditions\test\bedlevel.xyz"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\initial_conditions\test\frictioncoefficient_friction.pol"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\initial_conditions\test\initialFields.ini"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\initial_conditions\test\structures.ini"), Does.Exist);
+                
+                string ini = File.ReadAllText(mduExportPath);
+                
+                IniData iniData = new IniParser().Parse(ini);
+                IReadOnlyList<IniProperty> iniProperties = iniData.Sections.SelectMany(section => section.Properties).ToList();
+
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "NetFile" && p.Value == "fm_003_net.nc"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "GridEnclosureFile" && p.Value == "../../geometry/har_enc.pol"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "LandBoundaryFile" && p.Value == "../../geometry/Harlingen_haven.ldb"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "ThinDamFile" && p.Value == "../../geometry/thindam_thd.pli"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "FixedWeirFile" && p.Value == "../../geometry/fixedweir_fxw.pli"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "IniFieldFile" && p.Value == "../../initial_conditions/test/initialFields.ini"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "StructureFile" && p.Value == "../../initial_conditions/test/structures.ini"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "FrictFile" && p.Value == "roughness-Channels.ini;roughness-Main.ini;roughness-Sewer.ini;roughness-Manning_0.01667.ini;roughness-Strickler_15.0.ini"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "ExtForceFile" && p.Value == "../../boundary_conditions/test/001.ext"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "ExtForceFileNew" && p.Value == "../../boundary_conditions/test/001_bnd.ext"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "ObsFile" && p.Value == "../../geometry/output_locations/har_fine_V3_obs.xyn"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "CrsFile" && p.Value == "../../geometry/cross_sections/har_crs_V2_crs.pli"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "FouFile" && p.Value == "../../general/fourier_max.fou"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "HisFile" && p.Value == "001_his.nc"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "MapFile" && p.Value == "001_map.nc"));
+            }
+        }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ExportTwiceCheckNetFileIsCopiedCorrectly()
         {
             var mduPath =
@@ -935,8 +999,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void LoadingEmptyGridNetFileShouldNotLockIt()
         {
             string testDataDir = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input");
@@ -960,8 +1024,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ImportHarlingenAndCheckTimeSeries()
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen\har.mdu"));
@@ -990,8 +1054,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ReloadGridShouldNotThrowAlotOfEvents()
         {
             var mduPath =
@@ -1010,8 +1074,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void LoadManyRoughnessPolygonsForVenice()
         {
             var mduPath =
@@ -1028,8 +1092,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ImportSpatialOperationsTest()
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
@@ -1044,8 +1108,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ReloadBathymetryTest()
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
@@ -1074,8 +1138,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ReloadGridShouldConstructEdges()
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
@@ -1177,8 +1241,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(grids[0].IsEmpty);
         }
 
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         [Test]
         public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeseries()
         {
@@ -1220,79 +1284,94 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenFmModel_WhenAddingAnAreaFeatureWithGroupNameEqualToPathThatIsPointingToASubFolderOfMduFolder_ThenGroupNameIsAlwaysRelative()
         {
             // Make local copy of project
-            const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
-            var filePath = Path.Combine(baseFolderPath, "FlowFM.mdu");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel(mduFilePath);
-            
-            fmModel.Area.DryPoints.Add(new GroupablePointFeature
-            {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"SubFolder/MyDryPoints_dry.xyz")
-            });
-            fmModel.Area.LandBoundaries.Add(new DelftTools.Hydro.LandBoundary2D
-            {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"SubFolder/MyLandBoundaries.ldb")
-            });
+
+            fmModel.Area.DryPoints.Add(new GroupablePointFeature {GroupName = Path.Combine(localPath, @"MDU/SubFolder/MyDryPoints_dry.xyz")});
+            fmModel.Area.LandBoundaries.Add(new LandBoundary2D {GroupName = Path.Combine(localPath, @"MDU/SubFolder/MyLandBoundaries.ldb")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.DryPoints.FirstOrDefault().GroupName, Is.EqualTo(@"SubFolder/MyDryPoints_dry.xyz"));
             Assert.That(fmModel.Area.LandBoundaries.FirstOrDefault().GroupName, Is.EqualTo(@"SubFolder/MyLandBoundaries.ldb"));
+        }
+        
+        [Test]
+        public void GivenFmModel_WhenAddingAnAreaFeatureWithGroupNameEqualToPathThatIsPointingToASubFolderOfModelBaseFolderOutsideMduFolder_ThenGroupNameIsAlwaysRelative()
+        {
+            // Make local copy of project
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
+
+            // Make FM model from Mdu file
+            var fmModel = new WaterFlowFMModel(mduFilePath);
+
+            // Import dry points
+
+            fmModel.Area.DryPoints.Add(new GroupablePointFeature {GroupName = Path.Combine(localPath, @"FeatureFiles/MyDryPoints_dry.xyz")});
+            fmModel.Area.LandBoundaries.Add(new LandBoundary2D {GroupName = Path.Combine(localPath, @"FeatureFiles/MyLandBoundaries.ldb")});
+
+            // Check that group name gives a relative path from the mdu folder
+            Assert.That(fmModel.Area.DryPoints.FirstOrDefault().GroupName, Is.EqualTo(@"../FeatureFiles/MyDryPoints_dry.xyz"));
+            Assert.That(fmModel.Area.LandBoundaries.FirstOrDefault().GroupName, Is.EqualTo(@"../FeatureFiles/MyLandBoundaries.ldb"));
         }
 
         [Test]
         public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameToPathThatIsPointingToASubFolderOfMduFolder_ThenGroupNameIsPointingToItsReferencingStructureFile()
         {
             // Make local copy of project
-            const string testOutputFolder = @"TestOutput";
-            const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
-            var filePath = Path.Combine(testOutputFolder, baseFolderPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Gates.Add(new Gate2D
-            {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), testOutputFolder, baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
-            });
-            fmModel.Area.Pumps.Add(new Pump2D
-            {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), testOutputFolder, baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
-            });
-            fmModel.Area.Weirs.Add(new Weir2D
-            {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), testOutputFolder, baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
-            });
+            fmModel.Area.Gates.Add(new Gate2D { GroupName = Path.Combine(localPath, @"MDU/FeatureFiles/gate01.pli")});
+            fmModel.Area.Pumps.Add(new Pump2D { GroupName = Path.Combine(localPath, @"MDU/FeatureFiles/gate01.pli")});
+            fmModel.Area.Weirs.Add(new Weir2D { GroupName = Path.Combine(localPath, @"MDU/FeatureFiles/gate01.pli")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.Gates.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
             Assert.That(fmModel.Area.Pumps.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
             Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
         }
-
+        
         [Test]
-        public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameEqualToPathThatIsNotReferencedByAStructureFile_ThenGroupNameIsEqualToDefaultStructuresFileNameInTheSameFolder()
+        public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameToPathThatIsPointingToASubFolderOfModelBaseFolderOutsideMduFolder_ThenGroupNameIsPointingToItsReferencingStructureFile()
         {
             // Make local copy of project
-            const string testOutputFolder = @"TestOutput";
-            const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
-            var filePath = Path.Combine(testOutputFolder, baseFolderPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Gates.Add(new Gate2D
-            {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), testOutputFolder, baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")
-            });
+            fmModel.Area.Gates.Add(new Gate2D {GroupName = Path.Combine(localPath, @"FeatureFiles/gate01.pli")});
+            fmModel.Area.Pumps.Add(new Pump2D {GroupName = Path.Combine(localPath, @"FeatureFiles/gate01.pli")});
+            fmModel.Area.Weirs.Add(new Weir2D {GroupName = Path.Combine(localPath, @"FeatureFiles/gate01.pli")});
+
+            // Check that group name gives a relative path from the mdu folder
+            Assert.That(fmModel.Area.Gates.FirstOrDefault().GroupName, Is.EqualTo(@"../FeatureFiles/FlowFM_structures.ini"));
+            Assert.That(fmModel.Area.Pumps.FirstOrDefault().GroupName, Is.EqualTo(@"../FeatureFiles/FlowFM_structures.ini"));
+            Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo(@"../FeatureFiles/FlowFM_structures.ini"));
+        }
+
+        [Test]
+        public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameEqualToPathThatIsNotReferencedByAStructureFile_ThenGroupNameIsEqualToDefaultStructuresFileNameInTheSameFolder()
+        {
+            // Make local copy of project
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
+
+            // Make FM model from Mdu file
+            var fmModel = new WaterFlowFMModel(mduFilePath);
+
+            // Import dry points
+            fmModel.Area.Gates.Add(new Gate2D {GroupName = Path.Combine(localPath, @"MDU/FeatureFiles/nonReferencedGates.pli")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.Gates.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
@@ -1302,19 +1381,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenFmModel_WhenAddingAnAreaFeatureWithGroupNameToPathThatIsPointingToNotASubFolderOfMduFolder_ThenGroupNameIsEqualToFileName()
         {
             // Make local copy of project
-            const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
-            var filePath = Path.Combine(baseFolderPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel(mduFilePath);
 
             // Import dry points
-            fmModel.Area.DryAreas.Add(new GroupableFeature2DPolygon()
-            {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MyDryAreas_dry.pol")
-            });
+            fmModel.Area.DryAreas.Add(new GroupableFeature2DPolygon() {GroupName = Path.Combine(localPath, @"MDU/MyDryAreas_dry.pol")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.DryAreas.FirstOrDefault().GroupName, Is.EqualTo(@"MyDryAreas_dry.pol"));
@@ -1472,7 +1546,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(0, 0)
             });
 
-            var fixedWeir = new DelftTools.Hydro.Structures.FixedWeir { Geometry = lineGeomery };
+            var fixedWeir = new FixedWeir { Geometry = lineGeomery };
 
             var fmModel = new WaterFlowFMModel();
 

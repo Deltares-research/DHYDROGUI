@@ -41,31 +41,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public const string FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID = "FMModel";
         public const string FM_MODEL_MDU_IMPORT_PROJECT_TEMPLATE_ID = "FMModelMDUImport";
 
-        private static ILog Log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
+        private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
         internal static string PluginVersion { get; } = typeof(FlowFMApplicationPlugin).Assembly.GetName().Version.ToString();
         internal static string PluginName { get; } = "D-Flow Flexible Mesh Plugin";
 
         private IApplication application;
 
-        public override string Name
-        {
-            get { return "Delft3D FM"; }
-        }
+        public override string Name => "Delft3D FM";
 
-        public override string DisplayName
-        {
-            get { return PluginName; }
-        }
+        public override string DisplayName => PluginName;
 
-        public override string Description
-        {
-            get { return Properties.Resources.FlowFMApplicationPlugin_Description; }
-        }
+        public override string Description => Properties.Resources.FlowFMApplicationPlugin_Description;
 
-        public override string Version
-        {
-            get { return PluginVersion; }
-        }
+        public override string Version => PluginVersion;
 
         public override string FileFormatVersion => "1.4.0.0";
 
@@ -181,11 +169,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new BcmFileImporter();
             yield return new GroupablePointCloudImporter
             {
-                GetBaseFolder = list =>
-                {
-                    var model = Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().FirstOrDefault(m => Equals(m.Area.DryPoints, list));
-                    return model == null ? string.Empty : Path.GetDirectoryName(model.MduFilePath);
-                }
+                GetRootDirectory = featureList => GetModelFor(featureList, a => a.DryPoints).GetModelDirectory(),
+                GetBaseDirectory = featureList => GetModelFor(featureList, a => a.DryPoints).GetMduDirectory()
             };
 
             yield return new PliFileImporterExporter<Embankment, Embankment>
@@ -228,12 +213,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     
                     if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
                     {
-                        Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
+                        log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
                     }
 
                     if (modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
                     {
-                        Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been generated using default values");
+                        log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been generated using default values");
                     }
 
                     for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
@@ -269,10 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PlizFileImporterExporter<BridgePillar, BridgePillar>
             {
                 Mode = Feature2DImportExportMode.Import,
-                CreateDelegate = delegate (List<Coordinate> points, string name)
-                {
-                    return MduFile.CreateDelegateBridgePillar(name, points);
-                },
+                CreateDelegate = (points, name) => MduFile.CreateDelegateBridgePillar(name, points),
                 EqualityComparer = new GroupableFeatureComparer<BridgePillar>(),
                 AfterCreateAction = delegate (object featureList, BridgePillar bridgePillar)
                 {
@@ -430,7 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new GisToFeature2DImporter<IPolygon, GroupableFeature2DPolygon>();
         }
 
-        private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors) where T : IFeature, INameable
+        private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors) where T : IFeature
         {
             return Application?.ProjectService.Project?.RootFolder.GetAllModelsRecursive()
                 .OfType<WaterFlowFMModel>()
@@ -439,7 +421,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
-            yield return new WaterFlowFMFileExporter();
+            yield return new FMModelFileExporter();
             yield return new Area2DStructuresExporter { GetModelForArea = GetModelForArea };
             yield return new StructuresListExporter(StructuresListType.Pumps) { GetModelForList = GetModelForCollection };
             yield return new StructuresListExporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };
@@ -468,8 +450,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         if (!correspondingModelFeatureCoordinateData.DataColumns[index].IsActive) break;
                         var dataColumnWithData = correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
 
-                        GeometryPointsSyncedList<double> syncedList;
-                        syncedList = new GeometryPointsSyncedList<double>
+                        var syncedList = new GeometryPointsSyncedList<double>
                         {
                             CreationMethod = (f, i) => 0.0,
                             Feature = fixedWeir
@@ -626,9 +607,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private IEnumerable<WaterFlowFMModel> FlowModels
-        {
-            get { return Application != null ? Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>() : Enumerable.Empty<WaterFlowFMModel>(); }
-        }
+            => Application != null
+                   ? Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>()
+                   : Enumerable.Empty<WaterFlowFMModel>();
 
         private static bool GetAvailableLists(WaterFlowFMModel model, IEnumerable list)
         {

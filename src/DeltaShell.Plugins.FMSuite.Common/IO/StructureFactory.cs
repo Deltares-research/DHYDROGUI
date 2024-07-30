@@ -564,7 +564,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     gate.HorizontalOpeningDirection = GateOpeningDirection.FromRight;
                     break;
                 default:
-                    throw new ArgumentException("Could not parse horizontal_opening_direction of type: " + displayName);
+                    throw new ArgumentException($"Could not parse {StructureRegion.GateHorizontalOpeningDirection.Key} of type: " + displayName);
             }
 
             SetGateTimeSeriesProperties(structure2D, path, refDate, gate);

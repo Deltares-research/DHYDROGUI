@@ -13,6 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
     public static class KnownProperties
     {
+        public const string PathsRelativeToParent = "pathsrelativetoparent";
         public const string BathymetryFile = "bathymetryfile";
         public const string ObsCrsFile = "crsfile";
         public const string ExtForceFile = "extforcefile";

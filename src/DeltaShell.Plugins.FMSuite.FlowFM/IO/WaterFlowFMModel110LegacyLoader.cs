@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 PerformDirectoryRestructuring(waterFlowFmModel, oldWorkingDirPath);
 
-                waterFlowFmModel.ConnectOutput(waterFlowFmModel.PersistentOutputDirectoryPath);
+                waterFlowFmModel.ConnectOutput(waterFlowFmModel.GetModelOutputDirectory());
 
                 if (projectDataDirectoryInfo != null)
                 {
@@ -52,12 +52,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void PerformDirectoryRestructuring(WaterFlowFMModel waterFlowFMModel, string oldWorkingDirPath)
         {
+            string mduSavePath = waterFlowFMModel.GetMduSavePath();
             string currentOutputDirName = GetOldOutputDirectoryName(waterFlowFMModel.ModelDefinition);
             var currentWaqOutputDirName = $"DFM_DELWAQ_{waterFlowFMModel.Name}";
 
-            if (waterFlowFMModel.MduFilePath != waterFlowFMModel.MduSavePath)
+            if (waterFlowFMModel.MduFilePath != mduSavePath)
             {
-                waterFlowFMModel.ExportTo(waterFlowFMModel.MduSavePath);
+                waterFlowFMModel.ExportTo(mduSavePath);
             }
 
             var modelDirectoryInfo = new DirectoryInfo(waterFlowFMModel.MduFilePath);
@@ -66,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 modelDirectoryInfo = modelDirectoryInfo.Parent;
             }
 
-            string modelDirPath = modelDirectoryInfo?.FullName ?? Path.GetDirectoryName(waterFlowFMModel.MduFilePath);
+            string modelDirPath = modelDirectoryInfo?.FullName ?? waterFlowFMModel.GetMduDirectory();
 
             string currentOutputDirPath = Path.Combine(modelDirPath, currentOutputDirName);
             string targetOutputDirPath = Path.Combine(modelDirPath, NewOutputDirectoryName);

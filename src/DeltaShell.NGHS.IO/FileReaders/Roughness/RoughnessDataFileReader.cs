@@ -91,7 +91,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             }
             
             var roughnessSection = ReadRoughnessSection(contentSections[0]);
-            
             var readRoughnessBranchData = ReadRoughnessBranchData(hydroNetwork, iniData);
             
             //Reading went fine add to the model now!

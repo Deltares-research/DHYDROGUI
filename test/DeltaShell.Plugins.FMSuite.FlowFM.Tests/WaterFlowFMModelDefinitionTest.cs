@@ -100,7 +100,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // setup
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
             string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
@@ -110,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 var mduFile = new MduFile();
-                var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+                var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
                 var area = convertedFileObjectsForFMModel.HydroArea;
                 var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
                 var allFixedWeirsAndCorrespondingProperties = convertedFileObjectsForFMModel.AllFixedWeirsAndCorrespondingProperties;
@@ -153,11 +152,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // setup
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             var area = convertedFileObjectsForFMModel.HydroArea;
             var allFixedWeirsAndCorrespondingProperties = convertedFileObjectsForFMModel.AllFixedWeirsAndCorrespondingProperties;
@@ -198,11 +196,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadAndWriteMduFile()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             var area = convertedFileObjectsForFMModel.HydroArea;
             var allFixedWeirsAndCorrespondingProperties = convertedFileObjectsForFMModel.AllFixedWeirsAndCorrespondingProperties;
@@ -233,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var modelName = Path.GetFileName(mduFilePath);
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             
             mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
@@ -270,7 +267,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var modelName = Path.GetFileName(mduFilePath);
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             
             mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
@@ -292,11 +289,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadExtForceFileAndPlifiles()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             
             mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
@@ -339,7 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Path.Combine(TestHelper.GetTestDataDirectory(), "simpleBox");
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, "simplebox");
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel("simplebox");
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             var area = convertedFileObjectsForFMModel.HydroArea;
             var network = convertedFileObjectsForFMModel.HydroNetwork;
@@ -386,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFile.Write(mduFileSaveToPath, modelDefinition, area, null, null, null, null, null, null, allFixedWeirsAndCorrespondingProperties);
 
             var savedMduFile = new MduFile();
-            var convertedFileObjectsForFMModelSaved = CreateConvertedFileObjectsForFMModel(saveToDir, "simplebox");
+            var convertedFileObjectsForFMModelSaved = CreateConvertedFileObjectsForFMModel("simplebox");
             var savedModelDefinition = convertedFileObjectsForFMModelSaved.ModelDefinition;
             convertedFileObjectsForFMModelSaved.HydroArea = area;
             convertedFileObjectsForFMModelSaved.HydroNetwork = network;
@@ -414,7 +410,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduDir = Path.Combine(TestHelper.GetTestDataDirectory(), "mdu_ivoorkust");
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, "ivk");
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel("ivk");
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             var area = convertedFileObjectsForFMModel.HydroArea;
             var allFixedWeirsAndCorrespondingProperties = convertedFileObjectsForFMModel.AllFixedWeirsAndCorrespondingProperties;
@@ -462,7 +458,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduDir = Path.Combine(TestHelper.GetTestDataDirectory(), @"data\f05_boundary_conditions\c010_time_series\input");
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, "boundcond_test");
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel("boundcond_test");
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             var area = convertedFileObjectsForFMModel.HydroArea;
             var allFixedWeirsAndCorrespondingProperties = convertedFileObjectsForFMModel.AllFixedWeirsAndCorrespondingProperties;
@@ -506,7 +502,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Path.Combine(TestHelper.GetTestDataDirectory(), @"c075_Frictiontypes");
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, "frictiontypes");
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel("frictiontypes");
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             
             mduFile.Read(Path.Combine(mduDir, "frictiontypes.mdu"), convertedFileObjectsForFMModel);
@@ -521,10 +517,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(Path.GetDirectoryName(mduPath), "original");
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel("original");
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             var area = convertedFileObjectsForFMModel.HydroArea;
-            var network = convertedFileObjectsForFMModel.HydroNetwork;
             var allFixedWeirsAndCorrespondingProperties = convertedFileObjectsForFMModel.AllFixedWeirsAndCorrespondingProperties;
             
             mduFile.Read(mduPath, convertedFileObjectsForFMModel);
@@ -541,7 +536,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduExportPath = Path.Combine(Directory.GetCurrentDirectory(), mduExportPath);
             mduFile.Write(mduExportPath, modelDefinition, area, null, null, null,null, null, null, allFixedWeirsAndCorrespondingProperties);
 
-            var convertedFileObjectsForFMModelReimport = CreateConvertedFileObjectsForFMModel(Path.GetDirectoryName(mduExportPath), "exported");
+            var convertedFileObjectsForFMModelReimport = CreateConvertedFileObjectsForFMModel("exported");
             var modelDefinitionReimport = convertedFileObjectsForFMModel.ModelDefinition;
             
             new MduFile().Read(mduExportPath, convertedFileObjectsForFMModelReimport);
@@ -562,11 +557,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadMduAndVerifyIsEnabled()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             
             mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
@@ -586,11 +580,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void PropertyChangedEventsAreBubbledForModelProperties()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
             var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
             
             mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
@@ -609,53 +602,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void SettingUseMorSedShouldWriteSedimentSection()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
-            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-
-            try
+            string testData = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
+            
+            using (var tempDir = new TemporaryDirectory())
             {
-                var modelName = Path.GetFileName(mduFilePath);
-                var justModelName = Path.GetFileNameWithoutExtension(modelName);
-                var mduFile = new MduFile();
-                var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
-                var modelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
-                var area = convertedFileObjectsForFMModel.HydroArea;
-                var allFixedWeirsAndCorrespondingProperties = convertedFileObjectsForFMModel.AllFixedWeirsAndCorrespondingProperties;
-                
-                mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
+                string mduFilePath = tempDir.CopyTestDataFileAndDirectoryToTempDirectory(testData);
 
-                var useMorSed = modelDefinition.GetModelProperty("UseMorSed");
-                Assert.IsFalse(bool.Parse(useMorSed.Value.ToString()));
-                var readAllText = File.ReadAllText(mduFilePath);
+                var model = new WaterFlowFMModel(mduFilePath);
+
+                WaterFlowFMProperty useMorSed = model.ModelDefinition.GetModelProperty("UseMorSed");
+                Assert.IsFalse((bool)useMorSed.Value);
+
+                string readAllText = File.ReadAllText(mduFilePath);
                 Assert.IsFalse(readAllText.Contains("[sediment]"));
                 Assert.IsFalse(readAllText.Contains(KnownProperties.SedFile));
-                Assert.IsFalse(readAllText.Contains(justModelName + ".sed"));
+                Assert.IsFalse(readAllText.Contains(model.Name + ".sed"));
                 Assert.IsFalse(readAllText.Contains(KnownProperties.MorFile));
-                Assert.IsFalse(readAllText.Contains(justModelName + ".mor"));
+                Assert.IsFalse(readAllText.Contains(model.Name + ".mor"));
                 Assert.IsFalse(readAllText.Contains("Sedimentmodelnr"));
-                useMorSed.Value = true;
-                mduFile.Write(mduFilePath, modelDefinition, area, null, null, null,null, null, null, allFixedWeirsAndCorrespondingProperties);
-                
-                var otherMduFile = new MduFile();
-                var convertedFileObjectsForFMModelOther = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
-                var otherModelDefinition = convertedFileObjectsForFMModel.ModelDefinition;
-                
-                otherMduFile.Read(mduFilePath, convertedFileObjectsForFMModelOther);
 
-                useMorSed = otherModelDefinition.GetModelProperty("UseMorSed");
-                Assert.IsTrue(bool.Parse(useMorSed.Value.ToString()));
+                useMorSed.Value = true;
+                model.ExportTo(mduFilePath);
+
+                var otherModel = new WaterFlowFMModel(mduFilePath);
+
+                useMorSed = otherModel.ModelDefinition.GetModelProperty("UseMorSed");
+                Assert.IsTrue((bool)useMorSed.Value);
+                
                 readAllText = File.ReadAllText(mduFilePath);
                 Assert.IsTrue(readAllText.Contains("[sediment]"));
                 Assert.IsTrue(readAllText.Contains(KnownProperties.SedFile));
-                Assert.IsTrue(readAllText.Contains(justModelName + ".sed"));
+                Assert.IsTrue(readAllText.Contains(otherModel.Name + ".sed"));
                 Assert.IsTrue(readAllText.Contains(KnownProperties.MorFile));
-                Assert.IsTrue(readAllText.Contains(justModelName + ".mor"));
+                Assert.IsTrue(readAllText.Contains(otherModel.Name + ".mor"));
                 Assert.IsTrue(readAllText.Contains("Sedimentmodelnr"));
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(mduDir);
             }
         }
 
@@ -941,11 +921,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\FlowFM.mdu");
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
 
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
             var area = convertedFileObjectsForFMModel.HydroArea;
             
             mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
@@ -958,11 +937,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\threeEnclosuresDifferentName.mdu");
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
 
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
             var area = convertedFileObjectsForFMModel.HydroArea;
             
             area.Enclosures.Add(
@@ -980,11 +958,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\threeEnclosuresDifferentName.mdu");
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
 
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
             var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+            var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
             var area = convertedFileObjectsForFMModel.HydroArea;
             
             area.Enclosures.Add(
@@ -1001,7 +978,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var nameWithoutExtension = Path.GetTempFileName();
             var mduFilePath = String.Concat(nameWithoutExtension, ".mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var encFilePath = TestHelper.GetTestFilePath(String.Concat(nameWithoutExtension,"_enc.pol"));
 
             try
@@ -1010,7 +986,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var mduFile = new MduFile();
 
                 var area = new HydroArea();
-                var modelDefinition = new WaterFlowFMModelDefinition(mduDir, Path.GetFileName(mduFilePath));
+                var modelDefinition = new WaterFlowFMModelDefinition(Path.GetFileName(mduFilePath));
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 //Add an enclosure.
                 var enclosureGeom = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
@@ -1042,7 +1018,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var nameWithoutExtension = Path.GetTempFileName();
             var mduFilePath = String.Concat(nameWithoutExtension, ".mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
             var encFilePath = TestHelper.GetTestFilePath(String.Concat(nameWithoutExtension, "_enc.pol"));
 
@@ -1056,7 +1031,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 /**/
                 var area = new HydroArea();
-                var modelDefinition = new WaterFlowFMModelDefinition(mduDir, Path.GetFileName(mduFilePath));
+                var modelDefinition = new WaterFlowFMModelDefinition(Path.GetFileName(mduFilePath));
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 //Add an enclosure.
                 var enclosureGeom = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
@@ -1071,7 +1046,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.IsTrue(File.Exists(encFilePath));
                 /**/
 
-                var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(mduDir, modelName);
+                var convertedFileObjectsForFMModel = CreateConvertedFileObjectsForFMModel(modelName);
                 var readArea = convertedFileObjectsForFMModel.HydroArea;
                 
                 mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
@@ -1099,8 +1074,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var nameWithoutExtension = Path.GetTempFileName();
             var mduFilePath = String.Concat(nameWithoutExtension, ".mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, Path.GetFileName(mduFilePath));
+            var modelDefinition = new WaterFlowFMModelDefinition(Path.GetFileName(mduFilePath));
 
             var property = modelDefinition.GetModelProperty(hydroAreaFileProperty);
             Assert.IsNotNull(property);
@@ -1349,13 +1323,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That( modelDefinition.GetReferenceDateAsDateTime(), Is.EqualTo(datePart) );
         }
         
-        private static ConvertedFileObjectsForFMModel CreateConvertedFileObjectsForFMModel(string mduDir, string modelName)
+        private static ConvertedFileObjectsForFMModel CreateConvertedFileObjectsForFMModel(string modelName)
         {
             return new ConvertedFileObjectsForFMModel
             {
                 HydroArea = new HydroArea(),
                 HydroNetwork = new HydroNetwork(),
-                ModelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName),
+                ModelDefinition = new WaterFlowFMModelDefinition(modelName),
                 BoundaryConditions1D = new EventedList<Model1DBoundaryNodeData>(),
                 LateralSourcesData = new EventedList<Model1DLateralSourceData>(),
                 AllFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>(),

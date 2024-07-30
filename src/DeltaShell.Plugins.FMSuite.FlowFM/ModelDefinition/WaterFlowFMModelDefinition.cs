@@ -13,6 +13,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -91,7 +92,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
         }
-        public string ModelDirectory { get; set; }
         public string ModelName { get; set; }
         public ICoordinateSystem CoordinateSystem { get; set; }
 
@@ -369,9 +369,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             waterFlowFMProperty.Value = value;
         }
 
-        public WaterFlowFMModelDefinition(string modelDir, string modelName) : this()
+        public WaterFlowFMModelDefinition(string modelName) : this()
         {
-            ModelDirectory = modelDir;
             ModelName = modelName;
         }
 
@@ -413,27 +412,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             set { GetModelProperty(GuiProperties.UseMorSed).Value = value; }
         }
 
-        public string RelativeMapFilePath
-        {
-            get { return GetFilePathFromProperty("MapFile", ModelName + "_map.nc"); }
-        }
-
-        public string RelativeHisFilePath
-        {
-            get { return GetFilePathFromProperty("HisFile", ModelName + "_his.nc"); }
-        }
-        
         /// <summary>
         /// Retrieves the properties that represent a file location.
         /// </summary>
         public IEnumerable<WaterFlowFMProperty> FileProperties => Properties.Where(x => x.PropertyDefinition.IsFile);
+        
+        public string MapFileName => GetFileNameFromProperty(KnownProperties.MapFile, ModelName + FileConstants.MapFileExtension);
 
-        private string GetFilePathFromProperty(string propertyName, string defaultName)
+        public string HisFileName => GetFileNameFromProperty(KnownProperties.HisFile, ModelName + FileConstants.HisFileExtension);
+
+        private string GetFileNameFromProperty(string propertyName, string defaultName)
         {
-            var property = Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == propertyName);
-            var fileName = property != null ? (string) property.Value : defaultName;
+            WaterFlowFMProperty property = Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.EqualsCaseInsensitive(propertyName));
+            string fileName = property != null ? (string)property.Value : defaultName;
 
-            return Path.Combine(OutputDirectory, String.IsNullOrEmpty(fileName) ? defaultName : fileName);
+            return string.IsNullOrEmpty(fileName) ? defaultName : fileName;
         }
 
         public string RelativeComFilePath

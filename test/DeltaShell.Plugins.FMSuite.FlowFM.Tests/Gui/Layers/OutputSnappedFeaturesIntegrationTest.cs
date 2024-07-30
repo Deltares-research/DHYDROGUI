@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 var model = (WaterFlowFMModel)project.RootFolder.Items[0];
                 Assert.NotNull(model);
 
-                var secondModel = new WaterFlowFMModel("SecondModel");
+                var secondModel = new WaterFlowFMModel();
                 project.RootFolder.Add(secondModel);
                 
                 //Open view

@@ -9,10 +9,12 @@ using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -123,6 +125,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var w = structures[0];
             Assert.AreEqual("w", w.GetProperty(KnownStructureProperties.Name).GetValueAsString());
             Assert.IsNull(w.GetProperty("dummy"), "Should not accidentally take key from [test] section.");
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(@"structures\missing_fileVersion.ini")]
+        [TestCase(@"structures\wrong_fileVersion.ini")]
+        public void ReadStructuresWithWrongOrMissingFileVersion(string fileName)
+        {
+            string structuresFilePath = TestHelper.GetTestFilePath(fileName);
+            
+            IList<Structure2D> structures = null;
+            var structuresFile = new StructuresFile { StructureSchema = schema };
+            Action Call = () => structures = structuresFile.ReadStructures2D(structuresFilePath).ToList();
+
+            var expectedVersion = new Version(GeneralRegion.StructureDefinitionsMajorVersion, GeneralRegion.StructureDefinitionsMinorVersion);
+            var expectedMessage = $"Expected file version {expectedVersion} or lower; unable to read structures file: '{structuresFilePath}'";
+            
+            TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage, Level.Error);
+            Assert.AreEqual(0, structures.Count);
         }
 
         [Test]

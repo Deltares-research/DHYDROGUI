@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void WriteReadUniformForcings()
         {
-            var modelDefinition = new WaterFlowFMModelDefinition("testmodel", "testmodel");
+            var modelDefinition = new WaterFlowFMModelDefinition("testmodel");
             var refDate = new DateTime(1981, 8, 29);
             modelDefinition.GetModelProperty(KnownProperties.RefDate).Value = DateOnly.FromDateTime(refDate);
             
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void WriteReadArcInfoWindForcing()
         {
-            var modelDefinition = new WaterFlowFMModelDefinition("testmodel", "testmodel");
+            var modelDefinition = new WaterFlowFMModelDefinition("testmodel");
             var refDate = new DateTime(1981, 8, 29);
             modelDefinition.GetModelProperty(KnownProperties.RefDate).Value = DateOnly.FromDateTime(refDate);
 
@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void WriteReadUniformForcingWithSpiderWeb()
         {
-            var modelDefinition = new WaterFlowFMModelDefinition("testmodel", "testmodel");
+            var modelDefinition = new WaterFlowFMModelDefinition("testmodel");
             var refDate = new DateTime(1981, 8, 29);
             modelDefinition.GetModelProperty(KnownProperties.RefDate).Value = DateOnly.FromDateTime(refDate);
 

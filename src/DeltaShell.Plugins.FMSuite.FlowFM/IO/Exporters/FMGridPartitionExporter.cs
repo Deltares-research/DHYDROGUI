@@ -6,15 +6,35 @@ using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
+    /// <summary>
+    /// Provides a grid file partition exporter.
+    /// </summary>
     public class FMGridPartitionExporter : FMPartitionExporterBase
     {
+        /// <inheritdoc/>
+        public override string FileFilter => "Flexible Mesh Net File|*_net.nc";
+        
+        /// <summary>
+        /// Gets or sets the path to export the grid file to.
+        /// </summary>
+        public string FilePath { get; set; }
+
+        /// <inheritdoc/>
+        public override IEnumerable<Type> SourceTypes()
+        {
+            yield return typeof(UnstructuredGrid);
+            yield return typeof(ImportedFMNetFile);
+        }
+
         public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { private get; set; }
 
-        #region IFileExporter
-
+        /// <inheritdoc/>
         public override bool Export(object item, string path)
         {
-            if (PolygonFile == null && NumDomains <= 0) return false;
+            if (PolygonFile == null && NumDomains <= 0)
+            {
+                return false;
+            }
 
             var importedNetFile = item as ImportedFMNetFile;
             if (importedNetFile != null)
@@ -30,8 +50,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                     throw new NotImplementedException(
                         "Cannot export unstructured grid to partition without parent FM model");
                 }
-                var model = GetModelForGrid(unstructuredGrid);
-                var netFilePath = Path.Combine(Path.GetDirectoryName(model.MduFilePath), model.NetFilePath);
+
+                WaterFlowFMModel model = GetModelForGrid(unstructuredGrid);
+                string netFilePath = Path.Combine(Path.GetDirectoryName(model.MduFilePath), model.NetFilePath);
                 return ExportPartitionGrid(Path.GetFullPath(netFilePath), path);
             }
 
@@ -40,9 +61,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         private bool ExportPartitionGrid(string netFilePath, string path)
         {
-            var nonzeroPath = FilePath ?? path;
-            var filePathWithoutExtension = Path.Combine(Path.GetDirectoryName(nonzeroPath),
-                Path.GetFileNameWithoutExtension(nonzeroPath));
+            string nonzeroPath = FilePath ?? path;
+            string filePathWithoutExtension = Path.Combine(Path.GetDirectoryName(nonzeroPath),
+                                                           Path.GetFileNameWithoutExtension(nonzeroPath));
             TargetNetFilePath = filePathWithoutExtension + "_net.nc";
             SourceNetFilePath = netFilePath;
 
@@ -52,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 return true;
             }
 
-            var api = FlexibleMeshModelApiFactory.CreateNew();
+            IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew();
             if (api == null)
             {
                 return false;
@@ -65,18 +86,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
             return true;
         }
-
-        public override IEnumerable<Type> SourceTypes()
-        {
-            yield return typeof (UnstructuredGrid);
-            yield return typeof (ImportedFMNetFile);
-        }
-
-        public override string FileFilter
-        {
-            get { return "Flexible Mesh Net File|*_net.nc"; }
-        }
-
-        #endregion
     }
 }

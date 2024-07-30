@@ -4,8 +4,6 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Editing;
-using DelftTools.Utils.IO;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.Properties;
 using GeoAPI.Extensions.Feature;
@@ -15,15 +13,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
     public class GroupablePointCloudImporter : PointCloudImporter<GroupablePointFeature>
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(GroupablePointCloudImporter));
-        private const int GroupNameProgressTextInterval = 1000;
+        private static readonly ILog log = LogManager.GetLogger(typeof(GroupablePointCloudImporter));
+        private const int groupNameProgressTextInterval = 1000;
 
-        public override bool CanImportOnRootLevel
-        {
-            get { return false; }
-        }
-        
-        public Func<IList<GroupablePointFeature>, string> GetBaseFolder { get; set; }
+        public override bool CanImportOnRootLevel => false;
+
+        public Func<IList<GroupablePointFeature>, string> GetRootDirectory { get; set; }
+        public Func<IList<GroupablePointFeature>, string> GetBaseDirectory { get; set; }
 
         protected override object OnImportItem(string path, object target = null)
         {
@@ -37,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
                 object onImportItem;
                 // If importing from DeltaShell GUI, GetBaseFolder is set. In that case we import with progress
-                if (GetBaseFolder == null || GetBaseFolder(pointFeatureList) == string.Empty || GetRegion == null)
+                if (GetBaseDirectory == null || GetBaseDirectory(pointFeatureList) == string.Empty || GetRegion == null)
                 {
                     onImportItem = base.OnImportItem(path, pointFeatureList);
                     pointFeatureList.ForEach(f => f.GroupName = path);
@@ -49,17 +45,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 onImportItem = base.OnImportItem(path, importedFeatures);
 
                 var region = GetRegion?.Invoke(pointFeatureList);
-                var baseFolder = GetBaseFolder(pointFeatureList);
-                var relativePathToFile = FileUtils.GetRelativePath(baseFolder, path);
-                var groupName = GroupableFeatureExtensions.GetNewGroupName(relativePathToFile, baseFolder, path);
 
-                AddNewFeaturesToListWithGroupName(region, pointFeatureList, importedFeatures, groupName);
+                AddNewFeaturesToListWithGroupName(region, pointFeatureList, importedFeatures, path);
 
                 return onImportItem;
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                log.Error(e.Message);
             }
 
             return null;
@@ -73,18 +66,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <param name="region">The region where oiginalfeatures come from. We disable event bubbling while adding features to the originalFeatures list.</param>
         /// <param name="originalFeatures">The feature list on which the newly imported features will be added.</param>
         /// <param name="newFeatures">The new features that will be added to originalFeatures list after renaming their group names.</param>
-        /// <param name="groupName">The new group name.</param>
-        private void AddNewFeaturesToListWithGroupName(IRegion region, IList<GroupablePointFeature> originalFeatures, List<GroupablePointFeature> newFeatures, string groupName)
+        /// <param name="path"> The feature file path. </param>
+        private void AddNewFeaturesToListWithGroupName(IRegion region, IList<GroupablePointFeature> originalFeatures, List<GroupablePointFeature> newFeatures, string path)
         {
             region?.BeginEdit("Setting group names");
             var numOfFeaturesToAdd = newFeatures.Count;
-            for (var startIndex = 0; startIndex < numOfFeaturesToAdd; startIndex += GroupNameProgressTextInterval)
+            for (var startIndex = 0; startIndex < numOfFeaturesToAdd; startIndex += groupNameProgressTextInterval)
             {
                 var numOfFeaturesLeft = numOfFeaturesToAdd - startIndex;
-                var listToAdd = numOfFeaturesLeft > GroupNameProgressTextInterval
-                    ? newFeatures.GetRange(startIndex, GroupNameProgressTextInterval)
+                var listToAdd = numOfFeaturesLeft > groupNameProgressTextInterval
+                    ? newFeatures.GetRange(startIndex, groupNameProgressTextInterval)
                     : newFeatures.GetRange(startIndex, numOfFeaturesLeft);
-                AddFeatures(listToAdd, originalFeatures, groupName);
+                AddFeatures(listToAdd, originalFeatures, path);
                 UpdateProgress($"Setting group names {startIndex} / {newFeatures.Count}", 2);
             }
 
@@ -93,18 +86,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
 
         /// <summary>
-        /// Adds the features in newList to originalList, after changing the group name of the feature.
+        /// Adds the features in <paramref name="newFeatures"/> to <paramref name="originalFeatures"/>, after changing the group
+        /// name of the feature.
         /// </summary>
-        /// <param name="newList">New list of features.</param>
-        /// <param name="originalList">original list of features.</param>
-        /// <param name="groupName">The new group name of the new features.</param>
+        /// <param name="newFeatures"> A collection of new features. </param>
+        /// <param name="originalFeatures"> The list of features to add the new features to. </param>
+        /// <param name="path"> The feature file path. </param>
         [InvokeRequired]
-        private static void AddFeatures(IList<GroupablePointFeature> newList, IList<GroupablePointFeature> originalList, string groupName)
+        private void AddFeatures(IEnumerable<GroupablePointFeature> newFeatures, IList<GroupablePointFeature> originalFeatures, string path)
         {
-            foreach (var groupablePointFeature in newList)
+            foreach (GroupablePointFeature groupablePointFeature in newFeatures)
             {
-                groupablePointFeature.GroupName = groupName;
-                originalList.Add(groupablePointFeature);
+                groupablePointFeature.GroupName = path;
+                groupablePointFeature.MakeGroupNameRelative(GetRootDirectory(originalFeatures), GetBaseDirectory(originalFeatures));
+                originalFeatures.Add(groupablePointFeature);
             }
         }
     }

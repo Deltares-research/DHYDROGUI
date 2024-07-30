@@ -9,6 +9,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.Utils.Extensions;
@@ -382,7 +383,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
-        public void GivenAnFMModelWithMorpholy_WhenExporting_ThenOnlyOneSetOfMorphologyFilesIsExported()
+        public void GivenAnFMModelWithMorphology_WhenExporting_ThenOnlyOneSetOfMorphologyFilesIsExported()
         {
             var tempDirPath = FileUtils.CreateTempDirectory();
             var tempProjectFilePath = Path.Combine(tempDirPath, "Project.dsproj");
@@ -431,8 +432,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         var morFiles = exportDirInfo.GetFiles("*.mor");
                         var sedFiles = exportDirInfo.GetFiles("*.sed");
 
-                        var morFileName = "exported.mor";
-                        var sedFileName = "exported.sed";
+                        var morFileName = "FlowFM.mor";
+                        var sedFileName = "FlowFM.sed";
                         
 
                         Assert.NotNull(morFiles.FirstOrDefault(f => f.Name == morFileName));
@@ -441,19 +442,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         Assert.AreEqual(morFiles.Length, 1, "More then one morphology file after export");
                         Assert.AreEqual(sedFiles.Length, 1, "More then one sediment file after export");
 
-                        var properties = model.ModelDefinition.Properties;
-
                         // files referenced in MDU file
-                        var morPropValue = properties.FirstOrDefault(p =>
-                            p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MorFile,
-                                StringComparison.InvariantCultureIgnoreCase)).GetValueAsString();
+                        WaterFlowFMProperty morFileProperty = model.ModelDefinition.GetModelProperty(KnownProperties.MorFile);
+                        WaterFlowFMProperty sedFileProperty = model.ModelDefinition.GetModelProperty(KnownProperties.SedFile);
 
-                        var sedPropValue = properties.FirstOrDefault(p =>
-                            p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile,
-                                StringComparison.InvariantCultureIgnoreCase)).GetValueAsString();
-
-                        Assert.AreEqual(morFileName, morPropValue);
-                        Assert.AreEqual(sedFileName, sedPropValue);
+                        Assert.AreEqual(morFileName, morFileProperty.Value);
+                        Assert.AreEqual(sedFileName, sedFileProperty.Value);
 
                         projectService.CloseProject();
                     }
@@ -463,6 +457,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 FileUtils.DeleteIfExists(tempDirPath);
                 FileUtils.DeleteIfExists(exportDirPath);
+            }
+        }
+        
+        [Test]
+        [TestCase(@"rst\restart.nc", false)]
+        [TestCase(@"rst\restart.nc", true)]
+        [TestCase(@"..\rst\restart.nc", false)]
+        [TestCase(@"..\rst\restart.nc", true)]
+        public void ExportTo_WithRelativeRestartFile_WritesCorrectRestartFile(string restartFileName, bool switchTo)
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string exportDir = tempDir.CreateDirectory("export_dir");
+                
+                string sourceRestartFilePath = tempDir.CreateFile("restart.nc");
+                string exportRestartFilePath = Path.GetFullPath(Path.Combine(exportDir, restartFileName));
+                string mduPath = Path.Combine(exportDir, "model.mdu");
+
+                var model = new WaterFlowFMModel();
+                var restartFile = new RestartFile(sourceRestartFilePath);
+                model.RestartOutput = new [] { restartFile };
+
+                WaterFlowFMProperty restartFileProperty = model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile);
+                restartFileProperty.SetValueFromString(restartFileName);
+
+                // Call
+                model.ExportTo(mduPath, switchTo, false, false);
+
+                // Assert
+                Assert.That(sourceRestartFilePath, Does.Exist);
+                Assert.That(exportRestartFilePath, Does.Exist);
+                Assert.That(restartFileProperty.GetValueAsString(), Is.EqualTo(restartFileName));
+                Assert.That(restartFile.Path, Is.EqualTo(switchTo ? exportRestartFilePath : sourceRestartFilePath));
             }
         }
 

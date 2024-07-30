@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                 Substitute.For<IEventedList<RoughnessSection>>(),
                                 Substitute.For<IEventedList<ChannelFrictionDefinition>>(),
                                 Substitute.For<IEventedList<ChannelInitialConditionDefinition>>(),
-                                "network");
+                                "hydroNetwork");
 
             yield return ToData("mdu_file_path",
                                 new WaterFlowFMModelDefinition(),

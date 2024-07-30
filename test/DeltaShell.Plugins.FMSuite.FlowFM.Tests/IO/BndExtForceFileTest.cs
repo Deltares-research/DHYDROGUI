@@ -802,7 +802,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 extFileName = model.ModelDefinition.ModelName + ExtForceFile.Extension;
 
             bndExtForceFile.Write(extFileName, model.ModelDefinition);
-            var modelDefinition = new WaterFlowFMModelDefinition(Path.GetTempPath(),"myModel");
+            var modelDefinition = new WaterFlowFMModelDefinition("myModel");
             bndExtForceFile.Read(extFileName, modelDefinition, network);
         }
 

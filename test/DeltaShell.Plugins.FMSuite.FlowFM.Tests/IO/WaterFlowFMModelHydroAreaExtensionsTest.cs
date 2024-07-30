@@ -13,25 +13,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class WaterFlowFMModelHydroAreaExtensionsTest
     {
-        private MockRepository mocks;
-        private WaterFlowFMModel fmModel;
-        private string mduFilePath;
+        private TemporaryDirectory modelDir;
+        private TemporaryDirectory featuresDir;
+        private WaterFlowFMModel model;
 
-        [SetUp]
-        public void Setup()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
-            mocks = new MockRepository();
-            const string filePath = @"MduFileWithoutFeatureFileReferences/FlowFM.mdu";
-            var testWorkingFolder = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects"));
-            
-            mduFilePath = Path.Combine(testWorkingFolder, filePath);
-            fmModel = new WaterFlowFMModel(mduFilePath);
+            string testDataDir = TestHelper.GetTestFilePath(@"HydroAreaCollection\MduFileProjects\MduFileWithoutFeatureFileReferences\FlowFM");
+
+            modelDir = new TemporaryDirectory();
+            modelDir.CopyDirectoryToTempDirectory(testDataDir);
+
+            featuresDir = new TemporaryDirectory();
+            featuresDir.CopyDirectoryToTempDirectory(Path.Combine(testDataDir, "FeatureFiles"));
+
+            string mduFilePath = Path.Combine(modelDir.Path, @"FlowFM\MDU\FlowFM.mdu");
+
+            model = new WaterFlowFMModel(mduFilePath);
         }
 
-        [TearDown]
-        public void TearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
-            mocks.VerifyAll();
+            modelDir.Dispose();
+            featuresDir.Dispose();
         }
 
         [Test]
@@ -80,86 +86,95 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenFeatureWithUnRootedGroupName_WhenUpdatingGroupName_ThenGroupNameWillNotChange(string groupName, string expectedGroupName)
         {
             // structures
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Gate2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Weir2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Pump2D>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<Gate2D>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<Weir2D>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<Pump2D>(groupName, expectedGroupName);
 
             // other features
-            CheckIfUpdateGroupNameGivesTheDesiredResult<LandBoundary2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<GroupableFeature2DPolygon>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<ThinDam2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<FixedWeir>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<GroupableFeature2DPoint>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<ObservationCrossSection2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<BridgePillar>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<LandBoundary2D>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<GroupableFeature2DPolygon>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<ThinDam2D>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<FixedWeir>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<GroupableFeature2DPoint>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<ObservationCrossSection2D>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<BridgePillar>(groupName, expectedGroupName);
         }
 
         [Test]
         [TestCase("myFile.pli", "FlowFM_structures.ini")]
         [TestCase("FeatureFiles/gate01.pli", "FlowFM_structures.ini")]
         [TestCase("FeatureFiles/gate02.pli", "FlowFM_structures.ini")]
-        public void GivenStructureWithGroupNameThatIsNotInSubfolderOfMduFolder_WhenUpdatingGroupName_ThenGroupNameWillBeTheStructureFileName(string fileName, string expectedGroupName)
+        public void GivenStructureWithGroupNameThatIsOutsideModelDir_WhenUpdatingGroupName_ThenGroupNameWillBeTheStructureFileName(string fileName, string expectedGroupName)
         {
-            var parentDir = Directory.GetParent(Directory.GetParent(mduFilePath).FullName).FullName;
-            CheckUpdatingNamesForStructures(fileName, expectedGroupName, parentDir);
+            AssertUpdatedGroupNameForStructures(Path.Combine(featuresDir.Path, fileName), expectedGroupName);
         }
 
         [Test]
         [TestCase("myFile.ext", "myFile.ext")]
         [TestCase("FeatureFiles/myFile.ext", "myFile.ext")]
-        public void GivenHydroAreaFeatureWithGroupNameThatIsNotInSubfolderOfMduFolder_WhenUpdatingGroupName_ThenGroupNameWillBeTheFileName(string fileName, string expectedGroupName)
+        public void GivenHydroAreaFeatureWithGroupNameThatIsOutsideModelDir_WhenUpdatingGroupName_ThenGroupNameWillBeTheFileName(string fileName, string expectedGroupName)
         {
-            var parentDir = Directory.GetParent(Directory.GetParent(mduFilePath).FullName).FullName;
-            CheckUpdatingNamesForHydroAreaFeatures(fileName, expectedGroupName, parentDir);
+            AssertUpdatedGroupNameForHydroAreaFeatures(Path.Combine(featuresDir.Path, fileName), expectedGroupName);
+        }
+
+        [Test]
+        [TestCase("myFile.pli", "../FlowFM_structures.ini")]
+        [TestCase("FeatureFiles/gate01.pli", "../FeatureFiles/FlowFM_structures.ini")]
+        [TestCase("FeatureFiles/gate02.pli", "../FeatureFiles/FlowFM_structures.ini")]
+        public void GivenStructureWithGroupNameThatIsAboveMduDir_WhenUpdatingGroupName_ThenGroupNameWillBeTheRelativePath(string fileName, string expectedGroupName)
+        {
+            AssertUpdatedGroupNameForStructures(Path.Combine(model.GetModelDirectory(), fileName), expectedGroupName);
+        }
+
+        [Test]
+        [TestCase("myFile.ext", "../myFile.ext")]
+        [TestCase("FeatureFiles/myFile.ext", "../FeatureFiles/myFile.ext")]
+        public void GivenHydroAreaFeatureWithGroupNameThatIsAboveMduDir_WhenUpdatingGroupName_ThenGroupNameWillBeTheRelativePath(string fileName, string expectedGroupName)
+        {
+            AssertUpdatedGroupNameForHydroAreaFeatures(Path.Combine(model.GetModelDirectory(), fileName), expectedGroupName);
         }
 
         [Test]
         [TestCase("myFile.pli", "FlowFM_structures.ini")]
         [TestCase("FeatureFiles/gate01.pli", "FeatureFiles/FlowFM_structures.ini")]
         [TestCase("FeatureFiles/gate02.pli", "FeatureFiles/FlowFM_structures.ini")]
-        public void GivenStructureWithGroupNameThatIsInSubfolderOfMduFolder_WhenUpdatingGroupName_ThenGroupNameWillBeTheStructureFileName(string fileName, string expectedGroupName)
+        public void GivenStructureWithGroupNameThatIsInMduSubDir_WhenUpdatingGroupName_ThenGroupNameWillBeTheRelativePath(string fileName, string expectedGroupName)
         {
-            var parentDir = Directory.GetParent(mduFilePath).FullName;
-            CheckUpdatingNamesForStructures(fileName, expectedGroupName, parentDir);
+            AssertUpdatedGroupNameForStructures(Path.Combine(model.GetMduDirectory(), fileName), expectedGroupName);
         }
 
         [Test]
         [TestCase("myFile.ext", "myFile.ext")]
         [TestCase("FeatureFiles/myFile.ext", "FeatureFiles/myFile.ext")]
-        public void GivenHydroAreaFeatureWithGroupNameThatIsInSubfolderOfMduFolder_WhenUpdatingGroupName_ThenGroupNameWillBeTheRelativePath(string fileName, string expectedGroupName)
+        public void GivenHydroAreaFeatureWithGroupNameThatIsInMduSubDir_WhenUpdatingGroupName_ThenGroupNameWillBeTheRelativePath(string fileName, string expectedGroupName)
         {
-            var parentDir = Directory.GetParent(mduFilePath).FullName;
-            CheckUpdatingNamesForHydroAreaFeatures(fileName, expectedGroupName, parentDir);
+            AssertUpdatedGroupNameForHydroAreaFeatures(Path.Combine(model.GetMduDirectory(), fileName), expectedGroupName);
         }
 
-        #region Helper methods
-
-        private void CheckUpdatingNamesForStructures(string fileName, string expectedGroupName, string parentDir)
+        private void AssertUpdatedGroupNameForStructures(string newGroupName, string expectedGroupName)
         {
-            var groupName = Path.Combine(parentDir, fileName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Gate2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Weir2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Pump2D>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<Gate2D>(newGroupName, expectedGroupName);
+            AssertUpdatedGroupName<Weir2D>(newGroupName, expectedGroupName);
+            AssertUpdatedGroupName<Pump2D>(newGroupName, expectedGroupName);
         }
 
-        private void CheckUpdatingNamesForHydroAreaFeatures(string fileName, string expectedGroupName, string parentDir)
+        private void AssertUpdatedGroupNameForHydroAreaFeatures(string newGroupName, string expectedGroupName)
         {
-            var groupName = Path.Combine(parentDir, fileName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<LandBoundary2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<GroupableFeature2DPolygon>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<ThinDam2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<FixedWeir>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<GroupableFeature2DPoint>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<ObservationCrossSection2D>(groupName, expectedGroupName);
+            AssertUpdatedGroupName<LandBoundary2D>(newGroupName, expectedGroupName);
+            AssertUpdatedGroupName<GroupableFeature2DPolygon>(newGroupName, expectedGroupName);
+            AssertUpdatedGroupName<ThinDam2D>(newGroupName, expectedGroupName);
+            AssertUpdatedGroupName<FixedWeir>(newGroupName, expectedGroupName);
+            AssertUpdatedGroupName<GroupableFeature2DPoint>(newGroupName, expectedGroupName);
+            AssertUpdatedGroupName<ObservationCrossSection2D>(newGroupName, expectedGroupName);
         }
 
-        private void CheckIfUpdateGroupNameGivesTheDesiredResult<T>(string groupName, string expectedGroupName) where T : IGroupableFeature, new()
+        private void AssertUpdatedGroupName<TFeature>(string newGroupName, string expectedGroupName)
+            where TFeature : IGroupableFeature, new()
         {
-            var gate = new T();
-            gate.GroupName = groupName;
-            gate.UpdateGroupName(fmModel);
+            var structure = new TFeature { GroupName = newGroupName };
+            structure.UpdateGroupName(model);
 
-            Assert.That(gate.GroupName, Is.EqualTo(expectedGroupName));
+            Assert.That(structure.GroupName, Is.EqualTo(expectedGroupName));
         }
 
         private static void CheckIfRemoveDuplicateFeaturesWorks<T>() where T : IGroupableFeature, INameable, new()
@@ -215,7 +230,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(features, feature3, "MyModelName");
             Assert.That(features.Count, Is.EqualTo(3));
         }
-
-        #endregion
     }
 }

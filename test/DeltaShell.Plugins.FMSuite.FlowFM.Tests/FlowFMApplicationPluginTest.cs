@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         private void AssertContainsExpectedFileExporters(IFileExporter[] exporters)
         {
-            ContainsExporter<WaterFlowFMFileExporter>(exporters);
+            ContainsExporter<FMModelFileExporter>(exporters);
             ContainsExporter<Area2DStructuresExporter>(exporters);
             ContainsExporter<StructuresListExporter>(exporters, 3);
             ContainsExporter<BcFileExporter>(exporters);

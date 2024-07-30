@@ -160,5 +160,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(xyzFilePath);
             }
         }
+        
+        [Test]
+        public void GivenGroupablePointCloudImporter_WhenImportingGroupablePointFeaturesOnModel_ThenProgressMessagesAreAsExpected()
+        {
+            // Arrange
+            var progressMessages = new List<string>();
+            var importer = new GroupablePointCloudImporter
+            {
+                GetRegion = myObject => new HydroArea(),
+                ProgressChanged = (text, currentStep, totalAmountOfSteps) =>
+                {
+                    var progressText = $"{text} {currentStep}/{totalAmountOfSteps}";
+                    progressMessages.Add(progressText);
+                }
+            };
+
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(temporaryDirectory.Path, "myFile.xyz");
+                string[] fileContent =
+                {
+                    "0.50 0.50 -2.50",
+                    "1.50 0.50 -3.50"
+                };
+                File.WriteAllLines(filePath, fileContent);
+
+                importer.GetRootDirectory = list => temporaryDirectory.Path;
+                importer.GetBaseDirectory = list => temporaryDirectory.Path;
+
+                // Act
+                importer.ImportItem(filePath, new List<GroupablePointFeature>());
+            }
+
+            // Assert
+            var expectedProgressMessages = new[]
+            {
+                "Importing 2 point features 1/3",
+                "Importing point features : 0 / 2 1/3",
+                "Finished importing 2 point features 2/3",
+                "Setting group names 0 / 2 2/3",
+                "Finished importing 2 point features 3/3"
+            };
+
+            Assert.That(progressMessages, Is.EqualTo(expectedProgressMessages));
+        }
     }
 }

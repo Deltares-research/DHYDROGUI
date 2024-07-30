@@ -1142,7 +1142,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void ExportToDimrXml(HydroModel integratedModel, string dimrPath)
         {
             var fileExportService = new FileExportService();
-            fileExportService.RegisterFileExporter(new WaterFlowFMFileExporter());
+            fileExportService.RegisterFileExporter(new FMModelFileExporter());
             fileExportService.RegisterFileExporter(new RainfallRunoffModelExporter());
             
             var exporter = new DHydroConfigXmlExporter(fileExportService);

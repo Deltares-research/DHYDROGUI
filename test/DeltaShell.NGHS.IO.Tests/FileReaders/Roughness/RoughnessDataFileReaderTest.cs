@@ -24,7 +24,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Roughness
 
         private IHydroNetwork network;
         private IList<RoughnessSection> sections;
-
+        
         [SetUp]
         public void SetUp()
         {
@@ -154,7 +154,7 @@ frictionType  = {frictionType}";
         [TestCase(0.0d)]
         [TestCase(45.0d)]
         [TestCase(90.0d)]
-        public void WriteFile_WithDifferentFrictionValues_SetsExpectedRoughnessValue(double frictionValue)
+        public void ReadFile_WithDifferentFrictionValues_SetsExpectedRoughnessValue(double frictionValue)
         {
             var ini = $@"
 [General]
@@ -174,7 +174,7 @@ frictionValue = {frictionValue}";
         }
         
         [Test]
-        public void WriteFile_WithMultiDifferentFrictionValues_SetsExpectedRoughnessValue()
+        public void ReadFile_WithMultiDifferentFrictionValues_SetsExpectedRoughnessValue()
         {
             var ini = @"
 [General]
@@ -208,18 +208,8 @@ frictionValue = {frictionValue}";
             Assert.That(values, Is.EqualTo(new double[] {40, 45, 50, 40, 45, 50}));
         }
 
-        private static IBranch AddBranch(RoughnessSection roughnessSection)
-        {
-            var branch = Substitute.For<IBranch>();
-            branch.Name = "Channel_1D_1_A";
-            branch.Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2500, 0) });
-            branch.Length = 2500;
-            roughnessSection.Network.Branches.Add(branch);
-            return branch;
-        }
-
         [Test]
-        public void WriteFile_MissingFrictionTypeAndValue_PreservesRoughnessTypeAndValue()
+        public void ReadFile_MissingFrictionTypeAndValue_PreservesRoughnessTypeAndValue()
         {
             const string ini = @"
 [General]
@@ -243,7 +233,7 @@ frictionId    = TestCrossSection";
         private void ReadRoughnessFile(string ini)
         {
             const string fileName = "roughness-main.ini";
-
+            
             fileSystem.AddFile(fileName, new MockFileData(ini));
 
             reader.ReadFile(fileName, network, sections);
@@ -256,11 +246,21 @@ frictionId    = TestCrossSection";
             return new RoughnessSection(crossSectionType, network);
         }
 
-        
-
         private static CrossSectionSectionType CreateCrossSectionSectionType()
         {
             return new CrossSectionSectionType { Name = "TestCrossSection" };
+        }
+        
+        private static IBranch AddBranch(RoughnessSection roughnessSection)
+        {
+            var branch = Substitute.For<IBranch>();
+            
+            branch.Name = "Channel_1D_1_A";
+            branch.Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2500, 0) });
+            branch.Length = 2500;
+            roughnessSection.Network.Branches.Add(branch);
+            
+            return branch;
         }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using DelftTools.Shell.Core;
@@ -17,7 +16,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
-using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -30,7 +28,6 @@ using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
-using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
@@ -121,68 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             };
             WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
         }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void GivenAnIntegratedModelWithFMModelInItWhenOpeningGridInRGFGridAndClosingItThenItShouldNotThowAnException()
-        {
-            Action mainWindowShown = delegate
-            {
-                using (var integratedModel = new HydroModelBuilder().BuildModel(ModelGroup.FMWaveRtcModels))
-                {
-                    gui.CommandHandler.AddItemToProject(integratedModel);
-                    gui.Selection = integratedModel;
-                    gui.CommandHandler.OpenViewForSelection();
-                    var waterFlowFMModel = gui.Application.ProjectService.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().First();
-                    waterFlowFMModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(50, 50, 20, 20);
-                    waterFlowFMModel.ReloadGrid();
-                    gui.Selection = waterFlowFMModel.Grid;
-                    PerformActionWithCancellationThread(60000, () => gui.CommandHandler.OpenViewForSelection());
-                }
-            };
-            WpfTestHelper.ShowModal((MainWindow)gui.MainWindow, mainWindowShown);
-        }
-
-        private static void PerformActionWithCancellationThread(int timeout, Action action)
-        {
-            // Action waits for rgfgrid to close, we do this manually from another thread
-            var cancellationThread = new Thread(() => CloseRgfGrid(timeout));
-            cancellationThread.Start();
-
-            // Invoke action
-            action.Invoke();
-        }
-
-        private static void CloseRgfGrid(int maxTimeout)
-        {
-            Thread.Sleep(500); // Give action time to get started
-            const int millisecondsToSleep = 100;
-
-            // Get active rgfGrid processes (there should only be one)
-            var rgfGridProcesses = Process.GetProcessesByName(RgfGridEditor.MfeAppProcessName);
-            while (!rgfGridProcesses.Any())
-            {
-                Thread.Sleep(millisecondsToSleep);
-                rgfGridProcesses = Process.GetProcessesByName(RgfGridEditor.MfeAppProcessName);
-            }
-
-            foreach (var process in rgfGridProcesses)
-            {
-                var totalTimeWaiting = 0;
-                // attempt to close rgfGrid (may not be successful straight away)
-                while (!process.CloseMainWindow())
-                {
-                    totalTimeWaiting += millisecondsToSleep;
-                    Thread.Sleep(millisecondsToSleep);
-
-                    if (totalTimeWaiting > maxTimeout)
-                    {
-                        return;
-                    }
-                }
-            }
-        }
-
+        
         [Test]
         [Category(TestCategory.Slow)]
         public void FmModelShouldBeReplacedWhenImportedInIntegratedModel()

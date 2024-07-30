@@ -3160,6 +3160,50 @@ XrLp0EM2aG+RntUiB+ZT6fxfIsRPbYnQgbXhGFYAAAAASUVORK5CYII=
 		searchtimeout="30000ms">
 			/form/list/container?/container?/container?/container?/container?/tabpagelist/tabpage/container?/container?/container?/container/container[$ContainerNumber]/container?/container?/text[$TextContainer]
 		</item>
+		<appfolder
+		capname="form"
+		id="2168a1d1-d0ba-4018-8170-6a841010a5a4"
+		isrooted="True"
+		name="DialogSelectFolder"
+		searchtimeout="30000ms"
+		usecache="True">
+			<item
+			addcaps="text,nativewindow"
+			capname="text"
+			id="1c7da5d7-be87-4c96-8a8c-5fdf90c69bef"
+			name="DirectoryPath"
+			refpath="/form[@title='Select folder']/text[@controlid='1152']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&gt;'Select folder']/text[@controlid='1152']
+			</item>
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="71ea78b2-de6a-416d-a036-978744bc4e54"
+			name="SelectFolder"
+			refpath="/form[@title='Select folder']/button[@text='Select Folder']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&gt;'Select folder']/button[@text='Select Folder']
+			</item>
+			<basepath>
+				/form[@title&gt;'Select folder']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlz
+AAAOxAAADsQBlSsOGwAAAedJREFUOE9joDo4dOZuVklVSzCUSxpo7pkne/7Wp3cLVu7JP3HlZfa1
+Rz+P3H7299etZ3//AvGfrQevpUCVYgc2rp7Wlx/8/n3l0d9/GPjBnz8RcZkxUKXYgbGxMSuQ0gIx
+gVhZQkLG7tzdP3/O3f/7b8/pF6/mrzmydtOh+0X19avYQOrxgvq+pUqHr/54fOLW338gvHr3zftp
+eQ0LXbzDq2Rl1aWgyrCD9YdfOxy88vvH9tMfPzt7RzYAhTSEVFT4FJ2z1TSC29xUPOr5ICqxgN5F
+x1S2nPr2ITmvbT4DB4e8snuBtnnJgRtWVSf+WlWf+AfC6qGdC6HKUUHazJms87c+PGvhFFggp2sj
+aJy+Yq515eF/MGxeuOMjn4xRFgMfnxBUCyqIL5wQ7BmS0ygvL8+h6l2dalmy5x8y1o+fd0PNv7UM
+GEJMUC2oIDZvQq2MjBbYdAnjsHSzgq3/0LFh+oqXEgYeomANWAAjlAYCYV42HjF/MT3fKfpJiz6Y
+ZK/9B8Jy9mkLGbS0CEcjAhizSplG9hukLPsrbZO0goGbWwwqQRjY29ezaIT2VOjETv/ELaWVzcAg
+yA+VwgOAAShtkzpF0a30nJxD5i52UaVEoKgiEDOD5YkEoCTNDcQcQIwULuiAgQEAi6TYUx9nx94A
+AAAASUVORK5CYII=
+			</icon>
+		</appfolder>
 		<basepath>
 		</basepath>
 	</rootfolder>

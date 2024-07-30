@@ -206,6 +206,18 @@
       <UserCode>true</UserCode>
       <id>52e56e57-97ce-41e6-9253-bebe5031c519</id>
     </Compile>
+    <Compile Include="Modules\IO\SpecifyDirectoryToExportTo.cs">
+      <BoundTo>f778dbbf-86c1-42fd-bff1-d823627f526f</BoundTo>
+      <DependentUpon>SpecifyDirectoryToExportTo.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>bd9bfb17-30e9-4061-b7d5-53a1bf78c09e</id>
+    </Compile>
+    <Compile Include="Modules\IO\SpecifyDirectoryToExportTo.UserCode.cs">
+      <BoundTo>f778dbbf-86c1-42fd-bff1-d823627f526f</BoundTo>
+      <DependentUpon>SpecifyDirectoryToExportTo.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>8ce3ce0d-b077-4f7d-bf69-c9c25427f601</id>
+    </Compile>
     <Compile Include="Modules\MapTree\RightClickGenericItemInMapTreeWithUniqueParent.cs">
       <BoundTo>4b02e51f-754f-4617-a136-b251938f29f9</BoundTo>
       <DependentUpon>RightClickGenericItemInMapTreeWithUniqueParent.rxrec</DependentUpon>
@@ -1994,6 +2006,11 @@
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>4e1a3c3e-465a-47e3-b95b-f83023b74ae8</id>
       <recordtableid>ecda4d4e-4232-4dca-b667-838664544bdb</recordtableid>
+    </None>
+    <None Include="Modules\IO\SpecifyDirectoryToExportTo.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>f778dbbf-86c1-42fd-bff1-d823627f526f</id>
+      <recordtableid>d64b5925-da03-437f-98c7-66281361b624</recordtableid>
     </None>
     <None Include="Modules\MapTree\RightClickGenericItemInMapTreeWithUniqueParent.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>

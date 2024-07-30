@@ -49,8 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         void IFileBased.CreateNew(string path)
         {
-            MduFilePath = GetMduPathFromDeltaShellPath(path);
-            ExportTo(MduFilePath);
+            ExportTo(GetMduSavePath(path));
             filePath = path;
             isOpen = true;
         }
@@ -67,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         void IFileBased.CopyTo(string destinationPath)
         {
-            string mduPath = GetMduPathFromDeltaShellPath(destinationPath);
+            string mduPath = GetMduSavePath(destinationPath);
 
             string dirName = Path.GetDirectoryName(mduPath);
             if (!Directory.Exists(dirName))
@@ -86,16 +85,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             filePath = newPath;
 
-            string expectedMduPath = GetMduPathFromDeltaShellPath(newPath);
+            string expectedMduPath = GetMduSavePath(newPath);
+            
             var mduFileInfo = new FileInfo(expectedMduPath);
             if (!mduFileInfo.Exists && mduFileInfo.Directory?.Parent != null)
             {
-                // [D3DFMIQ-450] Backwards compatibility: Older Models may not have 'input' folder
-                string legacyMduPath = Path.Combine(mduFileInfo.Directory.Parent.FullName, mduFileInfo.Name);
-
-                if (File.Exists(legacyMduPath))
+                // Older models may not have an 'input' folder or the MDU file might be located in a subdirectory
+                string modelDirectory = mduFileInfo.Directory.Parent.FullName;
+                string foundMduPath = Directory.GetFiles(modelDirectory, "*.mdu", SearchOption.AllDirectories).FirstOrDefault();
+                
+                if (File.Exists(foundMduPath))
                 {
-                    OnSwitchTo(legacyMduPath);
+                    OnSwitchTo(foundMduPath);
                     return;
                 }
             }
@@ -117,13 +118,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             else // else: switch from existing: only change path
             {
                 MduFilePath = mduPath;
-
-                if (MduFile == null)
-                {
-                    return;
-                }
-
-                MduFile.Path = mduPath;
                 SwitchFileBasedItems();
             }
         }

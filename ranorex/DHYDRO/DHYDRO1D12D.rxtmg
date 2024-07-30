@@ -4,12 +4,6 @@ rxversion="10.7">
 	<testsuiteentryhierarchy>
 		<flatlistofchildren>
 			<testmodule
-			id="028903b8-3ab2-4f06-8b57-64f992df00c7"
-			name="SpecifyFileToExportTo"
-			ref="ad658c8e-eb55-433b-853a-d480d8c125c6"
-			type="Recording">
-			</testmodule>
-			<testmodule
 			id="08f16885-0a34-439e-bec0-8d3df29ee7c1"
 			name="SelectNodeInProjectTree"
 			ref="3ccd6609-bb39-41da-a091-205394a31109"
@@ -156,6 +150,12 @@ rxversion="10.7">
 			id="1a8b338a-7da7-4bb9-a5ad-d53569345e5f"
 			name="WaitForOpenProject"
 			ref="d2d35bb1-f562-4e75-8615-e94ac0c5ae40"
+			type="Recording">
+			</testmodule>
+			<testmodule
+			id="1c26b9c2-ca55-4364-b545-6648633cd0c6"
+			name="SpecifyDirectoryToExportTo"
+			ref="d64b5925-da03-437f-98c7-66281361b624"
 			type="Recording">
 			</testmodule>
 			<testmodule
@@ -317,6 +317,12 @@ rxversion="10.7">
 			type="Recording">
 			</testmodule>
 			<testmodule
+			id="44520839-a3a8-4739-87a8-a6bf5b3d43b5"
+			name="SpecifyDirectoryToExportTo"
+			ref="d64b5925-da03-437f-98c7-66281361b624"
+			type="Recording">
+			</testmodule>
+			<testmodule
 			id="462e1d13-a59e-4111-9fee-2d4fbca1fb04"
 			name="StartOpenProject"
 			ref="15c765b5-6700-469a-83ab-ca20f25f963b"
@@ -472,12 +478,6 @@ rxversion="10.7">
 			id="65afd680-8cd2-448a-891d-64384f21e2a1"
 			name="CloseOkDialog"
 			ref="d4da8175-ae96-47dc-9cd3-d7301667ef12"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="66a0113b-21bd-4efc-9b34-03615d19c8c3"
-			name="SaveAsFile"
-			ref="e2e07b1f-fc3f-47b6-bff3-f79aadf7f36d"
 			type="Recording">
 			</testmodule>
 			<testmodule
@@ -764,11 +764,11 @@ rxversion="10.7">
 				<groupvariables>
 					<groupvariable
 					id="e98f476c-ea03-457e-97cc-d802fd33a56c"
-					name="ExportDimrFilePath">
+					name="ExportDimrDirectory">
 						<modulevariable
-						moduleref="66a0113b-21bd-4efc-9b34-03615d19c8c3"
-						name="FilePath"
-						variableref="badbcc3f-d50d-4e11-9cfe-3b802abe7811">
+						moduleref="1c26b9c2-ca55-4364-b545-6648633cd0c6"
+						name="DirectoryName"
+						variableref="ff26bdf8-296e-429c-b3d0-839b2518e1e2">
 						</modulevariable>
 					</groupvariable>
 				</groupvariables>
@@ -1051,11 +1051,11 @@ rxversion="10.7">
 				<groupvariables>
 					<groupvariable
 					id="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
-					name="ExportMduFilePath">
+					name="ExportMduDirectory">
 						<modulevariable
-						moduleref="028903b8-3ab2-4f06-8b57-64f992df00c7"
-						name="FileName"
-						variableref="f45d74d9-36b6-445d-a144-84af2629f2b3">
+						moduleref="44520839-a3a8-4739-87a8-a6bf5b3d43b5"
+						name="DirectoryName"
+						variableref="ff26bdf8-296e-429c-b3d0-839b2518e1e2">
 						</modulevariable>
 					</groupvariable>
 				</groupvariables>
@@ -1386,8 +1386,8 @@ rxversion="10.7">
 					name="CloseOkDialog">
 					</testmodule>
 					<testmodule
-					id="028903b8-3ab2-4f06-8b57-64f992df00c7"
-					name="SpecifyFileToExportTo">
+					id="44520839-a3a8-4739-87a8-a6bf5b3d43b5"
+					name="SpecifyDirectoryToExportTo">
 					</testmodule>
 					<testmodule
 					id="300efbec-4f65-49f4-aa13-25a41c5c0a45"
@@ -1414,8 +1414,8 @@ rxversion="10.7">
 					name="CloseOkDialog">
 					</testmodule>
 					<testmodule
-					id="66a0113b-21bd-4efc-9b34-03615d19c8c3"
-					name="SaveAsFile">
+					id="1c26b9c2-ca55-4364-b545-6648633cd0c6"
+					name="SpecifyDirectoryToExportTo">
 					</testmodule>
 					<testmodule
 					id="fcf959df-bff6-4e64-9e1e-d87ab01fec2b"

@@ -234,7 +234,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
         private static DHydroConfigXmlExporter CreateExporter()
         {
             var fileExportService = new FileExportService();
-            fileExportService.RegisterFileExporter(new WaterFlowFMFileExporter());
+            fileExportService.RegisterFileExporter(new FMModelFileExporter());
             fileExportService.RegisterFileExporter(new RealTimeControlModelExporter
             {
                 XmlWriters =

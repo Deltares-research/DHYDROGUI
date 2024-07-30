@@ -25,11 +25,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var sourceOutputDirectory = new DirectoryInfo(currentOutputDirectoryPath);
             if (!sourceOutputDirectory.Exists)
             {
-                currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+                currentOutputDirectoryPath = GetModelOutputDirectory();
                 return;
             }
 
-            var targetOutputDirectory = new DirectoryInfo(PersistentOutputDirectoryPath);
+            var targetOutputDirectory = new DirectoryInfo(GetModelOutputDirectory());
             string sourceOutputDirectoryPath = sourceOutputDirectory.FullName;
             string targetOutputDirectoryPath = targetOutputDirectory.FullName;
 
@@ -37,14 +37,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (OutputIsEmpty && !HasOpenFunctionStores)
             {
-                CleanDirectory(PersistentOutputDirectoryPath);
+                CleanDirectory(GetModelOutputDirectory());
 
                 if (sourceIsWorkingDir)
                 {
                     CleanDirectory(WorkingDirectory);
                 }
 
-                currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+                currentOutputDirectoryPath = GetModelOutputDirectory();
 
                 return;
             }

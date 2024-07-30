@@ -89,8 +89,8 @@ namespace DHYDRO.Modules.Dialogs
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DialogSelectItem.ListWithItems.TextItemInSelectDialog' at CenterLeft.", repo.DialogSelectItem.ListWithItems.TextItemInSelectDialogInfo, new RecordItemIndex(0));
-            repo.DialogSelectItem.ListWithItems.TextItemInSelectDialog.Click(Location.CenterLeft);
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DialogSelectItem.ListWithItems.TextItemInSelectDialog' at Center.", repo.DialogSelectItem.ListWithItems.TextItemInSelectDialogInfo, new RecordItemIndex(0));
+            repo.DialogSelectItem.ListWithItems.TextItemInSelectDialog.Click();
             Delay.Milliseconds(0);
             
         }

@@ -8,6 +8,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections.Generic;
 using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -36,6 +37,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private readonly ILog log = LogManager.GetLogger(typeof(FeatureFile1D2DReader));
         private readonly InitialFieldFile initialFieldFile;
 
+        private WaterFlowFMModelDefinition modelDefinition;
+        private IHydroNetwork hydroNetwork;
+        private IEventedList<RoughnessSection> roughnessSections;
+        private IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions;
+        private IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions;
+        private string mduFilePath;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FeatureFile1D2DReader"/> class.
         /// </summary>
@@ -52,190 +60,186 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// </summary>
         /// <param name="mduFilePath"> The MDU file path. </param>
         /// <param name="modelDefinition"> The loaded model definition. </param>
-        /// <param name="network"> The hydro network. </param>
+        /// <param name="hydroNetwork"> The hydro network. </param>
         /// <param name="roughnessSections"> The roughness sections. </param>
         /// <param name="channelFrictionDefinitions"> The channel friction definitions. </param>
         /// <param name="channelInitialConditionDefinitions"> The channel initial condition definitions. </param>
         /// <param name="report1DOr2DFeatureRead">Function to report progress on</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when any parameter is <c>null</c>.
-        /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when any parameter is <c>null</c>.</exception>
         public void Read1D2DFeatures(string mduFilePath,
-                                            WaterFlowFMModelDefinition modelDefinition,
-                                            IHydroNetwork network,
-                                            IEventedList<RoughnessSection> roughnessSections,
-                                            IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions,
-                                            IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions,
-                                            Action<string> report1DOr2DFeatureRead = null)
+                                     WaterFlowFMModelDefinition modelDefinition,
+                                     IHydroNetwork hydroNetwork,
+                                     IEventedList<RoughnessSection> roughnessSections,
+                                     IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions,
+                                     IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions,
+                                     Action<string> report1DOr2DFeatureRead = null)
         {
             Ensure.NotNull(mduFilePath, nameof(mduFilePath));
             Ensure.NotNull(modelDefinition, nameof(modelDefinition));
-            Ensure.NotNull(network, nameof(network));
+            Ensure.NotNull(hydroNetwork, nameof(hydroNetwork));
             Ensure.NotNull(roughnessSections, nameof(roughnessSections));
             Ensure.NotNull(channelFrictionDefinitions, nameof(channelFrictionDefinitions));
             Ensure.NotNull(channelInitialConditionDefinitions, nameof(channelInitialConditionDefinitions));
 
+            this.mduFilePath = mduFilePath;
+            this.modelDefinition = modelDefinition;
+            this.hydroNetwork = hydroNetwork;
+            this.roughnessSections = roughnessSections;
+            this.channelFrictionDefinitions = channelFrictionDefinitions;
+            this.channelInitialConditionDefinitions = channelInitialConditionDefinitions;
+
             report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_routes);
-            ReadRoutesFile(mduFilePath, network);
+            ReadRoutesFile();
 
             report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_cross_section_definitions);
-            ICrossSectionDefinition[] definitions = ReadCrossSectionFiles(mduFilePath, modelDefinition, network, channelFrictionDefinitions);
+            ICrossSectionDefinition[] definitions = ReadCrossSectionFiles();
 
-            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_structures); 
-            ReadStructuresFiles(mduFilePath, modelDefinition, network, definitions);
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_structures);
+            ReadStructuresFiles(definitions);
 
-            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_observation_points); 
-            ReadObservationPointsFiles(mduFilePath, modelDefinition, network);
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_observation_points);
+            ReadObservationPointsFiles();
 
-            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_roughness); 
-            ReadRoughnessFiles(mduFilePath, modelDefinition, network, roughnessSections, channelFrictionDefinitions);
-            
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_roughness);
+            ReadRoughnessFiles();
+
             report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_retentions);
-            var retentions= ReadRetentionsFromFile(mduFilePath, modelDefinition, network);
+            IEnumerable<IRetention> retentions = ReadRetentionsFromFile();
             foreach (IRetention retention in retentions)
             {
                 retention.Branch.BranchFeatures.Add(retention);
             }
 
-            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_initial_conditions); 
-            ReadInitialConditionFiles(mduFilePath, modelDefinition, network, channelInitialConditionDefinitions);
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_initial_conditions);
+            ReadInitialConditionFiles();
         }
 
-        private IEnumerable<IRetention> ReadRetentionsFromFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+        private IEnumerable<IRetention> ReadRetentionsFromFile()
         {
-            string netFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
+            string netFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
             if (!File.Exists(netFilePath))
             {
                 return Enumerable.Empty<IRetention>();
             }
 
-            string storageNodeFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, modelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
+            string storageNodeFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
             if (!File.Exists(storageNodeFilePath))
             {
                 return Enumerable.Empty<IRetention>();
             }
 
-            var iniSections = new IniReader().ReadIniFile(storageNodeFilePath);
+            IList<IniSection> iniSections = new IniReader().ReadIniFile(storageNodeFilePath);
             if (iniSections.Count == 0)
             {
                 log.Warn(string.Format(Resources.FeatureFile1D2DReader_ReadRetentionsFile_Could_not_read_file__0__properly__it_seems_empty, storageNodeFilePath));
                 return Enumerable.Empty<IRetention>();
             }
 
-            return RetentionSectionParser.ParseIniSections(iniSections, network);
+            return RetentionSectionParser.ParseIniSections(iniSections, hydroNetwork);
         }
 
-        private ICrossSectionDefinition[] ReadCrossSectionFiles(
-            string targetMduFilePath,
-            WaterFlowFMModelDefinition modelDefinition,
-            IHydroNetwork network,
-            IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions)
+        private ICrossSectionDefinition[] ReadCrossSectionFiles()
         {
-            var crLocFile = modelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();
-            crLocFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crLocFile);
+            string crLocFile = modelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();
+            crLocFile = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, crLocFile);
 
-            var crDefFile = modelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
-            crDefFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
+            string crDefFile = modelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
+            crDefFile = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, crDefFile);
             if (!File.Exists(crDefFile))
             {
                 return Array.Empty<ICrossSectionDefinition>();
             }
 
-            return CrossSectionFileReader.ReadFile(crLocFile, crDefFile, network, channelFrictionDefinitions);
+            return CrossSectionFileReader.ReadFile(crLocFile, crDefFile, hydroNetwork, channelFrictionDefinitions);
         }
-        private void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+
+        private void ReadObservationPointsFiles()
         {
-            var obsFiles = modelDefinition.GetModelProperty(KnownProperties.ObsFile).GetValueAsString();
-            foreach (var obsFile in obsFiles.SplitOnEmptySpace())
+            string obsFiles = modelDefinition.GetModelProperty(KnownProperties.ObsFile).GetValueAsString();
+            foreach (string obsFile in obsFiles.SplitOnEmptySpace())
             {
-                var obsFileFullPath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, obsFile);
+                string obsFileFullPath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, obsFile);
                 if (!File.Exists(obsFileFullPath))
                 {
                     return;
                 }
-                LocationFileReader.ReadFileObservationPointLocations(obsFileFullPath, network);
-            }
 
+                LocationFileReader.ReadFileObservationPointLocations(obsFileFullPath, hydroNetwork);
+            }
         }
 
-        private void ReadRoutesFile(string targetMduFilePath, IHydroNetwork network)
+        private void ReadRoutesFile()
         {
-            var routesFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, RoutesFile.RoutesFileName);
+            string routesFile = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, RoutesFile.RoutesFileName);
             if (!File.Exists(routesFile))
             {
                 return;
             }
 
-            RoutesFile.Read(routesFile, network);
+            RoutesFile.Read(routesFile, hydroNetwork);
         }
 
-        private void ReadStructuresFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
-            IHydroNetwork network, ICrossSectionDefinition[] crossSectionDefinitions)
+        private void ReadStructuresFiles(ICrossSectionDefinition[] crossSectionDefinitions)
         {
-            string structureFile = modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString();
-            var referenceDateTime = modelDefinition.GetReferenceDateAsDateTime();
+            WaterFlowFMProperty structureFileProperty = modelDefinition.GetModelProperty(KnownProperties.StructuresFile);
 
-            structureFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, structureFile);
-            if (!File.Exists(structureFile))
+            string structureFilePath = MduFileHelper.GetSubfilePath(mduFilePath, structureFileProperty);
+            if (!File.Exists(structureFilePath))
             {
                 return;
             }
 
             var reader = new StructureFileReader(new FileSystem());
-            reader.ReadFile(structureFile, crossSectionDefinitions, network, referenceDateTime);
+            reader.ReadFile(structureFilePath, crossSectionDefinitions, hydroNetwork, modelDefinition.GetReferenceDateAsDateTime());
         }
 
-        private void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
+        private void ReadRoughnessFiles()
         {
-            var roughnessFileNames = modelDefinition.GetModelProperty(KnownProperties.FrictFile).GetFileLocationValues();
-            if (!roughnessFileNames.Any())
+            WaterFlowFMProperty roughnessFileProperty = modelDefinition.GetModelProperty(KnownProperties.FrictFile);
+            IReadOnlyList<string> roughnessFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, roughnessFileProperty).ToList();
+            if (!roughnessFilePaths.Any())
             {
                 return;
             }
-            var frictionFileName = Resources.Roughness_Main_Channels_Filename;
-
+            
             // read lanes
-            foreach (var roughnessFileName in roughnessFileNames)
+            foreach (string roughnessFilePath in roughnessFilePaths)
             {
-                if (roughnessFileName == frictionFileName)
+                if (roughnessFilePath.ContainsCaseInsensitive(Resources.Roughness_Main_Channels_Filename))
                 {
                     continue;
                 }
-                var fileName = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, roughnessFileName);
-                if (!File.Exists(fileName))
-                {
-                    return;
-                }
 
                 var roughnessReader = new RoughnessDataFileReader(new FileSystem());
-                
-                roughnessReader.ReadFile(fileName, network, roughnessSections);
+                roughnessReader.ReadFile(roughnessFilePath, hydroNetwork, roughnessSections);
             }
 
             // read channels roughness
-            var frictionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, frictionFileName);
+            string frictionFilePath = roughnessFilePaths.FirstOrDefault(x => x.ContainsCaseInsensitive(Resources.Roughness_Main_Channels_Filename));
             if (!File.Exists(frictionFilePath))
             {
                 return;
             }
-            ChannelFrictionDefinitionFileReader.ReadFile(frictionFilePath, modelDefinition, network, channelFrictionDefinitions);
+
+            ChannelFrictionDefinitionFileReader.ReadFile(frictionFilePath, modelDefinition, hydroNetwork, channelFrictionDefinitions);
         }
 
-        private void ReadInitialConditionFiles(string targetMduFilePath,
-            WaterFlowFMModelDefinition modelDefinition,
-            IHydroNetwork network,
-            IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
+        private void ReadInitialConditionFiles()
         {
-            var initialConditionFilename = modelDefinition.GetModelProperty(KnownProperties.IniFieldFile).GetValueAsString();
-            if (string.IsNullOrWhiteSpace(initialConditionFilename))
+            WaterFlowFMProperty pathsRelativeToParentProperty = modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent);
+            WaterFlowFMProperty initialFieldFileProperty = modelDefinition.GetModelProperty(KnownProperties.IniFieldFile);
+            
+            string initialConditionFilePath = MduFileHelper.GetSubfilePath(mduFilePath, initialFieldFileProperty);
+            string parentFilePath = (bool)pathsRelativeToParentProperty.Value ? initialConditionFilePath : mduFilePath;
+
+            if (string.IsNullOrWhiteSpace(initialConditionFilePath))
             {
                 log.Warn(string.Format(Resources.FeatureFile1D2DReader_ReadInitialConditionFiles_No_initial_condition_filename_found_in_the_mdu_file_skipping_reading_initial_conditions));
                 return;
             }
-            var initialConditionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, initialConditionFilename);
 
             // read initialFields.ini
-            var initialFieldFileData = initialFieldFile.Read(initialConditionFilePath, targetMduFilePath, modelDefinition);
+            InitialFieldFileData initialFieldFileData = initialFieldFile.Read(initialConditionFilePath, parentFilePath, modelDefinition);
 
             // read Initial<quantity>.ini
             string initialConditionQuantityFileName = GetChannelInitialConditionDefinitionFileName(initialFieldFileData);
@@ -243,10 +247,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 return;
             }
-            
-            string initialConditionQuantityFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, initialConditionQuantityFileName);
 
-            IEventedList<IBranch> branches = network.Branches;
+            string initialConditionQuantityFilePath = IoHelper.GetFilePathToLocationInSameDirectory(parentFilePath, initialConditionQuantityFileName);
+
+            IEventedList<IBranch> branches = hydroNetwork.Branches;
             Dictionary<string, IBranch> branchDictionary = branches.ToDictionary(b => b.Name, b => b, StringComparer.InvariantCultureIgnoreCase);
 
             ChannelInitialConditionDefinitionFileReader.ReadFile(
@@ -255,16 +259,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 branchDictionary,
                 channelInitialConditionDefinitions);
         }
-        
+
         private string GetChannelInitialConditionDefinitionFileName(InitialFieldFileData initialFieldFileData)
         {
-            var initialConditionIniSections = initialFieldFileData.AllFields.Where(x => x.LocationType == InitialFieldLocationType.OneD ||
-                                                                                        x.DataFileType == InitialFieldDataFileType.OneDField)
-                                                                  .ToArray();
+            InitialFieldData[] initialConditionIniSections = initialFieldFileData.AllFields.Where(x => x.LocationType == InitialFieldLocationType.OneD ||
+                                                                                                       x.DataFileType == InitialFieldDataFileType.OneDField)
+                                                                                 .ToArray();
             if (!initialConditionIniSections.Any())
             {
                 return string.Empty;
             }
+
             if (initialConditionIniSections.Length > 1)
             {
                 log.Warn(Resources.Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_the_first_and_ignoring_all_others);

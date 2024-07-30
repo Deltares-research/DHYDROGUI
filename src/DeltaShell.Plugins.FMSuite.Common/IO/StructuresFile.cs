@@ -58,9 +58,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public IEnumerable<Structure2D> ReadStructures2D(string filePath)
         {
-            var iniSections = new IniReader().ReadIniFile(filePath);
-            if(!((IEnumerable<IniSection>) iniSections).Any(c => c.ValidGeneralRegion(GeneralRegion.StructureDefinitionsMajorVersion,
-                GeneralRegion.StructureDefinitionsMinorVersion, GeneralRegion.FileTypeName.StructureDefinition))) yield break;
+            IList<IniSection> iniSections = new IniReader().ReadIniFile(filePath);
+            
+            if (!IsValidStructuresFile(iniSections, filePath))
+            {
+                yield break;
+            }
 
             foreach (var iniSection in iniSections.Where(c => c.ReadProperty<string>(StructureRegion.BranchId.Key, true)  == null)) // only write 2d features
             {
@@ -92,6 +95,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
                 yield return structure2D;
             }
+        }
+
+        private bool IsValidStructuresFile(IEnumerable<IniSection> iniSections, string filePath)
+        {
+            if (iniSections.Any(c => c.ValidGeneralRegion(GeneralRegion.StructureDefinitionsMajorVersion,
+                                                          GeneralRegion.StructureDefinitionsMinorVersion,
+                                                          GeneralRegion.FileTypeName.StructureDefinition)))
+            {
+                return true;
+            }
+
+            var version = new Version(GeneralRegion.StructureDefinitionsMajorVersion,
+                                      GeneralRegion.StructureDefinitionsMinorVersion);
+                
+            Log.Error($"Expected file version {version} or lower; unable to read structures file: '{filePath}'");
+            return false;
         }
 
         public void Write(string path, IEnumerable<IStructure> features)

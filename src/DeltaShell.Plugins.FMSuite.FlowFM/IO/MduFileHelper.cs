@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
@@ -42,43 +41,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 filePathList.Add(simpleFilePath);
 
             return filePathList.Select(fp => fp.Replace("/", @"\")).ToList();
-        }
-
-        /// <summary>
-        /// Checks if the filePath is a valid filePath for writing a feature file. Whenever filePath contains
-        /// a navigation to a parent folder, then it is considered as not valid and this method will return false.
-        /// </summary>
-        /// <param name="filePath">The filePath as a string to check.</param>
-        /// <returns></returns>
-        public static bool IsValidFilePath(string filePath, string mduFilePath)
-        {
-            var wrongValues = new List<string>();
-
-            if (Path.IsPathRooted(filePath)) // Absolute path
-            {
-                filePath = FileUtils.GetRelativePath(Path.GetDirectoryName(mduFilePath), filePath, true);
-            }
-
-            var regexSlashes = new Regex("/{3,}");
-            var matchSlashes = regexSlashes.Match(filePath);
-            if (matchSlashes.Success)
-            {
-                wrongValues.Add(matchSlashes.Value);
-            }
-
-            var regexParentFolder = new Regex(@"\.{2,}");
-            var matchParentFolder = regexParentFolder.Match(filePath);
-            if (matchParentFolder.Success)
-            {
-                wrongValues.Add(matchParentFolder.Value);
-            }
-            
-            var valid = wrongValues.Count == 0;
-            if (!valid)
-            {
-                Log.WarnFormat("Features are not saved to file at \'{0}\', because the group name is invalid. Remove any occurences of \'" + string.Join("\', \'", wrongValues) + "\' from these group names.", filePath);
-            }
-            return valid;
         }
 
         /// <summary>
@@ -142,17 +104,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // Checking for existing files in the project folder
             groupNames = groupNames.Select(gn =>
             {
-                var filePath = Path.Combine(mduDirectory, GetFilePathWithExtension(gn, extension, alternativeExtensions));
-                string existingFilePath;
-                try
-                {
-                    existingFilePath = Directory.GetFiles(Path.GetDirectoryName(filePath))
-                        .FirstOrDefault(fp => fp.ToLowerInvariant().EndsWith(filePath.Replace("/", @"\").ToLowerInvariant()));
-                }
-                catch (DirectoryNotFoundException)
+                string filePath = Path.Combine(mduDirectory, GetFilePathWithExtension(gn, extension, alternativeExtensions));
+                string directory = Path.GetDirectoryName(filePath);
+                
+                if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory))
                 {
                     return GetFilePathWithExtension(gn, extension, alternativeExtensions);
                 }
+                
+                string existingFilePath = Directory.GetFiles(directory)
+                                                   .FirstOrDefault(fp => fp.ToLowerInvariant()
+                                                                           .EndsWith(filePath.Replace("/", @"\").ToLowerInvariant()));
+                
                 if (File.Exists(filePath) && Path.GetFileName(existingFilePath) != Path.GetFileName(filePath))
                 {
                     // If a file already exists that only differs by capital letters, give a warning and return this file name as a group name.
@@ -197,13 +160,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         internal static string GetCombinedPath(string mduFilePath, string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName))
+            if (string.IsNullOrEmpty(fileName))
             {
-                return FileUtils.PathIsRelative(fileName)
-                    ? Path.GetFullPath(Path.Combine(Path.GetDirectoryName(mduFilePath), fileName))
-                    : fileName;
+                return null;
             }
-            return null;
+
+            string combinedPath = FileUtils.PathIsRelative(fileName)
+                                      ? Path.Combine(Path.GetDirectoryName(mduFilePath), fileName)
+                                      : fileName;
+
+            return Path.GetFullPath(combinedPath);
         }
 
         public static bool IsMultipleFileValued(WaterFlowFMProperty property)

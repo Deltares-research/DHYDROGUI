@@ -200,11 +200,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 WriteMeteoExtForceFile(meteoExtForceFileItems);
             }
-            if (allItems.Any() || meteoExtForceFileItems.Any())
-            {
-                modelProperty.SetValueFromString(Path.GetFileName(FilePath));
-            }
-            else
+
+            if (!allItems.Any() && !meteoExtForceFileItems.Any())
             {
                 FileUtils.DeleteIfExists(FilePath);
                 modelProperty.SetValueFromString(string.Empty);

@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private FMMapFileFunctionStore outputMapFileStore;
         private FM1DFileFunctionStore output1DFileStore;
 
-        public IEnumerable<RestartFile> RestartOutput { get; private set; } = Enumerable.Empty<RestartFile>();
+        public IEnumerable<RestartFile> RestartOutput { get; set; } = Enumerable.Empty<RestartFile>();
 
         public TimeSpan OutputTimeStep
         {

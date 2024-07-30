@@ -307,18 +307,6 @@
   <data name="MduFile_ReadFeaturesDryPoints_DryPoints_parameter_contains_more_than_one_file_format__Only_one_format__Area_or_Points__is_allowed___0_" xml:space="preserve">
     <value>DryPoints parameter contains more than one file format. Only one format (Area or Points) is allowed. {0}</value>
   </data>
-  <data name="MduFile_RemoveNonExistentFilePaths_" xml:space="preserve">
-    <value>File at location '{0}' does not exist, but is defined in MDU file at '{1}'
-at property '{2}'. Model information may have been lost while loading model '{3}'.</value>
-  </data>
-  <data name="MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlreadyExists" xml:space="preserve">
-    <value>Copying file at location '{0}' to location '{1}' did not succeed,
-because the file already exists. File import of feature file '{0}' has failed.</value>
-  </data>
-  <data name="MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder" xml:space="preserve">
-    <value>Copied file at location '{0}' to location '{1}',
-because the file existed outside of the project folder of model '{2}'.</value>
-  </data>
   <data name="MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists" xml:space="preserve">
     <value>A file '{0}' already exists in the project folder. Features in group '{1}' are written to this file.
 Change this group name and save the project again to write these features to a separate file.</value>

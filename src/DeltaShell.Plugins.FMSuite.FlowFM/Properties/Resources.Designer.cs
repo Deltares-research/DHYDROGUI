@@ -622,28 +622,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Copied file at location &apos;{0}&apos; to location &apos;{1}&apos;,
-        ///because the file existed outside of the project folder of model &apos;{2}&apos;..
-        /// </summary>
-        public static string MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder {
-            get {
-                return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExis" +
-                        "tedOutsideOfTheProjectFolder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Copying file at location &apos;{0}&apos; to location &apos;{1}&apos; did not succeed,
-        ///because the file already exists. File import of feature file &apos;{0}&apos; has failed..
-        /// </summary>
-        public static string MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlreadyExists {
-            get {
-                return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlrea" +
-                        "dyExists", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error retrieving FM Dll version: {0}.
         /// </summary>
         public static string MduFile_MduFile_Error_retrieving_FM_Dll_version___0_ {
@@ -849,16 +827,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string MduFile_RemoveAllStructuresFilesWithBadReferences_ {
             get {
                 return ResourceManager.GetString("MduFile_RemoveAllStructuresFilesWithBadReferences_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File at location &apos;{0}&apos; does not exist, but is defined in MDU file at &apos;{1}&apos;
-        ///at property &apos;{2}&apos;. Model information may have been lost while loading model &apos;{3}&apos;..
-        /// </summary>
-        public static string MduFile_RemoveNonExistentFilePaths_ {
-            get {
-                return ResourceManager.GetString("MduFile_RemoveNonExistentFilePaths_", resourceCulture);
             }
         }
         

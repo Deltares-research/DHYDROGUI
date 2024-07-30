@@ -8,6 +8,8 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
+using DelftTools.Utils.Validation;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -569,6 +571,100 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // reopen
                 IEnumerable<string> logMessages = TestHelper.GetAllRenderedMessages(() => _ = projectService.OpenProject(path));
                 Assert.That(logMessages, Does.Not.Contain("Network has changed, clearing results."));
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void SaveLoadHarlingenModelWithOrganizedFileStructure()
+        {
+            using (var app = CreateRunningApplication())
+            using (var sourceDir = new TemporaryDirectory())
+            using (var saveDir = new TemporaryDirectory())
+            {
+                string testData = TestHelper.GetTestFilePath(@"harlingen\OrganizedModel");
+                string modelDir = sourceDir.CopyDirectoryToTempDirectory(testData);
+                string mduPath = Path.Combine(modelDir, @"har\computations\test\har.mdu");
+
+                var model = new WaterFlowFMModel(mduPath);
+                app.ProjectService.CreateProject();
+                app.ProjectService.Project.RootFolder.Add(model);
+
+                string projectPath = Path.Combine(saveDir.Path, "har.proj");
+
+                app.ProjectService.SaveProjectAs(projectPath);
+                app.ProjectService.CloseProject();
+                app.ProjectService.OpenProject(projectPath);
+
+                WaterFlowFMModel loadedModel = app.ProjectService.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                Assert.IsNotNull(loadedModel);
+
+                ValidationReport validationResult = loadedModel.Validate();
+                string loadedMduFilePath = loadedModel.MduFilePath;
+                string loadedNetFilePath = loadedModel.NetFilePath;
+                string loadedExtFilePath = loadedModel.ExtFilePath;
+                string loadedBndExtFilePath = loadedModel.BndExtFilePath;
+                
+                app.ProjectService.CloseProject();
+                
+                Assert.That(validationResult.ErrorCount, Is.Zero, "Model validation failed after loading the saved Harlingen model.");
+                Assert.That(loadedMduFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\har.mdu")));
+                Assert.That(loadedNetFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\fm_003_net.nc")));
+                Assert.That(loadedExtFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\001.ext")));
+                Assert.That(loadedBndExtFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\001_bnd.ext")));
+                
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\network_bounds_d3d.pol"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\network_bounds_d3d_add.pol"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\001.ext"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\001_bnd.ext"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\071_01.pli"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\071_02.pli"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\071_03.pli"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\Discharge.bc"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\L1.pli"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\Salinity.bc"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\WaterLevel.bc"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\fm_003_net.nc"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\har.mdu"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\roughness-Channels.ini"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\roughness-Main.ini"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\roughness-Manning_0.01667.ini"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\roughness-Sewer.ini"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\roughness-Strickler_15.0.ini"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\general\fourier_max.fou"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\geometry\cross_sections\har_crs_V2_crs.pli"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\geometry\output_locations\har_fine_V3_obs.xyn"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\geometry\fixedweir_fxw.pli"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\geometry\har_enc.pol"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\geometry\Harlingen_haven.ldb"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\geometry\thindam_thd.pli"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\initial_conditions\test\initialFields.ini"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\initial_conditions\test\bedlevel.xyz"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\initial_conditions\test\frictioncoefficient_friction.pol"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\initial_conditions\test\InitialWaterdepth.ini"), Does.Exist);
+                Assert.That(Path.Combine(saveDir.Path, @"har.proj_data\har\input\initial_conditions\test\structures.ini"), Does.Exist);
+                
+                string ini = File.ReadAllText(loadedMduFilePath);
+                
+                IniData iniData = new IniParser().Parse(ini);
+                IReadOnlyList<IniProperty> iniProperties = iniData.Sections.SelectMany(section => section.Properties).ToList();
+
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "NetFile" && p.Value == "fm_003_net.nc"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "GridEnclosureFile" && p.Value == "../../geometry/har_enc.pol"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "LandBoundaryFile" && p.Value == "../../geometry/Harlingen_haven.ldb"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "ThinDamFile" && p.Value == "../../geometry/thindam_thd.pli"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "FixedWeirFile" && p.Value == "../../geometry/fixedweir_fxw.pli"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "IniFieldFile" && p.Value == "../../initial_conditions/test/initialFields.ini"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "StructureFile" && p.Value == "../../initial_conditions/test/structures.ini"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "FrictFile" && p.Value == "roughness-Channels.ini;roughness-Main.ini;roughness-Sewer.ini;roughness-Manning_0.01667.ini;roughness-Strickler_15.0.ini"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "ExtForceFile" && p.Value == "../../boundary_conditions/test/001.ext"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "ExtForceFileNew" && p.Value == "../../boundary_conditions/test/001_bnd.ext"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "ObsFile" && p.Value == "../../geometry/output_locations/har_fine_V3_obs.xyn"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "CrsFile" && p.Value == "../../geometry/cross_sections/har_crs_V2_crs.pli"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "FouFile" && p.Value == "../../general/fourier_max.fou"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "HisFile" && p.Value == "001_his.nc"));
+                Assert.That(iniProperties, Has.One.Matches<IniProperty>(p => p.Key == "MapFile" && p.Value == "001_map.nc"));
             }
         }
 

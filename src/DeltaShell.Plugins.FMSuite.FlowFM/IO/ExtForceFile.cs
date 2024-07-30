@@ -84,7 +84,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (extForceFileItems.Count > 0)
             {
                 WriteExtForceFile(new ExtForceFileData(extForceFileItems));
-                modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueFromString(Path.GetFileName(FilePath));
             }
             else
             {

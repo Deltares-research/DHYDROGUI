@@ -83,10 +83,10 @@
 			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
 				<databinding>
 					<var
-					dataname="ExportMduFilePath"
+					dataname="ExportMduDirectory"
 					datasourceid="62915f30-0830-46cb-aa4f-33542a98f569"
 					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
-					variablename="ExportMduFilePath">
+					variablename="ExportMduDirectory">
 					</var>
 				</databinding>
 				<missingdatabinding>
@@ -104,10 +104,10 @@
 			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
 				<databinding>
 					<var
-					dataname="ExportMduFilePath"
+					dataname="ExportMduDirectory"
 					datasourceid="63cf2dc3-e558-4474-bb95-74e5f9195439"
 					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
-					variablename="ExportMduFilePath">
+					variablename="ExportMduDirectory">
 					</var>
 				</databinding>
 			</modulegroup>
@@ -1160,10 +1160,10 @@
 			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
 				<databinding>
 					<var
-					dataname="ExportMduFilePath"
+					dataname="ExportMduDirectory"
 					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
 					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
-					variablename="ExportMduFilePath">
+					variablename="ExportMduDirectory">
 					</var>
 				</databinding>
 				<missingdatabinding>
@@ -1208,8 +1208,8 @@
 				<parameters>
 					<param
 					mask="False"
-					name="ExportMduFilePath"
-					value="westernscheldt07.mdu">
+					name="ExportMduDirectory"
+					value="westernscheldt07_result">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -1248,8 +1248,8 @@
 				<parameters>
 					<param
 					mask="False"
-					name="ExportMduFilePath"
-					value="westernscheldt05.mdu">
+					name="ExportMduDirectory"
+					value="westernscheldt06_result">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -1450,8 +1450,8 @@
 				<parameters>
 					<param
 					mask="False"
-					name="ExportMduFilePath"
-					value="westernscheldt06.mdu">
+					name="ExportMduDirectory"
+					value="westernscheldt06_result">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -2102,10 +2102,10 @@
 			ref="ae57245a-f450-4c2b-a380-39f288b3b304">
 				<databinding>
 					<var
-					dataname="ExportDimrFilePath"
+					dataname="ExportDimrDirectory"
 					datasourceid="f8fd2949-9688-46ac-a536-4fdd054dd32d"
 					variableid="e98f476c-ea03-457e-97cc-d802fd33a56c"
-					variablename="ExportDimrFilePath">
+					variablename="ExportDimrDirectory">
 					</var>
 				</databinding>
 			</modulegroup>
@@ -2785,8 +2785,8 @@
 				<parameters>
 					<param
 					mask="False"
-					name="ExportDimrFilePath"
-					value="dimr_config.xml">
+					name="ExportDimrDirectory"
+					value="westernscheldt10_result">
 					</param>
 				</parameters>
 			</smartfoldernode>

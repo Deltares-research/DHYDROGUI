@@ -124,7 +124,7 @@ namespace DelftTools.Hydro.Roughness
             }
             set { }
         }
-
+        
         /// <summary>
         /// Indicates if this RoughnessSection is used to describe reverse-flow roughness
         /// </summary>

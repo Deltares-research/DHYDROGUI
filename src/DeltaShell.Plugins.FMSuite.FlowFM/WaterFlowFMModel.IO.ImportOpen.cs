@@ -16,12 +16,8 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
-using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
-using SharpMap;
-using SharpMap.Api.SpatialOperations;
-using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -135,9 +131,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void LoadModelFromMdu(string mduFilePath)
         {
             MduFilePath = mduFilePath;
-            string mduFileDir = Path.GetDirectoryName(mduFilePath);
             Name = Path.GetFileNameWithoutExtension(mduFilePath);
-            ModelDefinition = new WaterFlowFMModelDefinition(mduFileDir, Name);
+            ModelDefinition = new WaterFlowFMModelDefinition(Name);
             Grid = Grid ?? new UnstructuredGrid();
 
             // initialize model definition from mdu file if it exists
@@ -194,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         private string RetrieveOutputDirectory(string mduFilePath)
         {
-            currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+            currentOutputDirectoryPath = GetModelOutputDirectory();
 
             if (ModelDefinition.ContainsProperty(KnownProperties.OutDir))
             {

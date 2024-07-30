@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public static FileBasedModelItem CreateParentNode(WaterFlowFMModel model)
         {
-            var parentNode = new FileBasedModelItem(MduFileProperty, model.MduSavePath);
+            var parentNode = new FileBasedModelItem(MduFileProperty, model.GetMduSavePath());
 
             var extForceFile = model.MduFile.ExternalForcingsFile ?? new ExtForceFile();
 

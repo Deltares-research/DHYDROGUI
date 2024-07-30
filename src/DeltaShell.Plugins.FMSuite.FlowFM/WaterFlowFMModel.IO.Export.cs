@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -17,17 +18,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             string previousModelDir = null;
             string previousExplicitWorkingDirectory = null;
-            if (MduFilePath != MduSavePath)
+            
+            string mduSavePath = GetMduSavePath();
+            
+            if (MduFilePath != mduSavePath)
             {
-                previousModelDir = RecursivelyGetModelDirectoryPathFromMduFile();
+                previousModelDir = GetModelDirectory();
                 previousExplicitWorkingDirectory = previousModelDir + postfixExplicitWorkingDirectory;
             }
 
-            if (ExportTo(MduSavePath))
-            {
-                /*Make sure the ModelDirectory gets updated when saving*/
-                ModelDefinition.ModelDirectory = RecursivelyGetModelDirectoryPathFromMduFile();
-            }
+            ExportTo(mduSavePath);
 
             if (previousModelDir == null)
             {
@@ -40,13 +40,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         internal virtual bool ExportTo(string mduPath, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true)
         {
-            string dirName = Path.GetDirectoryName(mduPath);
-            if (!Directory.Exists(dirName))
-            {
-                Directory.CreateDirectory(dirName);
-            }
-
-            CopyRestartFile(dirName);
+            string mduDir = Path.GetDirectoryName(mduPath);
+            FileUtils.CreateDirectoryIfNotExists(mduDir);
+            
+            WriteRestartFile(mduPath, switchTo);
 
             if (switchTo)
             {
@@ -84,13 +81,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             else
             {
                 string workNetFile = MduFileHelper.GetSubfilePath(mduPath, ModelDefinition.GetModelProperty(KnownProperties.NetFile));
-                WriteNetFile(workNetFile, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation,
-                             BedLevelZValues);
+                WriteNetFile(workNetFile, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation, BedLevelZValues);
                 var newGrid = new UnstructuredGrid();
                 UGridFileHelper.SetUnstructuredGrid(workNetFile, newGrid); //may throw...
                 bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(workNetFile, BedLevelLocation);
 
-                MduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering, UseMorSed ? this : null, workNetFilePath: workNetFile);
+                MduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering, UseMorSed ? this : null, false);
             }
 
             if (!IsEditing)
@@ -100,7 +96,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (switchTo)
             {
-                MduFilePath = mduPath;
                 CacheFile.UpdatePathToMduLocation(mduPath);
                 SaveOutput();
             }
@@ -118,25 +113,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
         }
 
-        private void CopyRestartFile(string targetDir)
+        private void WriteRestartFile(string mduPath, bool switchTo)
         {
-            string sourceDirectory = ModelDefinition.ModelDirectory;
-            if (string.IsNullOrWhiteSpace(sourceDirectory))
+            WaterFlowFMProperty restartFileProperty = ModelDefinition.GetModelProperty(KnownProperties.RestartFile);
+            
+            string restartFilePath = MduFileHelper.GetSubfilePath(mduPath, restartFileProperty);
+            if (string.IsNullOrEmpty(restartFilePath))
             {
                 return;
             }
 
-            string restartFileName = ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
-            if (string.IsNullOrWhiteSpace(restartFileName))
-            {
-                return;
-            }
+            string directoryPath = Path.GetDirectoryName(restartFilePath);
 
-            string sourcePath = Path.Combine(sourceDirectory, restartFileName);
-            if (File.Exists(sourcePath))
+            foreach (RestartFile restartFile in RestartOutput)
             {
-                string targetPath = Path.Combine(targetDir, restartFileName);
-                FileUtils.CopyFile(sourcePath, targetPath);
+                restartFile.CopyToDirectory(directoryPath, switchTo);
             }
         }
     }

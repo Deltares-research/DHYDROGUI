@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -25,34 +28,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <summary>
         /// Gets or sets the location of the MDU file.
         /// </summary>
-        public virtual string MduFilePath { get; set; }
-
-        public string MduSavePath 
-            => GetMduPathFromDeltaShellPath(RecursivelyGetModelDirectoryPathFromMduFile());
-
-        /// <summary>
-        /// Gets the base directory containing model files and folders.
-        /// </summary>
-        public string ModelDirectoryPath 
-            => Path.GetDirectoryName(Path.GetDirectoryName(MduFilePath));
-
-        /// <summary>
-        /// Gets the directory where the results of a model run are stored.
-        /// </summary>
-        public string PersistentOutputDirectoryPath 
-            => Path.Combine(ModelDirectoryPath, DirectoryNameConstants.OutputDirectoryName);
+        public string MduFilePath
+        {
+            get => MduFile.FilePath;
+            set => MduFile.FilePath = value;
+        }
         
         /// <summary>
         /// Gets the .cache file associated with the model.
         /// </summary>
-        public CacheFile CacheFile 
-            => cacheFile ?? (cacheFile = new CacheFile(this, new OverwriteCopyHandler()));
-        
+        public CacheFile CacheFile => cacheFile ?? (cacheFile = new CacheFile(this, new OverwriteCopyHandler()));
+
         /// <summary>
         /// Gets or sets the delegate for retrieving the working directory path.
         /// The default value is <see cref="DefaultModelSettings.DefaultDeltaShellWorkingDirectory"/>
         /// </summary>
-        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
 
         /// <summary>
         /// For FM the working directory is the same as the working directory from the application,
@@ -63,14 +54,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// this one can be null and then the DimrRunner will create a new working directory and the setter
         /// is then needed.
         /// </summary>
-        public virtual string WorkingDirectory
-            => Path.Combine(WorkingDirectoryPathFunc(), Name);
+        public virtual string WorkingDirectory => Path.Combine(WorkingDirectoryPathFunc(), Name);
         
         public string WorkingOutputDirectoryPath 
             => Path.Combine(WorkingDirectory, DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
-        public string DelwaqOutputDirectoryName => FileConstants.PrefixDelwaqDirectoryName + Name;
-        
         public string DelwaqOutputDirectoryPath { get; set; }
 
         public string ExtFilePath
@@ -79,8 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.ExtForceFile))
                 {
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                                                        ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile));
+                    return MduFileHelper.GetSubfilePath(MduFilePath, ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile));
                 }
 
                 return null;
@@ -93,8 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.BndExtForceFile))
                 {
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                                                        ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile));
+                    return MduFileHelper.GetSubfilePath(MduFilePath, ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile));
                 }
 
                 return null;
@@ -107,21 +93,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.NetFile))
                 {
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                                                        ModelDefinition.GetModelProperty(KnownProperties.NetFile));
+                    return MduFileHelper.GetSubfilePath(MduFilePath, ModelDefinition.GetModelProperty(KnownProperties.NetFile));
                 }
 
                 return null;
-            }
-        }
-
-        private string MapFilePath
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(MduFilePath)
-                           ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeMapFilePath)
-                           : null;
             }
         }
 
@@ -131,8 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.MorFile))
                 {
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                                                        ModelDefinition.GetModelProperty(KnownProperties.MorFile));
+                    return MduFileHelper.GetSubfilePath(MduFilePath, ModelDefinition.GetModelProperty(KnownProperties.MorFile));
                 }
 
                 return null;
@@ -145,21 +119,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.SedFile))
                 {
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                                                        ModelDefinition.GetModelProperty(KnownProperties.SedFile));
+                    return MduFileHelper.GetSubfilePath(MduFilePath, ModelDefinition.GetModelProperty(KnownProperties.SedFile));
                 }
 
                 return null;
-            }
-        }
-
-        private string HisFilePath
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(MduFilePath)
-                           ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeHisFilePath)
-                           : null;
             }
         }
 
@@ -167,17 +130,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get
             {
-                if (ModelDefinition == null)
+                if (ModelDefinition == null || MduFilePath == null)
                 {
                     return null;
                 }
 
                 if (ModelDefinition.ModelName.Equals(Name))
                 {
-                    return HisFilePath;
+                    return Path.Combine(GetModelOutputDirectory(), ModelDefinition.HisFileName);
                 }
 
-                return Name + "_his.nc";
+                return Name + FileConstants.HisFileExtension;
             }
         }
 
@@ -185,17 +148,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get
             {
-                if (ModelDefinition == null)
+                if (ModelDefinition == null || MduFilePath == null)
                 {
                     return null;
                 }
 
                 if (ModelDefinition.ModelName.Equals(Name))
                 {
-                    return MapFilePath;
+                    return Path.Combine(GetModelOutputDirectory(), ModelDefinition.MapFileName);
                 }
 
-                return Name + "_map.nc";
+                return Name + FileConstants.MapFileExtension;
             }
         }
 
@@ -220,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get
             {
                 var projectName = Path.GetFileNameWithoutExtension(MduFilePath);
-                return Path.Combine(WorkingDirectory, string.Format("DFM_DELWAQ_{0}", projectName),String.Format("{0}.hyd", projectName));
+                return Path.Combine(WorkingDirectory, $"DFM_DELWAQ_{projectName}", $"{projectName}.hyd");
             }
         }
 
@@ -267,7 +230,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     if (modelDefinitionName == null ||
                         ((modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile))
                     {
-                        propertyValue = Name + pair.Value;
+                        string newFileName = Name + pair.Value;
+                        string directoryName = string.IsNullOrEmpty(propertyValue)
+                                                   ? string.Empty
+                                                   : Path.GetDirectoryName(propertyValue) ?? string.Empty;
+
+                        propertyValue = Path.Combine(directoryName, newFileName);
                     }
 
                     yield return new KeyValuePair<WaterFlowFMProperty, string>(property, propertyValue);
@@ -279,35 +247,153 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             OutputSnappedFeaturesPathPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
-        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = DirectoryNameConstants.InputDirectoryName)
+        
+        /// <summary>
+        /// Retrieves the directory where the MDU file is located.
+        /// </summary>
+        /// <returns>A string representing the full path of the MDU directory.</returns>
+        public string GetMduDirectory()
         {
-            var directoryName = path != null
-                                    ? Path.GetDirectoryName(path) ?? ""
-                                    : "";
+            if (string.IsNullOrEmpty(MduFilePath))
+            {
+                return string.Empty;
+            }
+            
+            return Path.GetDirectoryName(MduFilePath);
+        }
 
-            // dsproj_data/<model name>/<model name>.mdu
-            return Path.Combine(directoryName, Name, subFoldersFromModelFolder, Name + ".mdu");
+        /// <summary>
+        /// Retrieves the directory where the results of a model run are stored.
+        /// </summary>
+        /// <returns>A string representing the full path of the model's output directory.</returns>
+        public string GetModelOutputDirectory()
+        {
+            return Path.Combine(GetModelDirectory(), DirectoryNameConstants.OutputDirectoryName);
         }
         
-        private string RecursivelyGetModelDirectoryPathFromMduFile()
+        /// <summary>
+        /// Retrieves the base directory containing model files and folders.
+        /// </summary>
+        /// <returns>A string representing the full path of the model's base directory.</returns>
+        /// <remarks>
+        /// This method searches for relative file references upward in the directory structure first.
+        /// If no matching directory is found, it attempts to locate a directory matching the name of the MDU file.
+        /// If neither is defined, the directory of the MDU file is returned.
+        /// </remarks>
+        public string GetModelDirectory()
         {
             if (string.IsNullOrEmpty(MduFilePath))
             {
                 return Name;
             }
 
-            string modelDirectoryName = Path.GetFileNameWithoutExtension(MduFilePath);
-            var modelDir = new DirectoryInfo(MduFilePath);
-            while (modelDir != null && modelDir.Name != modelDirectoryName)
+            string modelDirectory = GetModelDirectoryFromMduFileReferences() ??
+                                    GetModelDirectoryFromMduFilePath();
+
+            if (string.IsNullOrEmpty(modelDirectory))
+            {
+                modelDirectory = GetMduDirectory();
+            }
+
+            return modelDirectory;
+        }
+        
+        private string GetModelDirectoryFromMduFileReferences()
+        {
+            IEnumerable<string> fileLocations = modelDefinition.FileProperties.SelectMany(x => x.GetFileLocationValues());
+
+            int maxLevelsUp = fileLocations.Max(x => Regex.Matches(x, @"\.{2,}").Count);
+            if (maxLevelsUp == 0)
+            {
+                return null;
+            }
+
+            string mduDir = GetMduDirectory();
+            var modelDir = new DirectoryInfo(mduDir);
+
+            for (var i = 0; i < maxLevelsUp; i++)
+            {
+                modelDir = modelDir?.Parent;
+            }
+            
+            if (modelDir?.Name == DirectoryNameConstants.InputDirectoryName)
             {
                 modelDir = modelDir.Parent;
             }
 
-            return modelDir?.Parent == null // should never happen, unless the file-based repository is corrupted
-                       ? Path.GetDirectoryName(
-                           Path.GetDirectoryName(MduFilePath)) // default behaviour (e.g. model renamed)
-                       : modelDir.FullName;
+            return modelDir?.FullName;
+        }
+        
+        private string GetModelDirectoryFromMduFilePath()
+        {
+            string modelDirName = Path.GetFileNameWithoutExtension(MduFilePath);
+
+            string mduDir = GetMduDirectory();
+            var modelDir = new DirectoryInfo(mduDir);
+
+            while (modelDir != null)
+            {
+                if (modelDir.Name == modelDirName)
+                {
+                    return modelDir.FullName;
+                }
+
+                if (modelDir.Name == DirectoryNameConstants.InputDirectoryName)
+                {
+                    return modelDir.Parent?.FullName;
+                }
+
+                modelDir = modelDir.Parent;
+            }
+
+            return null;
+        }
+        
+        /// <summary>
+        /// Retrieves the path for exporting the MDU file.
+        /// </summary>
+        /// <param name="baseDir">The directory where the MDU file will be exported.</param>
+        /// <returns>A string representing the full path of the MDU file.</returns>
+        public string GetMduExportPath(string baseDir)
+        {
+            string mduSubDir = GetMduSubDirectoryFromModelDirectory();
+            
+            return Path.Combine(baseDir ?? string.Empty, mduSubDir, InputFile);
+        }
+        
+        /// <summary>
+        /// Retrieves the path for saving the MDU file.
+        /// </summary>
+        /// <returns>A string representing the full path of the MDU file.</returns>
+        public string GetMduSavePath()
+        {
+            return GetMduSavePath(GetModelDirectory());
+        }
+
+        private string GetMduSavePath(string fromPath)
+        {
+            string baseDir = Path.GetDirectoryName(fromPath) ?? string.Empty;
+            string mduSubDir = GetMduSubDirectoryFromModelDirectory();
+
+            return Path.Combine(baseDir, Name, DirectoryNameConstants.InputDirectoryName, mduSubDir, InputFile);
+        }
+        
+        private string GetMduSubDirectoryFromModelDirectory()
+        {
+            if (string.IsNullOrEmpty(MduFilePath))
+            {
+                return string.Empty;
+            }
+
+            string relativeMduPath = FileUtils.GetRelativePath(GetModelDirectory(), MduFilePath);
+            string inputDirPart = $@"{DirectoryNameConstants.InputDirectoryName}{Path.DirectorySeparatorChar}";
+
+            if (relativeMduPath.StartsWith(inputDirPart))
+            {
+                relativeMduPath = relativeMduPath.Substring(inputDirPart.Length);
+            }
+
+            return Path.GetDirectoryName(relativeMduPath);
         }
 
         private void RenameSubFilesIfApplicable()
