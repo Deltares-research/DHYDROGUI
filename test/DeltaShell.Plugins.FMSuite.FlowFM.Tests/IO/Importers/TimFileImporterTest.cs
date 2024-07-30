@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             salinityProperty.Value = useSalinity;
 
             var tempertureProperty = modelDefinition.GetModelProperty(KnownProperties.Temperature);
-            tempertureProperty.SetValueAsString(((int)temperature).ToString());
+            tempertureProperty.SetValueFromString(((int)temperature).ToString());
 
 
             var sedimentMorphologyProperty = modelDefinition.GetModelProperty(GuiProperties.UseMorSed);

@@ -1476,7 +1476,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var fmModel = new WaterFlowFMModel();
 
-            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueAsString("8");
+            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueFromString("8");
             fmModel.Area.FixedWeirs.Add(fixedWeir);
 
             var allData = fmModel.FixedWeirsProperties;
@@ -1508,7 +1508,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(modelFeatureCoordinateData.DataColumns.Count, Is.EqualTo(3));
             Assert.That(modelFeatureCoordinateData.DataColumns.First().ValueList.Count, Is.EqualTo(5));
 
-            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueAsString("9");
+            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueFromString("9");
 
             allData = fmModel.FixedWeirsProperties;
 
@@ -1525,7 +1525,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(dataColumn.IsActive, Is.True);
             }
 
-            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueAsString("6");
+            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueFromString("6");
 
             allData = fmModel.FixedWeirsProperties;
 
@@ -2043,7 +2043,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Setup
             using (var model = new WaterFlowFMModel())
             {
-                model.ModelDefinition.GetModelProperty("infiltrationmodel").SetValueAsString(infiltrationModel.ToString());
+                model.ModelDefinition.GetModelProperty("infiltrationmodel").SetValueFromString(infiltrationModel.ToString());
 
                 // Call
                 bool result = model.UseInfiltration;
@@ -2272,7 +2272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // set after adding the observation point, to test the model property eventing
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = useSalinity;
-            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString(((int)temperature).ToString());
+            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString(((int)temperature).ToString());
 
             IReadOnlyList<IDataItem> items = model.GetChildDataItems(observationPoint).ToArray();
 
@@ -2436,7 +2436,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             branch.BranchFeatures.Add(observationPoint);
             
             model.ModelDefinition.GetModelProperty(KnownProperties.Temperature)
-                 .SetValueAsString(((int) HeatFluxModelType.ExcessTemperature).ToString());
+                 .SetValueFromString(((int) HeatFluxModelType.ExcessTemperature).ToString());
 
             IReadOnlyList<IDataItem> items = model.GetChildDataItems(observationPoint).ToArray();
 

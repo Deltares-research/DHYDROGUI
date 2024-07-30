@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var temperatureString = ((int)Temperature).ToString();
             var model = new WaterFlowFMModel();
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = useSalinity;
-            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString(temperatureString);
+            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString(temperatureString);
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = useMorSed;
             model.ModelDefinition.GetModelProperty(KnownProperties.SecondaryFlow).Value = useSecondaryFlow;
             model.SourcesAndSinks.Add(sourceSink);

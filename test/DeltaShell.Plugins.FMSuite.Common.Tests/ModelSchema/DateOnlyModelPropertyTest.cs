@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.ModelSchema
         {
             var property = new TestModelProperty(new TestModelPropertyDefinition { DataType = typeof(DateOnly) },
                                                  validDateAsString);
-            Assert.Throws<FormatException>(() => property.SetValueAsString("1.2"));
+            Assert.Throws<FormatException>(() => property.SetValueFromString("1.2"));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.ModelSchema
         {
             var property = new TestModelProperty(new TestModelPropertyDefinition { DataType = typeof(DateOnly) },
                                                  validDateAsString);
-            Assert.Throws<FormatException>(() => property.SetValueAsString(notSupportedDateTimeAsString));
+            Assert.Throws<FormatException>(() => property.SetValueFromString(notSupportedDateTimeAsString));
         }
     }
 }

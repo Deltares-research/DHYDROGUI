@@ -329,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             var temperatureString = ((int)temperature).ToString();
             modelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = useSalinity;
-            modelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString(temperatureString);
+            modelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString(temperatureString);
             modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = useMorSed;
             modelDefinition.GetModelProperty(KnownProperties.SecondaryFlow).Value = useSecFlow;
 

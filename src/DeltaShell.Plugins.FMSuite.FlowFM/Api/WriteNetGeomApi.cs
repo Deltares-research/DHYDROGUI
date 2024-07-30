@@ -26,17 +26,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 var tempModel = new WaterFlowFMModel {Name = "temp"};
 
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                    .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                    .SetValueFromString(Path.GetFileName(model.NetFilePath));
 
-                tempModel.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueAsString("");
-                tempModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString("");
-                tempModel.ModelDefinition.GetModelProperty(KnownProperties.DryPointsFile).SetValueAsString("");
-                tempModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirFile).SetValueAsString("");
-                tempModel.ModelDefinition.GetModelProperty(KnownProperties.BridgePillarFile).SetValueAsString("");
-                tempModel.ModelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile).SetValueAsString("");
-                tempModel.ModelDefinition.GetModelProperty(KnownProperties.ThinDamFile).SetValueAsString("");
-                tempModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile).SetValueAsString("");
-                tempModel.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueAsString("2");
+                tempModel.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueFromString("");
+                tempModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueFromString("");
+                tempModel.ModelDefinition.GetModelProperty(KnownProperties.DryPointsFile).SetValueFromString("");
+                tempModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirFile).SetValueFromString("");
+                tempModel.ModelDefinition.GetModelProperty(KnownProperties.BridgePillarFile).SetValueFromString("");
+                tempModel.ModelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile).SetValueFromString("");
+                tempModel.ModelDefinition.GetModelProperty(KnownProperties.ThinDamFile).SetValueFromString("");
+                tempModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile).SetValueFromString("");
+                tempModel.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueFromString("2");
 
                 File.Copy(model.NetFilePath, Path.Combine(tempPath, Path.GetFileName(model.NetFilePath)));
 

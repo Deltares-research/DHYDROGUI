@@ -83,15 +83,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 {
                     // string are not cloned correctly (the clone contains a reference to the source string)
                     // so do it here
-                    clonedProperty.SetValueAsString(String.Copy(clonedProperty.GetValueAsString()));
+                    clonedProperty.SetValueFromString(String.Copy(clonedProperty.GetValueAsString()));
                 }
                 if (propertyToClear.ToLowerInvariant() == KnownProperties.TrtRou.ToLowerInvariant())
                 {
-                    clonedProperty.SetValueAsString("N");
+                    clonedProperty.SetValueFromString("N");
                 }
                 else
                 {
-                    clonedProperty.SetValueAsString(string.Empty); //clear 
+                    clonedProperty.SetValueFromString(string.Empty); //clear 
                 }
                 
 

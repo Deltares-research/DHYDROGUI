@@ -49,9 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// </summary>
         public void Validate()
         {
-            IReadOnlyList<WaterFlowFMProperty> fileProperties = GetFileProperties();
-
-            foreach (WaterFlowFMProperty property in fileProperties)
+            foreach (WaterFlowFMProperty property in modelDefinition.FileProperties)
             {
                 CleanupFileReferencePaths(property);
                 ValidateInvalidCharsInFileReferencePaths(property);
@@ -63,63 +61,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private IReadOnlyList<WaterFlowFMProperty> GetFileProperties()
-        {
-            return modelDefinition.Properties
-                                  .Where(p => p.PropertyDefinition.IsFile)
-                                  .ToArray();
-        }
-
         private void CleanupFileReferencePaths(WaterFlowFMProperty property)
         {
-            IReadOnlyList<string> filePaths = GetFilePropertyValues(property).ToArray();
+            IReadOnlyList<string> filePaths = property.GetFileLocationValues().ToArray();
             IReadOnlyList<string> cleanedFilePaths = filePaths.Select(CleanupFileReferencePath).ToArray();
 
-            SetFilePropertyValues(property, cleanedFilePaths);
+            property.SetValueFromStrings(cleanedFilePaths);
         }
         
         private void ValidateInvalidCharsInFileReferencePaths(WaterFlowFMProperty property)
         {
-            IReadOnlyList<string> filePaths = GetFilePropertyValues(property).ToArray();
+            IReadOnlyList<string> filePaths = property.GetFileLocationValues().ToArray();
             IReadOnlyList<string> invalidFilePaths = filePaths.Where(ContainsInvalidCharacters).ToArray();
 
             if (invalidFilePaths.Any())
             {
                 LogInvalidCharsInFileReferencePaths(property, invalidFilePaths);
-                SetFilePropertyValues(property, filePaths.Except(invalidFilePaths));
+                
+                property.SetValueFromStrings(filePaths.Except(invalidFilePaths));
             }
         }
 
         private void ValidateNotExistingFileReferences(WaterFlowFMProperty property)
         {
-            IReadOnlyList<string> filePaths = GetFilePropertyValues(property).ToArray();
+            IReadOnlyList<string> filePaths = property.GetFileLocationValues().ToArray();
             IReadOnlyList<string> existingFilePaths = filePaths.Where(IsExistingFileReference).ToArray();
             IReadOnlyList<string> invalidFilePaths = filePaths.Except(existingFilePaths).ToArray();
 
             if (invalidFilePaths.Any())
             {
                 LogNotExistingFileReferences(property, invalidFilePaths);
-                SetFilePropertyValues(property, existingFilePaths);
+                
+                property.SetValueFromStrings(existingFilePaths);
             }
-        }
-
-        private IReadOnlyList<string> GetFilePropertyValues(WaterFlowFMProperty property)
-        {
-            string propertyValue = property.GetValueAsString();
-
-            if (string.IsNullOrWhiteSpace(propertyValue))
-            {
-                return Array.Empty<string>();
-            }
-
-            return property.PropertyDefinition.IsMultipleFile
-                       ? propertyValue.Split(new[] { ' ', ';' }, StringSplitOptions.RemoveEmptyEntries)
-                       : new[] { propertyValue };
-        }
-
-        private void SetFilePropertyValues(WaterFlowFMProperty property, IEnumerable<string> filePaths)
-        {
-            property.SetValueAsString(string.Join(" ", filePaths));
         }
 
         private string CleanupFileReferencePath(string path)

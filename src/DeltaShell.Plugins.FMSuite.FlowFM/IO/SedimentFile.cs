@@ -260,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (!string.IsNullOrEmpty(readProp.Value))
             {
-                newSedProp.SetValueAsString(readProp.Value);
+                newSedProp.SetValueFromString(readProp.Value);
             }
         }
 

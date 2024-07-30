@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                 if (matchingDependency != null)
                 {
                     matchingDependency.LinkedModelProperty = property;
-                    property.SetValueAsString(property.PropertyDefinition.DefaultValueAsStringArray[(int)matchingDependency.Value]);
+                    property.SetValueFromString(property.PropertyDefinition.DefaultValueAsStringArray[(int)matchingDependency.Value]);
                 }
             }
         }

@@ -1626,7 +1626,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             string existingOutputDir = outputDirProperty.GetValueAsString();
             if (!existingOutputDir.StartsWith(DirectoryNameConstants.OutputDirectoryName))
             {
-                outputDirProperty.SetValueAsString(DirectoryNameConstants.OutputDirectoryName);
+                outputDirProperty.SetValueFromString(DirectoryNameConstants.OutputDirectoryName);
                 Log.InfoFormat("Running this model requires the OutputDirectory to be overwritten to: {0}",
                                DirectoryNameConstants.OutputDirectoryName);
             }
@@ -2225,7 +2225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         private void ClearWaqOutputDirProperty()
         {
-            ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir).SetValueAsString(string.Empty);
+            ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir).SetValueFromString(string.Empty);
         }
         
         private void SetWaqOutputDirProperty()
@@ -2237,7 +2237,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             string relativeDWaqOutputDirectory = Path.Combine(DirectoryNameConstants.OutputDirectoryName, DelwaqOutputDirectoryName);
             WaterFlowFMProperty waqOutputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir);
-            waqOutputDirProperty.SetValueAsString(relativeDWaqOutputDirectory);
+            waqOutputDirProperty.SetValueFromString(relativeDWaqOutputDirectory);
         }
         
         private void ReconnectSnappedOutputDirectory(string snappedOutputDirectoryPath)

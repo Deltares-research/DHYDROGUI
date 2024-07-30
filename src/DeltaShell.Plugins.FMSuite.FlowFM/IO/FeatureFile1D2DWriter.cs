@@ -235,12 +235,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (directoryName == null) return;
 
             var sections = roughnessSections.ToArray();
+            var frictionFiles = new List<string>();
             var frictionFileName = Properties.Resources.Roughness_Main_Channels_Filename;
-            var roughnessFileNames = sections.Select(GetRoughnessFilename);
-            var roughnessFileNamesString = string.Join(";", roughnessFileNames);
-
-            modelDefinition.SetModelProperty(KnownProperties.FrictFile, 
-                string.Join(";", frictionFileName, roughnessFileNamesString));
+            frictionFiles.Add(frictionFileName);
+            frictionFiles.AddRange(sections.Select(GetRoughnessFilename));
+            
+            modelDefinition.GetModelProperty(KnownProperties.FrictFile).SetValueFromStrings(frictionFiles, ';'); 
 
             RoughnessType globalFrictionType = (RoughnessType)(int)modelDefinition.GetModelProperty(GuiProperties.UnifFrictTypeChannels).Value;
             double globalFrictionValue = (double)modelDefinition.GetModelProperty(GuiProperties.UnifFrictCoefChannels).Value;
@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             // write channels roughness
-            var frictionFilePath = System.IO.Path.Combine(directoryName, frictionFileName);
+            var frictionFilePath = Path.Combine(directoryName, frictionFileName);
             FileWritingUtils.ThrowIfFileNotExists(frictionFilePath, directoryName, p => ChannelFrictionDefinitionFileWriter.WriteFile(p, channelFrictionDefinitions, globalFrictionType, globalFrictionValue));
             
         }

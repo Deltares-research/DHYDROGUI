@@ -202,12 +202,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             if (allItems.Any() || meteoExtForceFileItems.Any())
             {
-                modelProperty.SetValueAsString(Path.GetFileName(FilePath));
+                modelProperty.SetValueFromString(Path.GetFileName(FilePath));
             }
             else
             {
                 FileUtils.DeleteIfExists(FilePath);
-                modelProperty.SetValueAsString(string.Empty);
+                modelProperty.SetValueFromString(string.Empty);
             }
         }
 

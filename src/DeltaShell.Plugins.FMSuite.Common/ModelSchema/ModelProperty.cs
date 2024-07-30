@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
@@ -26,19 +28,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// </exception>
         protected ModelProperty(ModelPropertyDefinition propertyDefinition, string valueAsString)
         {
+            Ensure.NotNull(propertyDefinition, nameof(propertyDefinition));
+            
             this.propertyDefinition = propertyDefinition;
-
-            if (propertyDefinition == null)
-                throw new ArgumentNullException("propertyDefinition");
 
             var inputString = string.IsNullOrEmpty(valueAsString)
                                   ? propertyDefinition.DefaultValueAsString
                                   : valueAsString;
+            
             if (propertyDefinition.DataType == typeof (Steerable))
             {
                 value = new Steerable();
             }
-            SetValueAsString(inputString);
+            SetValueFromString(inputString);
         }
 
         /// <summary>
@@ -93,16 +95,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// <summary>
         /// The description and definition of this property.
         /// </summary>
-        public ModelPropertyDefinition PropertyDefinition
-        {
-            get { return propertyDefinition; }
-        }
-        
+        public ModelPropertyDefinition PropertyDefinition => propertyDefinition;
+
         /// <summary>
         /// The linked model properties. 
         /// </summary>
         /// <example>This can be a property which defines default values for a property with an enum.</example>
         public ModelProperty LinkedModelProperty { get; set; }
+        
+        /// <summary>
+        /// Returns <see cref="Value"/> in string representation.
+        /// </summary>
+        public virtual string GetValueAsString()
+        {
+            return DataTypeValueParser.ToString(value, propertyDefinition.DataType);
+        }
 
         /// <summary>
         /// Sets <see cref="Value"/> using a string representation.
@@ -112,13 +119,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         ///   When <paramref name="valueAsString"/> does not properly express the <see cref="ModelPropertyDefinition.DataType"/> 
         ///   specified in <see cref="PropertyDefinition"/>. Check <see cref="System.Exception.InnerException"/> for underlying cause.
         /// </exception>
-        public void SetValueAsString(string valueAsString)
+        public void SetValueFromString(string valueAsString)
         {
             try
             {
                 if (propertyDefinition.DataType == typeof (Steerable))
                 {
-                    SetValueAsStringForSteerable(valueAsString);
+                    SetValueFromStringForSteerable(valueAsString);
                 }
                 else
                 {
@@ -129,19 +136,63 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             {
                 if (e is ArgumentNullException || e is FormatException)
                 {
-                    throw new FormatException(String.Format("Unexpected value string \"{0}\" for property \"{1}\"",
-                                                            valueAsString, PropertyDefinition.FilePropertyKey),
-                                              e);
+                    throw new FormatException($@"Unexpected value string ""{valueAsString}"" for property ""{PropertyDefinition.FilePropertyKey}""", e);
                 }
+
                 if (e is OverflowException)
                 {
-                    throw new FormatException(String.Format("Value string \"{0}\" is too large/small for property \"{1}\"",
-                                                            valueAsString, PropertyDefinition.FilePropertyKey),
-                                              e);
+                    throw new FormatException($@"Value string ""{valueAsString}"" is too large/small for property ""{PropertyDefinition.FilePropertyKey}""", e);
                 }
+                
                 // Unexpected exception type, let it continue
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Sets <see cref="Value"/> as a combined string representation.
+        /// </summary>
+        /// <param name="valuesAsString">Collection to form the combined string representation.</param>
+        /// <param name="separator">The optional value separator; default is a whitespace character.</param>
+        /// <exception cref="ArgumentNullException">
+        /// When <paramref name="valuesAsString"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="FormatException">
+        /// When the combined string representation does not express the <see cref="ModelPropertyDefinition.DataType"/>
+        /// specified in <see cref="PropertyDefinition"/>. Check <see cref="System.Exception.InnerException"/> for underlying
+        /// cause.
+        /// </exception>
+        public void SetValueFromStrings(IEnumerable<string> valuesAsString, char separator = ' ')
+        {
+            Ensure.NotNull(valuesAsString, nameof(valuesAsString));
+            
+            SetValueFromString(string.Join(separator.ToString(), valuesAsString));
+        }
+
+        /// <summary>
+        /// Retrieves the values representing file locations associated with this property.
+        /// </summary>
+        /// <returns>An enumerable collection of non-empty file location strings.</returns>
+        /// <exception cref="InvalidOperationException">If the property is not defined as a file property.</exception>
+        public IReadOnlyList<string> GetFileLocationValues()
+        {
+            if (!PropertyDefinition.IsFile)
+            {
+                throw new InvalidOperationException($@"Unable to retrieve file locations for ""{PropertyDefinition.FilePropertyKey}""; not a file property.");
+            }
+            
+            string propertyValue = GetValueAsString();
+            
+            if (string.IsNullOrWhiteSpace(propertyValue))
+            {
+                return Array.Empty<string>();
+            }
+
+            IEnumerable<string> locations = PropertyDefinition.IsMultipleFile
+                                                ? propertyValue.Split(new[] { ' ', ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                                : new[] { propertyValue };
+
+            return locations.Where(x => !string.IsNullOrEmpty(x)).ToArray();
         }
 
         /// <summary>
@@ -149,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// </summary>
         /// <param name="valueAsString"></param>
         /// <exception cref="ArgumentException">When <see cref="valueAsString"/> is an invalid file name.</exception>
-        private void SetValueAsStringForSteerable(string valueAsString)
+        private void SetValueFromStringForSteerable(string valueAsString)
         {
             var steerableValue = (Steerable) value;
 
@@ -173,14 +224,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         }
 
         /// <summary>
-        /// Returns <see cref="Value"/> in string representation.
-        /// </summary>
-        public virtual string GetValueAsString()
-        {
-            return DataTypeValueParser.ToString(value, propertyDefinition.DataType);
-        }
-
-        /// <summary>
         /// Precondition check to for checking if a value type corresponds to <see cref="ModelPropertyDefinition"/>.<see cref="ModelPropertyDefinition.DataType"/>.
         /// </summary>
         /// <param name="type">Type to be checked.</param>
@@ -197,8 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
 
         public override string ToString()
         {
-            return string.Format("{0}: {1} ({2})", PropertyDefinition.Caption, GetValueAsString(),
-                                 PropertyDefinition.Category);
+            return $"{PropertyDefinition.Caption}: {GetValueAsString()} ({PropertyDefinition.Category})";
         }
 
         public abstract object Clone();

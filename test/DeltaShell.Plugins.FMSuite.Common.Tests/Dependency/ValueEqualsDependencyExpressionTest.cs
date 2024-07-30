@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             Assert.IsTrue(isEnabledMethod(properties),
                 "Support enum and compare on integer representation.");
 
-            propertyB.SetValueAsString("2");
+            propertyB.SetValueFromString("2");
             Assert.IsFalse(isEnabledMethod(properties),
                 "Support enum and compare on integer representation.");
 
@@ -88,11 +88,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             isEnabledMethod = expression.CompileExpression(propertyToBeComppiled, properties, propertyToBeComppiled.PropertyDefinition.EnabledDependencies);
             Assert.IsTrue(isEnabledMethod(properties),
                 "Support enum and match to a set of integers.");
-            propertyB.SetValueAsString("-1");
+            propertyB.SetValueFromString("-1");
             Assert.IsTrue(isEnabledMethod(properties),
                 "Support enum and match to a set of integers.");
 
-            propertyB.SetValueAsString("0");
+            propertyB.SetValueFromString("0");
             Assert.IsFalse(isEnabledMethod(properties),
                 "Support enum and match to a set of integers.");
 
@@ -113,11 +113,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             isEnabledMethod = expression.CompileExpression(propertyToBeComppiled, properties, propertyToBeComppiled.PropertyDefinition.EnabledDependencies);
             Assert.IsTrue(isEnabledMethod(properties),
                 "Support enum and match to a set of integers.");
-            propertyC.SetValueAsString("2");
+            propertyC.SetValueFromString("2");
             Assert.IsTrue(isEnabledMethod(properties),
                 "Support enum and match to a set of integers.");
 
-            propertyC.SetValueAsString("0");
+            propertyC.SetValueFromString("0");
             Assert.IsFalse(isEnabledMethod(properties),
                 "Support enum and match to a set of integers.");
 

@@ -268,7 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             if (property.LinkedModelProperty != null)
             {
-                property.LinkedModelProperty.SetValueAsString(property.LinkedModelProperty.PropertyDefinition.DefaultValueAsStringArray[(int)property.Value]);
+                property.LinkedModelProperty.SetValueFromString(property.LinkedModelProperty.PropertyDefinition.DefaultValueAsStringArray[(int)property.Value]);
             }
         }
 
@@ -349,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public void SetModelProperty(string propertyName, string value)
         {
             WaterFlowFMProperty waterFlowFMProperty = GetModelProperty(propertyName);
-            waterFlowFMProperty?.SetValueAsString(value);
+            waterFlowFMProperty?.SetValueFromString(value);
         }
         
         /// <summary>
@@ -389,7 +389,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 MapFormatType mapFormatValue;
                 return Enum.TryParse(mapFormatStringValue, out mapFormatValue) ? mapFormatValue : MapFormatType.Unknown;
             }
-            set { GetModelProperty(KnownProperties.MapFormat).SetValueAsString(((int)value).ToString()); }
+            set { GetModelProperty(KnownProperties.MapFormat).SetValueFromString(((int)value).ToString()); }
         }
 
         public void SetMapFormatPropertyValue()
@@ -422,6 +422,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             get { return GetFilePathFromProperty("HisFile", ModelName + "_his.nc"); }
         }
+        
+        /// <summary>
+        /// Retrieves the properties that represent a file location.
+        /// </summary>
+        public IEnumerable<WaterFlowFMProperty> FileProperties => Properties.Where(x => x.PropertyDefinition.IsFile);
 
         private string GetFilePathFromProperty(string propertyName, string defaultName)
         {

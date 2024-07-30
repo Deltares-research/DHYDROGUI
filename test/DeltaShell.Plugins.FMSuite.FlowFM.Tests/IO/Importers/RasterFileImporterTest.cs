@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                         Project project = app.ProjectService.CreateProject();
                         project.RootFolder.Add(model);
                         var facesValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
-                        model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(facesValue);
+                        model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(facesValue);
 
                         // open view for model
                         gui.CommandHandler.OpenView(model);
@@ -323,7 +323,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                         Project project = gui.Application.ProjectService.CreateProject();
                         project.RootFolder.Add(model);
                         var facesValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
-                        model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(facesValue);
+                        model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(facesValue);
 
                         // open view for model
                         gui.CommandHandler.OpenView(model);

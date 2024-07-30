@@ -366,7 +366,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Setup
             using (var model = new WaterFlowFMModel())
             {
-                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("false");
+                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueFromString("false");
                 // Call
                 model.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
 

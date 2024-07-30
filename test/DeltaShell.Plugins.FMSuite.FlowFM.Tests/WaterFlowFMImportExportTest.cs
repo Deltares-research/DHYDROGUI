@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ExportImportAssertUseTemperatureIsSetCorrectly()
         {
             var waterFlowFMModel = new WaterFlowFMModel();
-            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
+            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("3");
             const string dir = "temptest";
             Directory.CreateDirectory(dir);
             const string mduFileName = "excesstemp.mdu";
@@ -399,7 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                         var cellsValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
-                        model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
+                        model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(cellsValue);
 
                         model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
                         model.SedimentFractions.Add(new SedimentFraction { Name = "Fraction" });

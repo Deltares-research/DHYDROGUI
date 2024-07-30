@@ -194,14 +194,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         /*  We set the value now to avoid catching a 'used custom value' in the SedimentFile, or elsewhere */
 
                         if (!string.IsNullOrEmpty(readProp.Value))
-                            newProp.SetValueAsString(readProp.Value);
+                            newProp.SetValueFromString(readProp.Value);
 
                         definition.AddProperty(newProp);
                         continue;
                     }
                     if (!string.IsNullOrEmpty(readProp.Value))
                     {
-                        definition.GetModelProperty(readProp.Key).SetValueAsString(readProp.Value);
+                        definition.GetModelProperty(readProp.Key).SetValueFromString(readProp.Value);
                     }
                 }
             }

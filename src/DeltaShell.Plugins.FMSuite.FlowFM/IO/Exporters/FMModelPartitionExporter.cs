@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 var modelDefinition = waterFlowFMModel.ModelDefinition;
                 var igcSolverProperty = modelDefinition.GetModelProperty(KnownProperties.SolverType);
                 var originalSolverType = igcSolverProperty.GetValueAsString();
-                igcSolverProperty.SetValueAsString("2"); //ensure init works
+                igcSolverProperty.SetValueFromString("2"); //ensure init works
 
                 waterFlowFMModel.ExportTo(filePath, false);
                 
@@ -71,13 +71,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 {
                     filePath = filePathWithoutExtension + "_" + string.Format("{0:0000}", i++) + ".mdu";
 
-                    netFileProperty.SetValueAsString(netFile);
-                    igcSolverProperty.SetValueAsString(SolverType > 0 ? SolverType.ToString() : originalSolverType);
+                    netFileProperty.SetValueFromString(netFile);
+                    igcSolverProperty.SetValueFromString(SolverType > 0 ? SolverType.ToString() : originalSolverType);
                     new MduFile().WriteProperties(filePath, modelDefinition.Properties, true, true, false, false, waterFlowFMModel.DisableFlowNodeRenumbering);
                 }
-                netFileProperty.SetValueAsString(originalNetFile);
-                partFileProperty.SetValueAsString(originalPartFile);
-                igcSolverProperty.SetValueAsString(originalSolverType);
+                netFileProperty.SetValueFromString(originalNetFile);
+                partFileProperty.SetValueFromString(originalPartFile);
+                igcSolverProperty.SetValueFromString(originalSolverType);
             }
 
             return true;

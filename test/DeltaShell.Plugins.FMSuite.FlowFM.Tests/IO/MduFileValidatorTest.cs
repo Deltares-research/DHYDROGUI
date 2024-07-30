@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             WaterFlowFMProperty fileProperty = GetFileProperties().First(p => p.PropertyDefinition.IsMultipleFile);
             SetMultipleFileReferencesInMduDir(fileProperty);
             
-            fileProperty.SetValueAsString(fileProperty.GetValueAsString().Replace(' ', ';'));
+            fileProperty.SetValueFromString(fileProperty.GetValueAsString().Replace(' ', ';'));
 
             IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(
                 () => validator.Validate());
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void Validate_FilePropertiesWithInvalidCharactersInFileReference_LogsErrorMessages(string fileName)
         {
             IEnumerable<WaterFlowFMProperty> fileProperties = GetFileProperties().ToArray();
-            fileProperties.ForEach(p => p.SetValueAsString(fileName));
+            fileProperties.ForEach(p => p.SetValueFromString(fileName));
 
             IEnumerable<string> expected = fileProperties.Select(GetInvalidCharactersInPathMessage).ToArray();
 
@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void Validate_FilePropertiesWithInvalidCharactersInFileReferences_ClearsPropertyValues(string fileName)
         {
             IEnumerable<WaterFlowFMProperty> fileProperties = GetFileProperties().ToArray();
-            fileProperties.ForEach(p => p.SetValueAsString(fileName));
+            fileProperties.ForEach(p => p.SetValueFromString(fileName));
 
             validator.Validate();
 
@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private void SetFileReferenceInMduDir(WaterFlowFMProperty property, string fileName)
         {
-            property.SetValueAsString(fileName);
+            property.SetValueFromString(fileName);
             fileSystem.AddEmptyFile($"{mduDir}{fileName}");
         }
 
@@ -261,7 +261,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string fileName1 = CreateFileName();
             string fileName2 = CreateFileName();
 
-            property.SetValueAsString($"{fileName1} {fileName2}");
+            property.SetValueFromString($"{fileName1} {fileName2}");
 
             fileSystem.AddEmptyFile($"{mduDir}{fileName1}");
             fileSystem.AddEmptyFile($"{mduDir}{fileName2}");
@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var fileName = $@"..\data\{CreateFileName()}";
 
-            property.SetValueAsString(fileName);
+            property.SetValueFromString(fileName);
             fileSystem.AddEmptyFile($"{mduDir}{fileName}");
         }
 
@@ -279,13 +279,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var filePath = $@"c:\data\foo\{CreateFileName()}";
 
-            property.SetValueAsString(filePath);
+            property.SetValueFromString(filePath);
             fileSystem.AddEmptyFile(filePath);
         }
 
         private void SetNotExistingFileReference(WaterFlowFMProperty property)
         {
-            property.SetValueAsString(CreateFileName());
+            property.SetValueFromString(CreateFileName());
         }
 
         private IEnumerable<WaterFlowFMProperty> GetFileProperties()

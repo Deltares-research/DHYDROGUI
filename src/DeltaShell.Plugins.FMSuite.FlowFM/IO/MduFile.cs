@@ -260,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 // Revert path substitutions
                 foreach (var itemPair in substitutedPaths)
                 {
-                    modelDefinition.GetModelProperty(itemPair.Key).SetValueAsString(itemPair.Value.Item1);
+                    modelDefinition.GetModelProperty(itemPair.Key).SetValueFromString(itemPair.Value.Item1);
                 }
             }
         }
@@ -381,7 +381,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                     if (relativeSourcePath != relativeTargetPath)
                     {
-                        fileItem.SetValueAsString(relativeTargetPath);
+                        fileItem.SetValueFromString(relativeTargetPath);
                         substitutedPaths[fileItem.PropertyDefinition.MduPropertyName] =
                             new System.Tuple<string, string>(relativeSourcePath,
                                 relativeTargetPath);
@@ -458,7 +458,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             else if (!modelDefinition.BoundaryConditions.Any())
             {
-                modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString(string.Empty);
+                modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueFromString(string.Empty);
             }
         }
 
@@ -600,7 +600,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var waterFlowFmProperty = modelDefinition.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (waterFlowFmProperty != null)
             {
-                waterFlowFmProperty.SetValueAsString(value);
+                waterFlowFmProperty.SetValueFromString(value);
             }
         }
 
@@ -656,7 +656,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             else
             {
-                waterFlowFMProperty.SetValueAsString(string.Empty);
+                waterFlowFMProperty.SetValueFromString(string.Empty);
             }
         }
 
@@ -669,7 +669,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             grouping = features.OfType<IGroupableFeature>().GroupBy(f => f.GroupName, StringComparer.InvariantCultureIgnoreCase).ToList();
 
-            waterFlowFMProperty.SetValueAsString(string.Join(" ", writeToRelativeFilePaths.Select(f => IOPath.HasExtension(f) ? f : string.Concat(f, extension))));
+            waterFlowFMProperty.SetValueFromString(string.Join(" ", writeToRelativeFilePaths.Select(f => IOPath.HasExtension(f) ? f : string.Concat(f, extension))));
         }
 
         private static void AddDryAreasToWriter(string targetMduFilePath, IList<GroupableFeature2DPolygon> features, string extension,
@@ -684,7 +684,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (writeToRelativeFilePaths.Any())
             {
                 var currentStringValue = waterFlowFMProperty.GetValueAsString();
-                waterFlowFMProperty.SetValueAsString(currentStringValue + " " + string.Join(" ", writeToRelativeFilePaths.Select(f => IOPath.HasExtension(f)
+                waterFlowFMProperty.SetValueFromString(currentStringValue + " " + string.Join(" ", writeToRelativeFilePaths.Select(f => IOPath.HasExtension(f)
                                                                  ? f
                                                                  : string.Concat(f, extension))));
             }
@@ -733,7 +733,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             else
             {
-                waterFlowFMProperty.SetValueAsString(string.Empty);
+                waterFlowFMProperty.SetValueFromString(string.Empty);
             }
         }
 
@@ -1191,7 +1191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 mduPropertyValue = GetMduPropertyMultipleLineValueRecursive(mduPropertyName, mduPropertyValue, ref line, ref readNextLine);
                             }
 
-                            property.SetValueAsString(mduPropertyValue);
+                            property.SetValueFromString(mduPropertyValue);
                         }
                     }
 
@@ -1468,7 +1468,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             RemoveAllNonExistentFilePaths(featureFilePaths, mduFilePath, modelDefinition, propertyKey);
             RemoveAllStructuresFilesWithBadReferences(featureFilePaths, modelDefinition);
-            modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", featureFilePaths));
+            modelDefinition.GetModelProperty(propertyKey).SetValueFromStrings(featureFilePaths);
         }
 
         /// <summary>
@@ -1565,7 +1565,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
             featureGroupNames.RemoveAllWhere(fp => fp == null);
-            modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", featureGroupNames.Select(fp => FileUtils.GetRelativePath(mduDirectory, fp, true))));
+            modelDefinition.GetModelProperty(propertyKey).SetValueFromStrings(featureGroupNames.Select(fp => FileUtils.GetRelativePath(mduDirectory, fp, true)));
         }
 
         #endregion

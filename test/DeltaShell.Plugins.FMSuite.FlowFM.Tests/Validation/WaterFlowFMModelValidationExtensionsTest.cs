@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             //Validate model
             var report = model.Validate();
             salinityProperty.Value = true;
-            temperatureProperty.SetValueAsString("1");
+            temperatureProperty.SetValueFromString("1");
 
             Assert.AreEqual(0,
                 report.GetAllIssuesRecursive()
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void CheckSolverTypeValidation()
         {
             var model = new WaterFlowFMModel { CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824) };
-            model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueAsString("7");
+            model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueFromString("7");
 
             var report = model.Validate();
 

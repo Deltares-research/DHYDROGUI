@@ -25,9 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var model = new WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false, false);
                 File.Copy(netFile, model.NetFilePath, true);
-                model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(model.NetFilePath));
+                model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueFromString(Path.GetFileName(model.NetFilePath));
 
-                model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).SetValueAsString("Y");
+                model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).SetValueFromString("Y");
 
                 var api = new UnstrucGridOperationApi(model, false);
                 var tempMduPath = (string)TypeUtils.GetField<UnstrucGridOperationApi, String>(api, "mduFilePath");
@@ -61,9 +61,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var model = new WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false, false);
                 File.Copy(netFile, model.NetFilePath, true);
-                model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(model.NetFilePath));
+                model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueFromString(Path.GetFileName(model.NetFilePath));
 
-                model.ModelDefinition.GetModelProperty(knownProperties).SetValueAsString(file);
+                model.ModelDefinition.GetModelProperty(knownProperties).SetValueFromString(file);
                
 
                 var api = new UnstrucGridOperationApi(model, false);

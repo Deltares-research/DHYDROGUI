@@ -187,8 +187,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
-            var roughnessFileNames = modelDefinition.GetModelProperty(KnownProperties.FrictFile).GetValueAsString()?.Split(' ', ';');
-            if (roughnessFileNames == null || roughnessFileNames.Length == 0)
+            var roughnessFileNames = modelDefinition.GetModelProperty(KnownProperties.FrictFile).GetFileLocationValues();
+            if (!roughnessFileNames.Any())
             {
                 return;
             }

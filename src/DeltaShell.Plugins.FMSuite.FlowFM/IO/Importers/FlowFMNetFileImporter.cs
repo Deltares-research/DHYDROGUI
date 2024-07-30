@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 if (Path.GetFullPath(destFileName) != Path.GetFullPath(path))
                 {
                     File.Copy(path, destFileName, true);
-                    flowModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(destFileName));
+                    flowModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueFromString(Path.GetFileName(destFileName));
                 }
                 flowModel.ReloadGrid(false, true);
 

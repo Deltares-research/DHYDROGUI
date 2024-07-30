@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
             
             // Set to: no infiltration
-            model.ModelDefinition.GetModelProperty("infiltrationmodel").SetValueAsString("0");
+            model.ModelDefinition.GetModelProperty("infiltrationmodel").SetValueFromString("0");
             
             // Call
             object[] objects = nodePresenter.GetChildNodeObjects(model, null).Cast<object>().ToArray();
