@@ -92,8 +92,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Add.ButtonImport' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Add.ButtonImportInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Add.ButtonImport.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Add.ButtonImport' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Add.ButtonImportInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Add.ButtonImport.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Wait", "Waiting 5s to exist. Associated repository item: 'ContextMenu.HydrodynamicsAsteriskHyd'", repo.ContextMenu.HydrodynamicsAsteriskHydInfo, new ActionTimeout(5000), new RecordItemIndex(1));

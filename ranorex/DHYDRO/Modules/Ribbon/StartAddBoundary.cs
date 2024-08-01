@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.AddBoundaryButton' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.AddBoundaryButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.AddBoundaryButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.FM_Region_2D___3D.AddBoundaryButton' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.FM_Region_2D___3D.AddBoundaryButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.FM_Region_2D___3D.AddBoundaryButton.Click();
             Delay.Milliseconds(0);
             
         }

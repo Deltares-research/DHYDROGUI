@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Drawing;
 using System.Threading;
+using DHYDRO.Code;
 using WinForms = System.Windows.Forms;
 
 using Ranorex;
@@ -30,8 +31,7 @@ namespace DHYDRO.Modules.Map
         /// </summary>
         private void Init()
         {
-            // Your recording specific initialization code goes here.
+            FilePath = FileUtils.GetAbsolutePath(Get.InputDirectory, FilePath);
         }
-
     }
 }

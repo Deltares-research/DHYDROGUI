@@ -2,57 +2,19 @@
 <testsuitedoc>
 	<testsuiteentryhierarchy>
 		<flatlistofchildren>
-			<modulegroup
-			id="00472aec-9109-4283-ba91-7c637320a748"
-			name="ImportDFlowFMModel"
-			ref="97411fef-a968-4120-98ab-9188e0a8dc85">
-				<databinding>
-					<var
-					dataname="MduFilePath"
-					datasourceid="b93410bb-7abe-46c1-9e2d-93a4a86e2ec9"
-					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
-					variablename="MduFilePath">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="NameModelTypeToImport"
-					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
-					variableid="68f812eb-c408-42db-ad93-9bedf839d41b"
-					variablename="ModuleGroupNameModelTypeToImport">
-					</var>
-					<var
-					dataname="MduFilePath"
-					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
-					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
-					variablename="MduFilePath">
-					</var>
-				</missingdatabinding>
-			</modulegroup>
 			<smartfoldernode
-			id="02c97d7e-9793-4d88-a4ff-1a7dc516451f"
-			name="AddObservationPoints">
+			datasource="AstronomicalComponentsWestBC"
+			id="0176042a-03bb-44c1-a26d-707a454e7793"
+			name="SelectAstronomicalComponentsWestBC">
 			</smartfoldernode>
 			<smartfoldernode
-			id="03363b56-c2d1-4de8-8642-ef44d47a7083"
-			name="RunModel">
-				<parameters>
-					<param
-					mask="False"
-					name="ModelName"
-					value="westernscheldt08">
-					</param>
-					<param
-					mask="False"
-					name="RunOptionName"
-					value="Run Model">
-					</param>
-				</parameters>
+			id="02c8337b-d0fc-4836-b495-3966f5ec7e0e"
+			name="StopAddingObservationPoints">
 			</smartfoldernode>
 			<testmodule
-			id="0419327c-25b8-4523-acde-a9c538570dd6"
-			name="StartSaveAsProject"
-			ref="afdf4c01-a73b-49fc-8985-3bf446d2ebcd"
+			id="04a69735-f81e-4bdd-bbe0-578459fa1bbe"
+			name="ScreenshotCentralDocumentView"
+			ref="c5295c58-dc47-4006-937a-9ec7192f25b8"
 			type="Recording">
 			</testmodule>
 			<testmodule
@@ -83,28 +45,6 @@
 					</var>
 				</databinding>
 			</testmodule>
-			<smartfoldernode
-			id="062d693e-e491-4522-bbea-13e876953256"
-			name="ImportModel">
-				<parameters>
-					<param
-					mask="False"
-					name="MduFilePath"
-					value="exercise09\exercise09.mdu">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<testcase
-			id="0694f60a-f6ef-44b9-975e-3f802bbc1c08"
-			name="Exercise_06_Imposing_boundary_conditions">
-				<parameters>
-					<param
-					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
-					</param>
-				</parameters>
-			</testcase>
 			<testmodule
 			id="06bf10f2-ac67-49a3-ad5c-7f4810c6c860"
 			name="CloseAUT"
@@ -123,6 +63,40 @@
 			id="078aa058-b22a-41e4-a2a4-3cfe192e5891"
 			name="setup">
 			</setup>
+			<testmodule
+			id="0802bc44-018d-4b8d-924a-a85adb24caad"
+			name="ConvertDoubleToCurrentCulture"
+			ref="fdf9ecbc-142c-4210-ab32-f9846d51af27"
+			type="UserCode">
+				<databinding>
+					<var
+					dataname="ParameterValue"
+					datasourceid="6885a4d7-a219-4abc-918d-1bcb807e9606"
+					variableid="814ae3f0-5a9d-4964-88c7-18b5716ee9a3"
+					variablename="stringToConvert">
+					</var>
+					<var
+					dataname="numericValueToAssign"
+					datasourceid="a46f932c-5b64-4ea2-ae42-77070b532939"
+					variableid="ac1b2271-2ef8-44de-a3cd-04ec9493d520"
+					variablename="stringConverted">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="ValueParameter"
+					datasourceid="75984ae1-b447-4bc2-a0ef-2b55f1f1605f"
+					variableid="814ae3f0-5a9d-4964-88c7-18b5716ee9a3"
+					variablename="stringToConvert">
+					</var>
+					<var
+					dataname="numericValueToAssign"
+					datasourceid="d3b3815f-5934-4101-a50b-771fa5d8972e"
+					variableid="ac1b2271-2ef8-44de-a3cd-04ec9493d520"
+					variablename="stringConverted">
+					</var>
+				</missingdatabinding>
+			</testmodule>
 			<modulegroup
 			id="08ab3b8e-d050-41b2-bbb0-6ecb74b87179"
 			name="ImportFileInProjectTree"
@@ -162,283 +136,104 @@
 					</var>
 				</databinding>
 			</testmodule>
-			<testmodule
-			id="0b0ed901-1d24-4983-b8cc-2e318e32f2c3"
-			name="SelectSupportPoint"
-			ref="84aded17-affa-4df7-84e8-ebaf617dfc3f"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="SupportPointName1"
-					datasourceid="316aae83-7630-431c-8f55-1552922b46b8"
-					variableid="5fa0df42-3429-4094-a902-91befaef4b36"
-					variablename="SupportPointName">
-					</var>
-				</databinding>
-			</testmodule>
-			<modulegroup
-			id="0d2309fb-60db-4897-903c-29448f9fd4b1"
-			name="CloseProjectWithSaving"
-			ref="463c6d79-6646-4799-89e5-f4e7df0da757">
-				<databinding>
-					<var
-					dataname="SaveProjectFilePath"
-					datasourceid="5e07318e-7f10-402a-bdae-f99f6fa25183"
-					variableid="18b1f8ea-24ce-45cf-bbab-5bbb3ad84985"
-					variablename="SaveProjectFilePath">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="SaveProjectFilePath"
-					datasourceid="5dae7762-f20e-4666-bcb5-dbc58932fbdb"
-					variableid="18b1f8ea-24ce-45cf-bbab-5bbb3ad84985"
-					variablename="ModuleGroupSaveProjectFilePath">
-					</var>
-				</missingdatabinding>
-			</modulegroup>
-			<smartfoldernode
-			id="0eb04756-517d-429c-bc0a-c68ec2eefb90"
-			name="OpenSettings">
-				<parameters>
-					<param
-					mask="False"
-					name="ModelName"
-					value="exercise08">
-					</param>
-					<param
-					mask="False"
-					name="SettingsOptionName"
-					value="Settings">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<modulegroup
-			id="123124d6-e668-402f-b556-ed33c8d9e0e9"
-			name="ExportDimrModel"
-			ref="ae57245a-f450-4c2b-a380-39f288b3b304">
-				<databinding>
-					<var
-					dataname="ExportDimrFilePath"
-					datasourceid="aec2ae0b-44e1-4de3-be65-8263f2dc4870"
-					variableid="e98f476c-ea03-457e-97cc-d802fd33a56c"
-					variablename="ExportDimrFilePath">
-					</var>
-				</databinding>
-			</modulegroup>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="12c83d43-12b7-485b-8457-9ed14ace91ef"
-			name="DeleteModel">
-				<parameters>
-					<param
-					mask="False"
-					name="ModelName"
-					value="westernscheldt07">
-					</param>
-					<param
-					mask="False"
-					name="OptionContextMenuToDelete"
-					value="Delete">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<modulegroup
-			id="14548160-fa3e-44e3-aa3e-8fe6f1a98fa8"
-			name="ImportDFlowFMModel"
-			ref="97411fef-a968-4120-98ab-9188e0a8dc85">
-				<databinding>
-					<var
-					dataname="MduFilePath"
-					datasourceid="cac6d798-c8f7-4810-8d95-1cbb1f290f5d"
-					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
-					variablename="MduFilePath">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="NameModelTypeToImport"
-					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
-					variableid="68f812eb-c408-42db-ad93-9bedf839d41b"
-					variablename="ModuleGroupNameModelTypeToImport">
-					</var>
-					<var
-					dataname="MduFilePath"
-					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
-					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
-					variablename="MduFilePath">
-					</var>
-				</missingdatabinding>
-			</modulegroup>
-			<testmodule
-			id="1745003e-1171-49bc-80be-7896a2c0bbf7"
-			name="ScreenshotCentralDocumentView"
-			ref="c5295c58-dc47-4006-937a-9ec7192f25b8"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="19985217-c51a-4e7d-8018-38267e4faa49"
-			name="WaitForInterpolationFinished"
-			ref="914ba4ee-8f30-40a9-8dc6-0d29d03bdc16"
-			type="Recording">
-				<description>
-					<![CDATA[Wait until corresponding item is present in Operation panel]]>
-				</description>
-			</testmodule>
 			<smartfoldernode
 			datasource="OutputGroupSettings"
-			id="1d52a2e7-52df-4fb9-95ee-17319dd6c202"
+			id="0e662010-35e5-40b8-a8e1-9d0f5cafe04b"
 			name="SetOutputSettingsWithDataSource">
 			</smartfoldernode>
 			<testmodule
-			id="1dea9f64-5e89-4abc-ab43-bf10a39a443b"
-			name="SaveAsFile"
-			ref="e2e07b1f-fc3f-47b6-bff3-f79aadf7f36d"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="FilePath"
-					datasourceid="a3f6bf3e-1f50-4d02-ae64-75e08b47f88f"
-					variableid="badbcc3f-d50d-4e11-9cfe-3b802abe7811"
-					variablename="FilePath">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
-			id="1dfd687b-6e90-4e96-9b81-6b20b2223f9e"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<description>
-					<![CDATA[Select Run option in context menu]]>
-				</description>
-				<databinding>
-					<var
-					dataname="RunOptionName"
-					datasourceid="03363b56-c2d1-4de8-8642-ef44d47a7083"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
-			id="1e6d73b2-9809-4416-83e3-b5c6fa484c94"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
+			id="0e8b7aac-aea6-4a47-ab21-c99c281692fb"
+			name="SelectComponentsAstronomicalBCTimeSeries"
+			ref="448f57b3-16b5-4134-b1c0-ddd93917f08c"
 			type="Recording">
 			</testmodule>
-			<modulegroup
-			id="1f5928f5-33ec-44a1-bd68-2f3f9374982b"
-			name="AdjustBoundaryConditionSettings"
-			ref="e4ece066-bfd8-4e3e-bd30-925cb4ab5b44">
-				<databinding>
-					<var
-					dataname="BoundaryName"
-					datasourceid="25ac1849-0328-45df-bf46-b66587aa9531"
-					variableid="4f55b208-3692-4a13-8cc2-236fac5d8d43"
-					variablename="BoundaryName">
-					</var>
-					<var
-					dataname="Quantity"
-					datasourceid="25ac1849-0328-45df-bf46-b66587aa9531"
-					variableid="4cd512a9-a756-4ec3-9d60-9f762c071004"
-					variablename="Quantity">
-					</var>
-					<var
-					dataname="ForcingType"
-					datasourceid="25ac1849-0328-45df-bf46-b66587aa9531"
-					variableid="bfe00cc5-a624-462b-9ea1-2d0000837fdd"
-					variablename="ForcingType">
-					</var>
-				</databinding>
-			</modulegroup>
-			<smartfoldernode
-			datasource="BoundaryWestCoordinates"
-			id="1fb2a9f5-26b0-43b3-9252-a69470a7e21a"
-			name="DrawIntermediatePoints">
-			</smartfoldernode>
-			<smartfoldernode
-			id="206f654c-1647-4fab-a149-b61b1488423a"
-			name="SetTimeFrameSettings">
-				<parameters>
-					<param
-					mask="False"
-					name="NameSubTabToSelect"
-					value="Time Frame">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<modulegroup
-			id="226c5cd8-cad2-4e35-a745-9ecd1add107a"
-			name="RenameModel"
-			ref="808caf3e-efd2-4be8-9b5e-3dee4610c671">
-				<databinding>
-					<var
-					dataname="NewModelName"
-					datasourceid="9332b617-9627-4ffb-b2f2-1ffebe421fd3"
-					variableid="15b209bb-082f-48d9-9062-4b11d4c5e9eb"
-					variablename="NewModelName">
-					</var>
-				</databinding>
-			</modulegroup>
-			<smartfoldernode
-			id="2433ccff-35e6-411d-8ae8-8a182dc70df5"
-			name="CloseMapView">
-			</smartfoldernode>
 			<testmodule
-			id="250235ea-eade-4d2d-9d35-a8458161b711"
-			name="StartInterpolation"
-			ref="4ee3e88f-a9b0-4267-b0bd-202fc08ac081"
-			type="Recording">
-			</testmodule>
-			<smartfoldernode
-			id="25ac1849-0328-45df-bf46-b66587aa9531"
-			name="ImposeWestBoundaryCondition">
-				<parameters>
-					<param
-					mask="False"
-					name="BoundaryName"
-					value="Boundary01">
-					</param>
-					<param
-					mask="False"
-					name="Quantity"
-					value="Water level">
-					</param>
-					<param
-					mask="False"
-					name="ForcingType"
-					value="Astronomical">
-					</param>
-					<param
-					mask="False"
-					name="ModelName"
-					value="FlowFM">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<testmodule
-			id="28912260-464e-4d79-83ac-4970b32db3e6"
-			name="SelectAstronomicalComponent"
-			ref="7ed9ccbf-2400-419c-9b17-bfb7b53042d6"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="ComponentNameBetweenSemiColons"
-					datasourceid="70327620-bfaa-4df6-ba85-bc963139002b"
-					variableid="17c28b1a-4dab-4317-84e4-83aa7c764b95"
-					variablename="NameAstronomicalComponent">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
-			id="28b86e38-0352-49b0-a8db-dee76df76306"
+			id="0f7f3beb-9300-4819-a0f4-b1e869632f97"
 			name="CalibrateMap"
 			ref="0bc79973-0c13-4f47-8c3c-06da550f6269"
 			type="UserCode">
 			</testmodule>
 			<smartfoldernode
-			id="316aae83-7630-431c-8f55-1552922b46b8"
+			errorbehavior="ContinueParent"
+			id="10366c44-1add-4ddf-a5b7-cd0e47009d2d"
+			name="ExportModel">
+				<parameters>
+					<param
+					mask="False"
+					name="ExportMduDirectory"
+					value="exercise07_result">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<modulegroup
+			id="10c7ef90-e498-4c4b-9867-3f46552a2406"
+			name="StartupApplication"
+			ref="91b1037f-1045-4bd7-a324-632b2dc46edc">
+				<databinding>
+					<var
+					dataname="ExecutablePath"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
+					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
+					variablename="ModuleGroupExecutablePath">
+					</var>
+					<var
+					dataname="AppProcessID"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
+					variableid="c2568f59-4792-4dc0-825d-965e7f83cdf1"
+					variablename="ModuleGroupAppProcessID">
+					</var>
+				</databinding>
+			</modulegroup>
+			<testmodule
+			id="119beca5-52ce-4208-9563-cb2e2b5200d0"
+			name="SelectMapRibbonTab"
+			ref="98b511f8-f9eb-48f8-9d23-86cfd78aaf40"
+			type="Recording">
+				<missingdatabinding>
+					<var
+					dataname="TabName"
+					datasourceid="57479806-35f8-4fcb-b83b-5618a574c840"
+					variableid="d1107f4e-97fa-474d-b473-c78f2420dfec"
+					variablename="TabName">
+					</var>
+				</missingdatabinding>
+			</testmodule>
+			<testmodule
+			id="1236fa61-5c00-48b7-9e12-9090dda84207"
+			name="SelectSubTabSettings"
+			ref="f9775878-6727-409e-8319-2ee399166bb6"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="NameSubTabToSelect"
+					datasourceid="956c78e3-1315-4497-bad9-74135b5902b5"
+					variableid="4dc4a29e-24b4-4c49-9e90-db968bf0d9a6"
+					variablename="NameSubTab">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="NameSubTabToSelect"
+					datasourceid="5bfeb3a4-3c30-4590-a4b1-ad901aedf9e9"
+					variableid="4dc4a29e-24b4-4c49-9e90-db968bf0d9a6"
+					variablename="NameSubTab">
+					</var>
+				</missingdatabinding>
+			</testmodule>
+			<smartfoldernode
+			errorbehavior="ContinueParent"
+			id="143c89e2-4f8f-494b-9dce-92ba0f056ce9"
+			name="RenameModel">
+				<parameters>
+					<param
+					mask="False"
+					name="NewModelName"
+					value="exercise06">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<smartfoldernode
+			id="15940b33-fbd9-4afd-9df4-5cfe8a2b666d"
 			name="AddNewBCDefinition">
 				<parameters>
 					<param
@@ -453,94 +248,152 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
+			<smartfoldernode
+			datasource="ObservationCrossSectionPoints"
+			id="16611ffc-4200-4d71-861e-14428b4b11b6"
+			name="DrawCrossSections">
+			</smartfoldernode>
 			<testmodule
-			id="31bb2245-be18-4bdd-ba18-1b3ad654547a"
-			name="SingleClickOnMap"
-			ref="ee5c623f-6a42-49cc-9fa1-7e2c127a2046"
+			id="19985217-c51a-4e7d-8018-38267e4faa49"
+			name="WaitForInterpolationFinished"
+			ref="914ba4ee-8f30-40a9-8dc6-0d29d03bdc16"
 			type="Recording">
+				<description>
+					<![CDATA[Wait until corresponding item is present in Operation panel]]>
+				</description>
+			</testmodule>
+			<smartfoldernode
+			errorbehavior="ContinueParent"
+			id="19f7fb21-f499-49f4-a558-3ccc1a079539"
+			name="ExportModel">
+				<parameters>
+					<param
+					mask="False"
+					name="ExportMduDirectory"
+					value="exercie08_result">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<testcase
+			id="1c5b6d2c-1e6c-4c65-b75c-71930fecac39"
+			name="Exercise_07_Defining_output_locations">
+			</testcase>
+			<testmodule
+			id="1d446713-a7bb-48da-ad14-a28695998a58"
+			name="ConvertDoubleToCurrentCulture"
+			ref="fdf9ecbc-142c-4210-ab32-f9846d51af27"
+			type="UserCode">
 				<databinding>
 					<var
-					dataname="XY"
-					datasourceid="39707c8a-5b15-4b51-a6b1-3cc61ba2f9d9"
-					variableid="77d7f94d-4106-4ca0-acea-ba88c380d490"
-					variablename="WorldCoordinates">
+					dataname="ValueParameter"
+					datasourceid="75984ae1-b447-4bc2-a0ef-2b55f1f1605f"
+					variableid="814ae3f0-5a9d-4964-88c7-18b5716ee9a3"
+					variablename="stringToConvert">
 					</var>
 					<var
-					dataname="PixelCoordinates"
-					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
-					variableid="707bc6b8-b470-44b1-973d-60264995e110"
-					variablename="PixelCoordinates">
+					dataname="numericValueToAssign"
+					datasourceid="402d84c5-ad01-4302-b3fd-20ec9af8e6cd"
+					variableid="ac1b2271-2ef8-44de-a3cd-04ec9493d520"
+					variablename="stringConverted">
 					</var>
 				</databinding>
 			</testmodule>
 			<testmodule
-			id="3256e90a-c097-4734-9f24-4e350630fcf7"
-			name="DoubleClickOnMap"
-			ref="370e08fb-dfdd-4ca5-a04a-006d54548a71"
+			id="250235ea-eade-4d2d-9d35-a8458161b711"
+			name="StartInterpolation"
+			ref="4ee3e88f-a9b0-4267-b0bd-202fc08ac081"
 			type="Recording">
-				<databinding>
-					<var
-					dataname="CoordinateLastPointBoundaryEast"
-					datasourceid="8439f903-d62d-4041-a123-23149c789f72"
-					variableid="d3ba1fc1-e053-43c3-9b35-0345077993ee"
-					variablename="WorldCoordinates">
-					</var>
-					<var
-					dataname="PixelCoordinates"
-					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
-					variableid="d7b4cda5-6f79-485b-8af1-0a83d5a7fdbc"
-					variablename="PixelCoordinates">
-					</var>
-				</databinding>
 			</testmodule>
+			<smartfoldernode
+			id="25adddfd-d3cf-47af-b334-013412a9983e"
+			name="FinishSpecification">
+				<parameters>
+					<param
+					mask="False"
+					name="SupportPointsToChoose"
+					value="Active support points">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<smartfoldernode
+			id="286610b7-6220-4a42-8ce2-50cc3d3fdada"
+			name="SetOutputSettings">
+				<parameters>
+					<param
+					mask="False"
+					name="NameSubTabToSelect"
+					value="Output Parameters">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<smartfoldernode
+			id="28959490-2536-4d65-8b54-de2aeda82b7d"
+			name="StopDrawingCrossSections">
+			</smartfoldernode>
+			<smartfoldernode
+			id="29076f47-3883-4f9f-9d44-9b5bb8052d7d"
+			name="FinishDrawingBoundary">
+				<parameters>
+					<param
+					mask="False"
+					name="WorldCoordinateLastPointWestBoundary"
+					value="17935;379129">
+					</param>
+				</parameters>
+			</smartfoldernode>
 			<testmodule
-			id="33cca565-84f9-473d-84d8-ddb9463cb82e"
-			name="WaitForMessageInPanel"
-			ref="32ec47a0-3149-4df2-af94-407b6ab2fd70"
+			id="2a89fa4a-cc79-47bd-8cdd-360aee4ced0c"
+			name="SetTimeFrameSettings"
+			ref="5db26d24-9913-4622-af11-98104ae5007f"
 			type="Recording">
+			</testmodule>
+			<smartfoldernode
+			errorbehavior="ContinueParent"
+			id="2e4140f2-61f8-4896-9e0d-0fc28c09c6b2"
+			name="DeleteModel">
+				<parameters>
+					<param
+					mask="False"
+					name="ModelName"
+					value="westernscheldt07">
+					</param>
+					<param
+					mask="False"
+					name="OptionContextMenuToDelete"
+					value="Delete">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<smartfoldernode
+			datasource="BoundaryWestCoordinates"
+			id="2f1ba57d-cd0f-4540-8a4a-8a870ea02823"
+			name="DrawIntermediatePoints">
+			</smartfoldernode>
+			<modulegroup
+			id="313799ff-120b-40eb-92b3-11fb249c923d"
+			name="AdjustBoundaryConditionSettings"
+			ref="e4ece066-bfd8-4e3e-bd30-925cb4ab5b44">
 				<databinding>
 					<var
-					dataname="messageWhenFinishedSaving"
-					datasourceid="a3f6bf3e-1f50-4d02-ae64-75e08b47f88f"
-					variableid="8e5500c4-b59b-4c0c-9417-425c3691ddd3"
-					variablename="expectedMessage1stRow">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
-			id="33f47658-3e6c-44c4-b1f9-673ceda93756"
-			name="WaitForMessageInPanel"
-			ref="32ec47a0-3149-4df2-af94-407b6ab2fd70"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="messageWhenFinishedSaving"
-					datasourceid="9531a8ff-be7f-49b0-aacc-45fe045fde7d"
-					variableid="8e5500c4-b59b-4c0c-9417-425c3691ddd3"
-					variablename="expectedMessage1stRow">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
-			id="347a7b12-66bf-4cc7-9c0c-7a343f55021e"
-			name="DoubleClickOnMap"
-			ref="370e08fb-dfdd-4ca5-a04a-006d54548a71"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="LastPoint"
-					datasourceid="83c5625c-24f9-4eb0-a3c8-00f38b1d0410"
-					variableid="d3ba1fc1-e053-43c3-9b35-0345077993ee"
-					variablename="WorldCoordinates">
+					dataname="BoundaryName"
+					datasourceid="d897a526-917b-470b-b7a3-5fae729bf5b6"
+					variableid="4f55b208-3692-4a13-8cc2-236fac5d8d43"
+					variablename="BoundaryName">
 					</var>
 					<var
-					dataname="PixelCoordinates"
-					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
-					variableid="d7b4cda5-6f79-485b-8af1-0a83d5a7fdbc"
-					variablename="PixelCoordinates">
+					dataname="Quantity"
+					datasourceid="d897a526-917b-470b-b7a3-5fae729bf5b6"
+					variableid="4cd512a9-a756-4ec3-9d60-9f762c071004"
+					variablename="Quantity">
+					</var>
+					<var
+					dataname="ForcingType"
+					datasourceid="d897a526-917b-470b-b7a3-5fae729bf5b6"
+					variableid="bfe00cc5-a624-462b-9ea1-2d0000837fdd"
+					variablename="ForcingType">
 					</var>
 				</databinding>
-			</testmodule>
+			</modulegroup>
 			<smartfoldernode
 			errorbehavior="ContinueParent"
 			id="3522c3c5-de8b-431a-857e-0a5bb55ed605"
@@ -553,54 +406,63 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
-			<smartfoldernode
-			id="355cbb57-8552-45b2-8c06-56788175bb80"
-			name="DrawCrossSections">
-			</smartfoldernode>
 			<testmodule
 			id="36fd5c55-fdb9-4b8f-a5f1-c1bff2b61a07"
 			name="ProceedInterpolation"
 			ref="ddffc9b9-4be0-4e72-8684-7850c9641a25"
 			type="Recording">
 			</testmodule>
+			<testmodule
+			id="371e5881-574f-4258-9228-c425360e3bf4"
+			name="CloseDocumentView"
+			ref="00a1264a-0541-4204-af34-49b608e5c993"
+			type="Recording">
+			</testmodule>
+			<smartfoldernode
+			id="37d88159-8869-45c5-a6c9-c71e25c8d9e4"
+			name="AddObservationPoints">
+			</smartfoldernode>
 			<setup
 			id="3a174dfa-e4f6-402b-a094-5f6d22f6cefc"
 			name="setup">
 			</setup>
-			<smartfoldernode
-			datasource="ObservationCrossSectionPoints"
-			id="3cd38c92-f4a5-41f4-a1e1-e3d04096a59d"
-			name="DrawCrossSections">
-			</smartfoldernode>
-			<testmodule
-			id="3d3be8d8-9074-4d6a-8e3f-8fbba65d970b"
-			name="SelectSubTabSettings"
-			ref="f9775878-6727-409e-8319-2ee399166bb6"
-			type="Recording">
+			<modulegroup
+			id="3b94feb2-f840-44b4-be2e-607ca7ddacb2"
+			name="ExportDFlowFMModel"
+			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
 				<databinding>
 					<var
-					dataname="NameSubTabToSelect"
-					datasourceid="5bfeb3a4-3c30-4590-a4b1-ad901aedf9e9"
-					variableid="4dc4a29e-24b4-4c49-9e90-db968bf0d9a6"
-					variablename="NameSubTab">
+					dataname="ExportMduDirectory"
+					datasourceid="19f7fb21-f499-49f4-a558-3ccc1a079539"
+					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
+					variablename="ExportMduDirectory">
 					</var>
 				</databinding>
-			</testmodule>
+			</modulegroup>
+			<modulegroup
+			id="3c76bd73-82a3-4dd7-bbd7-b6559f5029a1"
+			name="CloseProjectWithSaving"
+			ref="463c6d79-6646-4799-89e5-f4e7df0da757">
+				<databinding>
+					<var
+					dataname="SaveProjectFilePath"
+					datasourceid="ad7c24e6-0883-497d-949a-215bd28690b2"
+					variableid="18b1f8ea-24ce-45cf-bbab-5bbb3ad84985"
+					variablename="SaveProjectFilePath">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="SaveProjectFilePath"
+					datasourceid="5dae7762-f20e-4666-bcb5-dbc58932fbdb"
+					variableid="18b1f8ea-24ce-45cf-bbab-5bbb3ad84985"
+					variablename="ModuleGroupSaveProjectFilePath">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
 			<smartfoldernode
 			id="3d89407c-9bb7-4a39-8488-e618ebdd748c"
 			name="Bathymetry">
-			</smartfoldernode>
-			<smartfoldernode
-			datasource="TimeSeriesEastBC"
-			id="3db3b2f7-351f-4138-911e-5acb29c3991f"
-			name="SpecifyDataTimeSeries">
-				<parameters>
-					<param
-					mask="False"
-					name="numericValueToAssign"
-					value="">
-					</param>
-				</parameters>
 			</smartfoldernode>
 			<testmodule
 			id="3df501fc-c89d-4b3e-b8b4-32f37c3d4217"
@@ -616,25 +478,21 @@
 					</var>
 				</databinding>
 			</testmodule>
-			<testmodule
-			id="3f86e50d-39e7-4cf8-b7a9-ab1e8aae5069"
-			name="DoubleClickOnModel"
-			ref="e4eb25dd-4a90-4176-ae27-02801c1fde2f"
-			type="Recording">
-			</testmodule>
 			<teardown
 			id="3fc44fbe-3dc5-45b4-9f49-c7e51839c80e"
 			name="teardown">
 			</teardown>
-			<modulegroup
-			id="406dc5f2-2c98-40bd-ae7b-ae618988cab2"
-			name="CloseProjectWithoutSaving"
-			ref="815e7d7d-2174-499e-9a7e-e36f3ed359c0">
-			</modulegroup>
 			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="43f8f964-a7eb-494d-9945-b6f6a55ba21f"
-			name="ImposeBoundaryConditions">
+			datasource="DataAstronomicalCompnentsWestBC"
+			id="402d84c5-ad01-4302-b3fd-20ec9af8e6cd"
+			name="SpecifyDataAstronomicalComponents">
+				<parameters>
+					<param
+					mask="False"
+					name="numericValueToAssign"
+					value="">
+					</param>
+				</parameters>
 			</smartfoldernode>
 			<testmodule
 			id="4506ae28-03cb-4408-9eff-a752714498eb"
@@ -656,56 +514,35 @@
 					</var>
 				</databinding>
 			</testmodule>
+			<smartfoldernode
+			id="45850a3a-e1af-4718-b4e1-01a1070c5eb7"
+			name="OpenBC_EditorView">
+			</smartfoldernode>
 			<testmodule
-			id="457ea481-09c0-41a8-b212-156b657b0de2"
-			name="SelectBoundary"
-			ref="a02a983e-6a9c-4c79-91ce-3aab358535b6"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="BoundaryName"
-					datasourceid="25ac1849-0328-45df-bf46-b66587aa9531"
-					variableid="eb24b6dc-f471-4a90-8453-22de04049eed"
-					variablename="boundaryName">
-					</var>
-				</databinding>
-			</testmodule>
-			<modulegroup
-			id="4630d913-9e58-42aa-8673-307d9f70ecdb"
-			name="DeleteModel"
-			ref="5cacd46a-05b6-4242-a34a-57fa8f9279e0">
-				<databinding>
-					<var
-					dataname="OptionContextMenuToDelete"
-					datasourceid="12c83d43-12b7-485b-8457-9ed14ace91ef"
-					variableid="e5c0adda-2f0c-4b65-8617-7da016ba93b7"
-					variablename="OptionInContextMenu">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="ModelName"
-					datasourceid="953e7f06-0697-469e-a053-2664110df31f"
-					variableid="a32377a2-9186-41db-8f0a-4d5d290aeb81"
-					variablename="ModelName">
-					</var>
-				</missingdatabinding>
-			</modulegroup>
-			<testmodule
-			id="47291376-0e68-4b45-b711-cc1b8fb50653"
-			name="SelectComponentsAstronomicalBCTimeSeries"
-			ref="448f57b3-16b5-4134-b1c0-ddd93917f08c"
+			id="46813518-2148-4587-9211-d9bff08915cf"
+			name="DoubleClickOnModel"
+			ref="e4eb25dd-4a90-4176-ae27-02801c1fde2f"
 			type="Recording">
 			</testmodule>
-			<testmodule
-			id="47e305df-4608-46af-b74b-ced41a550b1c"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
-			type="Recording">
-			</testmodule>
+			<smartfoldernode
+			id="46d00a62-766e-4866-bf30-26bf0b9f71dd"
+			name="SetTimeFrameSettings">
+				<parameters>
+					<param
+					mask="False"
+					name="NameSubTabToSelect"
+					value="Time Frame">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<smartfoldernode
+			datasource="BoundaryEastCoordinates"
+			id="46ec29fd-0c4c-4bfa-ae8e-678fd7ff66a1"
+			name="DrawIntermediatePoints">
+			</smartfoldernode>
 			<modulegroup
 			id="484cb29b-5def-4e4a-9fa0-dad4a906bf3b"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -716,23 +553,47 @@
 					</var>
 					<var
 					dataname="ExecutablePath"
-					datasourceid="b39a62d6-3a0b-4a9e-8278-e1749b4c5616"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
 					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
 					variablename="ModuleGroupExecutablePath">
 					</var>
 				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="ExecutablePath"
+					datasourceid="b39a62d6-3a0b-4a9e-8278-e1749b4c5616"
+					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
+					variablename="ModuleGroupExecutablePath">
+					</var>
+				</missingdatabinding>
 			</modulegroup>
-			<smartfoldernode
-			id="4aea4813-d24d-4f93-b794-17b8a48c14fc"
-			name="SetInitialConditionSettings">
-				<parameters>
-					<param
-					mask="False"
-					name="NameSubTabToSelect"
-					value="Initial Conditions">
-					</param>
-				</parameters>
-			</smartfoldernode>
+			<testmodule
+			id="49e7442a-4348-4768-b33c-861cfae67fc0"
+			name="SelectBoundary"
+			ref="a02a983e-6a9c-4c79-91ce-3aab358535b6"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="BoundaryName"
+					datasourceid="d897a526-917b-470b-b7a3-5fae729bf5b6"
+					variableid="eb24b6dc-f471-4a90-8453-22de04049eed"
+					variablename="boundaryName">
+					</var>
+				</databinding>
+			</testmodule>
+			<modulegroup
+			id="4a6f626e-489d-4f4b-a33d-6dfe2203d45f"
+			name="CloseProjectWithSaving"
+			ref="463c6d79-6646-4799-89e5-f4e7df0da757">
+				<databinding>
+					<var
+					dataname="SaveProjectFilePath"
+					datasourceid="6216c163-9df4-4ff1-a8c6-9a9601ab415f"
+					variableid="18b1f8ea-24ce-45cf-bbab-5bbb3ad84985"
+					variablename="SaveProjectFilePath">
+					</var>
+				</databinding>
+			</modulegroup>
 			<teardown
 			id="4b085583-1486-4774-b85f-39f825be356e"
 			name="teardown">
@@ -745,34 +606,19 @@
 					<![CDATA[<p>if two points have the same X coordinate (in pixels, at least), then clicking doens't work properly.</p><p>1st point is: 72342;369053</p><p>2nd point was: 72342;362143 (was not clicked)</p><p>New coords 2nd point: 71500;362143 (is clicked properly).</p>]]>
 				</description>
 			</smartfoldernode>
-			<testmodule
-			id="4d39352d-a286-4495-bf91-6e4db07f626c"
-			name="CalibrateMap"
-			ref="0bc79973-0c13-4f47-8c3c-06da550f6269"
-			type="UserCode">
-			</testmodule>
-			<smartfoldernode
-			id="4da2b8cf-8794-46ec-8a65-5e1e21551fa1"
-			name="AddNewBCDefinition">
-			</smartfoldernode>
 			<teardown
 			id="4df86d37-2bc7-46e6-9f65-16008e14da1c"
 			name="teardown">
 			</teardown>
 			<smartfoldernode
-			id="4e45dd1c-e31e-4fb3-9eec-b8c35750a02b"
-			name="DrawEastBoundary">
+			errorbehavior="ContinueParent"
+			id="510b75b8-d55b-4d96-a20f-9cc03629ad3c"
+			name="AddNewModel">
 			</smartfoldernode>
 			<testmodule
-			id="4fe0706c-659d-4fd8-9d14-57ad82484a33"
-			name="ContextMenuModel"
-			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="501731a5-d851-4d74-825d-b10ba48b505c"
-			name="StartSaveAsProject"
-			ref="afdf4c01-a73b-49fc-8985-3bf446d2ebcd"
+			id="51ff070b-e0ef-49d0-a109-4b59c025d331"
+			name="SendEscapeKey"
+			ref="a617fba5-29e5-4e9f-b6b6-a7e9a91e8f8c"
 			type="Recording">
 			</testmodule>
 			<testmodule
@@ -789,6 +635,10 @@
 					</var>
 				</databinding>
 			</testmodule>
+			<smartfoldernode
+			id="526e31b3-3c8b-4bba-9367-0270c70d68c5"
+			name="OpenBC_EditorView">
+			</smartfoldernode>
 			<testmodule
 			id="52f53cd1-c37a-46b4-8852-57dd5030c06f"
 			name="CalibrateMap"
@@ -800,9 +650,53 @@
 			name="setup">
 			</setup>
 			<smartfoldernode
-			id="560b59b1-9d77-4e81-9299-af5b66d78bb9"
-			name="DrawWestBoundary">
+			id="559f1464-f788-487e-bbbe-55c6a8b9d441"
+			name="OpenMapView">
 			</smartfoldernode>
+			<modulegroup
+			id="559fa9e2-8bb1-48b1-bec2-a7f34cad3ba5"
+			name="DeleteModel"
+			ref="5cacd46a-05b6-4242-a34a-57fa8f9279e0">
+				<databinding>
+					<var
+					dataname="OptionContextMenuToDelete"
+					datasourceid="2e4140f2-61f8-4896-9e0d-0fc28c09c6b2"
+					variableid="e5c0adda-2f0c-4b65-8617-7da016ba93b7"
+					variablename="OptionInContextMenu">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="ModelName"
+					datasourceid="953e7f06-0697-469e-a053-2664110df31f"
+					variableid="a32377a2-9186-41db-8f0a-4d5d290aeb81"
+					variablename="ModelName">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
+			<modulegroup
+			id="5694e8f5-f4aa-43f3-9e0f-dcd3a71056ec"
+			name="RunModel"
+			ref="a36aea86-d746-4e57-83f0-344c7dce2b2b">
+			</modulegroup>
+			<smartfoldernode
+			id="57b84d98-e215-4f07-a78b-28941f4354af"
+			name="DrawEastBoundary">
+			</smartfoldernode>
+			<testmodule
+			id="5a1f7d3d-4357-4475-b182-c35fa353ec3a"
+			name="SelectSupportPoint"
+			ref="84aded17-affa-4df7-84e8-ebaf617dfc3f"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="SupportPointName1"
+					datasourceid="15940b33-fbd9-4afd-9df4-5cfe8a2b666d"
+					variableid="5fa0df42-3429-4094-a902-91befaef4b36"
+					variablename="SupportPointName">
+					</var>
+				</databinding>
+			</testmodule>
 			<testmodule
 			id="5a7c1dc2-2662-48b2-9d68-5acd385fa3e3"
 			name="AddWmsLayer"
@@ -818,15 +712,12 @@
 				</databinding>
 			</testmodule>
 			<smartfoldernode
-			id="5bfeb3a4-3c30-4590-a4b1-ad901aedf9e9"
-			name="SetOutputSettings">
-				<parameters>
-					<param
-					mask="False"
-					name="NameSubTabToSelect"
-					value="Output Parameters">
-					</param>
-				</parameters>
+			id="5c5c2ce4-14c2-4300-9c76-6940abf21a4f"
+			name="DrawWestBoundary">
+			</smartfoldernode>
+			<smartfoldernode
+			id="5d0471ea-3ff6-4f3f-8a83-58616a61c6cc"
+			name="OpenMapView">
 			</smartfoldernode>
 			<testmodule
 			id="5d2a07b5-e4c7-49aa-ab90-6d7070ee2aa8"
@@ -848,41 +739,15 @@
 					</var>
 				</databinding>
 			</testmodule>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="5dae7762-f20e-4666-bcb5-dbc58932fbdb"
-			name="CloseWithSaving">
-				<parameters>
-					<param
-					mask="False"
-					name="SaveProjectFilePath"
-					value="Exercise06.dsproj">
-					</param>
-				</parameters>
-			</smartfoldernode>
 			<testmodule
-			id="5dc1bc2a-ae46-4993-bc32-38c8877ff89f"
-			name="ConvertDoubleToCurrentCulture"
-			ref="fdf9ecbc-142c-4210-ab32-f9846d51af27"
-			type="UserCode">
-				<databinding>
-					<var
-					dataname="ValueParameter"
-					datasourceid="75984ae1-b447-4bc2-a0ef-2b55f1f1605f"
-					variableid="814ae3f0-5a9d-4964-88c7-18b5716ee9a3"
-					variablename="stringToConvert">
-					</var>
-					<var
-					dataname="numericValueToAssign"
-					datasourceid="d3b3815f-5934-4101-a50b-771fa5d8972e"
-					variableid="ac1b2271-2ef8-44de-a3cd-04ec9493d520"
-					variablename="stringConverted">
-					</var>
-				</databinding>
+			id="5dc912d6-c876-4132-93ee-b35948756aaa"
+			name="FinishSelectionAstronomicalComponents"
+			ref="04493cb1-82d1-4444-868b-b11b943eca44"
+			type="Recording">
 			</testmodule>
 			<modulegroup
 			id="5dfd9f7a-2966-45a5-a81b-c0c884c735cd"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -893,7 +758,7 @@
 					</var>
 					<var
 					dataname="ExecutablePath"
-					datasourceid="e75baf1c-e062-4b6e-93bf-9bfe99748504"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
 					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
 					variablename="ModuleGroupExecutablePath">
 					</var>
@@ -901,24 +766,12 @@
 				<missingdatabinding>
 					<var
 					dataname="ExecutablePath"
-					datasourceid="ef6ac839-f470-4c9a-b986-b2ce57e8a246"
+					datasourceid="e75baf1c-e062-4b6e-93bf-9bfe99748504"
 					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
 					variablename="ModuleGroupExecutablePath">
 					</var>
 				</missingdatabinding>
 			</modulegroup>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="5e07318e-7f10-402a-bdae-f99f6fa25183"
-			name="CloseWithSaving">
-				<parameters>
-					<param
-					mask="False"
-					name="SaveProjectFilePath"
-					value="Exercise07.dsproj">
-					</param>
-				</parameters>
-			</smartfoldernode>
 			<testmodule
 			id="5e0d287d-555a-435b-b116-e39922643465"
 			name="AcceptCurrentCoordinateTransformationDialog"
@@ -926,35 +779,106 @@
 			type="Recording">
 			</testmodule>
 			<modulegroup
-			id="5e8f3a15-befd-4418-be59-8c818f9ff5f1"
-			name="CloseProjectWithSaving"
-			ref="463c6d79-6646-4799-89e5-f4e7df0da757">
+			id="6145ff0d-95d0-4506-87f7-b5ae2dcf99e5"
+			name="ImportDFlowFMModel"
+			ref="97411fef-a968-4120-98ab-9188e0a8dc85">
 				<databinding>
 					<var
-					dataname="SaveProjectFilePath"
-					datasourceid="5dae7762-f20e-4666-bcb5-dbc58932fbdb"
-					variableid="18b1f8ea-24ce-45cf-bbab-5bbb3ad84985"
-					variablename="SaveProjectFilePath">
+					dataname="MduFilePath"
+					datasourceid="7a53337b-8eb6-41e1-bd6d-54ef7b1b3b10"
+					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
+					variablename="MduFilePath">
 					</var>
 				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="NameModelTypeToImport"
+					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
+					variableid="68f812eb-c408-42db-ad93-9bedf839d41b"
+					variablename="ModuleGroupNameModelTypeToImport">
+					</var>
+					<var
+					dataname="MduFilePath"
+					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
+					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
+					variablename="MduFilePath">
+					</var>
+				</missingdatabinding>
 			</modulegroup>
 			<testmodule
-			id="60282ba1-2b9b-461d-9aa7-6ae23ac5519d"
-			name="StartAddObservationPoints"
-			ref="28b1b76c-7f17-4c12-a791-91e8f6961575"
+			id="615cb69a-74b9-422f-ad68-77535e93c52e"
+			name="ChooseSupportPoints"
+			ref="1030b82e-7d43-40ea-aac2-36aeac96ff81"
 			type="Recording">
+				<databinding>
+					<var
+					dataname="SupportPointsToChoose"
+					datasourceid="25adddfd-d3cf-47af-b334-013412a9983e"
+					variableid="f2a2ee80-625d-4b18-8a0e-a8064fa26926"
+					variablename="SupportPointsToApplyTo">
+					</var>
+				</databinding>
 			</testmodule>
-			<testcase
-			id="66062379-afa5-467d-88ac-6baf2e63961b"
-			name="Exercise_10_Viewing_the_output_of_a_model_simulation">
+			<smartfoldernode
+			errorbehavior="ContinueParent"
+			id="6216c163-9df4-4ff1-a8c6-9a9601ab415f"
+			name="CloseWithSaving">
 				<parameters>
 					<param
 					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					name="SaveProjectFilePath"
+					value="Exercise06.dsproj">
 					</param>
 				</parameters>
-			</testcase>
+			</smartfoldernode>
+			<smartfoldernode
+			id="629169d8-e784-4d18-9bce-ca92d92ead6a"
+			name="ImposeEastBoundaryCondition">
+				<parameters>
+					<param
+					mask="False"
+					name="BoundaryName"
+					value="Boundary02">
+					</param>
+					<param
+					mask="False"
+					name="Quantity"
+					value="Discharge">
+					</param>
+					<param
+					mask="False"
+					name="ForcingType"
+					value="Time Series">
+					</param>
+					<param
+					mask="False"
+					name="ModelName"
+					value="FlowFM">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<smartfoldernode
+			id="63ccdda1-9e5b-41e0-a015-e998bf08e15d"
+			name="ImportModel">
+				<parameters>
+					<param
+					mask="False"
+					name="MduFilePath"
+					value="exercise09\exercise09.mdu">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<testmodule
+			id="66f0439f-ff02-4d8e-abac-a53c528644fa"
+			name="DoubleClickOnModel"
+			ref="e4eb25dd-4a90-4176-ae27-02801c1fde2f"
+			type="Recording">
+			</testmodule>
+			<modulegroup
+			id="6781f79d-ffdc-4bde-9f36-434261f1592b"
+			name="CloseProjectWithoutSaving"
+			ref="815e7d7d-2174-499e-9a7e-e36f3ed359c0">
+			</modulegroup>
 			<testmodule
 			id="68dd5873-25d8-433e-b649-602cb8903184"
 			name="MakeOutputMapVariableVisible"
@@ -974,58 +898,77 @@
 			name="setup">
 			</setup>
 			<testmodule
-			id="6afa77e6-4a3d-4ab4-9da3-6971d0c94512"
-			name="SingleClickOnMap"
-			ref="ee5c623f-6a42-49cc-9fa1-7e2c127a2046"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="XY"
-					datasourceid="feb9ac0c-abd9-4976-89b3-7d3dd1ffd4e9"
-					variableid="77d7f94d-4106-4ca0-acea-ba88c380d490"
-					variablename="WorldCoordinates">
-					</var>
-					<var
-					dataname="PixelCoordinates"
-					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
-					variableid="707bc6b8-b470-44b1-973d-60264995e110"
-					variablename="PixelCoordinates">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
 			id="6cf5d2db-415f-4927-9f6e-b25254e61061"
 			name="ToggleVisibilityLegend"
 			ref="c1bec939-21ca-49dd-af1f-647f1f743fa9"
 			type="Recording">
 			</testmodule>
-			<smartfoldernode
-			datasource="ObservationPointPoints"
-			id="6e664507-6170-4725-be8f-1c0fb727b3eb"
-			name="PlaceObservationPoints">
-			</smartfoldernode>
+			<testcase
+			id="6dff9b5d-0aee-419d-98ee-f63cb2cceac2"
+			name="Exercise_08_Defining_computational_parameters">
+			</testcase>
+			<modulegroup
+			id="6e6c293c-0f0c-4c0d-aff3-5a6d8645e45e"
+			name="ImportDFlowFMModel"
+			ref="97411fef-a968-4120-98ab-9188e0a8dc85">
+				<databinding>
+					<var
+					dataname="MduFilePath"
+					datasourceid="ab2acaef-e2ce-46f5-8867-4650cf9f510b"
+					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
+					variablename="MduFilePath">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="NameModelTypeToImport"
+					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
+					variableid="68f812eb-c408-42db-ad93-9bedf839d41b"
+					variablename="ModuleGroupNameModelTypeToImport">
+					</var>
+					<var
+					dataname="MduFilePath"
+					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
+					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
+					variablename="MduFilePath">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
 			<modulegroup
 			id="7020eab5-0151-4da8-bb14-02dea65efef5"
 			name="CloseProjectWithoutSaving"
 			ref="815e7d7d-2174-499e-9a7e-e36f3ed359c0">
 			</modulegroup>
-			<testmodule
-			id="70f7313e-dab9-4020-8513-2bb3096f9c48"
-			name="WaitForModelRunFinished"
-			ref="ab0807f5-f1c5-4070-832b-332311b59dec"
-			type="Recording">
-			</testmodule>
 			<smartfoldernode
-			id="7242aa98-2492-4535-b730-0a02d185ca9b"
-			name="ViewMap">
+			id="765a2401-3ad4-4b8b-aa92-9dfe44d49861"
+			name="RunModel">
 				<parameters>
 					<param
 					mask="False"
 					name="ModelName"
-					value="westerscheldt09">
+					value="westernscheldt08">
+					</param>
+					<param
+					mask="False"
+					name="RunOptionName"
+					value="Run Model">
 					</param>
 				</parameters>
 			</smartfoldernode>
+			<testmodule
+			id="788c48a2-9c5b-4521-92ea-add46d380d90"
+			name="SelectMapRibbonTab"
+			ref="98b511f8-f9eb-48f8-9d23-86cfd78aaf40"
+			type="Recording">
+				<missingdatabinding>
+					<var
+					dataname="TabName"
+					datasourceid="57479806-35f8-4fcb-b83b-5618a574c840"
+					variableid="d1107f4e-97fa-474d-b473-c78f2420dfec"
+					variablename="TabName">
+					</var>
+				</missingdatabinding>
+			</testmodule>
 			<smartfoldernode
 			id="7918b736-cbcc-41f4-aa78-a259e412e3d5"
 			name="Prepare">
@@ -1036,6 +979,17 @@
 			ref="4fc39878-fa4c-4237-a8e2-2aaa95dad0ec"
 			type="Recording">
 			</testmodule>
+			<smartfoldernode
+			id="7a53337b-8eb6-41e1-bd6d-54ef7b1b3b10"
+			name="ImportModel">
+				<parameters>
+					<param
+					mask="False"
+					name="MduFilePath"
+					value="exercise07\exercise07.mdu">
+					</param>
+				</parameters>
+			</smartfoldernode>
 			<smartfoldernode
 			id="7a9f392d-59cb-4dd4-b8e6-02e652f0b62f"
 			name="ViewMapOutput">
@@ -1082,14 +1036,9 @@
 			id="7aef602e-b360-47ce-a4a1-46f0ab3bc9f2"
 			name="setup">
 			</setup>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="7afe7e6f-035c-4a20-8423-690f43ab31a9"
-			name="DrawBoundaries">
-			</smartfoldernode>
 			<modulegroup
 			id="7b9b1e28-3c74-4e9b-86bd-25fb9b5e90b0"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -1100,22 +1049,23 @@
 					</var>
 					<var
 					dataname="ExecutablePath"
-					datasourceid="c551fe4f-9383-4a33-b10c-82bd51ec9a2d"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
 					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
 					variablename="ModuleGroupExecutablePath">
 					</var>
 				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="ExecutablePath"
+					datasourceid="c551fe4f-9383-4a33-b10c-82bd51ec9a2d"
+					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
+					variablename="ModuleGroupExecutablePath">
+					</var>
+				</missingdatabinding>
 			</modulegroup>
 			<smartfoldernode
-			id="7bf50390-422d-42f9-afbd-3b0d2db7ce80"
-			name="FinishSpecification">
-				<parameters>
-					<param
-					mask="False"
-					name="SupportPointsToChoose"
-					value="Active support points">
-					</param>
-				</parameters>
+			id="7da662fa-4f11-4267-8055-a29726c04ccd"
+			name="StartDrawingBoundaries">
 			</smartfoldernode>
 			<testmodule
 			id="7ee5be04-a5a5-4626-8d7b-cf462c63f784"
@@ -1128,51 +1078,36 @@
 			id="7fb23670-793d-46af-949d-4416bf3fe015"
 			name="AddNewModel">
 			</smartfoldernode>
-			<modulegroup
-			id="81505da8-cce1-4562-ae0c-c1fada711407"
-			name="ImportFileInProjectTree"
-			ref="202ea432-7f99-47c6-a083-1b96bf9b32a6">
-				<databinding>
-					<var
-					dataname="GridFilePath"
-					datasourceid="fd7712a9-5056-45d8-bb24-1121c363a758"
-					variableid="6f788328-23a0-41a3-84e5-85a650cbd8b2"
-					variablename="FilePath">
-					</var>
-					<var
-					dataname="ContextMenu"
-					datasourceid="fd7712a9-5056-45d8-bb24-1121c363a758"
-					variableid="96877fae-3dbc-437b-a2bd-c8b4858ff0f2"
-					variablename="ContextMenuItem">
-					</var>
-					<var
-					dataname="TreePath"
-					datasourceid="fd7712a9-5056-45d8-bb24-1121c363a758"
-					variableid="902e12ae-db21-4cc6-bfd5-76ceb49a1a2e"
-					variablename="TreePath">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="GridFilePath"
-					datasourceid="cbe6d9a8-212b-4349-b239-6f79868e7ff5"
-					variableid="6f788328-23a0-41a3-84e5-85a650cbd8b2"
-					variablename="FilePath">
-					</var>
-					<var
-					dataname="TreePath"
-					datasourceid="cbe6d9a8-212b-4349-b239-6f79868e7ff5"
-					variableid="902e12ae-db21-4cc6-bfd5-76ceb49a1a2e"
-					variablename="TreePath">
-					</var>
-					<var
-					dataname="ContextMenu"
-					datasourceid="cbe6d9a8-212b-4349-b239-6f79868e7ff5"
-					variableid="96877fae-3dbc-437b-a2bd-c8b4858ff0f2"
-					variablename="ContextMenuItem">
-					</var>
-				</missingdatabinding>
-			</modulegroup>
+			<smartfoldernode
+			id="80706ed3-0b2a-4813-bd6f-d42fa5a9ccd5"
+			name="ImportData">
+				<parameters>
+					<param
+					mask="False"
+					name="GridFilePath"
+					value="exercise06\westernscheldt05_net.nc">
+					</param>
+					<param
+					mask="False"
+					name="LandBoundaryFilePath"
+					value="exercise06\sealand.ldb">
+					</param>
+					<param
+					mask="False"
+					name="ContextMenu"
+					value="Import">
+					</param>
+					<param
+					mask="False"
+					name="TreePath"
+					value="*>Grid">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<smartfoldernode
+			id="811d354e-41a3-4dac-961a-7bd3bf425662"
+			name="OpenSettings">
+			</smartfoldernode>
 			<testmodule
 			id="81b03908-6424-4bb7-96d1-7981e5701053"
 			name="SelectSpatialOperationsLayer"
@@ -1188,23 +1123,6 @@
 				</databinding>
 			</testmodule>
 			<testmodule
-			id="83623e51-8994-4d77-8197-5dcb599503d6"
-			name="StartAddCrossSections"
-			ref="5a129619-df07-4dc2-b1cc-98fc33e2d9a2"
-			type="Recording">
-			</testmodule>
-			<smartfoldernode
-			id="8439f903-d62d-4041-a123-23149c789f72"
-			name="FinishDrawingBoundary">
-				<parameters>
-					<param
-					mask="False"
-					name="CoordinateLastPointBoundaryEast"
-					value="85526;358913">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<testmodule
 			id="84459093-2028-4dc0-96f4-8276964c4dc5"
 			name="ShowLegendOutputMapVariable"
 			ref="dbaba202-112f-418d-bb26-287703a43aee"
@@ -1218,22 +1136,29 @@
 					</var>
 				</databinding>
 			</testmodule>
-			<modulegroup
-			id="865e0e11-7007-40b5-9ad5-f04a2ae8760e"
-			name="ExportDFlowFMModel"
-			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
+			<testmodule
+			id="84f7fb8d-3d12-4b42-83c5-9194a7d04be8"
+			name="DoubleClickOnMap"
+			ref="370e08fb-dfdd-4ca5-a04a-006d54548a71"
+			type="Recording">
 				<databinding>
 					<var
-					dataname="ExportMduDirectory"
-					datasourceid="fda30f1c-f1e2-4aaa-8a1a-776b5c8029d5"
-					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
-					variablename="ExportMduDirectory">
+					dataname="CoordinateLastPointBoundaryEast"
+					datasourceid="eaf84918-b799-42e4-aa7a-306a4e72481e"
+					variableid="d3ba1fc1-e053-43c3-9b35-0345077993ee"
+					variablename="WorldCoordinates">
+					</var>
+					<var
+					dataname="PixelCoordinates"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
+					variableid="d7b4cda5-6f79-485b-8af1-0a83d5a7fdbc"
+					variablename="PixelCoordinates">
 					</var>
 				</databinding>
-			</modulegroup>
+			</testmodule>
 			<smartfoldernode
 			id="88910c9e-e5a5-4617-a187-c9bbb874fa08"
-			name="StartUpDrawingAction">
+			name="StartDrawingAction">
 			</smartfoldernode>
 			<testmodule
 			id="89d92618-f29f-4c59-9cac-20b7c558acde"
@@ -1250,252 +1175,7 @@
 				</databinding>
 			</testmodule>
 			<testmodule
-			id="8a56f821-b4b6-4ee7-8551-5e669525a43c"
-			name="ConvertDoubleToCurrentCulture"
-			ref="fdf9ecbc-142c-4210-ab32-f9846d51af27"
-			type="UserCode">
-				<databinding>
-					<var
-					dataname="ParameterValue"
-					datasourceid="6885a4d7-a219-4abc-918d-1bcb807e9606"
-					variableid="814ae3f0-5a9d-4964-88c7-18b5716ee9a3"
-					variablename="stringToConvert">
-					</var>
-					<var
-					dataname="numericValueToAssign"
-					datasourceid="3db3b2f7-351f-4138-911e-5acb29c3991f"
-					variableid="ac1b2271-2ef8-44de-a3cd-04ec9493d520"
-					variablename="stringConverted">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="ValueParameter"
-					datasourceid="75984ae1-b447-4bc2-a0ef-2b55f1f1605f"
-					variableid="814ae3f0-5a9d-4964-88c7-18b5716ee9a3"
-					variablename="stringToConvert">
-					</var>
-					<var
-					dataname="numericValueToAssign"
-					datasourceid="d3b3815f-5934-4101-a50b-771fa5d8972e"
-					variableid="ac1b2271-2ef8-44de-a3cd-04ec9493d520"
-					variablename="stringConverted">
-					</var>
-				</missingdatabinding>
-			</testmodule>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="8c240560-4463-48ab-8864-8654349bfcf6"
-			name="SetBedLevelAtHarbour">
-				<parameters>
-					<param
-					mask="False"
-					name="WorldCoordinateLastPointHarbourPolygon"
-					value="75936;369053">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<modulegroup
-			id="8c4cc7c5-b262-410a-b39f-684ae2e56652"
-			name="AdjustBoundaryConditionSettings"
-			ref="e4ece066-bfd8-4e3e-bd30-925cb4ab5b44">
-				<databinding>
-					<var
-					dataname="BoundaryName"
-					datasourceid="f7b7204f-1c3f-493c-9447-34b9a1100e5b"
-					variableid="4f55b208-3692-4a13-8cc2-236fac5d8d43"
-					variablename="BoundaryName">
-					</var>
-					<var
-					dataname="Quantity"
-					datasourceid="f7b7204f-1c3f-493c-9447-34b9a1100e5b"
-					variableid="4cd512a9-a756-4ec3-9d60-9f762c071004"
-					variablename="Quantity">
-					</var>
-					<var
-					dataname="ForcingType"
-					datasourceid="f7b7204f-1c3f-493c-9447-34b9a1100e5b"
-					variableid="bfe00cc5-a624-462b-9ea1-2d0000837fdd"
-					variablename="ForcingType">
-					</var>
-				</databinding>
-			</modulegroup>
-			<modulegroup
-			id="8ebe2bc3-6e66-4f63-8b3f-8fa50d96751f"
-			name="ExportDFlowFMModel"
-			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
-				<databinding>
-					<var
-					dataname="ExportMduDirectory"
-					datasourceid="bc5c4e15-cedd-41ac-af9f-8dbe247b538d"
-					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
-					variablename="ExportMduDirectory">
-					</var>
-				</databinding>
-			</modulegroup>
-			<testmodule
-			id="8f576eed-31b0-49cc-b76a-4dc069c5cf89"
-			name="QueryTimeSeries"
-			ref="22840b78-eb71-4a50-a3fb-3fe29024e64e"
-			type="Recording">
-			</testmodule>
-			<teardown
-			id="8f75cc41-0438-4630-bb26-707f5761306e"
-			name="teardown">
-			</teardown>
-			<smartfoldernode
-			id="9032ce67-a055-4f3e-bb86-b3ec4d4b946d"
-			name="FinishDrawingBoundary">
-				<parameters>
-					<param
-					mask="False"
-					name="WorldCoordinateLastPointWestBoundary"
-					value="17935;379129">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="9332b617-9627-4ffb-b2f2-1ffebe421fd3"
-			name="RenameModel">
-				<parameters>
-					<param
-					mask="False"
-					name="NewModelName"
-					value="exercise06">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<testmodule
-			id="93a98e77-4a56-4063-9992-75c7de41e765"
-			name="FinishSelectionAstronomicalComponents"
-			ref="04493cb1-82d1-4444-868b-b11b943eca44"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="94ef3c63-a725-45e5-98f9-1bea57b26274"
-			name="SingleClickOnMap"
-			ref="ee5c623f-6a42-49cc-9fa1-7e2c127a2046"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="FirstPoint"
-					datasourceid="83c5625c-24f9-4eb0-a3c8-00f38b1d0410"
-					variableid="77d7f94d-4106-4ca0-acea-ba88c380d490"
-					variablename="WorldCoordinates">
-					</var>
-					<var
-					dataname="PixelCoordinates"
-					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
-					variableid="707bc6b8-b470-44b1-973d-60264995e110"
-					variablename="PixelCoordinates">
-					</var>
-				</databinding>
-			</testmodule>
-			<smartfoldernode
-			id="9531a8ff-be7f-49b0-aacc-45fe045fde7d"
-			name="SaveProject">
-				<parameters>
-					<param
-					mask="False"
-					name="FilePath"
-					value="Project.dsproj">
-					</param>
-					<param
-					mask="False"
-					name="messageWhenFinishedSaving"
-					value="saved">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<smartfoldernode
-			id="95915566-8add-4c04-97e5-13886f826ef9"
-			name="Import">
-			</smartfoldernode>
-			<smartfoldernode
-			id="98a2e1a6-d539-4a01-a50c-90f6c83bbf83"
-			name="OpenBC_EditorView">
-			</smartfoldernode>
-			<modulegroup
-			id="99eac887-355a-4f56-9cda-eafcd022daa4"
-			name="ImportLandBoundaries"
-			ref="df445ba6-095a-4a13-a5de-7d655e759fee">
-				<databinding>
-					<var
-					dataname="LandBoundaryFilePath"
-					datasourceid="cbe6d9a8-212b-4349-b239-6f79868e7ff5"
-					variableid="7b59ddaf-1b40-4d49-af32-989ed3603097"
-					variablename="LandBoundaryFilePath">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="TextAttributeTableToClose"
-					datasourceid="d5986c35-aa75-4408-8f13-11aad49ce5c5"
-					variableid="f5eec107-e7f3-470d-bbe4-1c071b1d659e"
-					variablename="ModuleGroupTextAttributeTableToClose">
-					</var>
-					<var
-					dataname="LandBoundaryFilePath"
-					datasourceid="d5986c35-aa75-4408-8f13-11aad49ce5c5"
-					variableid="7b59ddaf-1b40-4d49-af32-989ed3603097"
-					variablename="LandBoundaryFilePath">
-					</var>
-				</missingdatabinding>
-			</modulegroup>
-			<testmodule
-			id="9a2272b3-c38d-46b6-8b2c-4effb46adcc1"
-			name="ChooseSupportPoints"
-			ref="1030b82e-7d43-40ea-aac2-36aeac96ff81"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="SupportPointsToChoose"
-					datasourceid="7bf50390-422d-42f9-afbd-3b0d2db7ce80"
-					variableid="f2a2ee80-625d-4b18-8a0e-a8064fa26926"
-					variablename="SupportPointsToApplyTo">
-					</var>
-				</databinding>
-			</testmodule>
-			<smartfoldernode
-			datasource="InterpolationParametersScript4"
-			id="9bc1ed94-2267-4955-8b85-c246c63b6114"
-			name="Configuration">
-			</smartfoldernode>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="9e5d4735-ea4b-4c62-a2cf-a7a7c57a2f84"
-			name="ImportSamplesBedLevel">
-				<parameters>
-					<param
-					mask="False"
-					name="SamplesFilePath"
-					value="exercise05\westernscheldt_bed_level.xyz">
-					</param>
-					<param
-					mask="False"
-					name="PointwiseOperation"
-					value="Overwrite">
-					</param>
-					<param
-					mask="False"
-					name="NameTabSpatialOperations"
-					value="Spatial Operations">
-					</param>
-					<param
-					mask="False"
-					name="LayerSpatialOperations"
-					value="Bed Level">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<smartfoldernode
-			datasource="AstronomicalComponentsWestBC"
-			id="9f662e88-a2f0-46c1-af5c-d4656b22e9de"
-			name="SelectAstronomicalComponentsWestBC">
-			</smartfoldernode>
-			<testmodule
-			id="a0f2d059-4f84-489d-86be-41a97fc32962"
+			id="8a00734a-d1aa-4c0d-b4d2-b1620c8497f0"
 			name="SetSettings"
 			ref="72b10c2c-e289-45df-827d-f85ac1a38b57"
 			type="Recording">
@@ -1528,28 +1208,201 @@
 					</var>
 				</missingdatabinding>
 			</testmodule>
+			<testmodule
+			id="8a80515c-c444-499e-a4d7-dd4a6805c258"
+			name="AddNewFMModel"
+			ref="70157195-dbbd-46da-b3b4-f2ce9638759a"
+			type="Recording">
+			</testmodule>
 			<smartfoldernode
-			id="a3f6bf3e-1f50-4d02-ae64-75e08b47f88f"
-			name="SaveAsProject">
+			errorbehavior="ContinueParent"
+			id="8c240560-4463-48ab-8864-8654349bfcf6"
+			name="SetBedLevelAtHarbour">
 				<parameters>
 					<param
 					mask="False"
-					name="FilePath"
-					value="Project.dsproj">
-					</param>
-					<param
-					mask="False"
-					name="messageWhenFinishedSaving"
-					value="saved">
+					name="WorldCoordinateLastPointHarbourPolygon"
+					value="75936;369053">
 					</param>
 				</parameters>
 			</smartfoldernode>
+			<smartfoldernode
+			id="8e60b9f4-f7da-4c2c-b144-880b7e8a936f"
+			name="AddNewBCDefinition">
+			</smartfoldernode>
 			<testmodule
-			id="a46d8cf8-4560-4b90-a733-65aff2af11ec"
-			name="SetTimeFrameSettings"
-			ref="5db26d24-9913-4622-af11-98104ae5007f"
+			id="8f576eed-31b0-49cc-b76a-4dc069c5cf89"
+			name="QueryTimeSeries"
+			ref="22840b78-eb71-4a50-a3fb-3fe29024e64e"
 			type="Recording">
 			</testmodule>
+			<teardown
+			id="8f75cc41-0438-4630-bb26-707f5761306e"
+			name="teardown">
+			</teardown>
+			<smartfoldernode
+			id="904d225e-47fc-479b-b678-29ab679d73fa"
+			name="CloseBCEditorView">
+			</smartfoldernode>
+			<smartfoldernode
+			id="90eaa180-6d94-46e7-9baa-e58163aa47f1"
+			name="SpecifyBC">
+			</smartfoldernode>
+			<smartfoldernode
+			id="956c78e3-1315-4497-bad9-74135b5902b5"
+			name="SetInitialConditionSettings">
+				<parameters>
+					<param
+					mask="False"
+					name="NameSubTabToSelect"
+					value="Initial Conditions">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<smartfoldernode
+			id="95915566-8add-4c04-97e5-13886f826ef9"
+			name="Import">
+			</smartfoldernode>
+			<smartfoldernode
+			errorbehavior="ContinueParent"
+			id="97480b00-21bb-40be-9b36-943e194969db"
+			name="DrawBoundaries">
+			</smartfoldernode>
+			<smartfoldernode
+			id="9795e2d5-0d14-433f-a552-b490424e2db1"
+			name="CreateScreenshotDocumentView">
+			</smartfoldernode>
+			<testmodule
+			id="979c678a-ef99-40a1-94ab-73ed93490caf"
+			name="SingleClickOnMap"
+			ref="ee5c623f-6a42-49cc-9fa1-7e2c127a2046"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="XY"
+					datasourceid="feb9ac0c-abd9-4976-89b3-7d3dd1ffd4e9"
+					variableid="77d7f94d-4106-4ca0-acea-ba88c380d490"
+					variablename="WorldCoordinates">
+					</var>
+					<var
+					dataname="PixelCoordinates"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
+					variableid="707bc6b8-b470-44b1-973d-60264995e110"
+					variablename="PixelCoordinates">
+					</var>
+				</databinding>
+			</testmodule>
+			<modulegroup
+			id="99eac887-355a-4f56-9cda-eafcd022daa4"
+			name="ImportLandBoundaries"
+			ref="df445ba6-095a-4a13-a5de-7d655e759fee">
+				<databinding>
+					<var
+					dataname="LandBoundaryFilePath"
+					datasourceid="cbe6d9a8-212b-4349-b239-6f79868e7ff5"
+					variableid="7b59ddaf-1b40-4d49-af32-989ed3603097"
+					variablename="LandBoundaryFilePath">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="TextAttributeTableToClose"
+					datasourceid="d5986c35-aa75-4408-8f13-11aad49ce5c5"
+					variableid="f5eec107-e7f3-470d-bbe4-1c071b1d659e"
+					variablename="ModuleGroupTextAttributeTableToClose">
+					</var>
+					<var
+					dataname="LandBoundaryFilePath"
+					datasourceid="d5986c35-aa75-4408-8f13-11aad49ce5c5"
+					variableid="7b59ddaf-1b40-4d49-af32-989ed3603097"
+					variablename="LandBoundaryFilePath">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
+			<smartfoldernode
+			datasource="InterpolationParametersScript4"
+			id="9bc1ed94-2267-4955-8b85-c246c63b6114"
+			name="Configuration">
+			</smartfoldernode>
+			<smartfoldernode
+			errorbehavior="ContinueParent"
+			id="9e5d4735-ea4b-4c62-a2cf-a7a7c57a2f84"
+			name="ImportSamplesBedLevel">
+				<parameters>
+					<param
+					mask="False"
+					name="SamplesFilePath"
+					value="exercise05\westernscheldt_bed_level.xyz">
+					</param>
+					<param
+					mask="False"
+					name="PointwiseOperation"
+					value="Overwrite">
+					</param>
+					<param
+					mask="False"
+					name="NameTabSpatialOperations"
+					value="Spatial Operations">
+					</param>
+					<param
+					mask="False"
+					name="LayerSpatialOperations"
+					value="Bed Level">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<modulegroup
+			id="9fad743d-4c68-47ec-a446-0866cc7778b1"
+			name="ImportLandBoundaries"
+			ref="df445ba6-095a-4a13-a5de-7d655e759fee">
+				<databinding>
+					<var
+					dataname="LandBoundaryFilePath"
+					datasourceid="80706ed3-0b2a-4813-bd6f-d42fa5a9ccd5"
+					variableid="7b59ddaf-1b40-4d49-af32-989ed3603097"
+					variablename="LandBoundaryFilePath">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="TextAttributeTableToClose"
+					datasourceid="d5986c35-aa75-4408-8f13-11aad49ce5c5"
+					variableid="f5eec107-e7f3-470d-bbe4-1c071b1d659e"
+					variablename="ModuleGroupTextAttributeTableToClose">
+					</var>
+					<var
+					dataname="LandBoundaryFilePath"
+					datasourceid="d5986c35-aa75-4408-8f13-11aad49ce5c5"
+					variableid="7b59ddaf-1b40-4d49-af32-989ed3603097"
+					variablename="LandBoundaryFilePath">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
+			<modulegroup
+			id="a06195dc-1567-48c6-bc4c-9df3781956ea"
+			name="RenameModel"
+			ref="808caf3e-efd2-4be8-9b5e-3dee4610c671">
+				<databinding>
+					<var
+					dataname="NewModelName"
+					datasourceid="143c89e2-4f8f-494b-9dce-92ba0f056ce9"
+					variableid="15b209bb-082f-48d9-9062-4b11d4c5e9eb"
+					variablename="NewModelName">
+					</var>
+				</databinding>
+			</modulegroup>
+			<smartfoldernode
+			datasource="TimeSeriesEastBC"
+			id="a46f932c-5b64-4ea2-ae42-77070b532939"
+			name="SpecifyDataTimeSeries">
+				<parameters>
+					<param
+					mask="False"
+					name="numericValueToAssign"
+					value="">
+					</param>
+				</parameters>
+			</smartfoldernode>
 			<testmodule
 			id="a4df807a-4a6a-4e72-b3a0-d564a3e15c21"
 			name="ScreenshotCentralDocumentView"
@@ -1560,6 +1413,26 @@
 			id="a523b551-f775-4610-bf8d-8a2108889b32"
 			name="DrawDefiningPolygon">
 			</smartfoldernode>
+			<testmodule
+			id="a542498e-9ff6-40a1-959a-9c93343b08fd"
+			name="DoubleClickOnMap"
+			ref="370e08fb-dfdd-4ca5-a04a-006d54548a71"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="WorldCoordinateLastPointWestBoundary"
+					datasourceid="29076f47-3883-4f9f-9d44-9b5bb8052d7d"
+					variableid="d3ba1fc1-e053-43c3-9b35-0345077993ee"
+					variablename="WorldCoordinates">
+					</var>
+					<var
+					dataname="PixelCoordinates"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
+					variableid="d7b4cda5-6f79-485b-8af1-0a83d5a7fdbc"
+					variablename="PixelCoordinates">
+					</var>
+				</databinding>
+			</testmodule>
 			<testsuite
 			ExportColumnList="None"
 			ReportTime="RelativeToTestSuiteStartTime"
@@ -1579,6 +1452,7 @@
 			includeimageschecked="False"
 			includerecordingschecked="False"
 			junitreport="False"
+			junitreportaddtestid="False"
 			junitreportshowerrafterstd="True"
 			name="Coastal_hydrodynamic_modelling"
 			overwritefilechecked="False"
@@ -1591,17 +1465,33 @@
 			reportwriteinterval="30000ms"
 			singlereportpdfdirectory="SingleReportPDF">
 			</testsuite>
+			<testcase
+			id="a6b8fa7d-ac24-4baf-8d8a-2436632f6f06"
+			name="Exercise_06_Imposing_boundary_conditions">
+			</testcase>
+			<smartfoldernode
+			errorbehavior="ContinueParent"
+			id="a8047159-0fd7-45e3-aafc-c73db166be01"
+			name="ExportModel">
+				<parameters>
+					<param
+					mask="False"
+					name="ExportDimrFilePath"
+					value="work\exercise06">
+					</param>
+				</parameters>
+			</smartfoldernode>
 			<testmodule
-			id="a710f0ae-86ea-4e05-88ac-5c026ee22a2e"
-			name="SelectSupportPoint"
-			ref="84aded17-affa-4df7-84e8-ebaf617dfc3f"
+			id="a92c22cd-d5cc-4b9c-9dcc-4234ba9700db"
+			name="SelectSubTabSettings"
+			ref="f9775878-6727-409e-8319-2ee399166bb6"
 			type="Recording">
 				<databinding>
 					<var
-					dataname="SupportPointName2"
-					datasourceid="316aae83-7630-431c-8f55-1552922b46b8"
-					variableid="5fa0df42-3429-4094-a902-91befaef4b36"
-					variablename="SupportPointName">
+					dataname="NameSubTabToSelect"
+					datasourceid="286610b7-6220-4a42-8ce2-50cc3d3fdada"
+					variableid="4dc4a29e-24b4-4c49-9e90-db968bf0d9a6"
+					variablename="NameSubTab">
 					</var>
 				</databinding>
 			</testmodule>
@@ -1623,11 +1513,64 @@
 			name="DrawLastPoint">
 			</smartfoldernode>
 			<testmodule
-			id="abc33c1e-ad92-44f5-a22a-dcf3b39c4fb2"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
+			id="aa7f7bab-6c72-42e6-8f64-e349b60763e4"
+			name="StartAddObservationPoints"
+			ref="28b1b76c-7f17-4c12-a791-91e8f6961575"
 			type="Recording">
 			</testmodule>
+			<testmodule
+			id="aaea4ab4-92a5-4673-8d4f-ceaf05b6a2cf"
+			name="SpecifyValueRowAstronomicalComponentsBC"
+			ref="f992420c-d0ad-479e-a26e-4e48b5779c7b"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="NameAstronomicalComponent"
+					datasourceid="75984ae1-b447-4bc2-a0ef-2b55f1f1605f"
+					variableid="17c28b1a-4dab-4317-84e4-83aa7c764b95"
+					variablename="NameAstronomicalComponent">
+					</var>
+					<var
+					dataname="NameParameter"
+					datasourceid="75984ae1-b447-4bc2-a0ef-2b55f1f1605f"
+					variableid="be5e7200-5399-41ef-9324-a9f812145d8a"
+					variablename="ParameterName">
+					</var>
+					<var
+					dataname="numericValueToAssign"
+					datasourceid="402d84c5-ad01-4302-b3fd-20ec9af8e6cd"
+					variableid="c7d820f1-a714-4322-9bea-9eb6265d3336"
+					variablename="ParameterValue">
+					</var>
+				</databinding>
+			</testmodule>
+			<smartfoldernode
+			id="ab2acaef-e2ce-46f5-8867-4650cf9f510b"
+			name="ImportModel">
+				<parameters>
+					<param
+					mask="False"
+					name="MduFilePath"
+					value="exercise08\exercise08.mdu">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<testcase
+			id="ac855ab7-db15-4da7-bd9f-320936aaefba"
+			name="Exercise_10_Viewing_the_output_of_a_model_simulation">
+			</testcase>
+			<smartfoldernode
+			errorbehavior="ContinueParent"
+			id="ad7c24e6-0883-497d-949a-215bd28690b2"
+			name="CloseWithSaving">
+				<parameters>
+					<param
+					mask="False"
+					name="SaveProjectFilePath"
+					value="Exercise07.dsproj">
+					</param>
+				</parameters>
+			</smartfoldernode>
 			<modulegroup
 			id="ad857496-1354-4f1f-9833-43c65b681ac0"
 			name="ExportGrid"
@@ -1653,24 +1596,51 @@
 			id="ad88997d-c2bf-40b7-8720-d111d882a001"
 			name="teardown">
 			</teardown>
-			<testmodule
-			id="add60695-56e9-45bd-a134-cc76ae65e998"
-			name="AddNewFMModel"
-			ref="70157195-dbbd-46da-b3b4-f2ce9638759a"
-			type="Recording">
-			</testmodule>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="aec2ae0b-44e1-4de3-be65-8263f2dc4870"
-			name="ExportModel">
-				<parameters>
-					<param
-					mask="False"
-					name="ExportDimrFilePath"
-					value="work\exercise06">
-					</param>
-				</parameters>
-			</smartfoldernode>
+			<modulegroup
+			id="b2821ae0-95b7-4733-8fcc-b738bcb5e0c3"
+			name="ImportFileInProjectTree"
+			ref="202ea432-7f99-47c6-a083-1b96bf9b32a6">
+				<databinding>
+					<var
+					dataname="GridFilePath"
+					datasourceid="80706ed3-0b2a-4813-bd6f-d42fa5a9ccd5"
+					variableid="6f788328-23a0-41a3-84e5-85a650cbd8b2"
+					variablename="FilePath">
+					</var>
+					<var
+					dataname="ContextMenu"
+					datasourceid="80706ed3-0b2a-4813-bd6f-d42fa5a9ccd5"
+					variableid="96877fae-3dbc-437b-a2bd-c8b4858ff0f2"
+					variablename="ContextMenuItem">
+					</var>
+					<var
+					dataname="TreePath"
+					datasourceid="80706ed3-0b2a-4813-bd6f-d42fa5a9ccd5"
+					variableid="902e12ae-db21-4cc6-bfd5-76ceb49a1a2e"
+					variablename="TreePath">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="GridFilePath"
+					datasourceid="cbe6d9a8-212b-4349-b239-6f79868e7ff5"
+					variableid="6f788328-23a0-41a3-84e5-85a650cbd8b2"
+					variablename="FilePath">
+					</var>
+					<var
+					dataname="TreePath"
+					datasourceid="cbe6d9a8-212b-4349-b239-6f79868e7ff5"
+					variableid="902e12ae-db21-4cc6-bfd5-76ceb49a1a2e"
+					variablename="TreePath">
+					</var>
+					<var
+					dataname="ContextMenu"
+					datasourceid="cbe6d9a8-212b-4349-b239-6f79868e7ff5"
+					variableid="96877fae-3dbc-437b-a2bd-c8b4858ff0f2"
+					variablename="ContextMenuItem">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
 			<testmodule
 			id="b32f4a35-7912-44b0-a73a-8559957bbefa"
 			name="ConfigureLegendProperties"
@@ -1697,122 +1667,42 @@
 					</var>
 				</databinding>
 			</testmodule>
-			<testcase
-			id="b39a62d6-3a0b-4a9e-8278-e1749b4c5616"
-			name="Exercise_08_Defining_computational_parameters">
-				<parameters>
-					<param
-					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
-					</param>
-				</parameters>
-			</testcase>
-			<testmodule
-			id="b6a4c37c-5507-4b68-aa47-d67e13dcc890"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
-			type="Recording">
-			</testmodule>
 			<smartfoldernode
-			id="b93410bb-7abe-46c1-9e2d-93a4a86e2ec9"
-			name="ImportModel">
-				<parameters>
-					<param
-					mask="False"
-					name="MduFilePath"
-					value="exercise08\exercise08.mdu">
-					</param>
-				</parameters>
+			id="bb690866-dff1-43da-a1b0-dee2c416345e"
+			name="DrawCrossSections">
 			</smartfoldernode>
-			<testmodule
-			id="b9f00433-317f-4c94-8748-92c5f0386924"
-			name="DoubleClickOnMap"
-			ref="370e08fb-dfdd-4ca5-a04a-006d54548a71"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="WorldCoordinateLastPointWestBoundary"
-					datasourceid="9032ce67-a055-4f3e-bb86-b3ec4d4b946d"
-					variableid="d3ba1fc1-e053-43c3-9b35-0345077993ee"
-					variablename="WorldCoordinates">
-					</var>
-					<var
-					dataname="PixelCoordinates"
-					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
-					variableid="d7b4cda5-6f79-485b-8af1-0a83d5a7fdbc"
-					variablename="PixelCoordinates">
-					</var>
-				</databinding>
-			</testmodule>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="bc5c4e15-cedd-41ac-af9f-8dbe247b538d"
-			name="ExportModel">
-				<parameters>
-					<param
-					mask="False"
-					name="ExportMduDirectory"
-					value="exercie08_result">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<testmodule
-			id="bd64b467-c28c-4dc1-98b0-8b58f94227a5"
-			name="RightClickGenericTreeItem"
-			ref="3b1738c3-58ee-4c9b-90b4-f068e2aad82a"
-			type="Recording">
-				<description>
-					<![CDATA[Right click on model]]>
-				</description>
-				<databinding>
-					<var
-					dataname="ModelName"
-					datasourceid="0eb04756-517d-429c-bc0a-c68ec2eefb90"
-					variableid="28ac1b3a-9df9-4417-895a-56e7b8f06310"
-					variablename="NameTreeItemNode">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="ModelName"
-					datasourceid="bc5c4e15-cedd-41ac-af9f-8dbe247b538d"
-					variableid="28ac1b3a-9df9-4417-895a-56e7b8f06310"
-					variablename="NameTreeItemNode">
-					</var>
-				</missingdatabinding>
-			</testmodule>
 			<smartfoldernode
 			errorbehavior="ContinueParent"
 			id="be4706d2-eaa2-48d6-89a5-2a10cf1c2269"
 			name="CloseWithoutSaving">
 			</smartfoldernode>
+			<smartfoldernode
+			id="bf262236-0eb8-46df-a230-dba77ef5ddee"
+			name="StartUpDialogAstronomicalComponents">
+			</smartfoldernode>
+			<smartfoldernode
+			id="bfbf6102-5de3-4ecf-a54c-9e1f23dd365c"
+			name="SaveProject">
+				<parameters>
+					<param
+					mask="False"
+					name="FilePath"
+					value="Project.dsproj">
+					</param>
+				</parameters>
+			</smartfoldernode>
 			<modulegroup
-			id="bfc55f99-1992-4cbc-a6a3-368e3dbf7a1e"
-			name="StartupApplicationWithProject"
-			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
+			id="bffbedf2-a8b5-4bd8-adf9-ca30ff905c61"
+			name="ExportDFlowFMModel"
+			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
 				<databinding>
 					<var
-					dataname="AppProcessID"
-					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
-					variableid="c2568f59-4792-4dc0-825d-965e7f83cdf1"
-					variablename="ModuleGroupAppProcessID">
-					</var>
-					<var
-					dataname="ExecutablePath"
-					datasourceid="66062379-afa5-467d-88ac-6baf2e63961b"
-					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
-					variablename="ModuleGroupExecutablePath">
+					dataname="ExportMduDirectory"
+					datasourceid="10366c44-1add-4ddf-a5b7-cd0e47009d2d"
+					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
+					variablename="ExportMduDirectory">
 					</var>
 				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="ExecutablePath"
-					datasourceid="e1a20fea-51cc-485d-a685-3eb89e0010b5"
-					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
-					variablename="ModuleGroupExecutablePath">
-					</var>
-				</missingdatabinding>
 			</modulegroup>
 			<testmodule
 			id="c0501842-0856-4f29-b092-c90d49a18340"
@@ -1821,101 +1711,58 @@
 			type="Recording">
 			</testmodule>
 			<testmodule
-			id="c2753874-8c1f-4263-a092-473eb49c70dd"
-			name="SetInitialConditionSettings"
-			ref="0ad9d5c1-9e98-447f-a7b4-294677146b2e"
+			id="c13966b4-c108-4f6d-91ab-2ba5a20b028e"
+			name="AddTimeSeriesDataBC"
+			ref="9942d7b6-1ade-4d2f-a423-248b28111a73"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="ParameterName"
+					datasourceid="6885a4d7-a219-4abc-918d-1bcb807e9606"
+					variableid="be5e7200-5399-41ef-9324-a9f812145d8a"
+					variablename="ParameterName">
+					</var>
+					<var
+					dataname="numericValueToAssign"
+					datasourceid="a46f932c-5b64-4ea2-ae42-77070b532939"
+					variableid="0f0c78b3-10f8-47ce-b09f-27265323b717"
+					variablename="ParameterValue">
+					</var>
+				</databinding>
+			</testmodule>
+			<testmodule
+			id="c2e85f22-f806-45d0-83d0-261fa6e65e12"
+			name="StartAddCrossSections"
+			ref="5a129619-df07-4dc2-b1cc-98fc33e2d9a2"
 			type="Recording">
 			</testmodule>
-			<modulegroup
-			id="c2a938b7-08a8-403b-85ec-5aa4d1041574"
-			name="ImportDFlowFMModel"
-			ref="97411fef-a968-4120-98ab-9188e0a8dc85">
-				<databinding>
-					<var
-					dataname="MduFilePath"
-					datasourceid="062d693e-e491-4522-bbea-13e876953256"
-					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
-					variablename="MduFilePath">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="NameModelTypeToImport"
-					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
-					variableid="68f812eb-c408-42db-ad93-9bedf839d41b"
-					variablename="ModuleGroupNameModelTypeToImport">
-					</var>
-					<var
-					dataname="MduFilePath"
-					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
-					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
-					variablename="MduFilePath">
-					</var>
-				</missingdatabinding>
-			</modulegroup>
-			<testcase
-			id="c551fe4f-9383-4a33-b10c-82bd51ec9a2d"
-			name="Exercise_07_Defining_output_locations">
-				<parameters>
-					<param
-					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
-					</param>
-				</parameters>
-			</testcase>
-			<modulegroup
-			id="c5c1d13e-8862-4f1b-90dc-96610c4ff4e1"
-			name="ImportLandBoundaries"
-			ref="df445ba6-095a-4a13-a5de-7d655e759fee">
-				<databinding>
-					<var
-					dataname="LandBoundaryFilePath"
-					datasourceid="fd7712a9-5056-45d8-bb24-1121c363a758"
-					variableid="7b59ddaf-1b40-4d49-af32-989ed3603097"
-					variablename="LandBoundaryFilePath">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="TextAttributeTableToClose"
-					datasourceid="d5986c35-aa75-4408-8f13-11aad49ce5c5"
-					variableid="f5eec107-e7f3-470d-bbe4-1c071b1d659e"
-					variablename="ModuleGroupTextAttributeTableToClose">
-					</var>
-					<var
-					dataname="LandBoundaryFilePath"
-					datasourceid="d5986c35-aa75-4408-8f13-11aad49ce5c5"
-					variableid="7b59ddaf-1b40-4d49-af32-989ed3603097"
-					variablename="LandBoundaryFilePath">
-					</var>
-				</missingdatabinding>
-			</modulegroup>
+			<smartfoldernode
+			id="c4fbbd96-bd08-42df-aa6b-e44ef2ddb233"
+			name="SpecifyBC">
+			</smartfoldernode>
 			<testmodule
-			id="c5dba984-338e-40ab-a76b-50b0f955e0b3"
-			name="SaveAsFile"
-			ref="e2e07b1f-fc3f-47b6-bff3-f79aadf7f36d"
+			id="c5567646-c302-47a2-ac28-3b3002b836f3"
+			name="SingleClickOnMap"
+			ref="ee5c623f-6a42-49cc-9fa1-7e2c127a2046"
 			type="Recording">
 				<databinding>
 					<var
-					dataname="FilePath"
-					datasourceid="9531a8ff-be7f-49b0-aacc-45fe045fde7d"
-					variableid="badbcc3f-d50d-4e11-9cfe-3b802abe7811"
-					variablename="FilePath">
+					dataname="XY"
+					datasourceid="39707c8a-5b15-4b51-a6b1-3cc61ba2f9d9"
+					variableid="77d7f94d-4106-4ca0-acea-ba88c380d490"
+					variablename="WorldCoordinates">
+					</var>
+					<var
+					dataname="PixelCoordinates"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
+					variableid="707bc6b8-b470-44b1-973d-60264995e110"
+					variablename="PixelCoordinates">
 					</var>
 				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="FilePath"
-					datasourceid="a3f6bf3e-1f50-4d02-ae64-75e08b47f88f"
-					variableid="badbcc3f-d50d-4e11-9cfe-3b802abe7811"
-					variablename="FilePath">
-					</var>
-				</missingdatabinding>
 			</testmodule>
 			<modulegroup
 			id="c9950db0-c345-4c60-92f5-66a0a7c82e22"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -1926,23 +1773,20 @@
 					</var>
 					<var
 					dataname="ExecutablePath"
-					datasourceid="0694f60a-f6ef-44b9-975e-3f802bbc1c08"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
 					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
 					variablename="ModuleGroupExecutablePath">
 					</var>
 				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="ExecutablePath"
+					datasourceid="0694f60a-f6ef-44b9-975e-3f802bbc1c08"
+					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
+					variablename="ModuleGroupExecutablePath">
+					</var>
+				</missingdatabinding>
 			</modulegroup>
-			<smartfoldernode
-			id="cac6d798-c8f7-4810-8d95-1cbb1f290f5d"
-			name="ImportModel">
-				<parameters>
-					<param
-					mask="False"
-					name="MduFilePath"
-					value="exercise07\exercise07.mdu">
-					</param>
-				</parameters>
-			</smartfoldernode>
 			<testmodule
 			id="cb6a7e2d-c7bd-4f30-a2eb-e67e6be38c83"
 			name="SelectRibbonTab"
@@ -1989,10 +1833,20 @@
 			ref="e1f3b6bc-e4fc-4ba9-99b9-ba696dc7b753"
 			type="Recording">
 			</testmodule>
-			<smartfoldernode
-			id="cc07c5c4-c2fa-4389-8b2b-4dfcf2907ac2"
-			name="StartUpDialogAstronomicalComponents">
-			</smartfoldernode>
+			<testmodule
+			id="cc5e138d-1881-4ff1-ae53-c8d5401f1dd9"
+			name="SelectBoundary"
+			ref="a02a983e-6a9c-4c79-91ce-3aab358535b6"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="BoundaryName"
+					datasourceid="629169d8-e784-4d18-9bce-ca92d92ead6a"
+					variableid="eb24b6dc-f471-4a90-8453-22de04049eed"
+					variablename="boundaryName">
+					</var>
+				</databinding>
+			</testmodule>
 			<testmodule
 			id="cec1ce3b-74e9-4ede-a38a-ce57e0623493"
 			name="DoubleClickOnMap"
@@ -2031,21 +1885,24 @@
 					<param
 					mask="False"
 					name="InputDirectory"
-					value="R:\input\courses\Coastal_hydrodynamic_modelling">
+					value="..\..\test-data\input\courses\Coastal_hydrodynamic_modelling">
 					</param>
 					<param
 					mask="False"
 					name="OutputDirectory"
-					value="R:\output\courses\Coastal_hydrodynamic_modelling">
+					value="..\..\test-data\output\courses\Coastal_hydrodynamic_modelling">
+					</param>
+					<param
+					mask="False"
+					name="ExecutablePath"
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
-			<testmodule
-			id="d0ae0f6d-b2da-4bdb-9e39-5a8e52449630"
-			name="StartAddBoundary"
-			ref="77f143d5-5d2f-4441-b9bd-b627435f7842"
-			type="Recording">
-			</testmodule>
+			<smartfoldernode
+			id="d03aa0a7-b1e0-48f5-8fde-11698ca6b87d"
+			name="CloseBCEditorView">
+			</smartfoldernode>
 			<smartfoldernode
 			id="d22993aa-7e12-4317-b99e-8df80b67accb"
 			name="OpenProject">
@@ -2057,35 +1914,80 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
-			<smartfoldernode
-			datasource="DataAstronomicalCompnentsWestBC"
-			id="d3b3815f-5934-4101-a50b-771fa5d8972e"
-			name="SpecifyDataAstronomicalComponents">
-				<parameters>
-					<param
-					mask="False"
-					name="numericValueToAssign"
-					value="">
-					</param>
-				</parameters>
-			</smartfoldernode>
 			<teardown
 			id="d63528b7-5d01-4dec-ba6f-23cd5c62cae3"
 			name="teardown">
 			</teardown>
 			<testmodule
-			id="d952e07a-8c4f-4397-9a76-e7919a54af29"
-			name="SelectSubTabSettings"
-			ref="f9775878-6727-409e-8319-2ee399166bb6"
+			id="d6f44160-ebe7-4663-a8c1-356e554cd59f"
+			name="SelectAstronomicalComponent"
+			ref="7ed9ccbf-2400-419c-9b17-bfb7b53042d6"
 			type="Recording">
 				<databinding>
 					<var
-					dataname="NameSubTabToSelect"
-					datasourceid="206f654c-1647-4fab-a149-b61b1488423a"
-					variableid="4dc4a29e-24b4-4c49-9e90-db968bf0d9a6"
-					variablename="NameSubTab">
+					dataname="ComponentNameBetweenSemiColons"
+					datasourceid="70327620-bfaa-4df6-ba85-bc963139002b"
+					variableid="17c28b1a-4dab-4317-84e4-83aa7c764b95"
+					variablename="NameAstronomicalComponent">
 					</var>
 				</databinding>
+			</testmodule>
+			<smartfoldernode
+			errorbehavior="ContinueParent"
+			id="d7cebc24-1f7b-4d95-a5f2-b1674c7009ea"
+			name="CloseWithoutSaving">
+			</smartfoldernode>
+			<testmodule
+			id="d849cf38-29a0-44b5-bdd0-e188f233a700"
+			name="SingleClickOnMap"
+			ref="ee5c623f-6a42-49cc-9fa1-7e2c127a2046"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="XY"
+					datasourceid="20cf116e-418e-4f7d-8005-365bb840acff"
+					variableid="77d7f94d-4106-4ca0-acea-ba88c380d490"
+					variablename="WorldCoordinates">
+					</var>
+					<var
+					dataname="PixelCoordinates"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
+					variableid="707bc6b8-b470-44b1-973d-60264995e110"
+					variablename="PixelCoordinates">
+					</var>
+				</databinding>
+			</testmodule>
+			<smartfoldernode
+			id="d897a526-917b-470b-b7a3-5fae729bf5b6"
+			name="ImposeWestBoundaryCondition">
+				<parameters>
+					<param
+					mask="False"
+					name="BoundaryName"
+					value="Boundary01">
+					</param>
+					<param
+					mask="False"
+					name="Quantity"
+					value="Water level">
+					</param>
+					<param
+					mask="False"
+					name="ForcingType"
+					value="Astronomical">
+					</param>
+					<param
+					mask="False"
+					name="ModelName"
+					value="FlowFM">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<testmodule
+			id="d8d0cf50-a17f-4c46-8d28-98e0be7a1d84"
+			name="SendEscapeKey"
+			ref="a617fba5-29e5-4e9f-b6b6-a7e9a91e8f8c"
+			type="Recording">
 			</testmodule>
 			<testmodule
 			id="d992906e-5f1c-40c1-996d-2556d6e812f7"
@@ -2141,37 +2043,48 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
-			<smartfoldernode
-			id="db1af62b-cdbc-401d-a016-d1e04e1fe14a"
-			name="SpecifyBC">
-			</smartfoldernode>
-			<smartfoldernode
-			datasource="BoundaryEastCoordinates"
-			id="db1e94b3-0da7-4045-8386-0c7e49db6c6d"
-			name="DrawIntermediatePoints">
-			</smartfoldernode>
 			<testmodule
-			id="db6a153b-6a62-416d-9642-f3e88a008faf"
-			name="SelectSubTabSettings"
-			ref="f9775878-6727-409e-8319-2ee399166bb6"
-			type="Recording">
+			id="dbf43ba8-a6b0-4ba5-8d93-db3e2f8537cd"
+			name="CalibrateMap"
+			ref="0bc79973-0c13-4f47-8c3c-06da550f6269"
+			type="UserCode">
+			</testmodule>
+			<smartfoldernode
+			id="de67e63b-48ec-48d3-906c-7f7b429600f9"
+			name="SaveAsProject">
+				<parameters>
+					<param
+					mask="False"
+					name="FilePath"
+					value="Project.dsproj">
+					</param>
+				</parameters>
+			</smartfoldernode>
+			<modulegroup
+			id="dea84a0f-7e18-4234-bf20-196ea5cdef88"
+			name="AdjustBoundaryConditionSettings"
+			ref="e4ece066-bfd8-4e3e-bd30-925cb4ab5b44">
 				<databinding>
 					<var
-					dataname="NameSubTabToSelect"
-					datasourceid="4aea4813-d24d-4f93-b794-17b8a48c14fc"
-					variableid="4dc4a29e-24b4-4c49-9e90-db968bf0d9a6"
-					variablename="NameSubTab">
+					dataname="BoundaryName"
+					datasourceid="629169d8-e784-4d18-9bce-ca92d92ead6a"
+					variableid="4f55b208-3692-4a13-8cc2-236fac5d8d43"
+					variablename="BoundaryName">
+					</var>
+					<var
+					dataname="Quantity"
+					datasourceid="629169d8-e784-4d18-9bce-ca92d92ead6a"
+					variableid="4cd512a9-a756-4ec3-9d60-9f762c071004"
+					variablename="Quantity">
+					</var>
+					<var
+					dataname="ForcingType"
+					datasourceid="629169d8-e784-4d18-9bce-ca92d92ead6a"
+					variableid="bfe00cc5-a624-462b-9ea1-2d0000837fdd"
+					variablename="ForcingType">
 					</var>
 				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="NameSubTabToSelect"
-					datasourceid="5bfeb3a4-3c30-4590-a4b1-ad901aedf9e9"
-					variableid="4dc4a29e-24b4-4c49-9e90-db968bf0d9a6"
-					variablename="NameSubTab">
-					</var>
-				</missingdatabinding>
-			</testmodule>
+			</modulegroup>
 			<testmodule
 			id="dee4d642-5328-4267-ba10-a085e437d66e"
 			name="WaitForSampleImport"
@@ -2182,30 +2095,10 @@
 				</description>
 			</testmodule>
 			<testmodule
-			id="e0a00b8c-a524-4123-8e2f-562d20779cff"
-			name="SpecifyValueRowAstronomicalComponentsBC"
-			ref="f992420c-d0ad-479e-a26e-4e48b5779c7b"
+			id="df212f72-00bf-4fc9-81c5-47a47e5be92e"
+			name="SendEscapeKey"
+			ref="a617fba5-29e5-4e9f-b6b6-a7e9a91e8f8c"
 			type="Recording">
-				<databinding>
-					<var
-					dataname="NameAstronomicalComponent"
-					datasourceid="75984ae1-b447-4bc2-a0ef-2b55f1f1605f"
-					variableid="17c28b1a-4dab-4317-84e4-83aa7c764b95"
-					variablename="NameAstronomicalComponent">
-					</var>
-					<var
-					dataname="NameParameter"
-					datasourceid="75984ae1-b447-4bc2-a0ef-2b55f1f1605f"
-					variableid="be5e7200-5399-41ef-9324-a9f812145d8a"
-					variablename="ParameterName">
-					</var>
-					<var
-					dataname="numericValueToAssign"
-					datasourceid="d3b3815f-5934-4101-a50b-771fa5d8972e"
-					variableid="c7d820f1-a714-4322-9bea-9eb6265d3336"
-					variablename="ParameterValue">
-					</var>
-				</databinding>
 			</testmodule>
 			<testmodule
 			id="e21e9873-ba7d-4861-8102-c6853a30f9a6"
@@ -2228,47 +2121,45 @@
 				</databinding>
 			</testmodule>
 			<testmodule
-			id="e432d51a-13ca-43c9-b6d6-b4c0489e3c25"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
+			id="e4adcc77-b0f4-4e7d-9e5f-b035cdb99d64"
+			name="DoubleClickOnMap"
+			ref="370e08fb-dfdd-4ca5-a04a-006d54548a71"
 			type="Recording">
 				<databinding>
 					<var
-					dataname="SettingsOptionName"
-					datasourceid="0eb04756-517d-429c-bc0a-c68ec2eefb90"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
+					dataname="LastPoint"
+					datasourceid="83c5625c-24f9-4eb0-a3c8-00f38b1d0410"
+					variableid="d3ba1fc1-e053-43c3-9b35-0345077993ee"
+					variablename="WorldCoordinates">
+					</var>
+					<var
+					dataname="PixelCoordinates"
+					datasourceid="cf535267-94f1-4845-8ae4-32395f0f0add"
+					variableid="d7b4cda5-6f79-485b-8af1-0a83d5a7fdbc"
+					variablename="PixelCoordinates">
 					</var>
 				</databinding>
 			</testmodule>
 			<smartfoldernode
-			id="e54f6d77-3cb9-47ad-bc6d-681284065044"
-			name="CloseBCEditorView">
-			</smartfoldernode>
-			<smartfoldernode
-			id="e62891b8-5d89-45e9-b6fe-37942aef9333"
-			name="SpecifyBC">
-			</smartfoldernode>
-			<testcase
-			id="e75baf1c-e062-4b6e-93bf-9bfe99748504"
-			name="Exercise_09_Running_a_model_simulation">
+			id="eaf84918-b799-42e4-aa7a-306a4e72481e"
+			name="FinishDrawingBoundary">
 				<parameters>
 					<param
 					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					name="CoordinateLastPointBoundaryEast"
+					value="85526;358913">
 					</param>
 				</parameters>
-			</testcase>
+			</smartfoldernode>
 			<testmodule
-			id="e7a52c1f-4eab-4e16-91c4-bdf3bf0e8164"
+			id="ec3b0e9b-b006-49e2-ab6f-f94d053b4361"
 			name="SingleClickOnMap"
 			ref="ee5c623f-6a42-49cc-9fa1-7e2c127a2046"
 			type="Recording">
 				<databinding>
 					<var
-					dataname="XY"
-					datasourceid="20cf116e-418e-4f7d-8005-365bb840acff"
+					dataname="FirstPoint"
+					datasourceid="83c5625c-24f9-4eb0-a3c8-00f38b1d0410"
 					variableid="77d7f94d-4106-4ca0-acea-ba88c380d490"
 					variablename="WorldCoordinates">
 					</var>
@@ -2281,29 +2172,97 @@
 				</databinding>
 			</testmodule>
 			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="ec327acb-87e6-4816-a5e0-732b5bff1341"
-			name="AddNewModel">
-			</smartfoldernode>
-			<smartfoldernode
-			id="eee751a1-1012-45da-bf78-65290c72c510"
-			name="CreateScreenshotDocumentView">
-			</smartfoldernode>
-			<smartfoldernode
-			id="f0305e16-4719-4bf5-9476-50667179c360"
-			name="OpenBC_EditorView">
+			datasource="ObservationPointPoints"
+			id="ec7b85be-2aee-419b-a6aa-4fe636f72b52"
+			name="PlaceObservationPoints">
 			</smartfoldernode>
 			<testmodule
-			id="f311f30e-2395-459c-8c20-243fc0aa386a"
-			name="SelectBoundary"
-			ref="a02a983e-6a9c-4c79-91ce-3aab358535b6"
+			id="ece471c8-116f-4dfb-b25e-c826ebc3fc8c"
+			name="SelectSupportPoint"
+			ref="84aded17-affa-4df7-84e8-ebaf617dfc3f"
 			type="Recording">
 				<databinding>
 					<var
-					dataname="BoundaryName"
-					datasourceid="f7b7204f-1c3f-493c-9447-34b9a1100e5b"
-					variableid="eb24b6dc-f471-4a90-8453-22de04049eed"
-					variablename="boundaryName">
+					dataname="SupportPointName2"
+					datasourceid="15940b33-fbd9-4afd-9df4-5cfe8a2b666d"
+					variableid="5fa0df42-3429-4094-a902-91befaef4b36"
+					variablename="SupportPointName">
+					</var>
+				</databinding>
+			</testmodule>
+			<modulegroup
+			id="ed5ab24a-95b2-4589-8867-bd3d8a058510"
+			name="ExportDimrModel"
+			ref="ae57245a-f450-4c2b-a380-39f288b3b304">
+				<databinding>
+					<var
+					dataname="ExportDimrFilePath"
+					datasourceid="a8047159-0fd7-45e3-aafc-c73db166be01"
+					variableid="e98f476c-ea03-457e-97cc-d802fd33a56c"
+					variablename="ExportDimrFilePath">
+					</var>
+				</databinding>
+			</modulegroup>
+			<smartfoldernode
+			errorbehavior="ContinueParent"
+			id="eebe9c6b-1c62-42a3-81ec-de55aea5eabf"
+			name="ImposeBoundaryConditions">
+			</smartfoldernode>
+			<testmodule
+			id="ef0e6e16-b7df-4762-9e31-9423468d8910"
+			name="StartAddBoundary"
+			ref="77f143d5-5d2f-4441-b9bd-b627435f7842"
+			type="Recording">
+			</testmodule>
+			<modulegroup
+			id="f0b29d9c-fb02-4163-b2f8-b528b8a03e12"
+			name="OpenModelSettings"
+			ref="c19667cf-498a-4bde-96ad-d40cd4f76c6b">
+			</modulegroup>
+			<testmodule
+			id="f0b6d28b-11b9-4e86-a236-1291a25a96d9"
+			name="SetInitialConditionSettings"
+			ref="0ad9d5c1-9e98-447f-a7b4-294677146b2e"
+			type="Recording">
+			</testmodule>
+			<modulegroup
+			id="f0de924d-d06f-4f5f-a153-eb2ec42065c2"
+			name="ImportDFlowFMModel"
+			ref="97411fef-a968-4120-98ab-9188e0a8dc85">
+				<databinding>
+					<var
+					dataname="MduFilePath"
+					datasourceid="63ccdda1-9e5b-41e0-a015-e998bf08e15d"
+					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
+					variablename="MduFilePath">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="NameModelTypeToImport"
+					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
+					variableid="68f812eb-c408-42db-ad93-9bedf839d41b"
+					variablename="ModuleGroupNameModelTypeToImport">
+					</var>
+					<var
+					dataname="MduFilePath"
+					datasourceid="24668836-f75c-49e8-966f-1b519206b31b"
+					variableid="4e201650-490c-4425-9f6c-467ce4a0267c"
+					variablename="MduFilePath">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
+			<testmodule
+			id="f23be7fd-1503-483c-906f-3ccebb36b04e"
+			name="SelectSubTabSettings"
+			ref="f9775878-6727-409e-8319-2ee399166bb6"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="NameSubTabToSelect"
+					datasourceid="46d00a62-766e-4866-bf30-26bf0b9f71dd"
+					variableid="4dc4a29e-24b4-4c49-9e90-db968bf0d9a6"
+					variablename="NameSubTab">
 					</var>
 				</databinding>
 			</testmodule>
@@ -2316,6 +2275,11 @@
 					name="ExecutablePath"
 					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
+					<param
+					mask="False"
+					name="NewParameter"
+					value="">
+					</param>
 				</parameters>
 			</testcase>
 			<testmodule
@@ -2324,39 +2288,15 @@
 			ref="0bc79973-0c13-4f47-8c3c-06da550f6269"
 			type="UserCode">
 			</testmodule>
+			<testmodule
+			id="f646a1b2-3d1a-4c2c-b50a-20fb2472b4ba"
+			name="CloseDocumentView"
+			ref="00a1264a-0541-4204-af34-49b608e5c993"
+			type="Recording">
+			</testmodule>
 			<smartfoldernode
-			id="f6a726a4-08a5-4ada-85b2-92604e619100"
-			name="CloseBCEditorView">
-			</smartfoldernode>
-			<smartfoldernode
-			id="f73f989e-2b63-4216-8387-74de6c31f1d0"
-			name="StartupDrawingBoundaries">
-			</smartfoldernode>
-			<smartfoldernode
-			id="f7b7204f-1c3f-493c-9447-34b9a1100e5b"
-			name="ImposeEastBoundaryCondition">
-				<parameters>
-					<param
-					mask="False"
-					name="BoundaryName"
-					value="Boundary02">
-					</param>
-					<param
-					mask="False"
-					name="Quantity"
-					value="Discharge">
-					</param>
-					<param
-					mask="False"
-					name="ForcingType"
-					value="Time Series">
-					</param>
-					<param
-					mask="False"
-					name="ModelName"
-					value="FlowFM">
-					</param>
-				</parameters>
+			id="f693b44f-92c1-43ed-ad30-8879e66794c1"
+			name="StopDrawingBoundaries">
 			</smartfoldernode>
 			<smartfoldernode
 			id="f7c7276b-0bbc-4ca3-b1f6-c84bbd000a00"
@@ -2366,35 +2306,41 @@
 			id="f7cf4952-2f8b-4829-98ee-d590b7631d9b"
 			name="Preparation">
 			</smartfoldernode>
+			<modulegroup
+			id="f829f235-3ec3-4281-a809-854519a601fa"
+			name="SaveAsProject"
+			ref="04d0f50e-a57d-4762-b70c-d57b0c2ad9e5">
+				<databinding>
+					<var
+					dataname="FilePath"
+					datasourceid="de67e63b-48ec-48d3-906c-7f7b429600f9"
+					variableid="480029c8-389f-4e52-bd68-34fbb8de5464"
+					variablename="ModuleGroupFilePath">
+					</var>
+				</databinding>
+			</modulegroup>
+			<modulegroup
+			id="f838c9f1-3a05-4448-a1af-75d6ec290baa"
+			name="SaveAsProject"
+			ref="04d0f50e-a57d-4762-b70c-d57b0c2ad9e5">
+				<databinding>
+					<var
+					dataname="FilePath"
+					datasourceid="bfbf6102-5de3-4ecf-a54c-9e1f23dd365c"
+					variableid="480029c8-389f-4e52-bd68-34fbb8de5464"
+					variablename="ModuleGroupFilePath">
+					</var>
+				</databinding>
+			</modulegroup>
 			<testmodule
 			id="f85ec0ab-c06b-4679-823c-98dac537257d"
 			name="StartImportSamples"
 			ref="ae081b90-5e32-4317-a596-4db2457ba897"
 			type="Recording">
 			</testmodule>
-			<testmodule
-			id="f8ee5118-e0a8-4b4e-92ae-a4f2e69fb8ee"
-			name="AddTimeSeriesDataBC"
-			ref="9942d7b6-1ade-4d2f-a423-248b28111a73"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="ParameterName"
-					datasourceid="6885a4d7-a219-4abc-918d-1bcb807e9606"
-					variableid="be5e7200-5399-41ef-9324-a9f812145d8a"
-					variablename="ParameterName">
-					</var>
-					<var
-					dataname="numericValueToAssign"
-					datasourceid="3db3b2f7-351f-4138-911e-5acb29c3991f"
-					variableid="0f0c78b3-10f8-47ce-b09f-27265323b717"
-					variablename="ParameterValue">
-					</var>
-				</databinding>
-			</testmodule>
 			<modulegroup
 			id="f8f302cd-4148-4b65-9a35-654246359300"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -2411,49 +2357,10 @@
 					</var>
 				</databinding>
 			</modulegroup>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="fa7d6997-f28b-4533-b54b-068d3647b935"
-			name="CloseWithoutSaving">
-			</smartfoldernode>
-			<smartfoldernode
-			id="fd7712a9-5056-45d8-bb24-1121c363a758"
-			name="ImportData">
-				<parameters>
-					<param
-					mask="False"
-					name="GridFilePath"
-					value="exercise06\westernscheldt05_net.nc">
-					</param>
-					<param
-					mask="False"
-					name="LandBoundaryFilePath"
-					value="exercise06\sealand.ldb">
-					</param>
-					<param
-					mask="False"
-					name="ContextMenu"
-					value="Import">
-					</param>
-					<param
-					mask="False"
-					name="TreePath"
-					value="*>Grid">
-					</param>
-				</parameters>
-			</smartfoldernode>
-			<smartfoldernode
-			errorbehavior="ContinueParent"
-			id="fda30f1c-f1e2-4aaa-8a1a-776b5c8029d5"
-			name="ExportModel">
-				<parameters>
-					<param
-					mask="False"
-					name="ExportMduDirectory"
-					value="exercise07_result">
-					</param>
-				</parameters>
-			</smartfoldernode>
+			<testcase
+			id="fb85ec99-aac2-4a14-9326-914d070b77de"
+			name="Exercise_09_Running_a_model_simulation">
+			</testcase>
 			<smartfoldernode
 			id="fdd61d47-c187-4376-a64a-d39b6cc2283c"
 			name="Interpolate">
@@ -2478,7 +2385,7 @@
 						name="setup">
 							<modulegroup
 							id="f8f302cd-4148-4b65-9a35-654246359300"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
@@ -2587,7 +2494,7 @@
 									name="DrawDefiningPolygon">
 										<smartfoldernode
 										id="88910c9e-e5a5-4617-a187-c9bbb874fa08"
-										name="StartUpDrawingAction">
+										name="StartDrawingAction">
 											<testmodule
 											id="792e7e30-69a9-43e6-a569-7e18f6f0be42"
 											name="StartDrawPolygon">
@@ -2647,261 +2554,261 @@
 						</teardown>
 					</testcase>
 					<testcase
-					id="0694f60a-f6ef-44b9-975e-3f802bbc1c08"
+					id="a6b8fa7d-ac24-4baf-8d8a-2436632f6f06"
 					name="Exercise_06_Imposing_boundary_conditions">
 						<setup
 						id="53c4bc66-b38a-43b9-a00d-c2a36211e46f"
 						name="setup">
 							<modulegroup
 							id="c9950db0-c345-4c60-92f5-66a0a7c82e22"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
-						id="ec327acb-87e6-4816-a5e0-732b5bff1341"
+						id="510b75b8-d55b-4d96-a20f-9cc03629ad3c"
 						name="AddNewModel">
 							<testmodule
-							id="add60695-56e9-45bd-a134-cc76ae65e998"
+							id="8a80515c-c444-499e-a4d7-dd4a6805c258"
 							name="AddNewFMModel">
-							</testmodule>
-							<testmodule
-							id="47e305df-4608-46af-b74b-ced41a550b1c"
-							name="CloseUniqueDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
-						id="fd7712a9-5056-45d8-bb24-1121c363a758"
+						id="80706ed3-0b2a-4813-bd6f-d42fa5a9ccd5"
 						name="ImportData">
 							<modulegroup
-							id="81505da8-cce1-4562-ae0c-c1fada711407"
+							id="b2821ae0-95b7-4733-8fcc-b738bcb5e0c3"
 							name="ImportFileInProjectTree">
 							</modulegroup>
 							<modulegroup
-							id="c5c1d13e-8862-4f1b-90dc-96610c4ff4e1"
+							id="9fad743d-4c68-47ec-a446-0866cc7778b1"
 							name="ImportLandBoundaries">
 							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="7afe7e6f-035c-4a20-8423-690f43ab31a9"
+						id="97480b00-21bb-40be-9b36-943e194969db"
 						name="DrawBoundaries">
 							<smartfoldernode
-							id="f73f989e-2b63-4216-8387-74de6c31f1d0"
-							name="StartupDrawingBoundaries">
+							id="7da662fa-4f11-4267-8055-a29726c04ccd"
+							name="StartDrawingBoundaries">
 								<testmodule
-								id="28b86e38-0352-49b0-a8db-dee76df76306"
+								id="0f7f3beb-9300-4819-a0f4-b1e869632f97"
 								name="CalibrateMap">
 								</testmodule>
 								<testmodule
-								id="d0ae0f6d-b2da-4bdb-9e39-5a8e52449630"
+								id="119beca5-52ce-4208-9563-cb2e2b5200d0"
+								name="SelectMapRibbonTab">
+								</testmodule>
+								<testmodule
+								id="ef0e6e16-b7df-4762-9e31-9423468d8910"
 								name="StartAddBoundary">
 								</testmodule>
 							</smartfoldernode>
 							<smartfoldernode
-							id="560b59b1-9d77-4e81-9299-af5b66d78bb9"
+							id="5c5c2ce4-14c2-4300-9c76-6940abf21a4f"
 							name="DrawWestBoundary">
 								<smartfoldernode
-								id="1fb2a9f5-26b0-43b3-9252-a69470a7e21a"
+								id="2f1ba57d-cd0f-4540-8a4a-8a870ea02823"
 								name="DrawIntermediatePoints">
 									<testmodule
-									id="e7a52c1f-4eab-4e16-91c4-bdf3bf0e8164"
+									id="d849cf38-29a0-44b5-bdd0-e188f233a700"
 									name="SingleClickOnMap">
 									</testmodule>
 								</smartfoldernode>
 								<smartfoldernode
-								id="9032ce67-a055-4f3e-bb86-b3ec4d4b946d"
+								id="29076f47-3883-4f9f-9d44-9b5bb8052d7d"
 								name="FinishDrawingBoundary">
 									<testmodule
-									id="b9f00433-317f-4c94-8748-92c5f0386924"
+									id="a542498e-9ff6-40a1-959a-9c93343b08fd"
 									name="DoubleClickOnMap">
 									</testmodule>
 								</smartfoldernode>
 							</smartfoldernode>
 							<smartfoldernode
-							id="4e45dd1c-e31e-4fb3-9eec-b8c35750a02b"
+							id="57b84d98-e215-4f07-a78b-28941f4354af"
 							name="DrawEastBoundary">
 								<smartfoldernode
-								id="db1e94b3-0da7-4045-8386-0c7e49db6c6d"
+								id="46ec29fd-0c4c-4bfa-ae8e-678fd7ff66a1"
 								name="DrawIntermediatePoints">
 									<testmodule
-									id="31bb2245-be18-4bdd-ba18-1b3ad654547a"
+									id="c5567646-c302-47a2-ac28-3b3002b836f3"
 									name="SingleClickOnMap">
 									</testmodule>
 								</smartfoldernode>
 								<smartfoldernode
-								id="8439f903-d62d-4041-a123-23149c789f72"
+								id="eaf84918-b799-42e4-aa7a-306a4e72481e"
 								name="FinishDrawingBoundary">
 									<testmodule
-									id="3256e90a-c097-4734-9f24-4e350630fcf7"
+									id="84f7fb8d-3d12-4b42-83c5-9194a7d04be8"
 									name="DoubleClickOnMap">
 									</testmodule>
 								</smartfoldernode>
 							</smartfoldernode>
 							<smartfoldernode
-							id="eee751a1-1012-45da-bf78-65290c72c510"
-							name="CreateScreenshotDocumentView">
+							id="f693b44f-92c1-43ed-ad30-8879e66794c1"
+							name="StopDrawingBoundaries">
 								<testmodule
-								id="1745003e-1171-49bc-80be-7896a2c0bbf7"
-								name="ScreenshotCentralDocumentView">
+								id="d8d0cf50-a17f-4c46-8d28-98e0be7a1d84"
+								name="SendEscapeKey">
 								</testmodule>
 							</smartfoldernode>
 							<smartfoldernode
-							id="2433ccff-35e6-411d-8ae8-8a182dc70df5"
-							name="CloseMapView">
+							id="9795e2d5-0d14-433f-a552-b490424e2db1"
+							name="CreateScreenshotDocumentView">
 								<testmodule
-								id="1e6d73b2-9809-4416-83e3-b5c6fa484c94"
-								name="CloseUniqueDocumentView">
+								id="04a69735-f81e-4bdd-bbe0-578459fa1bbe"
+								name="ScreenshotCentralDocumentView">
 								</testmodule>
 							</smartfoldernode>
 						</smartfoldernode>
 						<smartfoldernode
-						id="43f8f964-a7eb-494d-9945-b6f6a55ba21f"
+						id="eebe9c6b-1c62-42a3-81ec-de55aea5eabf"
 						name="ImposeBoundaryConditions">
 							<smartfoldernode
-							id="25ac1849-0328-45df-bf46-b66587aa9531"
+							id="d897a526-917b-470b-b7a3-5fae729bf5b6"
 							name="ImposeWestBoundaryCondition">
 								<smartfoldernode
-								id="f0305e16-4719-4bf5-9476-50667179c360"
+								id="45850a3a-e1af-4718-b4e1-01a1070c5eb7"
 								name="OpenBC_EditorView">
 									<testmodule
-									id="457ea481-09c0-41a8-b212-156b657b0de2"
+									id="49e7442a-4348-4768-b33c-861cfae67fc0"
 									name="SelectBoundary">
 									</testmodule>
 								</smartfoldernode>
 								<smartfoldernode
-								id="316aae83-7630-431c-8f55-1552922b46b8"
+								id="15940b33-fbd9-4afd-9df4-5cfe8a2b666d"
 								name="AddNewBCDefinition">
 									<modulegroup
-									id="1f5928f5-33ec-44a1-bd68-2f3f9374982b"
+									id="313799ff-120b-40eb-92b3-11fb249c923d"
 									name="AdjustBoundaryConditionSettings">
 									</modulegroup>
 									<testmodule
-									id="0b0ed901-1d24-4983-b8cc-2e318e32f2c3"
+									id="5a1f7d3d-4357-4475-b182-c35fa353ec3a"
 									name="SelectSupportPoint">
 									</testmodule>
 									<testmodule
-									id="a710f0ae-86ea-4e05-88ac-5c026ee22a2e"
+									id="ece471c8-116f-4dfb-b25e-c826ebc3fc8c"
 									name="SelectSupportPoint">
 									</testmodule>
 								</smartfoldernode>
 								<smartfoldernode
-								id="db1af62b-cdbc-401d-a016-d1e04e1fe14a"
+								id="c4fbbd96-bd08-42df-aa6b-e44ef2ddb233"
 								name="SpecifyBC">
 									<smartfoldernode
-									id="cc07c5c4-c2fa-4389-8b2b-4dfcf2907ac2"
+									id="bf262236-0eb8-46df-a230-dba77ef5ddee"
 									name="StartUpDialogAstronomicalComponents">
 										<testmodule
-										id="47291376-0e68-4b45-b711-cc1b8fb50653"
+										id="0e8b7aac-aea6-4a47-ab21-c99c281692fb"
 										name="SelectComponentsAstronomicalBCTimeSeries">
 										</testmodule>
 									</smartfoldernode>
 									<smartfoldernode
-									id="9f662e88-a2f0-46c1-af5c-d4656b22e9de"
+									id="0176042a-03bb-44c1-a26d-707a454e7793"
 									name="SelectAstronomicalComponentsWestBC">
 										<testmodule
-										id="28912260-464e-4d79-83ac-4970b32db3e6"
+										id="d6f44160-ebe7-4663-a8c1-356e554cd59f"
 										name="SelectAstronomicalComponent">
 										</testmodule>
 									</smartfoldernode>
 									<smartfoldernode
-									id="7bf50390-422d-42f9-afbd-3b0d2db7ce80"
+									id="25adddfd-d3cf-47af-b334-013412a9983e"
 									name="FinishSpecification">
 										<testmodule
-										id="93a98e77-4a56-4063-9992-75c7de41e765"
+										id="5dc912d6-c876-4132-93ee-b35948756aaa"
 										name="FinishSelectionAstronomicalComponents">
 										</testmodule>
 										<testmodule
-										id="9a2272b3-c38d-46b6-8b2c-4effb46adcc1"
+										id="615cb69a-74b9-422f-ad68-77535e93c52e"
 										name="ChooseSupportPoints">
 										</testmodule>
 									</smartfoldernode>
 									<smartfoldernode
-									id="d3b3815f-5934-4101-a50b-771fa5d8972e"
+									id="402d84c5-ad01-4302-b3fd-20ec9af8e6cd"
 									name="SpecifyDataAstronomicalComponents">
 										<testmodule
-										id="5dc1bc2a-ae46-4993-bc32-38c8877ff89f"
+										id="1d446713-a7bb-48da-ad14-a28695998a58"
 										name="ConvertDoubleToCurrentCulture">
 										</testmodule>
 										<testmodule
-										id="e0a00b8c-a524-4123-8e2f-562d20779cff"
+										id="aaea4ab4-92a5-4673-8d4f-ceaf05b6a2cf"
 										name="SpecifyValueRowAstronomicalComponentsBC">
 										</testmodule>
 									</smartfoldernode>
 								</smartfoldernode>
 								<smartfoldernode
-								id="e54f6d77-3cb9-47ad-bc6d-681284065044"
+								id="d03aa0a7-b1e0-48f5-8fde-11698ca6b87d"
 								name="CloseBCEditorView">
 									<testmodule
-									id="abc33c1e-ad92-44f5-a22a-dcf3b39c4fb2"
-									name="CloseUniqueDocumentView">
+									id="f646a1b2-3d1a-4c2c-b50a-20fb2472b4ba"
+									name="CloseDocumentView">
 									</testmodule>
 								</smartfoldernode>
 							</smartfoldernode>
 							<smartfoldernode
-							id="f7b7204f-1c3f-493c-9447-34b9a1100e5b"
+							id="629169d8-e784-4d18-9bce-ca92d92ead6a"
 							name="ImposeEastBoundaryCondition">
 								<smartfoldernode
-								id="98a2e1a6-d539-4a01-a50c-90f6c83bbf83"
+								id="526e31b3-3c8b-4bba-9367-0270c70d68c5"
 								name="OpenBC_EditorView">
 									<testmodule
-									id="f311f30e-2395-459c-8c20-243fc0aa386a"
+									id="cc5e138d-1881-4ff1-ae53-c8d5401f1dd9"
 									name="SelectBoundary">
 									</testmodule>
 								</smartfoldernode>
 								<smartfoldernode
-								id="4da2b8cf-8794-46ec-8a65-5e1e21551fa1"
+								id="8e60b9f4-f7da-4c2c-b144-880b7e8a936f"
 								name="AddNewBCDefinition">
 									<modulegroup
-									id="8c4cc7c5-b262-410a-b39f-684ae2e56652"
+									id="dea84a0f-7e18-4234-bf20-196ea5cdef88"
 									name="AdjustBoundaryConditionSettings">
 									</modulegroup>
 								</smartfoldernode>
 								<smartfoldernode
-								id="e62891b8-5d89-45e9-b6fe-37942aef9333"
+								id="90eaa180-6d94-46e7-9baa-e58163aa47f1"
 								name="SpecifyBC">
 									<smartfoldernode
-									id="3db3b2f7-351f-4138-911e-5acb29c3991f"
+									id="a46f932c-5b64-4ea2-ae42-77070b532939"
 									name="SpecifyDataTimeSeries">
 										<testmodule
-										id="8a56f821-b4b6-4ee7-8551-5e669525a43c"
+										id="0802bc44-018d-4b8d-924a-a85adb24caad"
 										name="ConvertDoubleToCurrentCulture">
 										</testmodule>
 										<testmodule
-										id="f8ee5118-e0a8-4b4e-92ae-a4f2e69fb8ee"
+										id="c13966b4-c108-4f6d-91ab-2ba5a20b028e"
 										name="AddTimeSeriesDataBC">
 										</testmodule>
 									</smartfoldernode>
 								</smartfoldernode>
 								<smartfoldernode
-								id="f6a726a4-08a5-4ada-85b2-92604e619100"
+								id="904d225e-47fc-479b-b678-29ab679d73fa"
 								name="CloseBCEditorView">
 									<testmodule
-									id="b6a4c37c-5507-4b68-aa47-d67e13dcc890"
-									name="CloseUniqueDocumentView">
+									id="371e5881-574f-4258-9228-c425360e3bf4"
+									name="CloseDocumentView">
 									</testmodule>
 								</smartfoldernode>
 							</smartfoldernode>
 						</smartfoldernode>
 						<smartfoldernode
-						id="9332b617-9627-4ffb-b2f2-1ffebe421fd3"
+						id="143c89e2-4f8f-494b-9dce-92ba0f056ce9"
 						name="RenameModel">
 							<modulegroup
-							id="226c5cd8-cad2-4e35-a745-9ecd1add107a"
+							id="a06195dc-1567-48c6-bc4c-9df3781956ea"
 							name="RenameModel">
 							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="aec2ae0b-44e1-4de3-be65-8263f2dc4870"
+						id="a8047159-0fd7-45e3-aafc-c73db166be01"
 						name="ExportModel">
 							<modulegroup
-							id="123124d6-e668-402f-b556-ed33c8d9e0e9"
+							id="ed5ab24a-95b2-4589-8867-bd3d8a058510"
 							name="ExportDimrModel">
 							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="5dae7762-f20e-4666-bcb5-dbc58932fbdb"
+						id="6216c163-9df4-4ff1-a8c6-9a9601ab415f"
 						name="CloseWithSaving">
 							<modulegroup
-							id="5e8f3a15-befd-4418-be59-8c818f9ff5f1"
+							id="4a6f626e-489d-4f4b-a33d-6dfe2203d45f"
 							name="CloseProjectWithSaving">
 							</modulegroup>
 						</smartfoldernode>
@@ -2915,77 +2822,97 @@
 						</teardown>
 					</testcase>
 					<testcase
-					id="c551fe4f-9383-4a33-b10c-82bd51ec9a2d"
+					id="1c5b6d2c-1e6c-4c65-b75c-71930fecac39"
 					name="Exercise_07_Defining_output_locations">
 						<setup
 						id="078aa058-b22a-41e4-a2a4-3cfe192e5891"
 						name="setup">
 							<modulegroup
 							id="7b9b1e28-3c74-4e9b-86bd-25fb9b5e90b0"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
-						id="cac6d798-c8f7-4810-8d95-1cbb1f290f5d"
+						id="7a53337b-8eb6-41e1-bd6d-54ef7b1b3b10"
 						name="ImportModel">
 							<modulegroup
-							id="14548160-fa3e-44e3-aa3e-8fe6f1a98fa8"
+							id="6145ff0d-95d0-4506-87f7-b5ae2dcf99e5"
 							name="ImportDFlowFMModel">
 							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="355cbb57-8552-45b2-8c06-56788175bb80"
+						id="bb690866-dff1-43da-a1b0-dee2c416345e"
 						name="DrawCrossSections">
 							<testmodule
-							id="4d39352d-a286-4495-bf91-6e4db07f626c"
+							id="dbf43ba8-a6b0-4ba5-8d93-db3e2f8537cd"
 							name="CalibrateMap">
 							</testmodule>
 							<testmodule
-							id="83623e51-8994-4d77-8197-5dcb599503d6"
+							id="788c48a2-9c5b-4521-92ea-add46d380d90"
+							name="SelectMapRibbonTab">
+							</testmodule>
+							<testmodule
+							id="c2e85f22-f806-45d0-83d0-261fa6e65e12"
 							name="StartAddCrossSections">
 							</testmodule>
 							<smartfoldernode
-							id="3cd38c92-f4a5-41f4-a1e1-e3d04096a59d"
+							id="16611ffc-4200-4d71-861e-14428b4b11b6"
 							name="DrawCrossSections">
 								<testmodule
-								id="94ef3c63-a725-45e5-98f9-1bea57b26274"
+								id="ec3b0e9b-b006-49e2-ab6f-f94d053b4361"
 								name="SingleClickOnMap">
 								</testmodule>
 								<testmodule
-								id="347a7b12-66bf-4cc7-9c0c-7a343f55021e"
+								id="e4adcc77-b0f4-4e7d-9e5f-b035cdb99d64"
 								name="DoubleClickOnMap">
 								</testmodule>
 							</smartfoldernode>
-						</smartfoldernode>
-						<smartfoldernode
-						id="02c97d7e-9793-4d88-a4ff-1a7dc516451f"
-						name="AddObservationPoints">
-							<testmodule
-							id="60282ba1-2b9b-461d-9aa7-6ae23ac5519d"
-							name="StartAddObservationPoints">
-							</testmodule>
 							<smartfoldernode
-							id="6e664507-6170-4725-be8f-1c0fb727b3eb"
-							name="PlaceObservationPoints">
+							id="28959490-2536-4d65-8b54-de2aeda82b7d"
+							name="StopDrawingCrossSections">
 								<testmodule
-								id="6afa77e6-4a3d-4ab4-9da3-6971d0c94512"
-								name="SingleClickOnMap">
+								id="df212f72-00bf-4fc9-81c5-47a47e5be92e"
+								name="SendEscapeKey">
 								</testmodule>
 							</smartfoldernode>
 						</smartfoldernode>
 						<smartfoldernode
-						id="fda30f1c-f1e2-4aaa-8a1a-776b5c8029d5"
+						id="37d88159-8869-45c5-a6c9-c71e25c8d9e4"
+						name="AddObservationPoints">
+							<testmodule
+							id="aa7f7bab-6c72-42e6-8f64-e349b60763e4"
+							name="StartAddObservationPoints">
+							</testmodule>
+							<smartfoldernode
+							id="ec7b85be-2aee-419b-a6aa-4fe636f72b52"
+							name="PlaceObservationPoints">
+								<testmodule
+								id="979c678a-ef99-40a1-94ab-73ed93490caf"
+								name="SingleClickOnMap">
+								</testmodule>
+							</smartfoldernode>
+							<smartfoldernode
+							id="02c8337b-d0fc-4836-b495-3966f5ec7e0e"
+							name="StopAddingObservationPoints">
+								<testmodule
+								id="51ff070b-e0ef-49d0-a109-4b59c025d331"
+								name="SendEscapeKey">
+								</testmodule>
+							</smartfoldernode>
+						</smartfoldernode>
+						<smartfoldernode
+						id="10366c44-1add-4ddf-a5b7-cd0e47009d2d"
 						name="ExportModel">
 							<modulegroup
-							id="865e0e11-7007-40b5-9ad5-f04a2ae8760e"
+							id="bffbedf2-a8b5-4bd8-adf9-ca30ff905c61"
 							name="ExportDFlowFMModel">
 							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="5e07318e-7f10-402a-bdae-f99f6fa25183"
+						id="ad7c24e6-0883-497d-949a-215bd28690b2"
 						name="CloseWithSaving">
 							<modulegroup
-							id="0d2309fb-60db-4897-903c-29448f9fd4b1"
+							id="3c76bd73-82a3-4dd7-bbd7-b6559f5029a1"
 							name="CloseProjectWithSaving">
 							</modulegroup>
 						</smartfoldernode>
@@ -2999,97 +2926,101 @@
 						</teardown>
 					</testcase>
 					<testcase
-					id="b39a62d6-3a0b-4a9e-8278-e1749b4c5616"
+					id="6dff9b5d-0aee-419d-98ee-f63cb2cceac2"
 					name="Exercise_08_Defining_computational_parameters">
 						<setup
 						id="6a3100b2-a952-494e-9784-3a1bbed72e7a"
 						name="setup">
 							<modulegroup
 							id="484cb29b-5def-4e4a-9fa0-dad4a906bf3b"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
-						id="b93410bb-7abe-46c1-9e2d-93a4a86e2ec9"
+						id="ab2acaef-e2ce-46f5-8867-4650cf9f510b"
 						name="ImportModel">
 							<modulegroup
-							id="00472aec-9109-4283-ba91-7c637320a748"
+							id="6e6c293c-0f0c-4c0d-aff3-5a6d8645e45e"
 							name="ImportDFlowFMModel">
 							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="0eb04756-517d-429c-bc0a-c68ec2eefb90"
+						id="811d354e-41a3-4dac-961a-7bd3bf425662"
 						name="OpenSettings">
-							<testmodule
-							id="bd64b467-c28c-4dc1-98b0-8b58f94227a5"
-							name="RightClickGenericTreeItem">
-							</testmodule>
-							<testmodule
-							id="e432d51a-13ca-43c9-b6d6-b4c0489e3c25"
-							name="SelectContextMenuItem">
-							</testmodule>
+							<modulegroup
+							id="f0b29d9c-fb02-4163-b2f8-b528b8a03e12"
+							name="OpenModelSettings">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="206f654c-1647-4fab-a149-b61b1488423a"
+						id="46d00a62-766e-4866-bf30-26bf0b9f71dd"
 						name="SetTimeFrameSettings">
 							<testmodule
-							id="d952e07a-8c4f-4397-9a76-e7919a54af29"
+							id="f23be7fd-1503-483c-906f-3ccebb36b04e"
 							name="SelectSubTabSettings">
 							</testmodule>
 							<testmodule
-							id="a46d8cf8-4560-4b90-a733-65aff2af11ec"
+							id="2a89fa4a-cc79-47bd-8cdd-360aee4ced0c"
 							name="SetTimeFrameSettings">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
-						id="4aea4813-d24d-4f93-b794-17b8a48c14fc"
+						id="956c78e3-1315-4497-bad9-74135b5902b5"
 						name="SetInitialConditionSettings">
 							<testmodule
-							id="db6a153b-6a62-416d-9642-f3e88a008faf"
+							id="1236fa61-5c00-48b7-9e12-9090dda84207"
 							name="SelectSubTabSettings">
 							</testmodule>
 							<testmodule
-							id="c2753874-8c1f-4263-a092-473eb49c70dd"
+							id="f0b6d28b-11b9-4e86-a236-1291a25a96d9"
 							name="SetInitialConditionSettings">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
-						id="5bfeb3a4-3c30-4590-a4b1-ad901aedf9e9"
+						id="286610b7-6220-4a42-8ce2-50cc3d3fdada"
 						name="SetOutputSettings">
 							<testmodule
-							id="3d3be8d8-9074-4d6a-8e3f-8fbba65d970b"
+							id="a92c22cd-d5cc-4b9c-9dcc-4234ba9700db"
 							name="SelectSubTabSettings">
 							</testmodule>
 							<smartfoldernode
-							id="1d52a2e7-52df-4fb9-95ee-17319dd6c202"
+							id="0e662010-35e5-40b8-a8e1-9d0f5cafe04b"
 							name="SetOutputSettingsWithDataSource">
 								<testmodule
-								id="a0f2d059-4f84-489d-86be-41a97fc32962"
+								id="8a00734a-d1aa-4c0d-b4d2-b1620c8497f0"
 								name="SetSettings">
 								</testmodule>
 							</smartfoldernode>
 						</smartfoldernode>
 						<smartfoldernode
-						id="bc5c4e15-cedd-41ac-af9f-8dbe247b538d"
+						id="559f1464-f788-487e-bbbe-55c6a8b9d441"
+						name="OpenMapView">
+							<testmodule
+							id="66f0439f-ff02-4d8e-abac-a53c528644fa"
+							name="DoubleClickOnModel">
+							</testmodule>
+						</smartfoldernode>
+						<smartfoldernode
+						id="19f7fb21-f499-49f4-a558-3ccc1a079539"
 						name="ExportModel">
 							<modulegroup
-							id="8ebe2bc3-6e66-4f63-8b3f-8fa50d96751f"
+							id="3b94feb2-f840-44b4-be2e-607ca7ddacb2"
 							name="ExportDFlowFMModel">
 							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="12c83d43-12b7-485b-8457-9ed14ace91ef"
+						id="2e4140f2-61f8-4896-9e0d-0fc28c09c6b2"
 						name="DeleteModel">
 							<modulegroup
-							id="4630d913-9e58-42aa-8673-307d9f70ecdb"
+							id="559fa9e2-8bb1-48b1-bec2-a7f34cad3ba5"
 							name="DeleteModel">
 							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="fa7d6997-f28b-4533-b54b-068d3647b935"
+						id="d7cebc24-1f7b-4d95-a5f2-b1674c7009ea"
 						name="CloseWithoutSaving">
 							<modulegroup
-							id="406dc5f2-2c98-40bd-ae7b-ae618988cab2"
+							id="6781f79d-ffdc-4bde-9f36-434261f1592b"
 							name="CloseProjectWithoutSaving">
 							</modulegroup>
 						</smartfoldernode>
@@ -3103,71 +3034,47 @@
 						</teardown>
 					</testcase>
 					<testcase
-					id="e75baf1c-e062-4b6e-93bf-9bfe99748504"
+					id="fb85ec99-aac2-4a14-9326-914d070b77de"
 					name="Exercise_09_Running_a_model_simulation">
 						<setup
 						id="ffa084a5-328d-4ad8-8011-70b678b63804"
 						name="setup">
 							<modulegroup
 							id="5dfd9f7a-2966-45a5-a81b-c0c884c735cd"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
-						id="062d693e-e491-4522-bbea-13e876953256"
+						id="63ccdda1-9e5b-41e0-a015-e998bf08e15d"
 						name="ImportModel">
 							<modulegroup
-							id="c2a938b7-08a8-403b-85ec-5aa4d1041574"
+							id="f0de924d-d06f-4f5f-a153-eb2ec42065c2"
 							name="ImportDFlowFMModel">
 							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="a3f6bf3e-1f50-4d02-ae64-75e08b47f88f"
+						id="de67e63b-48ec-48d3-906c-7f7b429600f9"
 						name="SaveAsProject">
-							<testmodule
-							id="0419327c-25b8-4523-acde-a9c538570dd6"
-							name="StartSaveAsProject">
-							</testmodule>
-							<testmodule
-							id="1dea9f64-5e89-4abc-ab43-bf10a39a443b"
-							name="SaveAsFile">
-							</testmodule>
-							<testmodule
-							id="33cca565-84f9-473d-84d8-ddb9463cb82e"
-							name="WaitForMessageInPanel">
-							</testmodule>
+							<modulegroup
+							id="f829f235-3ec3-4281-a809-854519a601fa"
+							name="SaveAsProject">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="03363b56-c2d1-4de8-8642-ef44d47a7083"
+						id="765a2401-3ad4-4b8b-aa92-9dfe44d49861"
 						name="RunModel">
-							<testmodule
-							id="4fe0706c-659d-4fd8-9d14-57ad82484a33"
-							name="ContextMenuModel">
-							</testmodule>
-							<testmodule
-							id="1dfd687b-6e90-4e96-9b81-6b20b2223f9e"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="70f7313e-dab9-4020-8513-2bb3096f9c48"
-							name="WaitForModelRunFinished">
-							</testmodule>
+							<modulegroup
+							id="5694e8f5-f4aa-43f3-9e0f-dcd3a71056ec"
+							name="RunModel">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="9531a8ff-be7f-49b0-aacc-45fe045fde7d"
+						id="bfbf6102-5de3-4ecf-a54c-9e1f23dd365c"
 						name="SaveProject">
-							<testmodule
-							id="501731a5-d851-4d74-825d-b10ba48b505c"
-							name="StartSaveAsProject">
-							</testmodule>
-							<testmodule
-							id="c5dba984-338e-40ab-a76b-50b0f955e0b3"
-							name="SaveAsFile">
-							</testmodule>
-							<testmodule
-							id="33f47658-3e6c-44c4-b1f9-673ceda93756"
-							name="WaitForMessageInPanel">
-							</testmodule>
+							<modulegroup
+							id="f838c9f1-3a05-4448-a1af-75d6ec290baa"
+							name="SaveAsProject">
+							</modulegroup>
 						</smartfoldernode>
 						<teardown
 						id="ad88997d-c2bf-40b7-8720-d111d882a001"
@@ -3179,14 +3086,14 @@
 						</teardown>
 					</testcase>
 					<testcase
-					id="66062379-afa5-467d-88ac-6baf2e63961b"
+					id="ac855ab7-db15-4da7-bd9f-320936aaefba"
 					name="Exercise_10_Viewing_the_output_of_a_model_simulation">
 						<setup
 						id="3a174dfa-e4f6-402b-a094-5f6d22f6cefc"
 						name="setup">
 							<modulegroup
-							id="bfc55f99-1992-4cbc-a6a3-368e3dbf7a1e"
-							name="StartupApplicationWithProject">
+							id="10c7ef90-e498-4c4b-9867-3f46552a2406"
+							name="StartupApplication">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
@@ -3198,10 +3105,10 @@
 							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
-						id="7242aa98-2492-4535-b730-0a02d185ca9b"
-						name="ViewMap">
+						id="5d0471ea-3ff6-4f3f-8a83-58616a61c6cc"
+						name="OpenMapView">
 							<testmodule
-							id="3f86e50d-39e7-4cf8-b7a9-ab1e8aae5069"
+							id="46813518-2148-4587-9211-d9bff08915cf"
 							name="DoubleClickOnModel">
 							</testmodule>
 						</smartfoldernode>
@@ -3800,202 +3707,34 @@
 		<testconfiguration
 		name="Exercise06">
 			<testcontainer
-			id="0694f60a-f6ef-44b9-975e-3f802bbc1c08">
-			</testcontainer>
-			<testcontainer
-			id="1fb2a9f5-26b0-43b3-9252-a69470a7e21a">
-			</testcontainer>
-			<testcontainer
-			id="2433ccff-35e6-411d-8ae8-8a182dc70df5">
-			</testcontainer>
-			<testcontainer
-			id="25ac1849-0328-45df-bf46-b66587aa9531">
-			</testcontainer>
-			<testcontainer
-			id="316aae83-7630-431c-8f55-1552922b46b8">
-			</testcontainer>
-			<testcontainer
-			id="3db3b2f7-351f-4138-911e-5acb29c3991f">
-			</testcontainer>
-			<testcontainer
-			id="43f8f964-a7eb-494d-9945-b6f6a55ba21f">
-			</testcontainer>
-			<testcontainer
-			id="4da2b8cf-8794-46ec-8a65-5e1e21551fa1">
-			</testcontainer>
-			<testcontainer
-			id="4e45dd1c-e31e-4fb3-9eec-b8c35750a02b">
-			</testcontainer>
-			<testcontainer
-			id="560b59b1-9d77-4e81-9299-af5b66d78bb9">
-			</testcontainer>
-			<testcontainer
-			id="5dae7762-f20e-4666-bcb5-dbc58932fbdb">
-			</testcontainer>
-			<testcontainer
-			id="7afe7e6f-035c-4a20-8423-690f43ab31a9">
-			</testcontainer>
-			<testcontainer
-			id="7bf50390-422d-42f9-afbd-3b0d2db7ce80">
-			</testcontainer>
-			<testcontainer
-			id="8439f903-d62d-4041-a123-23149c789f72">
-			</testcontainer>
-			<testcontainer
-			id="9032ce67-a055-4f3e-bb86-b3ec4d4b946d">
-			</testcontainer>
-			<testcontainer
-			id="9332b617-9627-4ffb-b2f2-1ffebe421fd3">
-			</testcontainer>
-			<testcontainer
-			id="98a2e1a6-d539-4a01-a50c-90f6c83bbf83">
-			</testcontainer>
-			<testcontainer
-			id="9f662e88-a2f0-46c1-af5c-d4656b22e9de">
-			</testcontainer>
-			<testcontainer
-			id="aec2ae0b-44e1-4de3-be65-8263f2dc4870">
-			</testcontainer>
-			<testcontainer
-			id="cc07c5c4-c2fa-4389-8b2b-4dfcf2907ac2">
-			</testcontainer>
-			<testcontainer
 			id="cf535267-94f1-4845-8ae4-32395f0f0add">
-			</testcontainer>
-			<testcontainer
-			id="d3b3815f-5934-4101-a50b-771fa5d8972e">
-			</testcontainer>
-			<testcontainer
-			id="db1af62b-cdbc-401d-a016-d1e04e1fe14a">
-			</testcontainer>
-			<testcontainer
-			id="db1e94b3-0da7-4045-8386-0c7e49db6c6d">
-			</testcontainer>
-			<testcontainer
-			id="e54f6d77-3cb9-47ad-bc6d-681284065044">
-			</testcontainer>
-			<testcontainer
-			id="e62891b8-5d89-45e9-b6fe-37942aef9333">
-			</testcontainer>
-			<testcontainer
-			id="ec327acb-87e6-4816-a5e0-732b5bff1341">
-			</testcontainer>
-			<testcontainer
-			id="eee751a1-1012-45da-bf78-65290c72c510">
-			</testcontainer>
-			<testcontainer
-			id="f0305e16-4719-4bf5-9476-50667179c360">
-			</testcontainer>
-			<testcontainer
-			id="f6a726a4-08a5-4ada-85b2-92604e619100">
-			</testcontainer>
-			<testcontainer
-			id="f73f989e-2b63-4216-8387-74de6c31f1d0">
-			</testcontainer>
-			<testcontainer
-			id="f7b7204f-1c3f-493c-9447-34b9a1100e5b">
-			</testcontainer>
-			<testcontainer
-			id="fd7712a9-5056-45d8-bb24-1121c363a758">
 			</testcontainer>
 		</testconfiguration>
 		<testconfiguration
 		name="Exercise07">
 			<testcontainer
-			id="02c97d7e-9793-4d88-a4ff-1a7dc516451f">
-			</testcontainer>
-			<testcontainer
-			id="355cbb57-8552-45b2-8c06-56788175bb80">
-			</testcontainer>
-			<testcontainer
-			id="3cd38c92-f4a5-41f4-a1e1-e3d04096a59d">
-			</testcontainer>
-			<testcontainer
-			id="5e07318e-7f10-402a-bdae-f99f6fa25183">
-			</testcontainer>
-			<testcontainer
-			id="6e664507-6170-4725-be8f-1c0fb727b3eb">
-			</testcontainer>
-			<testcontainer
-			id="c551fe4f-9383-4a33-b10c-82bd51ec9a2d">
-			</testcontainer>
-			<testcontainer
-			id="cac6d798-c8f7-4810-8d95-1cbb1f290f5d">
-			</testcontainer>
-			<testcontainer
 			id="cf535267-94f1-4845-8ae4-32395f0f0add">
-			</testcontainer>
-			<testcontainer
-			id="fda30f1c-f1e2-4aaa-8a1a-776b5c8029d5">
 			</testcontainer>
 		</testconfiguration>
 		<testconfiguration
 		name="Exercise08">
 			<testcontainer
-			id="0eb04756-517d-429c-bc0a-c68ec2eefb90">
-			</testcontainer>
-			<testcontainer
-			id="12c83d43-12b7-485b-8457-9ed14ace91ef">
-			</testcontainer>
-			<testcontainer
-			id="1d52a2e7-52df-4fb9-95ee-17319dd6c202">
-			</testcontainer>
-			<testcontainer
-			id="206f654c-1647-4fab-a149-b61b1488423a">
-			</testcontainer>
-			<testcontainer
-			id="4aea4813-d24d-4f93-b794-17b8a48c14fc">
-			</testcontainer>
-			<testcontainer
-			id="5bfeb3a4-3c30-4590-a4b1-ad901aedf9e9">
-			</testcontainer>
-			<testcontainer
-			id="b39a62d6-3a0b-4a9e-8278-e1749b4c5616">
-			</testcontainer>
-			<testcontainer
-			id="b93410bb-7abe-46c1-9e2d-93a4a86e2ec9">
-			</testcontainer>
-			<testcontainer
-			id="bc5c4e15-cedd-41ac-af9f-8dbe247b538d">
-			</testcontainer>
-			<testcontainer
 			id="cf535267-94f1-4845-8ae4-32395f0f0add">
-			</testcontainer>
-			<testcontainer
-			id="fa7d6997-f28b-4533-b54b-068d3647b935">
 			</testcontainer>
 		</testconfiguration>
 		<testconfiguration
 		name="Exercise09">
 			<testcontainer
-			id="03363b56-c2d1-4de8-8642-ef44d47a7083">
-			</testcontainer>
-			<testcontainer
-			id="062d693e-e491-4522-bbea-13e876953256">
-			</testcontainer>
-			<testcontainer
-			id="9531a8ff-be7f-49b0-aacc-45fe045fde7d">
-			</testcontainer>
-			<testcontainer
-			id="a3f6bf3e-1f50-4d02-ae64-75e08b47f88f">
-			</testcontainer>
-			<testcontainer
 			id="cf535267-94f1-4845-8ae4-32395f0f0add">
-			</testcontainer>
-			<testcontainer
-			id="e75baf1c-e062-4b6e-93bf-9bfe99748504">
 			</testcontainer>
 		</testconfiguration>
 		<testconfiguration
 		name="Exercise10">
 			<testcontainer
-			id="66062379-afa5-467d-88ac-6baf2e63961b">
-			</testcontainer>
-			<testcontainer
-			id="7242aa98-2492-4535-b730-0a02d185ca9b">
-			</testcontainer>
-			<testcontainer
 			id="7a9f392d-59cb-4dd4-b8e6-02e652f0b62f">
+			</testcontainer>
+			<testcontainer
+			id="ac855ab7-db15-4da7-bd9f-320936aaefba">
 			</testcontainer>
 			<testcontainer
 			id="cf535267-94f1-4845-8ae4-32395f0f0add">
@@ -4006,98 +3745,119 @@
 			<testcontainer
 			id="da9b8c0c-ff6d-481a-a40e-07fb86e9e9d9">
 			</testcontainer>
+			<testcontainer
+			id="f31e107b-4d95-4760-bea8-2ba582b39654">
+			</testcontainer>
 		</testconfiguration>
 		<testconfiguration
 		name="TestRun">
 			<testcontainer
-			id="02c97d7e-9793-4d88-a4ff-1a7dc516451f">
+			id="0176042a-03bb-44c1-a26d-707a454e7793">
 			</testcontainer>
 			<testcontainer
-			id="03363b56-c2d1-4de8-8642-ef44d47a7083">
+			id="02c8337b-d0fc-4836-b495-3966f5ec7e0e">
 			</testcontainer>
 			<testcontainer
-			id="062d693e-e491-4522-bbea-13e876953256">
+			id="0e662010-35e5-40b8-a8e1-9d0f5cafe04b">
 			</testcontainer>
 			<testcontainer
-			id="0694f60a-f6ef-44b9-975e-3f802bbc1c08">
+			id="10366c44-1add-4ddf-a5b7-cd0e47009d2d">
 			</testcontainer>
 			<testcontainer
-			id="0eb04756-517d-429c-bc0a-c68ec2eefb90">
+			id="143c89e2-4f8f-494b-9dce-92ba0f056ce9">
 			</testcontainer>
 			<testcontainer
-			id="12c83d43-12b7-485b-8457-9ed14ace91ef">
+			id="15940b33-fbd9-4afd-9df4-5cfe8a2b666d">
 			</testcontainer>
 			<testcontainer
-			id="1d52a2e7-52df-4fb9-95ee-17319dd6c202">
+			id="16611ffc-4200-4d71-861e-14428b4b11b6">
 			</testcontainer>
 			<testcontainer
-			id="1fb2a9f5-26b0-43b3-9252-a69470a7e21a">
+			id="19f7fb21-f499-49f4-a558-3ccc1a079539">
 			</testcontainer>
 			<testcontainer
-			id="206f654c-1647-4fab-a149-b61b1488423a">
+			id="1c5b6d2c-1e6c-4c65-b75c-71930fecac39">
 			</testcontainer>
 			<testcontainer
-			id="2433ccff-35e6-411d-8ae8-8a182dc70df5">
+			id="25adddfd-d3cf-47af-b334-013412a9983e">
 			</testcontainer>
 			<testcontainer
-			id="25ac1849-0328-45df-bf46-b66587aa9531">
+			id="286610b7-6220-4a42-8ce2-50cc3d3fdada">
 			</testcontainer>
 			<testcontainer
-			id="316aae83-7630-431c-8f55-1552922b46b8">
+			id="28959490-2536-4d65-8b54-de2aeda82b7d">
+			</testcontainer>
+			<testcontainer
+			id="29076f47-3883-4f9f-9d44-9b5bb8052d7d">
+			</testcontainer>
+			<testcontainer
+			id="2e4140f2-61f8-4896-9e0d-0fc28c09c6b2">
+			</testcontainer>
+			<testcontainer
+			id="2f1ba57d-cd0f-4540-8a4a-8a870ea02823">
 			</testcontainer>
 			<testcontainer
 			id="3522c3c5-de8b-431a-857e-0a5bb55ed605">
 			</testcontainer>
 			<testcontainer
-			id="355cbb57-8552-45b2-8c06-56788175bb80">
-			</testcontainer>
-			<testcontainer
-			id="3cd38c92-f4a5-41f4-a1e1-e3d04096a59d">
+			id="37d88159-8869-45c5-a6c9-c71e25c8d9e4">
 			</testcontainer>
 			<testcontainer
 			id="3d89407c-9bb7-4a39-8488-e618ebdd748c">
 			</testcontainer>
 			<testcontainer
-			id="3db3b2f7-351f-4138-911e-5acb29c3991f">
+			id="402d84c5-ad01-4302-b3fd-20ec9af8e6cd">
 			</testcontainer>
 			<testcontainer
-			id="43f8f964-a7eb-494d-9945-b6f6a55ba21f">
+			id="45850a3a-e1af-4718-b4e1-01a1070c5eb7">
 			</testcontainer>
 			<testcontainer
-			id="4aea4813-d24d-4f93-b794-17b8a48c14fc">
+			id="46d00a62-766e-4866-bf30-26bf0b9f71dd">
+			</testcontainer>
+			<testcontainer
+			id="46ec29fd-0c4c-4bfa-ae8e-678fd7ff66a1">
 			</testcontainer>
 			<testcontainer
 			id="4d2dd552-4911-49eb-a7e0-c90f9b48e553">
 			</testcontainer>
 			<testcontainer
-			id="4da2b8cf-8794-46ec-8a65-5e1e21551fa1">
+			id="510b75b8-d55b-4d96-a20f-9cc03629ad3c">
 			</testcontainer>
 			<testcontainer
-			id="4e45dd1c-e31e-4fb3-9eec-b8c35750a02b">
+			id="526e31b3-3c8b-4bba-9367-0270c70d68c5">
 			</testcontainer>
 			<testcontainer
-			id="560b59b1-9d77-4e81-9299-af5b66d78bb9">
+			id="559f1464-f788-487e-bbbe-55c6a8b9d441">
 			</testcontainer>
 			<testcontainer
-			id="5bfeb3a4-3c30-4590-a4b1-ad901aedf9e9">
+			id="57b84d98-e215-4f07-a78b-28941f4354af">
 			</testcontainer>
 			<testcontainer
-			id="5dae7762-f20e-4666-bcb5-dbc58932fbdb">
+			id="5c5c2ce4-14c2-4300-9c76-6940abf21a4f">
 			</testcontainer>
 			<testcontainer
-			id="5e07318e-7f10-402a-bdae-f99f6fa25183">
+			id="5d0471ea-3ff6-4f3f-8a83-58616a61c6cc">
 			</testcontainer>
 			<testcontainer
-			id="66062379-afa5-467d-88ac-6baf2e63961b">
+			id="6216c163-9df4-4ff1-a8c6-9a9601ab415f">
 			</testcontainer>
 			<testcontainer
-			id="6e664507-6170-4725-be8f-1c0fb727b3eb">
+			id="629169d8-e784-4d18-9bce-ca92d92ead6a">
 			</testcontainer>
 			<testcontainer
-			id="7242aa98-2492-4535-b730-0a02d185ca9b">
+			id="63ccdda1-9e5b-41e0-a015-e998bf08e15d">
+			</testcontainer>
+			<testcontainer
+			id="6dff9b5d-0aee-419d-98ee-f63cb2cceac2">
+			</testcontainer>
+			<testcontainer
+			id="765a2401-3ad4-4b8b-aa92-9dfe44d49861">
 			</testcontainer>
 			<testcontainer
 			id="7918b736-cbcc-41f4-aa78-a259e412e3d5">
+			</testcontainer>
+			<testcontainer
+			id="7a53337b-8eb6-41e1-bd6d-54ef7b1b3b10">
 			</testcontainer>
 			<testcontainer
 			id="7a9f392d-59cb-4dd4-b8e6-02e652f0b62f">
@@ -4106,16 +3866,16 @@
 			id="7ac8fae5-d248-4f3d-b16e-0319837ffc62">
 			</testcontainer>
 			<testcontainer
-			id="7afe7e6f-035c-4a20-8423-690f43ab31a9">
-			</testcontainer>
-			<testcontainer
-			id="7bf50390-422d-42f9-afbd-3b0d2db7ce80">
+			id="7da662fa-4f11-4267-8055-a29726c04ccd">
 			</testcontainer>
 			<testcontainer
 			id="7fb23670-793d-46af-949d-4416bf3fe015">
 			</testcontainer>
 			<testcontainer
-			id="8439f903-d62d-4041-a123-23149c789f72">
+			id="80706ed3-0b2a-4813-bd6f-d42fa5a9ccd5">
+			</testcontainer>
+			<testcontainer
+			id="811d354e-41a3-4dac-961a-7bd3bf425662">
 			</testcontainer>
 			<testcontainer
 			id="88910c9e-e5a5-4617-a187-c9bbb874fa08">
@@ -4124,19 +3884,25 @@
 			id="8c240560-4463-48ab-8864-8654349bfcf6">
 			</testcontainer>
 			<testcontainer
-			id="9032ce67-a055-4f3e-bb86-b3ec4d4b946d">
+			id="8e60b9f4-f7da-4c2c-b144-880b7e8a936f">
 			</testcontainer>
 			<testcontainer
-			id="9332b617-9627-4ffb-b2f2-1ffebe421fd3">
+			id="904d225e-47fc-479b-b678-29ab679d73fa">
 			</testcontainer>
 			<testcontainer
-			id="9531a8ff-be7f-49b0-aacc-45fe045fde7d">
+			id="90eaa180-6d94-46e7-9baa-e58163aa47f1">
+			</testcontainer>
+			<testcontainer
+			id="956c78e3-1315-4497-bad9-74135b5902b5">
 			</testcontainer>
 			<testcontainer
 			id="95915566-8add-4c04-97e5-13886f826ef9">
 			</testcontainer>
 			<testcontainer
-			id="98a2e1a6-d539-4a01-a50c-90f6c83bbf83">
+			id="97480b00-21bb-40be-9b36-943e194969db">
+			</testcontainer>
+			<testcontainer
+			id="9795e2d5-0d14-433f-a552-b490424e2db1">
 			</testcontainer>
 			<testcontainer
 			id="9bc1ed94-2267-4955-8b85-c246c63b6114">
@@ -4145,91 +3911,82 @@
 			id="9e5d4735-ea4b-4c62-a2cf-a7a7c57a2f84">
 			</testcontainer>
 			<testcontainer
-			id="9f662e88-a2f0-46c1-af5c-d4656b22e9de">
-			</testcontainer>
-			<testcontainer
-			id="a3f6bf3e-1f50-4d02-ae64-75e08b47f88f">
+			id="a46f932c-5b64-4ea2-ae42-77070b532939">
 			</testcontainer>
 			<testcontainer
 			id="a523b551-f775-4610-bf8d-8a2108889b32">
 			</testcontainer>
 			<testcontainer
+			id="a6b8fa7d-ac24-4baf-8d8a-2436632f6f06">
+			</testcontainer>
+			<testcontainer
+			id="a8047159-0fd7-45e3-aafc-c73db166be01">
+			</testcontainer>
+			<testcontainer
 			id="aa724833-0e74-4e61-ad00-41aded7bd7ea">
 			</testcontainer>
 			<testcontainer
-			id="aec2ae0b-44e1-4de3-be65-8263f2dc4870">
+			id="ab2acaef-e2ce-46f5-8867-4650cf9f510b">
 			</testcontainer>
 			<testcontainer
-			id="b39a62d6-3a0b-4a9e-8278-e1749b4c5616">
+			id="ac855ab7-db15-4da7-bd9f-320936aaefba">
 			</testcontainer>
 			<testcontainer
-			id="b93410bb-7abe-46c1-9e2d-93a4a86e2ec9">
+			id="ad7c24e6-0883-497d-949a-215bd28690b2">
 			</testcontainer>
 			<testcontainer
-			id="bc5c4e15-cedd-41ac-af9f-8dbe247b538d">
+			id="bb690866-dff1-43da-a1b0-dee2c416345e">
 			</testcontainer>
 			<testcontainer
 			id="be4706d2-eaa2-48d6-89a5-2a10cf1c2269">
 			</testcontainer>
 			<testcontainer
-			id="c551fe4f-9383-4a33-b10c-82bd51ec9a2d">
+			id="bf262236-0eb8-46df-a230-dba77ef5ddee">
 			</testcontainer>
 			<testcontainer
-			id="cac6d798-c8f7-4810-8d95-1cbb1f290f5d">
+			id="bfbf6102-5de3-4ecf-a54c-9e1f23dd365c">
+			</testcontainer>
+			<testcontainer
+			id="c4fbbd96-bd08-42df-aa6b-e44ef2ddb233">
 			</testcontainer>
 			<testcontainer
 			id="cbe6d9a8-212b-4349-b239-6f79868e7ff5">
 			</testcontainer>
 			<testcontainer
-			id="cc07c5c4-c2fa-4389-8b2b-4dfcf2907ac2">
+			id="cf535267-94f1-4845-8ae4-32395f0f0add">
 			</testcontainer>
 			<testcontainer
-			id="cf535267-94f1-4845-8ae4-32395f0f0add">
+			id="d03aa0a7-b1e0-48f5-8fde-11698ca6b87d">
 			</testcontainer>
 			<testcontainer
 			id="d22993aa-7e12-4317-b99e-8df80b67accb">
 			</testcontainer>
 			<testcontainer
-			id="d3b3815f-5934-4101-a50b-771fa5d8972e">
+			id="d7cebc24-1f7b-4d95-a5f2-b1674c7009ea">
+			</testcontainer>
+			<testcontainer
+			id="d897a526-917b-470b-b7a3-5fae729bf5b6">
 			</testcontainer>
 			<testcontainer
 			id="da9b8c0c-ff6d-481a-a40e-07fb86e9e9d9">
 			</testcontainer>
 			<testcontainer
-			id="db1af62b-cdbc-401d-a016-d1e04e1fe14a">
+			id="de67e63b-48ec-48d3-906c-7f7b429600f9">
 			</testcontainer>
 			<testcontainer
-			id="db1e94b3-0da7-4045-8386-0c7e49db6c6d">
+			id="eaf84918-b799-42e4-aa7a-306a4e72481e">
 			</testcontainer>
 			<testcontainer
-			id="e54f6d77-3cb9-47ad-bc6d-681284065044">
+			id="ec7b85be-2aee-419b-a6aa-4fe636f72b52">
 			</testcontainer>
 			<testcontainer
-			id="e62891b8-5d89-45e9-b6fe-37942aef9333">
-			</testcontainer>
-			<testcontainer
-			id="e75baf1c-e062-4b6e-93bf-9bfe99748504">
-			</testcontainer>
-			<testcontainer
-			id="ec327acb-87e6-4816-a5e0-732b5bff1341">
-			</testcontainer>
-			<testcontainer
-			id="eee751a1-1012-45da-bf78-65290c72c510">
-			</testcontainer>
-			<testcontainer
-			id="f0305e16-4719-4bf5-9476-50667179c360">
+			id="eebe9c6b-1c62-42a3-81ec-de55aea5eabf">
 			</testcontainer>
 			<testcontainer
 			id="f31e107b-4d95-4760-bea8-2ba582b39654">
 			</testcontainer>
 			<testcontainer
-			id="f6a726a4-08a5-4ada-85b2-92604e619100">
-			</testcontainer>
-			<testcontainer
-			id="f73f989e-2b63-4216-8387-74de6c31f1d0">
-			</testcontainer>
-			<testcontainer
-			id="f7b7204f-1c3f-493c-9447-34b9a1100e5b">
+			id="f693b44f-92c1-43ed-ad30-8879e66794c1">
 			</testcontainer>
 			<testcontainer
 			id="f7c7276b-0bbc-4ca3-b1f6-c84bbd000a00">
@@ -4238,13 +3995,7 @@
 			id="f7cf4952-2f8b-4829-98ee-d590b7631d9b">
 			</testcontainer>
 			<testcontainer
-			id="fa7d6997-f28b-4533-b54b-068d3647b935">
-			</testcontainer>
-			<testcontainer
-			id="fd7712a9-5056-45d8-bb24-1121c363a758">
-			</testcontainer>
-			<testcontainer
-			id="fda30f1c-f1e2-4aaa-8a1a-776b5c8029d5">
+			id="fb85ec99-aac2-4a14-9326-914d070b77de">
 			</testcontainer>
 			<testcontainer
 			id="fdd61d47-c187-4376-a64a-d39b6cc2283c">

@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Drawing;
 using System.Reflection;
 using System.Threading;
+using DHYDRO.Code;
 using WinForms = System.Windows.Forms;
 
 using Ranorex;
@@ -40,10 +41,7 @@ namespace DHYDRO.Modules.Application
         /// </summary>
         private void UpdateExecutablePath() 
         {
-            var executingAssemblyLocation = Assembly.GetExecutingAssembly().Location;
-            var currentDirectory = Path.GetDirectoryName(executingAssemblyLocation);
-            var executablePath = Path.Combine(currentDirectory, ExecutablePath);
-            ExecutablePath = Path.GetFullPath(executablePath);
+            ExecutablePath = FileUtils.GetAbsolutePath(ExecutablePath);
         }
 
         public void StartAUT_Run_application()
@@ -52,14 +50,15 @@ namespace DHYDRO.Modules.Application
             
             for (int i = 1; i < 16; i++)
             {
-                Report.Info("Attempt #" + i.ToString() + " to start up and automate the application.");
-                StartAutProcessIDVar = ValueConverter.ToString(Host.Local.RunApplication(ExecutablePath, "", "", false));
+                Report.Info("Attempt #" + i + " to start up and automate the application.");
+                StartAutProcessIDVar = ValueConverter.ToString(Host.Local.RunApplication(ExecutablePath, "--culture-name=en-US", "", false));
                 
                 try 
                 {
                 	repo.DSWindow.SelfInfo.WaitForExists(new Duration(new TimeSpan(0,10,0)));
                     Delay.Duration(300, false);
                     Report.Info("Application started up and can be automated properly!");
+                    ReportScreenInfo();
                     break;
                 }
                 catch (Exception e) 
@@ -72,6 +71,23 @@ namespace DHYDRO.Modules.Application
                     Delay.Duration(1000, false);
                     Report.Info("Rebooting...");
                 }
+            }
+        }
+        
+        private static void ReportScreenInfo()
+        {
+            // Get screen resolution
+            int screenWidth = WinForms.Screen.PrimaryScreen.Bounds.Width;
+            int screenHeight = WinForms.Screen.PrimaryScreen.Bounds.Height;
+            
+            // Get DPI scaling
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                float dpiX = g.DpiX;
+                float dpiY = g.DpiY;
+                
+                Report.Info("Screen Resolution", $"Width: {screenWidth}, Height: {screenHeight}");
+                Report.Info("DPI Scaling", $"DPI X: {dpiX}, DPI Y: {dpiY}");
             }
         }
     }

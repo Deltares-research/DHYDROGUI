@@ -27,7 +27,7 @@ mode="Global">
 	<recorditems>
 		<WaitForRecordItem
 		enabled="True"
-		optional="False"
+		optional="True"
 		searchpropertyid="12b73292-c415-4205-811d-b88f9474ab60"
 		waitaction="Exists"
 		waittimeout="5000ms">

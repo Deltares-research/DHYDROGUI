@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.SpatialOperationsGroup.InterpolateButton' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.SpatialOperationsGroup.InterpolateButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.SpatialOperationsGroup.InterpolateButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.SpatialOperationsGroup.InterpolateButton' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.SpatialOperationsGroup.InterpolateButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.SpatialOperationsGroup.InterpolateButton.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'ContextMenu.InterpolateSelectedSetMenuItem' at Center.", repo.ContextMenu.InterpolateSelectedSetMenuItemInfo, new RecordItemIndex(1));

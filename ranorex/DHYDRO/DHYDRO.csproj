@@ -145,14 +145,14 @@
     <Compile Include="AssemblyInfo.cs">
       <id>2cc9f13d-ef72-4313-9c52-57c55418d17a</id>
     </Compile>
-    <Compile Include="Code\Create.cs">
-      <id>4e3942cf-26ea-47ca-83ca-7151cd6c96d2</id>
-    </Compile>
     <Compile Include="Code\CsvParser.cs">
       <id>7d287ad7-2793-4d44-b1ce-b8fd51ecae23</id>
     </Compile>
     <Compile Include="Code\Current.cs">
       <id>a35d1a7b-8955-4eb0-a693-01381a957401</id>
+    </Compile>
+    <Compile Include="Code\FileUtils.cs">
+      <id>c3906b65-0ae1-477e-9fb1-d9071c7dcdc4</id>
     </Compile>
     <Compile Include="Code\Get.cs">
       <id>f435a795-3f51-44c6-bfd2-127944815e28</id>
@@ -208,6 +208,18 @@
       <UserCode>true</UserCode>
       <id>931318d7-caaa-478d-a0e9-42d2c2154c88</id>
     </Compile>
+    <Compile Include="Modules\Application\SendEscapeKey.cs">
+      <BoundTo>a5128665-c0a3-4327-8170-41f3fb441f11</BoundTo>
+      <DependentUpon>SendEscapeKey.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>fd61684c-fbf0-46f5-a9cd-99dd782359d3</id>
+    </Compile>
+    <Compile Include="Modules\Application\SendEscapeKey.UserCode.cs">
+      <BoundTo>a5128665-c0a3-4327-8170-41f3fb441f11</BoundTo>
+      <DependentUpon>SendEscapeKey.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>7edd492f-e4aa-4c11-b31e-1f89263694d3</id>
+    </Compile>
     <Compile Include="Modules\Application\SendKeySequence.cs">
       <BoundTo>90e23722-773b-4ae7-858c-a5ae8284930f</BoundTo>
       <DependentUpon>SendKeySequence.rxrec</DependentUpon>
@@ -256,6 +268,18 @@
       <id>30f87131-2cf9-4276-b67a-4e4af37988ea</id>
       <BoundTo>191dec72-944a-4d7e-b7f0-82786454c1b7</BoundTo>
     </Compile>
+    <Compile Include="Modules\AttributesTable\CloseAttributeTable.cs">
+      <DependentUpon>CloseAttributeTable.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>ea1f867a-ff40-4c90-a821-00e30cea9189</id>
+      <BoundTo>b23a516c-e353-47ad-8a81-f65540ad9372</BoundTo>
+    </Compile>
+    <Compile Include="Modules\AttributesTable\CloseAttributeTable.UserCode.cs">
+      <DependentUpon>CloseAttributeTable.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>9b807fbf-5881-4402-8adc-e44eefc8e98a</id>
+      <BoundTo>b23a516c-e353-47ad-8a81-f65540ad9372</BoundTo>
+    </Compile>
     <Compile Include="Modules\AttributesTable\SetAttributeTableCell.cs">
       <DependentUpon>SetAttributeTableCell.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
@@ -291,18 +315,6 @@
       <DependentUpon>AddWasteLoad.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>422e7efa-14db-4ef7-be33-745ccd3c4eca</id>
-    </Compile>
-    <Compile Include="Modules\BoundaryConditions\ConstantToTimeSeries.cs">
-      <BoundTo>166114e0-479d-49a7-8203-759a30323800</BoundTo>
-      <DependentUpon>ConstantToTimeSeries.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>daf6a4ee-3ef7-4155-ae84-79f7577c8556</id>
-    </Compile>
-    <Compile Include="Modules\BoundaryConditions\ConstantToTimeSeries.UserCode.cs">
-      <BoundTo>166114e0-479d-49a7-8203-759a30323800</BoundTo>
-      <DependentUpon>ConstantToTimeSeries.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>3c022a85-a5b4-4d7c-ae76-f46004d39df9</id>
     </Compile>
     <Compile Include="Modules\BoundaryConditions\FinishSelectionAstronomicalComponents.cs">
       <BoundTo>fafa0ab3-86ea-48da-88fe-eb8507edec02</BoundTo>
@@ -607,29 +619,29 @@
       <id>1912b84d-67d5-4ed9-b4d0-6ccd46a2c1f5</id>
       <BoundTo>4e05924a-b21d-43f5-bfae-ce8823a97833</BoundTo>
     </Compile>
-    <Compile Include="Modules\DocumentViews\CloseAttributeTable.cs">
-      <DependentUpon>CloseAttributeTable.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>ea1f867a-ff40-4c90-a821-00e30cea9189</id>
-      <BoundTo>b23a516c-e353-47ad-8a81-f65540ad9372</BoundTo>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\CloseAttributeTable.UserCode.cs">
-      <DependentUpon>CloseAttributeTable.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>9b807fbf-5881-4402-8adc-e44eefc8e98a</id>
-      <BoundTo>b23a516c-e353-47ad-8a81-f65540ad9372</BoundTo>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\CloseUniqueDocumentView.cs">
-      <DependentUpon>CloseUniqueDocumentView.rxrec</DependentUpon>
+    <Compile Include="Modules\DocumentViews\CloseDocumentView.cs">
+      <DependentUpon>CloseDocumentView.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>23f3e4e4-db36-4e43-b3d1-05cf8989f751</id>
       <BoundTo>2b6d8813-c825-4a89-b6ea-a83c158fb6ae</BoundTo>
     </Compile>
-    <Compile Include="Modules\DocumentViews\CloseUniqueDocumentView.UserCode.cs">
-      <DependentUpon>CloseUniqueDocumentView.rxrec</DependentUpon>
+    <Compile Include="Modules\DocumentViews\CloseDocumentView.UserCode.cs">
+      <DependentUpon>CloseDocumentView.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>3d9c6334-e364-49d8-9431-c7cc649ee96d</id>
       <BoundTo>2b6d8813-c825-4a89-b6ea-a83c158fb6ae</BoundTo>
+    </Compile>
+    <Compile Include="Modules\DocumentViews\DocumentViewPageDown.cs">
+      <BoundTo>120262df-504b-41a1-bf5d-c6f1ecb7147b</BoundTo>
+      <DependentUpon>DocumentViewPageDown.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>459fd32b-cb97-444e-883c-a7653bdb4b55</id>
+    </Compile>
+    <Compile Include="Modules\DocumentViews\DocumentViewPageDown.UserCode.cs">
+      <BoundTo>120262df-504b-41a1-bf5d-c6f1ecb7147b</BoundTo>
+      <DependentUpon>DocumentViewPageDown.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>1113fd56-3236-482e-8f45-5ec8108c7848</id>
     </Compile>
     <Compile Include="Modules\DocumentViews\GetColumnIndex.cs">
       <id>e963db3c-429e-4670-979e-83846577e396</id>
@@ -994,29 +1006,89 @@
       <id>5bbec227-05b4-49c1-82de-8806770c2246</id>
       <BoundTo>4e7fb193-d102-4ca8-b9cd-dcc27ad6dee4</BoundTo>
     </Compile>
-    <Compile Include="Modules\ModelSettings\SetModelProperties.cs">
-      <BoundTo>2a95ee97-0a5f-4138-8cf3-68dab415bf7c</BoundTo>
-      <DependentUpon>SetModelProperties.rxrec</DependentUpon>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetGeneralSettings.cs">
+      <DependentUpon>SetGeneralSettings.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
-      <id>be936f3a-a47f-4930-a3cb-ee4e54056ccd</id>
+      <id>744ea71f-cc5e-4438-a637-534677960ad0</id>
+      <BoundTo>f629972d-c6d2-4d45-9630-04f910bf6ef4</BoundTo>
     </Compile>
-    <Compile Include="Modules\ModelSettings\SetModelProperties.UserCode.cs">
-      <BoundTo>2a95ee97-0a5f-4138-8cf3-68dab415bf7c</BoundTo>
-      <DependentUpon>SetModelProperties.rxrec</DependentUpon>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetGeneralSettings.UserCode.cs">
+      <DependentUpon>SetGeneralSettings.rxrec</DependentUpon>
       <UserCode>true</UserCode>
-      <id>f79d61f9-73cb-4515-abf2-60e9370c2784</id>
+      <id>09708f5b-1523-4653-8888-f690ee97ea68</id>
+      <BoundTo>f629972d-c6d2-4d45-9630-04f910bf6ef4</BoundTo>
     </Compile>
-    <Compile Include="Modules\ModelSettings\SetNumericalParametersSettings.cs">
-      <BoundTo>4b60f95d-adb1-4fb7-807f-cee851ceb15b</BoundTo>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetNumericalParametersSettings.cs">
       <DependentUpon>SetNumericalParametersSettings.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>90ff7d5f-c4ac-4776-aff6-f50f38228d11</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetNumericalParametersSettings.UserCode.cs">
       <BoundTo>4b60f95d-adb1-4fb7-807f-cee851ceb15b</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetNumericalParametersSettings.UserCode.cs">
       <DependentUpon>SetNumericalParametersSettings.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>4bde7317-af1f-4ede-a540-16b662440310</id>
+      <BoundTo>4b60f95d-adb1-4fb7-807f-cee851ceb15b</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetOutputParametersSettings.cs">
+      <DependentUpon>SetOutputParametersSettings.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>b0039dfa-f836-4f52-8070-7e4ef4f0cfa7</id>
+      <BoundTo>c6725d93-d152-497e-b480-b9ad00f47feb</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetOutputParametersSettings.UserCode.cs">
+      <DependentUpon>SetOutputParametersSettings.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>9cd86718-d69d-4f2e-b068-e650bd24ba0c</id>
+      <BoundTo>c6725d93-d152-497e-b480-b9ad00f47feb</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetPhysicalProcessesSettings.cs">
+      <DependentUpon>SetPhysicalProcessesSettings.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>e88760b9-f693-4d85-bf9c-81cf3de5a30a</id>
+      <BoundTo>1cd54add-97c6-40f1-8f78-489b9f473e3a</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetPhysicalProcessesSettings.UserCode.cs">
+      <DependentUpon>SetPhysicalProcessesSettings.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>6f16e899-c39b-487a-adc7-4152d9ba843a</id>
+      <BoundTo>1cd54add-97c6-40f1-8f78-489b9f473e3a</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetSpectralDomainSettings.cs">
+      <DependentUpon>SetSpectralDomainSettings.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>c0dbf67c-ff61-421a-b9d1-9608b434795f</id>
+      <BoundTo>be4b84a8-5f56-43e9-9863-24a51a25c830</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetSpectralDomainSettings.UserCode.cs">
+      <DependentUpon>SetSpectralDomainSettings.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>fe92fb09-69a9-4c71-9cba-60e701499e6d</id>
+      <BoundTo>be4b84a8-5f56-43e9-9863-24a51a25c830</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetTimeFrameSettings.cs">
+      <DependentUpon>SetTimeFrameSettings.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>8ab6d857-0804-447b-9773-f0d188b53636</id>
+      <BoundTo>737d97a4-0491-402a-b2f5-6e7a6c8fbc01</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetTimeFrameSettings.UserCode.cs">
+      <DependentUpon>SetTimeFrameSettings.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>ae30fd49-7263-48da-9406-5331e1c8724a</id>
+      <BoundTo>737d97a4-0491-402a-b2f5-6e7a6c8fbc01</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetBoundarySettings.cs">
+      <DependentUpon>SetBoundarySettings.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>9ed591e1-b52b-403b-80e4-6be2ba5c3ea6</id>
+      <BoundTo>a7589f91-dd43-4a33-a292-de420a60b2ee</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings %28Waves%29\SetBoundarySettings.UserCode.cs">
+      <DependentUpon>SetBoundarySettings.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>43750de1-6fc7-4023-adee-7bff19da0442</id>
+      <BoundTo>a7589f91-dd43-4a33-a292-de420a60b2ee</BoundTo>
     </Compile>
     <Compile Include="Modules\ModelSettings\SetOthersOutputSettings.cs">
       <BoundTo>b42b3c5c-bb8d-49d7-befb-a72071aae5e5</BoundTo>
@@ -1029,30 +1101,6 @@
       <DependentUpon>SetOthersOutputSettings.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>7a484116-c35f-4bc3-b821-ab24f81d9678</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetOutputParametersSettings.cs">
-      <BoundTo>c6725d93-d152-497e-b480-b9ad00f47feb</BoundTo>
-      <DependentUpon>SetOutputParametersSettings.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>b0039dfa-f836-4f52-8070-7e4ef4f0cfa7</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetOutputParametersSettings.UserCode.cs">
-      <BoundTo>c6725d93-d152-497e-b480-b9ad00f47feb</BoundTo>
-      <DependentUpon>SetOutputParametersSettings.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>9cd86718-d69d-4f2e-b068-e650bd24ba0c</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetPhysicalProcessesSettings.cs">
-      <BoundTo>1cd54add-97c6-40f1-8f78-489b9f473e3a</BoundTo>
-      <DependentUpon>SetPhysicalProcessesSettings.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>e88760b9-f693-4d85-bf9c-81cf3de5a30a</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetPhysicalProcessesSettings.UserCode.cs">
-      <BoundTo>1cd54add-97c6-40f1-8f78-489b9f473e3a</BoundTo>
-      <DependentUpon>SetPhysicalProcessesSettings.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>6f16e899-c39b-487a-adc7-4152d9ba843a</id>
     </Compile>
     <Compile Include="Modules\ModelSettings\SetSettings.cs">
       <DependentUpon>SetSettings.rxrec</DependentUpon>
@@ -1078,18 +1126,6 @@
       <id>2859d2c3-30e9-47f1-b996-9f0774a01cf3</id>
       <BoundTo>35daaecc-6e69-4575-a297-dbe749e725d9</BoundTo>
     </Compile>
-    <Compile Include="Modules\ModelSettings\SetMapOutputSettings.cs">
-      <DependentUpon>SetMapOutputSettings.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>638b1bbd-8ebf-4408-9bd9-ac2bd0378a22</id>
-      <BoundTo>90e64b26-d77b-444c-b92b-d67909684763</BoundTo>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetMapOutputSettings.UserCode.cs">
-      <DependentUpon>SetMapOutputSettings.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>cec7f8b6-4b62-4a79-ae96-6838aa59d69d</id>
-      <BoundTo>90e64b26-d77b-444c-b92b-d67909684763</BoundTo>
-    </Compile>
     <Compile Include="Modules\ModelSettings\SetRestartSettings.cs">
       <DependentUpon>SetRestartSettings.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
@@ -1102,30 +1138,6 @@
       <id>4fce1d67-4295-4c2b-ae52-d8c43811bba0</id>
       <BoundTo>ee0e6eb1-faeb-4c99-b02a-c8e27fba5df6</BoundTo>
     </Compile>
-    <Compile Include="Modules\ModelSettings\SetGeneralSettingsInWaves.cs">
-      <BoundTo>f629972d-c6d2-4d45-9630-04f910bf6ef4</BoundTo>
-      <DependentUpon>SetGeneralSettingsInWaves.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>744ea71f-cc5e-4438-a637-534677960ad0</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetGeneralSettingsInWaves.UserCode.cs">
-      <BoundTo>f629972d-c6d2-4d45-9630-04f910bf6ef4</BoundTo>
-      <DependentUpon>SetGeneralSettingsInWaves.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>09708f5b-1523-4653-8888-f690ee97ea68</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetSpectralDomainSettings.cs">
-      <BoundTo>be4b84a8-5f56-43e9-9863-24a51a25c830</BoundTo>
-      <DependentUpon>SetSpectralDomainSettings.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>c0dbf67c-ff61-421a-b9d1-9608b434795f</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetSpectralDomainSettings.UserCode.cs">
-      <BoundTo>be4b84a8-5f56-43e9-9863-24a51a25c830</BoundTo>
-      <DependentUpon>SetSpectralDomainSettings.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>fe92fb09-69a9-4c71-9cba-60e701499e6d</id>
-    </Compile>
     <Compile Include="Modules\ModelSettings\SetTimeFrameSettings.cs">
       <DependentUpon>SetTimeFrameSettings.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
@@ -1137,54 +1149,6 @@
       <UserCode>true</UserCode>
       <id>a79b689d-7e7d-4e45-9172-d62479ffe18b</id>
       <BoundTo>dee24dfc-e0aa-4689-a684-3b3c417a2faf</BoundTo>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetTimeFrameSettingsWaves.cs">
-      <BoundTo>737d97a4-0491-402a-b2f5-6e7a6c8fbc01</BoundTo>
-      <DependentUpon>SetTimeFrameSettingsWaves.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>8ab6d857-0804-447b-9773-f0d188b53636</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetTimeFrameSettingsWaves.UserCode.cs">
-      <BoundTo>737d97a4-0491-402a-b2f5-6e7a6c8fbc01</BoundTo>
-      <DependentUpon>SetTimeFrameSettingsWaves.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>ae30fd49-7263-48da-9406-5331e1c8724a</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetWaveBoundarySettings.cs">
-      <BoundTo>a7589f91-dd43-4a33-a292-de420a60b2ee</BoundTo>
-      <DependentUpon>SetWaveBoundarySettings.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>9ed591e1-b52b-403b-80e4-6be2ba5c3ea6</id>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetWaveBoundarySettings.UserCode.cs">
-      <BoundTo>a7589f91-dd43-4a33-a292-de420a60b2ee</BoundTo>
-      <DependentUpon>SetWaveBoundarySettings.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>43750de1-6fc7-4023-adee-7bff19da0442</id>
-    </Compile>
-    <Compile Include="Modules\Obstacles\AdjustObstacleSettings.cs">
-      <BoundTo>bd989772-7cdf-42ba-ad2e-872a850b6307</BoundTo>
-      <DependentUpon>AdjustObstacleSettings.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>04f32c3c-33e8-4f4b-8acc-7edf627079d9</id>
-    </Compile>
-    <Compile Include="Modules\Obstacles\AdjustObstacleSettings.UserCode.cs">
-      <BoundTo>bd989772-7cdf-42ba-ad2e-872a850b6307</BoundTo>
-      <DependentUpon>AdjustObstacleSettings.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>77b4c5ba-d700-4826-8974-1b3eb2d9e63a</id>
-    </Compile>
-    <Compile Include="Modules\Obstacles\StartAddObstacle.cs">
-      <DependentUpon>StartAddObstacle.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>45747f66-024d-4fc3-9171-9a3447fd4fad</id>
-      <BoundTo>095040b3-6299-429d-ac7d-5d7d2cacbf1f</BoundTo>
-    </Compile>
-    <Compile Include="Modules\Obstacles\StartAddObstacle.UserCode.cs">
-      <DependentUpon>StartAddObstacle.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>d0551818-675f-4d09-bd0d-e037ba8791d1</id>
-      <BoundTo>095040b3-6299-429d-ac7d-5d7d2cacbf1f</BoundTo>
     </Compile>
     <Compile Include="Modules\ProjectTree\AddNewWavesModel.cs">
       <DependentUpon>AddNewWavesModel.rxrec</DependentUpon>
@@ -1420,18 +1384,6 @@
       <id>d558cf69-3d02-4496-930a-22c6a8aab07f</id>
       <BoundTo>99577484-aba5-4054-ba60-485780ed0133</BoundTo>
     </Compile>
-    <Compile Include="Modules\Ribbon\StartAddObstacle.cs">
-      <BoundTo>14861f7b-9cc5-49f2-8d86-748c087cf040</BoundTo>
-      <DependentUpon>StartAddObstacle.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>1fff930a-2926-491c-9a12-dac2a4315e19</id>
-    </Compile>
-    <Compile Include="Modules\Ribbon\StartAddObstacle.UserCode.cs">
-      <BoundTo>14861f7b-9cc5-49f2-8d86-748c087cf040</BoundTo>
-      <DependentUpon>StartAddObstacle.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>f440eeb6-653a-496b-894f-d952fde4ddda</id>
-    </Compile>
     <Compile Include="Modules\Ribbon\AddWaqModelImportingHyd.cs">
       <BoundTo>8b0cf9ab-595f-4a79-b018-265baf981b08</BoundTo>
       <DependentUpon>AddWaqModelImportingHyd.rxrec</DependentUpon>
@@ -1443,6 +1395,30 @@
       <DependentUpon>AddWaqModelImportingHyd.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>399cf8dc-1b4e-4ed0-b071-fd7a7fcc8f06</id>
+    </Compile>
+    <Compile Include="Modules\Ribbon\SelectMapRibbonTab.cs">
+      <BoundTo>81f54819-45c9-4eb6-8551-49330181a260</BoundTo>
+      <DependentUpon>SelectMapRibbonTab.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>b6210ab5-570d-4b06-ab86-2cef9b1adfac</id>
+    </Compile>
+    <Compile Include="Modules\Ribbon\SelectMapRibbonTab.UserCode.cs">
+      <BoundTo>81f54819-45c9-4eb6-8551-49330181a260</BoundTo>
+      <DependentUpon>SelectMapRibbonTab.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>081b0f7e-9f64-447e-9b6b-d967155a12a2</id>
+    </Compile>
+    <Compile Include="Modules\Ribbon\StartAddObstacle.cs">
+      <DependentUpon>StartAddObstacle.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>45747f66-024d-4fc3-9171-9a3447fd4fad</id>
+      <BoundTo>095040b3-6299-429d-ac7d-5d7d2cacbf1f</BoundTo>
+    </Compile>
+    <Compile Include="Modules\Ribbon\StartAddObstacle.UserCode.cs">
+      <DependentUpon>StartAddObstacle.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>d0551818-675f-4d09-bd0d-e037ba8791d1</id>
+      <BoundTo>095040b3-6299-429d-ac7d-5d7d2cacbf1f</BoundTo>
     </Compile>
     <Compile Include="Modules\Ribbon\StartAddWaveBoundary.cs">
       <BoundTo>c2924661-1ff8-4640-bdae-f883a880e747</BoundTo>
@@ -1504,15 +1480,15 @@
       <id>6f31ba23-295b-4768-be73-b3526e0428e5</id>
       <BoundTo>272ab570-cbcc-4c71-8584-17176b953670</BoundTo>
     </Compile>
-    <Compile Include="Modules\Ribbon\SelectTabInRibbon.cs">
+    <Compile Include="Modules\Ribbon\SelectRibbonTab.cs">
       <BoundTo>a5904643-3be2-4c54-8220-112b6e952f8c</BoundTo>
-      <DependentUpon>SelectTabInRibbon.rxrec</DependentUpon>
+      <DependentUpon>SelectRibbonTab.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>1ec1b616-cb46-452a-9597-a1d1ec004cdc</id>
     </Compile>
-    <Compile Include="Modules\Ribbon\SelectTabInRibbon.UserCode.cs">
+    <Compile Include="Modules\Ribbon\SelectRibbonTab.UserCode.cs">
       <BoundTo>a5904643-3be2-4c54-8220-112b6e952f8c</BoundTo>
-      <DependentUpon>SelectTabInRibbon.rxrec</DependentUpon>
+      <DependentUpon>SelectRibbonTab.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>fe6bbaf3-2f70-400e-9dc7-8296a75c6ef9</id>
     </Compile>
@@ -1831,6 +1807,11 @@
       <id>9e25f12b-67b7-4ae1-ac6d-de7165a630f4</id>
       <recordtableid>ddffc9b9-4be0-4e72-8684-7850c9641a25</recordtableid>
     </None>
+    <None Include="Modules\Application\SendEscapeKey.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>a5128665-c0a3-4327-8170-41f3fb441f11</id>
+      <recordtableid>a617fba5-29e5-4e9f-b6b6-a7e9a91e8f8c</recordtableid>
+    </None>
     <None Include="Modules\Application\SendKeySequence.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>90e23722-773b-4ae7-858c-a5ae8284930f</id>
@@ -1851,6 +1832,11 @@
       <id>191dec72-944a-4d7e-b7f0-82786454c1b7</id>
       <recordtableid>aa59d88e-f833-4794-8403-e75ddc532777</recordtableid>
     </None>
+    <None Include="Modules\AttributesTable\CloseAttributeTable.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>b23a516c-e353-47ad-8a81-f65540ad9372</id>
+      <recordtableid>ea292564-9c6e-4072-8380-ce96f8a1fefb</recordtableid>
+    </None>
     <None Include="Modules\AttributesTable\SetAttributeTableCell.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>87426ff9-a0bb-412c-9d2a-8a1f8aef7099</id>
@@ -1865,11 +1851,6 @@
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>8f8f68f2-77c0-4327-bebe-fc39a14080e6</id>
       <recordtableid>235d4e49-72f8-46d6-9960-7c72755a803c</recordtableid>
-    </None>
-    <None Include="Modules\BoundaryConditions\ConstantToTimeSeries.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>166114e0-479d-49a7-8203-759a30323800</id>
-      <recordtableid>5bccd7ff-dca8-497f-948d-fe3118dcf9ca</recordtableid>
     </None>
     <None Include="Modules\BoundaryConditions\FinishSelectionAstronomicalComponents.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -1996,15 +1977,15 @@
       <id>4e05924a-b21d-43f5-bfae-ce8823a97833</id>
       <recordtableid>5845c792-4a69-4693-b578-b022b9740f8f</recordtableid>
     </None>
-    <None Include="Modules\DocumentViews\CloseAttributeTable.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>b23a516c-e353-47ad-8a81-f65540ad9372</id>
-      <recordtableid>ea292564-9c6e-4072-8380-ce96f8a1fefb</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\CloseUniqueDocumentView.rxrec">
+    <None Include="Modules\DocumentViews\CloseDocumentView.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>2b6d8813-c825-4a89-b6ea-a83c158fb6ae</id>
       <recordtableid>00a1264a-0541-4204-af34-49b608e5c993</recordtableid>
+    </None>
+    <None Include="Modules\DocumentViews\DocumentViewPageDown.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>120262df-504b-41a1-bf5d-c6f1ecb7147b</id>
+      <recordtableid>d5a4de11-07ec-4a56-9da2-3fbe822a44b3</recordtableid>
     </None>
     <None Include="Modules\DocumentViews\ZoomMouseTo.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -2151,30 +2132,45 @@
       <id>4e7fb193-d102-4ca8-b9cd-dcc27ad6dee4</id>
       <recordtableid>afdf4c01-a73b-49fc-8985-3bf446d2ebcd</recordtableid>
     </None>
-    <None Include="Modules\ModelSettings\SetModelProperties.rxrec">
+    <None Include="Modules\ModelSettings %28Waves%29\SetGeneralSettings.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>2a95ee97-0a5f-4138-8cf3-68dab415bf7c</id>
-      <recordtableid>b3e0153c-9b5d-4e9b-9953-83e8843fa1f9</recordtableid>
+      <id>f629972d-c6d2-4d45-9630-04f910bf6ef4</id>
+      <recordtableid>61a8d8e9-59cc-497c-95bb-d9bcafc26f83</recordtableid>
     </None>
-    <None Include="Modules\ModelSettings\SetNumericalParametersSettings.rxrec">
+    <None Include="Modules\ModelSettings %28Waves%29\SetNumericalParametersSettings.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>4b60f95d-adb1-4fb7-807f-cee851ceb15b</id>
       <recordtableid>c4f9343e-6e93-4251-9a5a-94e007e453fd</recordtableid>
+    </None>
+    <None Include="Modules\ModelSettings %28Waves%29\SetOutputParametersSettings.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>c6725d93-d152-497e-b480-b9ad00f47feb</id>
+      <recordtableid>1e0fddc0-f57e-479a-a0b5-bd13d6a5fc63</recordtableid>
+    </None>
+    <None Include="Modules\ModelSettings %28Waves%29\SetPhysicalProcessesSettings.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>1cd54add-97c6-40f1-8f78-489b9f473e3a</id>
+      <recordtableid>95881761-e2a9-4d4a-b06f-86f68c520d4b</recordtableid>
+    </None>
+    <None Include="Modules\ModelSettings %28Waves%29\SetSpectralDomainSettings.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>be4b84a8-5f56-43e9-9863-24a51a25c830</id>
+      <recordtableid>041bf6cb-b1bf-4d92-a33d-143fb5e45abf</recordtableid>
+    </None>
+    <None Include="Modules\ModelSettings %28Waves%29\SetTimeFrameSettings.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>737d97a4-0491-402a-b2f5-6e7a6c8fbc01</id>
+      <recordtableid>5bc55578-5975-4a9f-964c-7192b109cf2a</recordtableid>
+    </None>
+    <None Include="Modules\ModelSettings %28Waves%29\SetBoundarySettings.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>a7589f91-dd43-4a33-a292-de420a60b2ee</id>
+      <recordtableid>2e3ae591-8b32-4144-b779-332f626e8851</recordtableid>
     </None>
     <None Include="Modules\ModelSettings\SetOthersOutputSettings.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>b42b3c5c-bb8d-49d7-befb-a72071aae5e5</id>
       <recordtableid>27f7f6d2-4512-4bb8-b9e6-c45dc963ccf8</recordtableid>
-    </None>
-    <None Include="Modules\ModelSettings\SetOutputParametersSettings.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>c6725d93-d152-497e-b480-b9ad00f47feb</id>
-      <recordtableid>1e0fddc0-f57e-479a-a0b5-bd13d6a5fc63</recordtableid>
-    </None>
-    <None Include="Modules\ModelSettings\SetPhysicalProcessesSettings.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>1cd54add-97c6-40f1-8f78-489b9f473e3a</id>
-      <recordtableid>95881761-e2a9-4d4a-b06f-86f68c520d4b</recordtableid>
     </None>
     <None Include="Modules\ModelSettings\SetSettings.rxrec">
       <id>f93d2ff2-2b56-4840-97a0-2f2e91c6e46c</id>
@@ -2186,50 +2182,15 @@
       <id>35daaecc-6e69-4575-a297-dbe749e725d9</id>
       <recordtableid>0ad9d5c1-9e98-447f-a7b4-294677146b2e</recordtableid>
     </None>
-    <None Include="Modules\ModelSettings\SetMapOutputSettings.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>90e64b26-d77b-444c-b92b-d67909684763</id>
-      <recordtableid>d2d170aa-97ab-410b-a768-292db4e582bb</recordtableid>
-    </None>
     <None Include="Modules\ModelSettings\SetRestartSettings.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>ee0e6eb1-faeb-4c99-b02a-c8e27fba5df6</id>
       <recordtableid>982f95be-ef94-48ae-963c-65ed5e0c6a8a</recordtableid>
     </None>
-    <None Include="Modules\ModelSettings\SetGeneralSettingsInWaves.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>f629972d-c6d2-4d45-9630-04f910bf6ef4</id>
-      <recordtableid>61a8d8e9-59cc-497c-95bb-d9bcafc26f83</recordtableid>
-    </None>
-    <None Include="Modules\ModelSettings\SetSpectralDomainSettings.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>be4b84a8-5f56-43e9-9863-24a51a25c830</id>
-      <recordtableid>041bf6cb-b1bf-4d92-a33d-143fb5e45abf</recordtableid>
-    </None>
     <None Include="Modules\ModelSettings\SetTimeFrameSettings.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>dee24dfc-e0aa-4689-a684-3b3c417a2faf</id>
       <recordtableid>5db26d24-9913-4622-af11-98104ae5007f</recordtableid>
-    </None>
-    <None Include="Modules\ModelSettings\SetTimeFrameSettingsWaves.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>737d97a4-0491-402a-b2f5-6e7a6c8fbc01</id>
-      <recordtableid>5bc55578-5975-4a9f-964c-7192b109cf2a</recordtableid>
-    </None>
-    <None Include="Modules\ModelSettings\SetWaveBoundarySettings.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>a7589f91-dd43-4a33-a292-de420a60b2ee</id>
-      <recordtableid>2e3ae591-8b32-4144-b779-332f626e8851</recordtableid>
-    </None>
-    <None Include="Modules\Obstacles\AdjustObstacleSettings.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>bd989772-7cdf-42ba-ad2e-872a850b6307</id>
-      <recordtableid>88216d23-4245-4e64-b095-1755e0b6d939</recordtableid>
-    </None>
-    <None Include="Modules\Obstacles\StartAddObstacle.rxrec">
-      <id>095040b3-6299-429d-ac7d-5d7d2cacbf1f</id>
-      <recordtableid>957e18c7-6bbf-4c80-8192-47de9bdeffd9</recordtableid>
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
     </None>
     <None Include="Modules\ProjectTree\AddNewWavesModel.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -2326,15 +2287,20 @@
       <id>99577484-aba5-4054-ba60-485780ed0133</id>
       <recordtableid>70157195-dbbd-46da-b3b4-f2ce9638759a</recordtableid>
     </None>
-    <None Include="Modules\Ribbon\StartAddObstacle.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>14861f7b-9cc5-49f2-8d86-748c087cf040</id>
-      <recordtableid>4e466133-8e56-4206-a5e9-ae3a77f13e2e</recordtableid>
-    </None>
     <None Include="Modules\Ribbon\AddWaqModelImportingHyd.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>8b0cf9ab-595f-4a79-b018-265baf981b08</id>
       <recordtableid>6b429464-b40c-4284-91c1-ce5093f4c084</recordtableid>
+    </None>
+    <None Include="Modules\Ribbon\SelectMapRibbonTab.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>81f54819-45c9-4eb6-8551-49330181a260</id>
+      <recordtableid>98b511f8-f9eb-48f8-9d23-86cfd78aaf40</recordtableid>
+    </None>
+    <None Include="Modules\Ribbon\StartAddObstacle.rxrec">
+      <id>095040b3-6299-429d-ac7d-5d7d2cacbf1f</id>
+      <recordtableid>957e18c7-6bbf-4c80-8192-47de9bdeffd9</recordtableid>
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
     </None>
     <None Include="Modules\Ribbon\StartAddWaveBoundary.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -2361,7 +2327,7 @@
       <id>272ab570-cbcc-4c71-8584-17176b953670</id>
       <recordtableid>48d81c13-0d34-44eb-9688-f27d6eb6f8ee</recordtableid>
     </None>
-    <None Include="Modules\Ribbon\SelectTabInRibbon.rxrec">
+    <None Include="Modules\Ribbon\SelectRibbonTab.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>a5904643-3be2-4c54-8220-112b6e952f8c</id>
       <recordtableid>b491a20e-1a35-46aa-9233-b700915cf077</recordtableid>
@@ -2507,6 +2473,9 @@
     </Folder>
     <Folder Include="Modules\BoundaryData">
       <id>115be92f-f74f-4b90-b67d-9940b31a1ff9</id>
+    </Folder>
+    <Folder Include="Modules\ModelSettings %28Waves%29">
+      <id>cdc62ea9-034d-45a9-958b-64b7a8d01b84</id>
     </Folder>
     <Folder Include="Resources\">
       <id>bbf1a688-de40-4178-a6c8-061bfa5fc402</id>

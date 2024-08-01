@@ -92,8 +92,8 @@ namespace DHYDRO.Modules.Map
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.AddNewLayerButton' at Center.", repo.DSWindow.ListView.AddNewLayerButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.AddNewLayerButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneRight.MapLegendTree.AddNewLayerButton' at Center.", repo.DSWindow.DocumentsPaneRight.MapLegendTree.AddNewLayerButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneRight.MapLegendTree.AddNewLayerButton.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Wait", "Waiting 5s to exist. Associated repository item: 'DialogSelectFile.FieldFilePath'", repo.DialogSelectFile.FieldFilePathInfo, new ActionTimeout(5000), new RecordItemIndex(1));

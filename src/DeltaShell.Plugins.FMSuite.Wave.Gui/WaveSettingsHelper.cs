@@ -64,6 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     new FieldUIDescription(d => SetCoordinateSystemButton.CoordinateSystemName(model), null)
                     {
                         Category = "General",
+                        Name = "CoordinateSystem",
                         ToolTip = SetCoordinateSystemButton.ToolTip,
                         Label = SetCoordinateSystemButton.Label,
                         ValueType = typeof(string),

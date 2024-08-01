@@ -73,7 +73,7 @@ namespace DHYDRO.Modules.Validation
                     break;
             }
             
-            var imagePath = Path.Combine(Get.ResourcesPath, imageName);
+            var imagePath = Path.Combine(Get.ResourcesDirectory, imageName);
 
             return Image.FromFile(imagePath);
         }

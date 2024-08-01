@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.TimeNavigator
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.TimeNavigatorSelector' at Center.", repo.DSWindow.ListView.TimeNavigatorSelectorInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.TimeNavigatorSelector.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneBottom.TimeSeriesNavigatorTab' at Center.", repo.DSWindow.DocumentsPaneBottom.TimeSeriesNavigatorTabInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneBottom.TimeSeriesNavigatorTab.Click();
             Delay.Milliseconds(0);
             
         }

@@ -89,20 +89,20 @@ namespace DHYDRO.Modules.ProjectTree
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNode'.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNodeInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNode.Focus();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNode'.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNodeInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNode.Focus();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNode'.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNodeInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNode.Select();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNode'.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNodeInfo, new RecordItemIndex(1));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNode.Select();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Keyboard", "Key sequence '{Right}'.", new RecordItemIndex(2));
             Keyboard.Press("{Right}");
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNode' at Center.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNodeInfo, new RecordItemIndex(3));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNode.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNode' at Center.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNodeInfo, new RecordItemIndex(3));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNode.Click();
             Delay.Milliseconds(0);
             
         }

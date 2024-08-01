@@ -2,7 +2,6 @@
 
 :: SUMMARY:
 :: 		This script checks out all the test data in the specified location and builds the correct folder hierarchy.
-:: 		It also creates a mapping from R: to this location as needed by running the Ranorex tests.
 :: 		Note that running this script will also clean up and revert the SVN checkouts.
 
 :: REQUIREMENTS:
@@ -58,7 +57,6 @@
 :: ========== RUN SCRIPT ==========
 	CALL :NORMALIZE_PATH %root%
 	CALL :CREATE_FILE_STRUCTURE
-	CALL :CREATE_NETWORK_MAPPING
 	CALL :CHECKOUT_DATA
 	
 	EXIT /B
@@ -90,17 +88,6 @@
 		MKDIR %root%\%rel_river_modelling_courses%
 		MKDIR %root%\%rel_environmental_modelling_courses%
 		MKDIR %root%\%rel_wave_dynamics_courses%
-		
-		EXIT /B
-		
-	:CREATE_NETWORK_MAPPING
-		:: Creates a network mapping from R: to the root folder.
-		
-		CALL :SET_UNC
-		
-		CALL :LOG "MAP R: DRIVE TO            : %unc%"
-		net use R: /delete /y
-		net use R: %unc%
 		
 		EXIT /B
 		

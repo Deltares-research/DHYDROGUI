@@ -44,7 +44,7 @@
 			</testmodule>
 			<modulegroup
 			id="034d4d47-a75f-4b07-aa71-e3a982d4542c"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -75,31 +75,9 @@
 			ref="b8efd6e2-0a28-42a7-a806-d76903c6dc29"
 			type="Recording">
 			</testmodule>
-			<testmodule
-			id="04e3477e-7c25-4687-a4f2-58b95523e967"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="runModelOption"
-					datasourceid="cf272b8a-bb86-4889-aa52-35f0e3e60705"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="RunOptionName"
-					datasourceid="d9c8399d-adce-4589-9810-c016e0f5d6d0"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</missingdatabinding>
-			</testmodule>
 			<modulegroup
 			id="04ff4c71-1184-4bdf-b7c8-79d1c27aef5a"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -186,6 +164,12 @@
 					</var>
 				</databinding>
 			</testmodule>
+			<testmodule
+			id="0c7fe3f3-4f44-45da-8521-476ae79ad77b"
+			name="CloseDocumentView"
+			ref="00a1264a-0541-4204-af34-49b608e5c993"
+			type="Recording">
+			</testmodule>
 			<smartfoldernode
 			id="0c92167c-135b-4e95-b939-0e4270766eaa"
 			name="ImportBacteriaSubset">
@@ -218,12 +202,6 @@
 			name="setup">
 			</setup>
 			<testmodule
-			id="0ee26bf6-376b-4259-9ef6-dc9d4d14f310"
-			name="ContextMenuModel"
-			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
-			type="Recording">
-			</testmodule>
-			<testmodule
 			id="0f818a12-fe0c-46e5-a0f2-65dc072d88e7"
 			name="DoubleClickGenericItem"
 			ref="de67ce0b-f08e-4732-b4e2-6d47a07a72f3"
@@ -244,6 +222,12 @@
 					variablename="NameTreeItemNode">
 					</var>
 				</missingdatabinding>
+			</testmodule>
+			<testmodule
+			id="0ff87798-da23-470a-b618-84b5692e0872"
+			name="DocumentViewPageDown"
+			ref="d5a4de11-07ec-4a56-9da2-3fbe822a44b3"
+			type="Recording">
 			</testmodule>
 			<testmodule
 			id="1091ccce-9eb4-4638-87b0-620fa072ec6c"
@@ -356,6 +340,12 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
+			<testmodule
+			id="1796da23-80bb-4b8f-b4c8-f2fcf7cd7f47"
+			name="CloseDocumentView"
+			ref="00a1264a-0541-4204-af34-49b608e5c993"
+			type="Recording">
+			</testmodule>
 			<smartfoldernode
 			id="1888f9bd-1582-4fb6-9ecd-d52835c598e1"
 			name="ObserveResults">
@@ -367,7 +357,7 @@
 					<param
 					mask="False"
 					name="pathToHydFile"
-					value="R:\input\courses\Environmental_modelling\flow-model\westernscheldt01.hyd">
+					value="column-model\1x1x1_restim10days\com-1x1x1_unstructured.hyd">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -421,6 +411,7 @@
 			includeimageschecked="False"
 			includerecordingschecked="False"
 			junitreport="False"
+			junitreportaddtestid="False"
 			junitreportshowerrafterstd="True"
 			name="WAQ"
 			overwritefilechecked="False"
@@ -469,36 +460,19 @@
 			type="Recording">
 			</testmodule>
 			<testmodule
-			id="1cd2f48a-6016-4c66-b4f9-1f775aea9d85"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="runModelOption"
-					datasourceid="cba839b4-f5d1-4e96-b2ff-4217feb4f2c3"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="RunOptionName"
-					datasourceid="d9c8399d-adce-4589-9810-c016e0f5d6d0"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</missingdatabinding>
-			</testmodule>
-			<testmodule
 			id="1cded140-4439-449c-861c-42f2850b9008"
 			name="ClickNextInWizard"
 			ref="bc49a76c-01fe-407b-87dc-3f6cb671860a"
 			type="Recording">
 			</testmodule>
 			<modulegroup
+			id="1db2e54b-5459-438d-a532-fe66eea74726"
+			name="RunModel"
+			ref="a36aea86-d746-4e57-83f0-344c7dce2b2b">
+			</modulegroup>
+			<modulegroup
 			id="1dd94d10-486a-4aae-b485-125c067b1740"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -552,15 +526,9 @@
 				</missingdatabinding>
 			</testmodule>
 			<testmodule
-			id="1e70cc74-3644-45cf-ae1a-0a59d5b363b5"
-			name="ContextMenuModel"
-			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="1f5dc738-cd40-4366-9214-c9fc9e7e539c"
-			name="ContextMenuModel"
-			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
+			id="2057f9d0-8330-4adc-ab34-c44e2c4dcbbe"
+			name="CloseDocumentView"
+			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
 			</testmodule>
 			<smartfoldernode
@@ -598,7 +566,7 @@
 			</testmodule>
 			<modulegroup
 			id="2172aa6b-4c6a-4794-ae6b-810c4450879d"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -623,12 +591,6 @@
 					</var>
 				</missingdatabinding>
 			</modulegroup>
-			<testmodule
-			id="2186a625-d1cc-4174-a57c-5221021ed887"
-			name="WaitForModelRunFinished"
-			ref="ab0807f5-f1c5-4070-832b-332311b59dec"
-			type="Recording">
-			</testmodule>
 			<testmodule
 			id="21908285-d786-4bb0-9d8e-e90b4500c24f"
 			name="SetTextValueInPropertiesPanelParameter"
@@ -696,7 +658,7 @@
 					<param
 					mask="False"
 					name="RelativePathToProcessDefinitionFile"
-					value="..\..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\share\delft3d\proc_def.def">
+					value="..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\share\delft3d\proc_def.def">
 					</param>
 				</parameters>
 			</testcase>
@@ -746,7 +708,7 @@
 					<param
 					mask="False"
 					name="pathToHydFile"
-					value="R:\input\courses\Environmental_modelling\column-model\1x1x1_restim10days\com-1x1x1_unstructured.hyd">
+					value="column-model\1x1x1_restim10days\com-1x1x1_unstructured.hyd">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -789,12 +751,11 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
-			<testmodule
-			id="2c30c148-4163-43d4-b174-d1b05c3d28b5"
-			name="WaitForModelRunFinished"
-			ref="ab0807f5-f1c5-4070-832b-332311b59dec"
-			type="Recording">
-			</testmodule>
+			<modulegroup
+			id="2d26832c-4dd1-4d4f-a3c3-b255a90580c1"
+			name="RunModel"
+			ref="a36aea86-d746-4e57-83f0-344c7dce2b2b">
+			</modulegroup>
 			<testcase
 			id="2db41db3-8674-4b96-9a3e-f16f37bfabd4"
 			name="Exercise1_FractionCalculation">
@@ -813,7 +774,7 @@
 					<param
 					mask="False"
 					name="FilePath"
-					value="R:\input\courses\Environmental_modelling\column-model\forcing_data\radsurf.csv">
+					value="column-model\forcing_data\radsurf.csv">
 					</param>
 					<param
 					mask="False"
@@ -832,6 +793,10 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
+			<teardown
+			id="2ec35c1b-797a-48d9-a077-1668981d3f1e"
+			name="teardown">
+			</teardown>
 			<testmodule
 			id="309e6791-a7ee-4f02-8f2b-c1703edd709f"
 			name="SetTextValueInPropertiesPanelParameter"
@@ -945,18 +910,6 @@
 				</parameters>
 			</testcase>
 			<testmodule
-			id="373455f9-7d9a-4613-a451-3915f4a6ad7b"
-			name="ContextMenuModel"
-			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="374bb39f-ce61-4caa-9fec-a50d33278a06"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
-			type="Recording">
-			</testmodule>
-			<testmodule
 			id="37cee5d2-3910-4a3d-b68c-a1f7626e2b7b"
 			name="FinishImport"
 			ref="9cde4c1a-031f-4166-961e-c6d425b673b7"
@@ -970,7 +923,7 @@
 			</testmodule>
 			<testmodule
 			id="38f293fa-3fff-4eb6-abaa-bac45274402f"
-			name="CloseUniqueDocumentView"
+			name="CloseDocumentView"
 			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
 				<description>
@@ -1018,7 +971,7 @@
 			</smartfoldernode>
 			<modulegroup
 			id="3a56b6e4-600b-4666-b8e0-bab210dd975d"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -1120,16 +1073,15 @@
 					</var>
 				</missingdatabinding>
 			</testmodule>
+			<modulegroup
+			id="3e31b36e-802b-443d-a5ca-eb83796901b4"
+			name="RunModel"
+			ref="a36aea86-d746-4e57-83f0-344c7dce2b2b">
+			</modulegroup>
 			<smartfoldernode
 			id="3e5b6b7d-0b44-4f47-a4c2-53f7b1a1e390"
 			name="SetInitialCondition">
 			</smartfoldernode>
-			<testmodule
-			id="3e78fbf7-69c9-4bc4-9d2d-ae860ec8ff3d"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
-			type="Recording">
-			</testmodule>
 			<smartfoldernode
 			id="3edd7531-ac98-4a78-968d-76fb841c86cd"
 			name="AddMassBalances">
@@ -1158,7 +1110,7 @@
 			</testmodule>
 			<testmodule
 			id="43de5de8-759f-4be2-bcc8-7a3db2be604c"
-			name="CloseUniqueDocumentView"
+			name="CloseDocumentView"
 			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
 			</testmodule>
@@ -1209,12 +1161,6 @@
 				</missingdatabinding>
 			</testmodule>
 			<testmodule
-			id="443e87dd-f586-4ae3-afe2-4d1d9af87a6c"
-			name="ContextMenuModel"
-			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
-			type="Recording">
-			</testmodule>
-			<testmodule
 			id="4b0b79be-d7bf-44c8-a9ee-809dcb6e20ea"
 			name="DoubleClickGenericItem"
 			ref="de67ce0b-f08e-4732-b4e2-6d47a07a72f3"
@@ -1227,12 +1173,6 @@
 					variablename="NameTreeItemNode">
 					</var>
 				</databinding>
-			</testmodule>
-			<testmodule
-			id="4bf665a1-ed1a-4ef9-bf24-6c444ec21a40"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
-			type="Recording">
 			</testmodule>
 			<testmodule
 			id="4c03549b-9f8b-47cd-aec8-58dcb6ef0661"
@@ -1286,7 +1226,7 @@
 			</testmodule>
 			<modulegroup
 			id="4d27c0eb-fd19-416a-9107-c7afcb36a8ef"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -1553,28 +1493,6 @@
 				</parameters>
 			</smartfoldernode>
 			<testmodule
-			id="5a2395a7-17d2-420f-8611-47e33fed6311"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="runModelOption"
-					datasourceid="b50aad6b-0ae7-4dd2-813e-31fa15466555"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="RunOptionName"
-					datasourceid="d9c8399d-adce-4589-9810-c016e0f5d6d0"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</missingdatabinding>
-			</testmodule>
-			<testmodule
 			id="5ce25f10-d5f7-41f9-8c0a-f31e1fef4b7a"
 			name="ImportProcessCSV"
 			ref="117b5715-b085-4a3b-98b5-819228ee0f3c"
@@ -1590,7 +1508,7 @@
 			</testmodule>
 			<testmodule
 			id="5d30f93b-cc05-4a02-8887-03b372e92cdf"
-			name="CloseUniqueDocumentView"
+			name="CloseDocumentView"
 			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
 			</testmodule>
@@ -1612,12 +1530,6 @@
 			id="5f0922f5-479a-4f63-acf5-fb295a389cc2"
 			name="ImportBoundaryData"
 			ref="4d29198a-ec15-4efb-82ef-bfdca8a00ace"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="60e98bf6-70c4-46fd-901a-45da66d30022"
-			name="ContextMenuModel"
-			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
 			type="Recording">
 			</testmodule>
 			<smartfoldernode
@@ -1797,12 +1709,6 @@
 			type="Recording">
 			</testmodule>
 			<testmodule
-			id="6bdbebaf-e51c-494e-87a2-1f88a6597544"
-			name="WaitForModelRunFinished"
-			ref="ab0807f5-f1c5-4070-832b-332311b59dec"
-			type="Recording">
-			</testmodule>
-			<testmodule
 			id="6c1b6fb0-5c37-45a8-bfb7-903b38c8cf2a"
 			name="DelayXMiliseconds"
 			ref="64309eeb-f439-41a7-98a7-fc1d63e0015d"
@@ -1813,6 +1719,20 @@
 					datasourceid="9a409d5d-6cd6-4904-94de-842484b61308"
 					variableid="9a7db6ae-dfb4-4e1f-869e-ebd323130abd"
 					variablename="delayInMiliseconds">
+					</var>
+				</databinding>
+			</testmodule>
+			<testmodule
+			id="6c69c2dd-489d-43ef-81c1-6a6c5e643a3e"
+			name="CloseAUT"
+			ref="7c4f813a-c9af-43c8-9eb7-b5d131eee240"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="AppProcessID"
+					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
+					variableid="666b916c-f31e-496f-845b-22690b6a832a"
+					variablename="CloseAutProcessIDVar">
 					</var>
 				</databinding>
 			</testmodule>
@@ -2146,17 +2066,22 @@
 					<param
 					mask="False"
 					name="OutputDirectory"
-					value="R:\output\courses\Environmental_modelling">
+					value="..\..\test-data\output\courses\Environmental_modelling">
 					</param>
 					<param
 					mask="False"
 					name="InputDirectory"
-					value="R:\input\courses\Environmental_modelling">
+					value="..\..\test-data\input\courses\Environmental_modelling">
 					</param>
 					<param
 					mask="False"
 					name="PixelCoordinates"
 					value="">
+					</param>
+					<param
+					mask="False"
+					name="ExecutablePath"
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
@@ -2181,13 +2106,6 @@
 			<smartfoldernode
 			id="828d7548-56a8-4a03-9b0f-69287e4447c9"
 			name="RunModel">
-				<parameters>
-					<param
-					mask="False"
-					name="runModelOption"
-					value="Run Model">
-					</param>
-				</parameters>
 			</smartfoldernode>
 			<testmodule
 			id="82c7a08d-7ec7-4572-9ddb-e3846b54b0c1"
@@ -2238,12 +2156,6 @@
 				</parameters>
 			</smartfoldernode>
 			<testmodule
-			id="87b32141-2178-47c9-9425-3e5068532ed3"
-			name="WaitForModelRunFinished"
-			ref="ab0807f5-f1c5-4070-832b-332311b59dec"
-			type="Recording">
-			</testmodule>
-			<testmodule
 			id="87dc1cfa-1f8a-483d-8547-bbb91eb87b80"
 			name="SelectContextMenuItem"
 			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
@@ -2259,7 +2171,7 @@
 			</testmodule>
 			<testmodule
 			id="87e29bc6-fa96-4603-989f-efcf546cbcaa"
-			name="CloseUniqueDocumentView"
+			name="CloseDocumentView"
 			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
 			</testmodule>
@@ -2289,7 +2201,7 @@
 					<param
 					mask="False"
 					name="RelativePathToProcessDefinitionFile"
-					value="..\..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\share\delft3d\proc_def.def">
+					value="..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\share\delft3d\proc_def.def">
 					</param>
 				</parameters>
 			</testcase>
@@ -2297,12 +2209,6 @@
 			id="8c3b57bb-b252-4296-8608-98d3a9808bca"
 			name="PauseTimeNavigation"
 			ref="54fc8d23-3405-4f2e-bf0a-c5019518c2f1"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="8d411866-8258-4608-b1ff-f3b08108f1c4"
-			name="WaitForModelRunFinished"
-			ref="ab0807f5-f1c5-4070-832b-332311b59dec"
 			type="Recording">
 			</testmodule>
 			<smartfoldernode
@@ -2423,7 +2329,7 @@
 					<param
 					mask="False"
 					name="pathToHydFile"
-					value="R:\input\courses\Environmental_modelling\flow-model\westernscheldt01.hyd">
+					value="flow-model\westernscheldt01.hyd">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -2473,7 +2379,7 @@
 					<param
 					mask="False"
 					name="FilePath"
-					value="R:\input\courses\Environmental_modelling\column-model\forcing_data\radsurf.csv">
+					value="column-model\forcing_data\radsurf.csv">
 					</param>
 					<param
 					mask="False"
@@ -2498,20 +2404,6 @@
 			ref="0bc79973-0c13-4f47-8c3c-06da550f6269"
 			type="UserCode">
 			</testmodule>
-			<testmodule
-			id="9591626f-8d46-47f1-9857-91619f2ec8e8"
-			name="CloseAUT"
-			ref="7c4f813a-c9af-43c8-9eb7-b5d131eee240"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="AppProcessID"
-					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
-					variableid="666b916c-f31e-496f-845b-22690b6a832a"
-					variablename="CloseAutProcessIDVar">
-					</var>
-				</databinding>
-			</testmodule>
 			<smartfoldernode
 			id="96c5e80c-078b-4b2e-a0bd-095e2226130f"
 			name="SetInitialConditions">
@@ -2530,7 +2422,7 @@
 					<param
 					mask="False"
 					name="pathToHydFile"
-					value="R:\input\courses\Environmental_modelling\flow-model\westernscheldt01.hyd">
+					value="flow-model\westernscheldt01.hyd">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -2556,28 +2448,6 @@
 			id="9a59064e-eb49-414a-8bd7-f2f56c189a6c"
 			name="PlaceObservationPoints">
 			</smartfoldernode>
-			<testmodule
-			id="9cd2c9d5-35dc-4dea-a897-52f29ae6b440"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="runModelOption"
-					datasourceid="828d7548-56a8-4a03-9b0f-69287e4447c9"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="RunOptionName"
-					datasourceid="d9c8399d-adce-4589-9810-c016e0f5d6d0"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</missingdatabinding>
-			</testmodule>
 			<testmodule
 			id="9d921038-a653-4392-b300-a27155c8cf7e"
 			name="ShowContextMenuCurrentSelection"
@@ -2721,22 +2591,19 @@
 				</parameters>
 			</smartfoldernode>
 			<testmodule
-			id="a3f64211-9408-4afb-9a6a-05c7b733d91e"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
-			type="Recording">
-			</testmodule>
-			<testmodule
 			id="a47e4b47-5b2a-4d58-88e7-ff82606e0ced"
 			name="StartAddObservationPoints"
 			ref="28b1b76c-7f17-4c12-a791-91e8f6961575"
 			type="Recording">
 			</testmodule>
 			<testmodule
-			id="a6a5e44b-3b37-4cde-9493-4488343c1e95"
-			name="WaitForModelRunFinished"
-			ref="ab0807f5-f1c5-4070-832b-332311b59dec"
+			id="a904ff4a-d7a4-4142-83b1-2e5571bf8055"
+			name="CloseDocumentView"
+			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
+				<description>
+					<![CDATA[Close the boundary data view]]>
+				</description>
 			</testmodule>
 			<smartfoldernode
 			id="a923ff69-44cc-4de9-b6c8-2578b70be1e3"
@@ -2760,6 +2627,15 @@
 				</parameters>
 			</smartfoldernode>
 			<testmodule
+			id="a9e1ae3a-adb0-48b9-a462-bc9d3d63b30d"
+			name="CloseDocumentView"
+			ref="00a1264a-0541-4204-af34-49b608e5c993"
+			type="Recording">
+				<description>
+					<![CDATA[Close the boundary data view]]>
+				</description>
+			</testmodule>
+			<testmodule
 			id="a9e84424-ceb5-4a14-8f77-d017619b00d6"
 			name="FinishImport"
 			ref="9cde4c1a-031f-4166-961e-c6d425b673b7"
@@ -2767,7 +2643,7 @@
 			</testmodule>
 			<testmodule
 			id="aae40fef-934d-4a53-a159-4acbe536b229"
-			name="CloseUniqueDocumentView"
+			name="CloseDocumentView"
 			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
 			</testmodule>
@@ -2797,7 +2673,7 @@
 					<param
 					mask="False"
 					name="FilePath"
-					value="R:\input\courses\Environmental_modelling\column-model\forcing_data\radsurf.csv">
+					value="column-model\forcing_data\radsurf.csv">
 					</param>
 					<param
 					mask="False"
@@ -2868,7 +2744,7 @@
 					<param
 					mask="False"
 					name="PathFile"
-					value="R:\input\courses\Environmental_modelling\fraction-model\westernscheldt01.dsproj">
+					value="fraction-model\westernscheldt01.dsproj">
 					</param>
 					<param
 					mask="False"
@@ -2905,7 +2781,7 @@
 			</smartfoldernode>
 			<modulegroup
 			id="aeb1a1bd-7b7c-49f1-8aa8-fdea493e6c1b"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -2996,14 +2872,12 @@
 			<smartfoldernode
 			id="b50aad6b-0ae7-4dd2-813e-31fa15466555"
 			name="RunModel">
-				<parameters>
-					<param
-					mask="False"
-					name="runModelOption"
-					value="Run Model">
-					</param>
-				</parameters>
 			</smartfoldernode>
+			<modulegroup
+			id="b58a28ed-b6ba-48e8-be36-18d9a9619931"
+			name="RunModel"
+			ref="a36aea86-d746-4e57-83f0-344c7dce2b2b">
+			</modulegroup>
 			<testmodule
 			id="b5e78323-9460-49b1-92fa-ce709e256752"
 			name="ClickNextInWizard"
@@ -3046,12 +2920,6 @@
 			id="bc017339-ea99-424e-96ad-18bf122ddd8a"
 			name="ImportBoundaryData"
 			ref="4d29198a-ec15-4efb-82ef-bfdca8a00ace"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="bdb8de93-c0bc-42c4-863e-1201555f9920"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
 			</testmodule>
 			<testmodule
@@ -3106,28 +2974,6 @@
 			id="c22329ec-f52a-4417-8e39-569d813691fb"
 			name="SkipIntermediateStepsInConfigurationTimeSeries">
 			</smartfoldernode>
-			<testmodule
-			id="c24fc097-9fa1-4535-a6d3-b7f3992f0e78"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="runModelOption"
-					datasourceid="21248972-bd15-4309-ac02-db4a2664baac"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="RunOptionName"
-					datasourceid="d9c8399d-adce-4589-9810-c016e0f5d6d0"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</missingdatabinding>
-			</testmodule>
 			<setup
 			id="c3af33df-627d-4eaf-bab4-6a2893903f36"
 			name="setup">
@@ -3153,13 +2999,9 @@
 			id="c4fa52ae-6323-4ec4-a789-fb107675eaea"
 			name="teardown">
 			</teardown>
-			<teardown
-			id="c53da525-1fe4-4fbb-bf91-8966e24174f9"
-			name="teardown">
-			</teardown>
 			<testmodule
 			id="c5b8020c-38e7-48aa-bb3e-08165aeb360f"
-			name="CloseUniqueDocumentView"
+			name="CloseDocumentView"
 			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
 			</testmodule>
@@ -3239,6 +3081,11 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
+			<modulegroup
+			id="cb2a79c4-9b41-4c60-937f-15746c047224"
+			name="RunModel"
+			ref="a36aea86-d746-4e57-83f0-344c7dce2b2b">
+			</modulegroup>
 			<smartfoldernode
 			id="cba839b4-f5d1-4e96-b2ff-4217feb4f2c3"
 			name="RunModel">
@@ -3278,7 +3125,7 @@
 					<param
 					mask="False"
 					name="pathToHydFile"
-					value="R:\input\courses\Environmental_modelling\flow-model\westernscheldt01.hyd">
+					value="flow-model\westernscheldt01.hyd">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -3353,12 +3200,6 @@
 					variablename="FilePath">
 					</var>
 				</databinding>
-			</testmodule>
-			<testmodule
-			id="d552ee4a-f136-4949-a77c-109bcc519270"
-			name="WaitForModelRunFinished"
-			ref="ab0807f5-f1c5-4070-832b-332311b59dec"
-			type="Recording">
 			</testmodule>
 			<smartfoldernode
 			datasource="WasteLoadProperties_e3"
@@ -3442,43 +3283,9 @@
 					</var>
 				</databinding>
 			</testmodule>
-			<testmodule
-			id="d9858ab4-0107-45a9-b1da-fecb346303bb"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="runModelOption"
-					datasourceid="526936f2-66d0-4d1c-a72f-54263a0e60f6"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="RunOptionName"
-					datasourceid="d9c8399d-adce-4589-9810-c016e0f5d6d0"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</missingdatabinding>
-			</testmodule>
 			<smartfoldernode
 			id="d9c8399d-adce-4589-9810-c016e0f5d6d0"
 			name="RunModel">
-				<parameters>
-					<param
-					mask="False"
-					name="ModelName"
-					value="westernscheldt08">
-					</param>
-					<param
-					mask="False"
-					name="RunOptionName"
-					value="Run Model">
-					</param>
-				</parameters>
 			</smartfoldernode>
 			<testmodule
 			id="db9650b3-56ed-48c3-a02a-e4fd1794e8ba"
@@ -3543,7 +3350,7 @@
 					<param
 					mask="False"
 					name="FilePath"
-					value="R:\input\courses\Environmental_modelling\column-model\forcing_data\radsurf.csv">
+					value="column-model\forcing_data\radsurf.csv">
 					</param>
 					<param
 					mask="False"
@@ -3652,6 +3459,11 @@
 					</var>
 				</missingdatabinding>
 			</testmodule>
+			<modulegroup
+			id="dea3655c-5fad-4efa-900e-b33a442a178c"
+			name="RunModel"
+			ref="a36aea86-d746-4e57-83f0-344c7dce2b2b">
+			</modulegroup>
 			<testmodule
 			id="df4b72c9-782b-401b-b2ee-38241c8d8a98"
 			name="ImportProcessLibrary"
@@ -3709,11 +3521,25 @@
 				</databinding>
 			</testmodule>
 			<testmodule
-			id="e6eaf0a3-a68a-49c3-a287-50a4136be288"
-			name="ContextMenuModel"
-			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
+			id="e3472198-0e16-4eef-a053-c6940e2ec0d2"
+			name="CloseDocumentView"
+			ref="00a1264a-0541-4204-af34-49b608e5c993"
+			type="Recording">
+				<description>
+					<![CDATA[Close the boundary data view]]>
+				</description>
+			</testmodule>
+			<testmodule
+			id="e5f6a10e-c140-49cd-890b-abaeb9ddca86"
+			name="DocumentViewPageDown"
+			ref="d5a4de11-07ec-4a56-9da2-3fbe822a44b3"
 			type="Recording">
 			</testmodule>
+			<modulegroup
+			id="e8c04977-45cc-44b6-924e-ddf16d1fe8bf"
+			name="RunModel"
+			ref="a36aea86-d746-4e57-83f0-344c7dce2b2b">
+			</modulegroup>
 			<testmodule
 			id="ea13f058-6f0b-46ac-ac63-717d0ed19cdd"
 			name="RightClickGenericTreeItem"
@@ -3795,20 +3621,6 @@
 			type="Recording">
 			</testmodule>
 			<testmodule
-			id="edf01fcc-a055-40f0-948f-0597b3d3b7d4"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="RunOptionName"
-					datasourceid="d9c8399d-adce-4589-9810-c016e0f5d6d0"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
 			id="eeac7ce5-f403-4edc-83f9-b8d7b03f3c92"
 			name="SetTextValueInPropertiesPanelParameter"
 			ref="5890ebb4-9b00-42e5-abe9-7e64a7c47983"
@@ -3863,7 +3675,7 @@
 					<param
 					mask="False"
 					name="PathFile"
-					value="R:\input\courses\Environmental_modelling\fraction-model\westernscheldt01.dsproj">
+					value="fraction-model\westernscheldt01.dsproj">
 					</param>
 					<param
 					mask="False"
@@ -3881,6 +3693,12 @@
 			id="f16b9109-dce4-4d6f-872e-0460d6ecfdf7"
 			name="ImportProcessLibrary"
 			ref="12aa1e77-0b1d-4af5-802d-07531c4fd8fe"
+			type="Recording">
+			</testmodule>
+			<testmodule
+			id="f246a3db-83b7-423e-8218-7ea89f995cd8"
+			name="CloseDocumentView"
+			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
 			</testmodule>
 			<teardown
@@ -3919,12 +3737,6 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
-			<testmodule
-			id="f71a4357-1f3b-4c2c-8002-f68f45e044a3"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
-			type="Recording">
-			</testmodule>
 			<testmodule
 			id="f835c3d5-3260-4bb0-839d-b23cf23146b9"
 			name="SetInputFileNameAndProceed"
@@ -3976,12 +3788,6 @@
 			type="Recording">
 			</testmodule>
 			<testmodule
-			id="f8c692fe-64ff-4114-87f1-374c3c061c97"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
-			type="Recording">
-			</testmodule>
-			<testmodule
 			id="f91873ad-9057-4281-8d90-85a7f199e060"
 			name="DoubleClickGenericItem"
 			ref="de67ce0b-f08e-4732-b4e2-6d47a07a72f3"
@@ -4002,12 +3808,6 @@
 					variablename="NameTreeItemNode">
 					</var>
 				</missingdatabinding>
-			</testmodule>
-			<testmodule
-			id="fa1fe56c-3fce-40bf-9694-8144a4946e25"
-			name="CloseUniqueDocumentView"
-			ref="00a1264a-0541-4204-af34-49b608e5c993"
-			type="Recording">
 			</testmodule>
 			<testmodule
 			id="faa8776d-ec11-4bec-b932-a7d8795552f6"
@@ -4156,7 +3956,7 @@
 						name="setup">
 							<modulegroup
 							id="3a56b6e4-600b-4666-b8e0-bab210dd975d"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
@@ -4214,22 +4014,10 @@
 						<smartfoldernode
 						id="d9c8399d-adce-4589-9810-c016e0f5d6d0"
 						name="RunModel">
-							<testmodule
-							id="443e87dd-f586-4ae3-afe2-4d1d9af87a6c"
-							name="ContextMenuModel">
-							</testmodule>
-							<testmodule
-							id="edf01fcc-a055-40f0-948f-0597b3d3b7d4"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="87b32141-2178-47c9-9425-3e5068532ed3"
-							name="WaitForModelRunFinished">
-							</testmodule>
-							<testmodule
-							id="a3f64211-9408-4afb-9a6a-05c7b733d91e"
-							name="CloseUniqueDocumentView">
-							</testmodule>
+							<modulegroup
+							id="e8c04977-45cc-44b6-924e-ddf16d1fe8bf"
+							name="RunModel">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
 						id="1888f9bd-1582-4fb6-9ecd-d52835c598e1"
@@ -4292,7 +4080,7 @@
 						name="setup">
 							<modulegroup
 							id="04ff4c71-1184-4bdf-b7c8-79d1c27aef5a"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
@@ -4343,8 +4131,8 @@
 								</testmodule>
 							</smartfoldernode>
 							<testmodule
-							id="374bb39f-ce61-4caa-9fec-a50d33278a06"
-							name="CloseUniqueDocumentView">
+							id="a9e1ae3a-adb0-48b9-a462-bc9d3d63b30d"
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -4363,8 +4151,8 @@
 								</testmodule>
 							</smartfoldernode>
 							<testmodule
-							id="3e78fbf7-69c9-4bc4-9d2d-ae860ec8ff3d"
-							name="CloseUniqueDocumentView">
+							id="a904ff4a-d7a4-4142-83b1-2e5571bf8055"
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -4383,8 +4171,8 @@
 								</testmodule>
 							</smartfoldernode>
 							<testmodule
-							id="4bf665a1-ed1a-4ef9-bf24-6c444ec21a40"
-							name="CloseUniqueDocumentView">
+							id="e3472198-0e16-4eef-a053-c6940e2ec0d2"
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -4424,24 +4212,16 @@
 							</testmodule>
 							<testmodule
 							id="38f293fa-3fff-4eb6-abaa-bac45274402f"
-							name="CloseUniqueDocumentView">
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
 						id="b50aad6b-0ae7-4dd2-813e-31fa15466555"
 						name="RunModel">
-							<testmodule
-							id="1e70cc74-3644-45cf-ae1a-0a59d5b363b5"
-							name="ContextMenuModel">
-							</testmodule>
-							<testmodule
-							id="5a2395a7-17d2-420f-8611-47e33fed6311"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="a6a5e44b-3b37-4cde-9493-4488343c1e95"
-							name="WaitForModelRunFinished">
-							</testmodule>
+							<modulegroup
+							id="cb2a79c4-9b41-4c60-937f-15746c047224"
+							name="RunModel">
+							</modulegroup>
 						</smartfoldernode>
 						<teardown
 						id="ddb9b0ad-3824-46aa-bbf2-262e63b3f927"
@@ -4460,7 +4240,7 @@
 						name="setup">
 							<modulegroup
 							id="4d27c0eb-fd19-416a-9107-c7afcb36a8ef"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
@@ -4515,8 +4295,8 @@
 								</testmodule>
 							</smartfoldernode>
 							<testmodule
-							id="f71a4357-1f3b-4c2c-8002-f68f45e044a3"
-							name="CloseUniqueDocumentView">
+							id="1796da23-80bb-4b8f-b4c8-f2fcf7cd7f47"
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -4535,8 +4315,8 @@
 								</testmodule>
 							</smartfoldernode>
 							<testmodule
-							id="bdb8de93-c0bc-42c4-863e-1201555f9920"
-							name="CloseUniqueDocumentView">
+							id="f246a3db-83b7-423e-8218-7ea89f995cd8"
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -4556,7 +4336,7 @@
 							</smartfoldernode>
 							<testmodule
 							id="87e29bc6-fa96-4603-989f-efcf546cbcaa"
-							name="CloseUniqueDocumentView">
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -4630,28 +4410,20 @@
 						<smartfoldernode
 						id="828d7548-56a8-4a03-9b0f-69287e4447c9"
 						name="RunModel">
-							<testmodule
-							id="1f5dc738-cd40-4366-9214-c9fc9e7e539c"
-							name="ContextMenuModel">
-							</testmodule>
-							<testmodule
-							id="9cd2c9d5-35dc-4dea-a897-52f29ae6b440"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="d552ee4a-f136-4949-a77c-109bcc519270"
-							name="WaitForModelRunFinished">
-							</testmodule>
+							<modulegroup
+							id="2d26832c-4dd1-4d4f-a3c3-b255a90580c1"
+							name="RunModel">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
 						id="8583d2e7-ff1d-4d7c-b728-089e47681a73"
 						name="InspectResults">
 						</smartfoldernode>
 						<teardown
-						id="c53da525-1fe4-4fbb-bf91-8966e24174f9"
+						id="2ec35c1b-797a-48d9-a077-1668981d3f1e"
 						name="teardown">
 							<testmodule
-							id="9591626f-8d46-47f1-9857-91619f2ec8e8"
+							id="6c69c2dd-489d-43ef-81c1-6a6c5e643a3e"
 							name="CloseAUT">
 							</testmodule>
 						</teardown>
@@ -4664,7 +4436,7 @@
 						name="setup">
 							<modulegroup
 							id="aeb1a1bd-7b7c-49f1-8aa8-fdea493e6c1b"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
@@ -4794,18 +4566,10 @@
 						<smartfoldernode
 						id="21248972-bd15-4309-ac02-db4a2664baac"
 						name="RunModel">
-							<testmodule
-							id="0ee26bf6-376b-4259-9ef6-dc9d4d14f310"
-							name="ContextMenuModel">
-							</testmodule>
-							<testmodule
-							id="c24fc097-9fa1-4535-a6d3-b7f3992f0e78"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="2186a625-d1cc-4174-a57c-5221021ed887"
-							name="WaitForModelRunFinished">
-							</testmodule>
+							<modulegroup
+							id="1db2e54b-5459-438d-a532-fe66eea74726"
+							name="RunModel">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
 						id="3edd7531-ac98-4a78-968d-76fb841c86cd"
@@ -4830,18 +4594,10 @@
 						<smartfoldernode
 						id="cba839b4-f5d1-4e96-b2ff-4217feb4f2c3"
 						name="RunModel">
-							<testmodule
-							id="60e98bf6-70c4-46fd-901a-45da66d30022"
-							name="ContextMenuModel">
-							</testmodule>
-							<testmodule
-							id="1cd2f48a-6016-4c66-b4f9-1f775aea9d85"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="2c30c148-4163-43d4-b174-d1b05c3d28b5"
-							name="WaitForModelRunFinished">
-							</testmodule>
+							<modulegroup
+							id="3e31b36e-802b-443d-a5ca-eb83796901b4"
+							name="RunModel">
+							</modulegroup>
 						</smartfoldernode>
 						<teardown
 						id="c4fa52ae-6323-4ec4-a789-fb107675eaea"
@@ -4860,7 +4616,7 @@
 						name="setup">
 							<modulegroup
 							id="034d4d47-a75f-4b07-aa71-e3a982d4542c"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
@@ -4920,7 +4676,7 @@
 							</testmodule>
 							<testmodule
 							id="aae40fef-934d-4a53-a159-4acbe536b229"
-							name="CloseUniqueDocumentView">
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -4940,7 +4696,7 @@
 							</smartfoldernode>
 							<testmodule
 							id="c5b8020c-38e7-48aa-bb3e-08165aeb360f"
-							name="CloseUniqueDocumentView">
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -4988,7 +4744,7 @@
 							</smartfoldernode>
 							<testmodule
 							id="5d30f93b-cc05-4a02-8887-03b372e92cdf"
-							name="CloseUniqueDocumentView">
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -5038,18 +4794,10 @@
 						<smartfoldernode
 						id="526936f2-66d0-4d1c-a72f-54263a0e60f6"
 						name="RunModel">
-							<testmodule
-							id="e6eaf0a3-a68a-49c3-a287-50a4136be288"
-							name="ContextMenuModel">
-							</testmodule>
-							<testmodule
-							id="d9858ab4-0107-45a9-b1da-fecb346303bb"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="8d411866-8258-4608-b1ff-f3b08108f1c4"
-							name="WaitForModelRunFinished">
-							</testmodule>
+							<modulegroup
+							id="dea3655c-5fad-4efa-900e-b33a442a178c"
+							name="RunModel">
+							</modulegroup>
 						</smartfoldernode>
 						<teardown
 						id="f250e999-39d0-4c9e-b950-26ea8272df26"
@@ -5068,7 +4816,7 @@
 						name="setup">
 							<modulegroup
 							id="1dd94d10-486a-4aae-b485-125c067b1740"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
@@ -5077,10 +4825,6 @@
 							<testmodule
 							id="5740f6f3-7302-4ba7-9c12-630ad8bf1329"
 							name="AddWaqModelImportingHyd">
-							</testmodule>
-							<testmodule
-							id="f8c692fe-64ff-4114-87f1-374c3c061c97"
-							name="CloseUniqueDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -5124,7 +4868,7 @@
 							</smartfoldernode>
 							<testmodule
 							id="43de5de8-759f-4be2-bcc8-7a3db2be604c"
-							name="CloseUniqueDocumentView">
+							name="CloseDocumentView">
 							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
@@ -5158,6 +4902,10 @@
 							id="cf376f0d-6a88-43ee-9261-600ba4bfa77e"
 							name="DoubleClickGenericItem">
 							</testmodule>
+							<testmodule
+							id="0ff87798-da23-470a-b618-84b5692e0872"
+							name="DocumentViewPageDown">
+							</testmodule>
 							<smartfoldernode
 							id="94b035cc-ad14-4752-b3e4-512ae02a0aa6"
 							name="MakeTimeSeries">
@@ -5169,6 +4917,10 @@
 							<smartfoldernode
 							id="dd194010-dcd7-4577-adab-8b9b65792c09"
 							name="ImportTimeSeries">
+								<testmodule
+								id="e5f6a10e-c140-49cd-890b-abaeb9ddca86"
+								name="DocumentViewPageDown">
+								</testmodule>
 								<testmodule
 								id="2a376f1c-90c4-4cde-a34d-1415b4550fca"
 								name="ImportProcessCSV">
@@ -5193,7 +4945,15 @@
 								id="6b3b35dc-8927-4923-ae1c-dedc9b446d5e"
 								name="FinishImport">
 								</testmodule>
+								<testmodule
+								id="2057f9d0-8330-4adc-ab34-c44e2c4dcbbe"
+								name="CloseDocumentView">
+								</testmodule>
 							</smartfoldernode>
+							<testmodule
+							id="0c7fe3f3-4f44-45da-8521-476ae79ad77b"
+							name="CloseDocumentView">
+							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
 						id="a3f29b07-afd4-4723-bfed-502fd18aa15c"
@@ -5222,26 +4982,14 @@
 								name="SingleClickOnMap">
 								</testmodule>
 							</smartfoldernode>
-							<testmodule
-							id="fa1fe56c-3fce-40bf-9694-8144a4946e25"
-							name="CloseUniqueDocumentView">
-							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
 						id="cf272b8a-bb86-4889-aa52-35f0e3e60705"
 						name="RunModel">
-							<testmodule
-							id="373455f9-7d9a-4613-a451-3915f4a6ad7b"
-							name="ContextMenuModel">
-							</testmodule>
-							<testmodule
-							id="04e3477e-7c25-4687-a4f2-58b95523e967"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="6bdbebaf-e51c-494e-87a2-1f88a6597544"
-							name="WaitForModelRunFinished">
-							</testmodule>
+							<modulegroup
+							id="b58a28ed-b6ba-48e8-be36-18d9a9619931"
+							name="RunModel">
+							</modulegroup>
 						</smartfoldernode>
 						<teardown
 						id="21e2e501-37d4-4807-9b82-f1d31b497eb3"
@@ -5260,7 +5008,7 @@
 						name="setup">
 							<modulegroup
 							id="2172aa6b-4c6a-4794-ae6b-810c4450879d"
-							name="StartupApplicationWithProject">
+							name="StartupApplicationWithNewProject">
 							</modulegroup>
 						</setup>
 						<smartfoldernode
@@ -6404,6 +6152,9 @@
 			id="78a98b82-1a75-46bf-88cd-cbfa9836cef1">
 			</testcontainer>
 			<testcontainer
+			id="7a4bca8d-9180-4ad8-aeac-9c388272891c">
+			</testcontainer>
+			<testcontainer
 			id="7d561164-f892-498e-a2b6-0df30deacf24">
 			</testcontainer>
 			<testcontainer
@@ -6434,6 +6185,9 @@
 			id="90227384-1580-481f-ad2a-c425cd4fcd44">
 			</testcontainer>
 			<testcontainer
+			id="94b035cc-ad14-4752-b3e4-512ae02a0aa6">
+			</testcontainer>
+			<testcontainer
 			id="96c5e80c-078b-4b2e-a0bd-095e2226130f">
 			</testcontainer>
 			<testcontainer
@@ -6453,6 +6207,9 @@
 			</testcontainer>
 			<testcontainer
 			id="a26c9dd7-828a-49c5-9d70-6646e2191657">
+			</testcontainer>
+			<testcontainer
+			id="a3f29b07-afd4-4723-bfed-502fd18aa15c">
 			</testcontainer>
 			<testcontainer
 			id="a923ff69-44cc-4de9-b6c8-2578b70be1e3">
@@ -6476,6 +6233,9 @@
 			id="b50aad6b-0ae7-4dd2-813e-31fa15466555">
 			</testcontainer>
 			<testcontainer
+			id="c22329ec-f52a-4417-8e39-569d813691fb">
+			</testcontainer>
+			<testcontainer
 			id="c9a16952-96ff-4bfc-bd89-e6604a5622eb">
 			</testcontainer>
 			<testcontainer
@@ -6497,6 +6257,9 @@
 			id="ceaf7e52-eea0-498f-8950-4f5adbca9974">
 			</testcontainer>
 			<testcontainer
+			id="cf272b8a-bb86-4889-aa52-35f0e3e60705">
+			</testcontainer>
+			<testcontainer
 			id="d5a79357-5b1e-45da-a0bc-cdf7586bce0b">
 			</testcontainer>
 			<testcontainer
@@ -6504,6 +6267,9 @@
 			</testcontainer>
 			<testcontainer
 			id="d9c8399d-adce-4589-9810-c016e0f5d6d0">
+			</testcontainer>
+			<testcontainer
+			id="dd194010-dcd7-4577-adab-8b9b65792c09">
 			</testcontainer>
 			<testcontainer
 			id="e03c814e-cddf-40c4-ab73-1f5675280cd1">

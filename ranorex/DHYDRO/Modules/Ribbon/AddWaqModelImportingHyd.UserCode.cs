@@ -12,7 +12,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Drawing;
+using System.IO;
 using System.Threading;
+using DHYDRO.Code;
 using WinForms = System.Windows.Forms;
 
 using Ranorex;
@@ -24,14 +26,13 @@ namespace DHYDRO.Modules.Ribbon
 {
     public partial class AddWaqModelImportingHyd
     {
-        /// <summary>
+        /// <summary> 
         /// This method gets called right after the recording has been started.
         /// It can be used to execute recording specific initialization code.
         /// </summary>
         private void Init()
         {
-            // Your recording specific initialization code goes here.
+            PathHydFile = FileUtils.GetAbsolutePath(Path.Combine(Get.InputDirectory, PathHydFile));
         }
-
     }
 }

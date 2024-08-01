@@ -16,7 +16,7 @@ using System.Threading;
 using WinForms = System.Windows.Forms;
 using System.Reflection;
 using System.IO;
-
+using DHYDRO.Code;
 using Ranorex;
 using Ranorex.Core;
 using Ranorex.Core.Repository;
@@ -32,7 +32,8 @@ namespace DHYDRO.Modules.IO
         /// </summary>
         private void Init()
         {
-            // Your recording specific initialization code goes here.
+            AbsolutePathToProcessDefinitionFile = FileUtils.GetAbsolutePath(relativePathToProcessFile);
+            FilePath = Path.Combine(Get.InputDirectory, FilePath);
         }
 
         public void WaitUntilProjectHasBeenOpened(RepoItemInfo progressbarInfo, string pathToProcessDefinitionFile)
@@ -47,12 +48,5 @@ namespace DHYDRO.Modules.IO
         	Report.Log(ReportLevel.Info, "Wait", "Waiting 2m to not exist. Associated repository item: 'progressbarInfo'", progressbarInfo, new ActionTimeout(120000));
             progressbarInfo.WaitForNotExists(120000);
         }
-
-        public string CalculatePathToProcessDefinitionFile(string IsModelWAQ, string relativePathToProcessFile)
-        {
-        	var pathProcessFile = Path.GetFullPath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + relativePathToProcessFile);
-        	return pathProcessFile;
-        }
-
     }
 }

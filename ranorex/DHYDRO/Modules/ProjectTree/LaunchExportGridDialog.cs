@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.ProjectTree
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Right Click item 'DSWindow.ListView.ProjectTree.RootTreeItem.Grid' at Center.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.GridInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Grid.Click(System.Windows.Forms.MouseButtons.Right);
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Right Click item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Grid' at Center.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GridInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Grid.Click(System.Windows.Forms.MouseButtons.Right);
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'ContextMenu.Export' at Center.", repo.ContextMenu.ExportInfo, new RecordItemIndex(1));

@@ -38,7 +38,7 @@ namespace DHYDRO.Modules.ModelSettings
 
         public void Set(RepoItemInfo container, string dataSource)
         {
-            var file = Path.Combine(Get.DataSourcesPath, dataSource);
+            var file = Path.Combine(Get.DataSourcesDirectory, dataSource);
             var data = GetDataMapping(CsvParser.Parse(file));
             var elements = GetElementMapping(container);
 

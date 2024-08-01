@@ -103,7 +103,7 @@ namespace DHYDRO.Modules.BoundaryData
 
             Init();
 
-            SetEnabled(repo.DSWindow.ListView.DataTableManagerView.BoundaryDataPanel.BoundaryDataTable.BoundaryDataEnabledInfo);
+            SetEnabled(repo.DSWindow.DocumentsPaneCentral.DataTableManagerView.BoundaryDataPanel.BoundaryDataTable.BoundaryDataEnabledInfo);
             Delay.Milliseconds(0);
             
         }

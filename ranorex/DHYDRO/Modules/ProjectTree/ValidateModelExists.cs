@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.ProjectTree
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Validation", "Validating Exists on item 'DSWindow.ListView.ProjectTree.RootTreeItem.Model'.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.SelfInfo, new RecordItemIndex(0));
-            Validate.Exists(repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.SelfInfo);
+            Report.Log(ReportLevel.Info, "Validation", "Validating Exists on item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model'.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.SelfInfo, new RecordItemIndex(0));
+            Validate.Exists(repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.SelfInfo);
             Delay.Milliseconds(0);
             
         }

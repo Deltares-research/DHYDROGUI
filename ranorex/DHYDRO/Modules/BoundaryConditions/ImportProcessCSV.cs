@@ -89,31 +89,31 @@ namespace DHYDRO.Modules.BoundaryConditions
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.ListView.WinFormsAdapter.ParametersDocumentView.Table.Data.EditCell'.", repo.DSWindow.ListView.WinFormsAdapter.ParametersDocumentView.Table.Data.EditCellInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.WinFormsAdapter.ParametersDocumentView.Table.Data.EditCell.Focus();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.DocumentsPaneCentral.WaterQualityParametersDocumentView.Table.Data.EditCell'.", repo.DSWindow.DocumentsPaneCentral.WaterQualityParametersDocumentView.Table.Data.EditCellInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneCentral.WaterQualityParametersDocumentView.Table.Data.EditCell.Focus();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'DSWindow.ListView.WinFormsAdapter.ParametersDocumentView.Table.Data.EditCell'.", repo.DSWindow.ListView.WinFormsAdapter.ParametersDocumentView.Table.Data.EditCellInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.WinFormsAdapter.ParametersDocumentView.Table.Data.EditCell.Select();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'DSWindow.DocumentsPaneCentral.WaterQualityParametersDocumentView.Table.Data.EditCell'.", repo.DSWindow.DocumentsPaneCentral.WaterQualityParametersDocumentView.Table.Data.EditCellInfo, new RecordItemIndex(1));
+            repo.DSWindow.DocumentsPaneCentral.WaterQualityParametersDocumentView.Table.Data.EditCell.Select();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.WinFormsAdapter.ParametersDocumentView.Table.Data.EditCell' at Center.", repo.DSWindow.ListView.WinFormsAdapter.ParametersDocumentView.Table.Data.EditCellInfo, new RecordItemIndex(2));
-            repo.DSWindow.ListView.WinFormsAdapter.ParametersDocumentView.Table.Data.EditCell.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneCentral.WaterQualityParametersDocumentView.Table.Data.EditCell' at Center.", repo.DSWindow.DocumentsPaneCentral.WaterQualityParametersDocumentView.Table.Data.EditCellInfo, new RecordItemIndex(2));
+            repo.DSWindow.DocumentsPaneCentral.WaterQualityParametersDocumentView.Table.Data.EditCell.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(3));
             Delay.Duration(300, false);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.WinFormsAdapter.MultipleFunctionView.LeftPanel.CsvImport' at Center.", repo.DSWindow.ListView.WinFormsAdapter.MultipleFunctionView.LeftPanel.CsvImportInfo, new RecordItemIndex(4));
-            repo.DSWindow.ListView.WinFormsAdapter.MultipleFunctionView.LeftPanel.CsvImport.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneCentral.MultipleFunctionView.CsvImport' at Center.", repo.DSWindow.DocumentsPaneCentral.MultipleFunctionView.CsvImportInfo, new RecordItemIndex(4));
+            repo.DSWindow.DocumentsPaneCentral.MultipleFunctionView.CsvImport.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'WizardDialog.ButtonNextWizard' at Center.", repo.WizardDialog.ButtonNextWizardInfo, new RecordItemIndex(5));
             repo.WizardDialog.ButtonNextWizard.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'WizardDialog.ButtonOpenFileWizard' at Center.", repo.WizardDialog.ButtonOpenFileWizardInfo, new RecordItemIndex(6));
-            repo.WizardDialog.ButtonOpenFileWizard.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'WizardDialog.ButtonOpenFile' at Center.", repo.WizardDialog.ButtonOpenFileInfo, new RecordItemIndex(6));
+            repo.WizardDialog.ButtonOpenFile.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(7));

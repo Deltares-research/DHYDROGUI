@@ -64,8 +64,8 @@ namespace DHYDRO.Modules.PropertiesPanel
             Keyboard.DefaultKeyPressTime = 0;
             Delay.SpeedFactor = 0.00;
             var repos = DHYDRORepository.Instance;
-            Adapter propertiesPanelAdapter = repos.DSWindow.ListView.PropertiesPanel.Self;
-            var allCells = propertiesPanelAdapter.Children.Where(ch=>ch.As<Cell>()!=null);
+            Adapter propertyTableAdapter = repos.DSWindow.DocumentsPaneLeft.PropertiesGrid.PropertyTable.Self;
+            var allCells = propertyTableAdapter.Children.Where(ch=>ch.As<Cell>()!=null);
             var cellToChange = allCells.Where(cl => cl.Element.GetAttributeValueText("AccessibleName")==parameterName).FirstOrDefault();
             cellToChange.As<Cell>().Focus();
             cellToChange.As<Cell>().Select();

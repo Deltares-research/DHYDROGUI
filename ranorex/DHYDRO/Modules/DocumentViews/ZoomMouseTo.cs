@@ -109,8 +109,8 @@ namespace DHYDRO.Modules.DocumentViews
             
             Report.Log(ReportLevel.Info, "User", WorldCoordinates, new RecordItemIndex(1));
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Move item 'DSWindow.ListView.CentralMapContainer.CentralMap' at position from variable $PixelCoordinates.", repo.DSWindow.ListView.CentralMapContainer.CentralMapInfo, new RecordItemIndex(2));
-            repo.DSWindow.ListView.CentralMapContainer.CentralMap.MoveTo(PixelCoordinates, 10);
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Move item 'DSWindow.DocumentsPaneCentral.MapView.MapControl' at position from variable $PixelCoordinates.", repo.DSWindow.DocumentsPaneCentral.MapView.MapControlInfo, new RecordItemIndex(2));
+            repo.DSWindow.DocumentsPaneCentral.MapView.MapControl.MoveTo(PixelCoordinates, 10);
             Delay.Milliseconds(0);
             
         }

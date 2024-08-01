@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DHYDRO.Code;
 using Ranorex;
 using Ranorex.Core.Testing;
 using WinForms = System.Windows.Forms;
@@ -44,7 +45,7 @@ namespace DHYDRO.DataSources.Open_Many_Projects
         
         void ITestModule.Run()
         {
-        	UpdateProjectListPath();
+        	UpdatePathVariables();
         	CreateProjectListDirectory();
         	
         	var projectFiles = GetProjectFiles();
@@ -54,18 +55,25 @@ namespace DHYDRO.DataSources.Open_Many_Projects
 				throw new RanorexException($"No project files found in directory '{InputDirectory}'.");
 			}
 			
+			Report.Log(ReportLevel.Info, $"Project files found:{Environment.NewLine}{string.Join(Environment.NewLine, projectFiles)}");
+			
 			File.WriteAllLines(ProjectListPath, projectFiles);
         }
         
-	    private void UpdateProjectListPath()
+	    private void UpdatePathVariables()
 	    {
-	    	var executableDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        	ProjectListPath = Path.Combine(executableDir, ProjectListPath);
+		    InputDirectory = FileUtils.GetAbsolutePath(InputDirectory);
+		    ProjectListPath = FileUtils.GetAbsolutePath(ProjectListPath);
+	        
+	        Report.Log(ReportLevel.Info, $"InputDirectory: {InputDirectory}");
+	        Report.Log(ReportLevel.Info, $"ProjectListPath: {ProjectListPath}");
 	    }
 	    
         private void CreateProjectListDirectory()
         {
         	var projectListDir = Path.GetDirectoryName(ProjectListPath);
+	        
+	        Report.Log(ReportLevel.Info, $"Creating project list dir: {projectListDir}");
         	
 			if (!Directory.Exists(projectListDir))
 			{
@@ -73,10 +81,12 @@ namespace DHYDRO.DataSources.Open_Many_Projects
 			}
         }
         
-        private IEnumerable<string> GetProjectFiles()
+        private IReadOnlyList<string> GetProjectFiles()
         {
 			var exclusionList = ProjectExclusionList.Split(';');
 
+			Report.Log(ReportLevel.Info, $"Retrieving project files from {InputDirectory}");
+			
 			var projects = Directory.GetFiles(InputDirectory, "*.dsproj", SearchOption.AllDirectories).ToArray();
 			var projectsFiltered = projects.Where(p => !exclusionList.Any(x => ContainsIgnoreCase(p, x))).ToArray();
 			

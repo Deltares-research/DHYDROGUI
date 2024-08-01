@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.ProjectTree
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Right Click item 'DSWindow.ListView.ProjectTree.Project1' at Center.", repo.DSWindow.ListView.ProjectTree.Project1Info, new RecordItemIndex(0));
-            repo.DSWindow.ListView.ProjectTree.Project1.Click(System.Windows.Forms.MouseButtons.Right);
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Right Click item 'DSWindow.DocumentsPaneLeft.ProjectTree.Project1' at Center.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.Project1Info, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.Project1.Click(System.Windows.Forms.MouseButtons.Right);
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'ContextMenu.MenuItemAdd' at Center.", repo.ContextMenu.MenuItemAddInfo, new RecordItemIndex(1));

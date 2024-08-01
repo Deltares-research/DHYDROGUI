@@ -102,7 +102,7 @@ namespace DHYDRO.Modules.ModelSettings
 
             Init();
 
-            Set(repo.DSWindow.ListView.MainTabControl.ListGroupsOutputSettings.Other.OthersOutputGroup.SelfInfo, DataSource);
+            Set(repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Other.OthersOutputGroup.SelfInfo, DataSource);
             Delay.Milliseconds(0);
             
         }

@@ -131,42 +131,39 @@ namespace DHYDRO.Modules.IO
 
             Init();
 
-            AbsolutePathToProcessDefinitionFile = CalculatePathToProcessDefinitionFile("", relativePathToProcessFile);
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.BackstageTabControl.FileTab' at Center.", repo.DSWindow.BackstageTabControl.FileTabInfo, new RecordItemIndex(0));
+            repo.DSWindow.BackstageTabControl.FileTab.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.FileTab' at Center.", repo.DSWindow.ListView.MenuBar.FileTabInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.MenuBar.FileTab.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.BackstageTabControl.OpenButton' at Center.", repo.DSWindow.BackstageTabControl.OpenButtonInfo, new RecordItemIndex(1));
+            repo.DSWindow.BackstageTabControl.OpenButton.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.BackstageTabControl.Open' at Center.", repo.DSWindow.ListView.MenuBar.BackstageTabControl.Open.SelfInfo, new RecordItemIndex(2));
-            repo.DSWindow.ListView.MenuBar.BackstageTabControl.Open.Self.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.BackstageTabControl.BackstageContentControl.BrowseButton' at Center.", repo.DSWindow.BackstageTabControl.BackstageContentControl.BrowseButtonInfo, new RecordItemIndex(2));
+            repo.DSWindow.BackstageTabControl.BackstageContentControl.BrowseButton.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.BackstageTabControl.Open.Browse' at Center.", repo.DSWindow.ListView.MenuBar.BackstageTabControl.Open.BrowseInfo, new RecordItemIndex(3));
-            repo.DSWindow.ListView.MenuBar.BackstageTabControl.Open.Browse.Click();
-            Delay.Milliseconds(0);
-            
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '$FilePath' on item 'DialogSelectFile.FieldFilePath'.", repo.DialogSelectFile.FieldFilePathInfo, new RecordItemIndex(4));
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '$FilePath' on item 'DialogSelectFile.FieldFilePath'.", repo.DialogSelectFile.FieldFilePathInfo, new RecordItemIndex(3));
             repo.DialogSelectFile.FieldFilePath.Element.SetAttributeValue("Text", FilePath);
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DialogSelectFile.ButtonOpen' at Center.", repo.DialogSelectFile.ButtonOpenInfo, new RecordItemIndex(5));
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DialogSelectFile.ButtonOpen' at Center.", repo.DialogSelectFile.ButtonOpenInfo, new RecordItemIndex(4));
             repo.DialogSelectFile.ButtonOpen.Click();
             Delay.Milliseconds(0);
             
-            //Report.Log(ReportLevel.Info, "Delay", "Waiting for 100ms.", new RecordItemIndex(6));
+            //Report.Log(ReportLevel.Info, "Delay", "Waiting for 100ms.", new RecordItemIndex(5));
             //Delay.Duration(100, false);
             
             //Code.UserCodeLibrary.ClickIfExists(repo.OverwriteCurrentProject.ButtonYesInfo, ValueConverter.ArgumentFromString<int>("waitPeriodInMilliSeconds", "1000"));
             //Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Wait", "Waiting 7s to exist. Associated repository item: 'ProgressBarWindow.ProgressBarBar'", repo.ProgressBarWindow.ProgressBarBarInfo, new ActionTimeout(7000), new RecordItemIndex(8));
+            Report.Log(ReportLevel.Info, "Wait", "Waiting 7s to exist. Associated repository item: 'ProgressBarWindow.ProgressBarBar'", repo.ProgressBarWindow.ProgressBarBarInfo, new ActionTimeout(7000), new RecordItemIndex(7));
             repo.ProgressBarWindow.ProgressBarBarInfo.WaitForExists(7000);
             
             WaitUntilProjectHasBeenOpened(repo.ProgressDialog.ProgressBarInfo, AbsolutePathToProcessDefinitionFile);
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Delay", "Waiting for 1s.", new RecordItemIndex(10));
+            Report.Log(ReportLevel.Info, "Delay", "Waiting for 1s.", new RecordItemIndex(9));
             Delay.Duration(1000, false);
             
         }

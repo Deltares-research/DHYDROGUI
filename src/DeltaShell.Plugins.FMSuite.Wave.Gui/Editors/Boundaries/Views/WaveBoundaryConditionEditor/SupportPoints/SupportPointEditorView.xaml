@@ -61,7 +61,8 @@
                      HorizontalAlignment="Left"
                      Width="120"
                      Grid.Column="1" Grid.Row="0"
-                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text">
+                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"
+                     AutomationProperties.AutomationId="AddNewDistanceTextBox">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter"
                                 Command="{Binding Path=AddSupportPointCommand}"
@@ -77,7 +78,8 @@
             <Button Command="{Binding Path=AddSupportPointCommand}"
                     CommandParameter="{Binding ElementName=AddNewDistanceTextBox, Path=Text}"
                     Grid.Column="2" Grid.Row="0"
-                    Style="{StaticResource ButtonStyle}">
+                    Style="{StaticResource ButtonStyle}"
+                    AutomationProperties.AutomationId="AddSupportPointButton">
                 <Image Source="{StaticResource AddImg}" />
             </Button>
 

@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.MapTree
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MapTab' at Center.", repo.DSWindow.ListView.MapTabInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MapTab.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneRight.AnchorableMapTab' at Center.", repo.DSWindow.DocumentsPaneRight.AnchorableMapTabInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneRight.AnchorableMapTab.Click();
             Delay.Milliseconds(0);
             
         }

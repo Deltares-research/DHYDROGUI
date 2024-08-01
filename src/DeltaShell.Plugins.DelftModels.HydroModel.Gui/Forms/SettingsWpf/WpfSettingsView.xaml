@@ -161,7 +161,8 @@
                              Style="{StaticResource TextBlockWithErrorStyle}"
                              IsReadOnly="{Binding Path=IsReadOnly}"
                              IsReadOnlyCaretVisible="True"
-                             attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
+                             attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"
+                             AutomationProperties.AutomationId="{Binding Name, StringFormat={}{0}TextBox}" />
                     <TextBlock Grid.Column="2"
                                Text="{Binding UnitSymbol}"
                                Style="{StaticResource LabelTextBlockStyle}"
@@ -172,7 +173,8 @@
                             Width="20"
                             Height="20"
                             Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource BoolToVisibility}}"
-                            Command="{Binding CustomCommand.CustomCommand}">
+                            Command="{Binding CustomCommand.CustomCommand}"
+                            AutomationProperties.AutomationId="{Binding Name, StringFormat={}{0}Button}">
                         <StackPanel>
                             <Image Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}" />
                             <TextBlock Visibility="{Binding CustomCommand.HasNoImage, Converter={StaticResource BoolToVisibility}}">...</TextBlock>
@@ -210,15 +212,21 @@
                     <TextBlock Grid.Column="0"
                                Text="{Binding Label}"
                                Style="{StaticResource LabelTextBlockStyle}" />
-                    <xctk:DateTimePicker
-                        Grid.Column="1"
-                        Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=True}"
-                        Style="{StaticResource ControlWithErrorStyle}"
-                        AllowTextInput="True"
-                        Format="Custom"
-                        FormatString="yyyy-MM-dd HH:mm:ss"
-                        UpdateValueOnEnterKey="True"
-                        TextAlignment="Left" />
+                    <xctk:DateTimePicker Grid.Column="1"
+                                         Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=True}"
+                                         Style="{StaticResource ControlWithErrorStyle}"
+                                         AllowTextInput="True"
+                                         Format="Custom"
+                                         FormatString="yyyy-MM-dd HH:mm:ss"
+                                         UpdateValueOnEnterKey="True"
+                                         TextAlignment="Left"
+                                         AutomationProperties.AutomationId="{Binding Name}">
+                        <xctk:DateTimePicker.Resources>
+                            <Style TargetType="{x:Type xctk:WatermarkTextBox}" BasedOn="{StaticResource {x:Type xctk:WatermarkTextBox}}">
+                                <Setter Property="AutomationProperties.AutomationId" Value="{Binding Name}" />
+                            </Style>
+                        </xctk:DateTimePicker.Resources>
+                    </xctk:DateTimePicker>
                 </Grid>
             </DataTemplate>
             
@@ -241,7 +249,14 @@
                                          Style="{StaticResource ControlWithErrorStyle}"
                                          TextAlignment="Left"
                                          TimePickerVisibility="Collapsed"
-                                         Value="{Binding Value, Converter={StaticResource DateTimeToDateOnlyConverter}, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}" />
+                                         Value="{Binding Value, Converter={StaticResource DateTimeToDateOnlyConverter}, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}"
+                                         AutomationProperties.AutomationId="{Binding Name}">
+                        <xctk:DateTimePicker.Resources>
+                            <Style TargetType="{x:Type xctk:WatermarkTextBox}" BasedOn="{StaticResource {x:Type xctk:WatermarkTextBox}}">
+                                <Setter Property="AutomationProperties.AutomationId" Value="{Binding Name}" />
+                            </Style>
+                        </xctk:DateTimePicker.Resources>
+                    </xctk:DateTimePicker>
                 </Grid>
             </DataTemplate>
 
@@ -255,16 +270,22 @@
                     <TextBlock Grid.Column="0"
                                Text="{Binding Label}"
                                Style="{StaticResource LabelTextBlockStyle}" />
-                    <xctk:DateTimePicker
-                        Grid.Column="1"
-                        Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=True}"
-                        Style="{StaticResource ControlWithErrorStyle}"
-                        AllowTextInput="True"
-                        TimePickerVisibility="Collapsed"
-                        Format="Custom"
-                        FormatString="yyyy-MM-dd"
-                        UpdateValueOnEnterKey="True"
-                        TextAlignment="Left" />
+                    <xctk:DateTimePicker Grid.Column="1"
+                                         Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=True}"
+                                         Style="{StaticResource ControlWithErrorStyle}"
+                                         AllowTextInput="True"
+                                         TimePickerVisibility="Collapsed"
+                                         Format="Custom"
+                                         FormatString="yyyy-MM-dd"
+                                         UpdateValueOnEnterKey="True"
+                                         TextAlignment="Left"
+                                         AutomationProperties.AutomationId="{Binding Name}">
+                        <xctk:DateTimePicker.Resources>
+                            <Style TargetType="{x:Type xctk:WatermarkTextBox}" BasedOn="{StaticResource {x:Type xctk:WatermarkTextBox}}">
+                                <Setter Property="AutomationProperties.AutomationId" Value="{Binding Name}" />
+                            </Style>
+                        </xctk:DateTimePicker.Resources>
+                    </xctk:DateTimePicker>
                 </Grid>
             </DataTemplate>
 
@@ -278,7 +299,8 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{Binding Label}"
                                Style="{StaticResource LabelTextBlockStyle}" />
-                    <controls:TimeSpanView Grid.Column="1" CurrentTimeSpan="{Binding Value}" />
+                    <controls:TimeSpanView Grid.Column="1" CurrentTimeSpan="{Binding Value}"
+                                           AutomationProperties.AutomationId="{Binding Name}" />
                 </Grid>
             </DataTemplate>
 
@@ -296,7 +318,8 @@
                     <ComboBox Grid.Column="1"
                               ItemsSource="{Binding Path=ValueType, Converter={StaticResource GuiEnumConverter}}"
                               SelectedItem="{Binding Path=Value}"
-                              Style="{StaticResource ControlStyle}">
+                              Style="{StaticResource ControlStyle}"
+                              AutomationProperties.AutomationId="{Binding Name}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" MaxWidth="140" TextWrapping="Wrap" />
@@ -321,7 +344,8 @@
                     <ItemsControl Grid.Column="1"
                                   ItemsSource="{Binding ValueCollection, Mode=TwoWay}"
                                   Style="{StaticResource ControlStyle}"
-                                  HorizontalContentAlignment="Stretch">
+                                  HorizontalContentAlignment="Stretch"
+                                  AutomationProperties.AutomationId="{Binding Name}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBox Name="TextBoxList"

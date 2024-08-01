@@ -92,7 +92,7 @@ namespace DHYDRO.Modules.Validation
 
             Init();
 
-            CheckModelValidationResult(repo.DSWindow.ListView.BoundaryEditorContainer.ValidationViewInfo);
+            CheckModelValidationResult(repo.DSWindow.DocumentsPaneCentral.ValidationView.SelfInfo);
             Delay.Milliseconds(0);
             
         }

@@ -118,28 +118,28 @@ namespace DHYDRO.Modules.Map
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '$NumberOfClasses' on item 'LegendProperties.ContainerLayerThemeSettings.NumberOfClassesField'.", repo.LegendProperties.ContainerLayerThemeSettings.NumberOfClassesFieldInfo, new RecordItemIndex(0));
-            repo.LegendProperties.ContainerLayerThemeSettings.NumberOfClassesField.Element.SetAttributeValue("Text", NumberOfClasses);
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '$NumberOfClasses' on item 'PropertiesDialog.NumberOfClassesField'.", repo.PropertiesDialog.NumberOfClassesFieldInfo, new RecordItemIndex(0));
+            repo.PropertiesDialog.NumberOfClassesField.Element.SetAttributeValue("Text", NumberOfClasses);
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'LegendProperties.ContainerLayerThemeSettings.CustomRange' at Center.", repo.LegendProperties.ContainerLayerThemeSettings.CustomRangeInfo, new RecordItemIndex(1));
-            repo.LegendProperties.ContainerLayerThemeSettings.CustomRange.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'PropertiesDialog.CustomRange' at Center.", repo.PropertiesDialog.CustomRangeInfo, new RecordItemIndex(1));
+            repo.PropertiesDialog.CustomRange.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '$MinimumValue' on item 'LegendProperties.ContainerLayerThemeSettings.MinField'.", repo.LegendProperties.ContainerLayerThemeSettings.MinFieldInfo, new RecordItemIndex(2));
-            repo.LegendProperties.ContainerLayerThemeSettings.MinField.Element.SetAttributeValue("Text", MinimumValue);
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '$MinimumValue' on item 'PropertiesDialog.MinField'.", repo.PropertiesDialog.MinFieldInfo, new RecordItemIndex(2));
+            repo.PropertiesDialog.MinField.Element.SetAttributeValue("Text", MinimumValue);
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '$MaximumValue' on item 'LegendProperties.ContainerLayerThemeSettings.MaxField'.", repo.LegendProperties.ContainerLayerThemeSettings.MaxFieldInfo, new RecordItemIndex(3));
-            repo.LegendProperties.ContainerLayerThemeSettings.MaxField.Element.SetAttributeValue("Text", MaximumValue);
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '$MaximumValue' on item 'PropertiesDialog.MaxField'.", repo.PropertiesDialog.MaxFieldInfo, new RecordItemIndex(3));
+            repo.PropertiesDialog.MaxField.Element.SetAttributeValue("Text", MaximumValue);
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'LegendProperties.ContainerLayerThemeSettings.Generate' at Center.", repo.LegendProperties.ContainerLayerThemeSettings.GenerateInfo, new RecordItemIndex(4));
-            repo.LegendProperties.ContainerLayerThemeSettings.Generate.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'PropertiesDialog.ButtonGenerate' at Center.", repo.PropertiesDialog.ButtonGenerateInfo, new RecordItemIndex(4));
+            repo.PropertiesDialog.ButtonGenerate.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'LegendProperties.ButtonOk' at Center.", repo.LegendProperties.ButtonOkInfo, new RecordItemIndex(5));
-            repo.LegendProperties.ButtonOk.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'PropertiesDialog.ButtonOk' at Center.", repo.PropertiesDialog.ButtonOkInfo, new RecordItemIndex(5));
+            repo.PropertiesDialog.ButtonOk.Click();
             Delay.Milliseconds(0);
             
         }

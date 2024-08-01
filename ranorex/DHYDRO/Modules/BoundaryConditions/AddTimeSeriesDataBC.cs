@@ -102,7 +102,7 @@ namespace DHYDRO.Modules.BoundaryConditions
 
             Init();
 
-            FillInParameterValue(repo.DSWindow.ListView.BoundaryConditionsEditor.TableChartPanel.TableDataBC.GenericCellLastRowInfo);
+            FillInParameterValue(repo.DSWindow.DocumentsPaneCentral.BoundaryConditionsEditor.TableChartPanel.TableDataBC.GenericCellLastRowInfo);
             Delay.Milliseconds(0);
             
         }

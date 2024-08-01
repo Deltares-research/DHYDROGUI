@@ -99,12 +99,12 @@ namespace DHYDRO.Modules.ProjectTree
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.ListView.ProjectTree.RootTreeItem.Model.GenericInputItem'.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.GenericInputItemInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.GenericInputItem.Focus();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.GenericInputItem'.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.GenericInputItemInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.GenericInputItem.Focus();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'DSWindow.ListView.ProjectTree.RootTreeItem.Model.GenericInputItem'.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.GenericInputItemInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.GenericInputItem.Select();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.GenericInputItem'.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.GenericInputItemInfo, new RecordItemIndex(1));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.GenericInputItem.Select();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Keyboard", "Key sequence '{Apps}'.", new RecordItemIndex(2));

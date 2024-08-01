@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.ModelSettings
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '0.5' on item 'DSWindow.ListView.MainTabControl.ListGroupsOutputSettings.InitialWaterLevelField'.", repo.DSWindow.ListView.MainTabControl.ListGroupsOutputSettings.InitialWaterLevelFieldInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MainTabControl.ListGroupsOutputSettings.InitialWaterLevelField.Element.SetAttributeValue("Text", "0.5");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '0.5' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Initial_Conditions.InitialWaterLevelField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Initial_Conditions.InitialWaterLevelFieldInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Initial_Conditions.InitialWaterLevelField.Element.SetAttributeValue("Text", "0.5");
             Delay.Milliseconds(0);
             
         }

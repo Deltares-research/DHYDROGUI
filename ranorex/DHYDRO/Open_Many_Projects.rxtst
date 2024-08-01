@@ -48,7 +48,7 @@
 					<param
 					mask="False"
 					name="InputDirectory"
-					value="R:\input\">
+					value="..\..\test-data\input\">
 					</param>
 					<param
 					mask="False"
@@ -89,7 +89,7 @@
 			</testcase>
 			<modulegroup
 			id="6fc00e8c-6ee0-4255-b50b-eaf0f77e8116"
-			name="StartupApplicationWithProject"
+			name="StartupApplicationWithNewProject"
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
@@ -133,6 +133,7 @@
 			includeimageschecked="False"
 			includerecordingschecked="False"
 			junitreport="False"
+			junitreportaddtestid="False"
 			junitreportshowerrafterstd="True"
 			name="Open_Many_Projects"
 			overwritefilechecked="False"
@@ -233,7 +234,7 @@
 						</modulegroup>
 						<modulegroup
 						id="6fc00e8c-6ee0-4255-b50b-eaf0f77e8116"
-						name="StartupApplicationWithProject">
+						name="StartupApplicationWithNewProject">
 						</modulegroup>
 					</setup>
 					<testcase

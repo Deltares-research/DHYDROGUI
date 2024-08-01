@@ -112,7 +112,7 @@ namespace DHYDRO.Modules.BoundaryConditions
 
             Init();
 
-            TypeInParameterValue(repo.DSWindow.ListView.BoundaryConditionsEditor.TableChartPanel.TableDataBC.GenAstronComponentAmplitudeCellInfo);
+            TypeInParameterValue(repo.DSWindow.DocumentsPaneCentral.BoundaryConditionsEditor.TableChartPanel.TableDataBC.GenAstronComponentAmplitudeCellInfo);
             Delay.Milliseconds(0);
             
         }

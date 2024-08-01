@@ -89,8 +89,8 @@ namespace DHYDRO.Modules.Application
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.AddNewWmsLayerButton' at Center.", repo.DSWindow.ListView.AddNewWmsLayerButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.AddNewWmsLayerButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneRight.MapLegendTree.AddNewWmsLayerButton' at Center.", repo.DSWindow.DocumentsPaneRight.MapLegendTree.AddNewWmsLayerButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneRight.MapLegendTree.AddNewWmsLayerButton.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'OpenUrlDialog.ExpandDropDownMenu' at Center.", repo.OpenUrlDialog.ExpandDropDownMenuInfo, new RecordItemIndex(1));

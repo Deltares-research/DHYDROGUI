@@ -30,16 +30,11 @@ namespace DHYDRO.Code
         }
 
 	    /// <summary>
-	    /// Gets the input directory path used by the currently running Test Suite.
+	    /// Gets the test suite parameter with the specified key.
 	    /// </summary>
-	    public static string InputDirectory => GetParameter("InputDirectory");
-
-	    /// <summary>
-	    /// Gets the output directory path used by the currently running Test Suite.
-	    /// </summary>
-	    public static string OutputDirectory => GetParameter("OutputDirectory");
-
-        private static string GetParameter(string key)
+	    /// <param name="key">The parameter to get.</param>
+	    /// <returns>The test suite parameter.</returns>
+	    public static string GetParameter(string key)
         {
             return TS.Current.Parameters[key];
         }

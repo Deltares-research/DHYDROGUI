@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Tools.QueryTimeSeries' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Tools.QueryTimeSeriesInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Tools.QueryTimeSeries.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Tools.QueryTimeSeries' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Tools.QueryTimeSeriesInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Tools.QueryTimeSeries.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'GridBasedDialog.WaterLevelCell' at 25;12.", repo.GridBasedDialog.WaterLevelCellInfo, new RecordItemIndex(1));
@@ -91,10 +91,10 @@ namespace DHYDRO.Modules.Ribbon
             repo.GridBasedDialog.ButtonOk.Click("47;19");
             Delay.Milliseconds(0);
             
-            Report.Screenshot(ReportLevel.Info, "User", "", repo.DSWindow.ListView.CentralMapContainer.Self, false, new RecordItemIndex(3));
+            Report.Screenshot(ReportLevel.Info, "User", "", repo.DSWindow.DocumentsPaneCentral.MapView.Self, false, new RecordItemIndex(3));
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButton' at 9;10.", repo.DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButtonInfo, new RecordItemIndex(4));
-            repo.DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButton.Click("9;10");
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneCentral.DocumentCloseButton' at 9;10.", repo.DSWindow.DocumentsPaneCentral.DocumentCloseButtonInfo, new RecordItemIndex(4));
+            repo.DSWindow.DocumentsPaneCentral.DocumentCloseButton.Click("9;10");
             Delay.Milliseconds(0);
             
         }

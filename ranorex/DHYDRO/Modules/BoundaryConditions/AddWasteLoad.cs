@@ -79,16 +79,16 @@ namespace DHYDRO.Modules.BoundaryConditions
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.ControlLabel' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.ControlLabelInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.ControlLabel.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Water_Quality.AddLoadButton' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Water_Quality.AddLoadButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Water_Quality.AddLoadButton.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.CentralMapContainer.CentralMap' at Center.", repo.DSWindow.ListView.CentralMapContainer.CentralMapInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.CentralMapContainer.CentralMap.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneCentral.MapView.MapControl' at Center.", repo.DSWindow.DocumentsPaneCentral.MapView.MapControlInfo, new RecordItemIndex(1));
+            repo.DSWindow.DocumentsPaneCentral.MapView.MapControl.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Keyboard", "Key sequence '{Escape}' with focus on 'DSWindow.ListView.CentralMapContainer.CentralMap'.", repo.DSWindow.ListView.CentralMapContainer.CentralMapInfo, new RecordItemIndex(2));
-            repo.DSWindow.ListView.CentralMapContainer.CentralMap.PressKeys("{Escape}");
+            Report.Log(ReportLevel.Info, "Keyboard", "Key sequence '{Escape}' with focus on 'DSWindow.DocumentsPaneCentral.MapView.MapControl'.", repo.DSWindow.DocumentsPaneCentral.MapView.MapControlInfo, new RecordItemIndex(2));
+            repo.DSWindow.DocumentsPaneCentral.MapView.MapControl.PressKeys("{Escape}");
             Delay.Milliseconds(0);
             
         }

@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.QuickAccess
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.SaveQuickAccessButton' at Center.", repo.DSWindow.ListView.MenuBar.SaveQuickAccessButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.SaveQuickAccessButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ToolBarPanel.SaveQuickAccessButton' at Center.", repo.DSWindow.ToolBarPanel.SaveQuickAccessButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.ToolBarPanel.SaveQuickAccessButton.Click();
             Delay.Milliseconds(0);
             
         }

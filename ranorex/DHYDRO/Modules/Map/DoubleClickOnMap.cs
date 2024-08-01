@@ -105,8 +105,8 @@ namespace DHYDRO.Modules.Map
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left DoubleClick item 'DSWindow.ListView.CentralMapContainer.CentralMap' at position from variable $PixelCoordinates.", repo.DSWindow.ListView.CentralMapContainer.CentralMapInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.CentralMapContainer.CentralMap.DoubleClick(PixelCoordinates, 10);
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left DoubleClick item 'DSWindow.DocumentsPaneCentral.MapView.MapControl' at position from variable $PixelCoordinates.", repo.DSWindow.DocumentsPaneCentral.MapView.MapControlInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneCentral.MapView.MapControl.DoubleClick(PixelCoordinates, 10);
             Delay.Milliseconds(0);
             
         }

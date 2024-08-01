@@ -83,8 +83,8 @@ namespace DHYDRO.Modules.IO
             repo.WizardDialog.ButtonNextWizard.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'WizardDialog.ImportBoundaryDataFile' at Center.", repo.WizardDialog.ImportBoundaryDataFileInfo, new RecordItemIndex(1));
-            repo.WizardDialog.ImportBoundaryDataFile.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'WizardDialog.OpenFileButton' at Center.", repo.WizardDialog.OpenFileButtonInfo, new RecordItemIndex(1));
+            repo.WizardDialog.OpenFileButton.Click();
             Delay.Milliseconds(0);
             
         }

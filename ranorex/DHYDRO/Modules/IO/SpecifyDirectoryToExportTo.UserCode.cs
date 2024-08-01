@@ -32,13 +32,8 @@ namespace DHYDRO.Modules.IO
         /// </summary>
         private void Init()
         {
-        	UpdateFilePath();
-        	Create.DirectoryIfNotExists(DirectoryName);
-        }
-        
-        private void UpdateFilePath()
-        {
-        	DirectoryName = Path.Combine(Current.OutputDirectory, Current.TestCaseName, DirectoryName);
+        	DirectoryName = Path.Combine(Get.OutputDirectory, Current.TestCaseName, DirectoryName);
+        	FileUtils.CreateDirectoryIfNotExists(DirectoryName);
         }
     }
 }

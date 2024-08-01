@@ -73,7 +73,7 @@ namespace DHYDRO.Modules.DocumentViews
             Keyboard.DefaultKeyPressTime = 0;
             Delay.SpeedFactor = 0.00;
         	var repos = DHYDRORepository.Instance;
-            var table = repos.DSWindow.ListView.WinFormsAdapter.ParametersDocumentView.Table;
+            var table = repos.DSWindow.DocumentsPaneCentral.WaterQualityParametersDocumentView.Table;
             var headerRow = table.Header.Children.Select(it => it.As<Cell>()).ToList();
             var cellWithName = headerRow.Where(cl => cl.Element.GetAttributeValueText("AccessibleName")==columnName).FirstOrDefault();
             var columnIndex = headerRow.IndexOf(cellWithName);

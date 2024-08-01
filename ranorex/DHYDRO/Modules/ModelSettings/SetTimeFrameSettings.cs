@@ -79,82 +79,82 @@ namespace DHYDRO.Modules.ModelSettings
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '0.7' on item 'DSWindow.ListView.MainTabControl.TimeFrame.MaxCourantNrField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.MaxCourantNrFieldInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.MaxCourantNrField.Element.SetAttributeValue("Text", "0.7");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '0.7' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.MaxCourantNrField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.MaxCourantNrFieldInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.MaxCourantNrField.Element.SetAttributeValue("Text", "0.7");
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '2001-01-01 00:00:00' on item 'DSWindow.ListView.MainTabControl.TimeFrame.ReferenceTimeField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.ReferenceTimeFieldInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.ReferenceTimeField.Element.SetAttributeValue("Text", "2001-01-01 00:00:00");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '2001-01-01' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.ReferenceTimeField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.ReferenceTimeFieldInfo, new RecordItemIndex(1));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.ReferenceTimeField.Element.SetAttributeValue("Text", "2001-01-01");
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '0' on item 'DSWindow.ListView.MainTabControl.TimeFrame.TimeZoneField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.TimeZoneFieldInfo, new RecordItemIndex(2));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.TimeZoneField.Element.SetAttributeValue("Text", "0");
-            Delay.Milliseconds(0);
-            
-            // Set to: 0d00:05:00.000
-            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d00:05:00.000\r\nSetting attribute Text to '0' on item 'DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.DaysField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.DaysFieldInfo, new RecordItemIndex(3));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.DaysField.Element.SetAttributeValue("Text", "0");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '0' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.TimeZoneField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.TimeZoneFieldInfo, new RecordItemIndex(2));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.TimeZoneField.Element.SetAttributeValue("Text", "0");
             Delay.Milliseconds(0);
             
             // Set to: 0d00:05:00.000
-            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d00:05:00.000\r\nSetting attribute Text to '00' on item 'DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.HoursField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.HoursFieldInfo, new RecordItemIndex(4));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.HoursField.Element.SetAttributeValue("Text", "00");
+            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d00:05:00.000\r\nSetting attribute Text to '0' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.DaysField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.DaysFieldInfo, new RecordItemIndex(3));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.DaysField.Element.SetAttributeValue("Text", "0");
             Delay.Milliseconds(0);
             
             // Set to: 0d00:05:00.000
-            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d00:05:00.000\r\nSetting attribute Text to '05' on item 'DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.MinutesField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.MinutesFieldInfo, new RecordItemIndex(5));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.MinutesField.Element.SetAttributeValue("Text", "05");
+            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d00:05:00.000\r\nSetting attribute Text to '00' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.HoursField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.HoursFieldInfo, new RecordItemIndex(4));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.HoursField.Element.SetAttributeValue("Text", "00");
             Delay.Milliseconds(0);
             
             // Set to: 0d00:05:00.000
-            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d00:05:00.000\r\nSetting attribute Text to '00' on item 'DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.SecondsField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.SecondsFieldInfo, new RecordItemIndex(6));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.SecondsField.Element.SetAttributeValue("Text", "00");
+            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d00:05:00.000\r\nSetting attribute Text to '05' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.MinutesField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.MinutesFieldInfo, new RecordItemIndex(5));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.MinutesField.Element.SetAttributeValue("Text", "05");
             Delay.Milliseconds(0);
             
             // Set to: 0d00:05:00.000
-            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d00:05:00.000\r\nSetting attribute Text to '000' on item 'DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.MilliSecondsField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.MilliSecondsFieldInfo, new RecordItemIndex(7));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.UserTimeStep.MilliSecondsField.Element.SetAttributeValue("Text", "000");
+            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d00:05:00.000\r\nSetting attribute Text to '00' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.SecondsField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.SecondsFieldInfo, new RecordItemIndex(6));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.SecondsField.Element.SetAttributeValue("Text", "00");
+            Delay.Milliseconds(0);
+            
+            // Set to: 0d00:05:00.000
+            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d00:05:00.000\r\nSetting attribute Text to '000' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.MilliSecondsField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.MilliSecondsFieldInfo, new RecordItemIndex(7));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.UserTimeStep.MilliSecondsField.Element.SetAttributeValue("Text", "000");
             Delay.Milliseconds(0);
             
             // Set to: 0d06:00:00.000
-            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d06:00:00.000\r\nSetting attribute Text to '0' on item 'DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.DaysField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.DaysFieldInfo, new RecordItemIndex(8));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.DaysField.Element.SetAttributeValue("Text", "0");
+            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d06:00:00.000\r\nSetting attribute Text to '0' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.DaysField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.DaysFieldInfo, new RecordItemIndex(8));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.DaysField.Element.SetAttributeValue("Text", "0");
             Delay.Milliseconds(0);
             
             // Set to: 0d06:00:00.000
-            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d06:00:00.000\r\nSetting attribute Text to '06' on item 'DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.HoursField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.HoursFieldInfo, new RecordItemIndex(9));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.HoursField.Element.SetAttributeValue("Text", "06");
+            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d06:00:00.000\r\nSetting attribute Text to '06' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.HoursField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.HoursFieldInfo, new RecordItemIndex(9));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.HoursField.Element.SetAttributeValue("Text", "06");
             Delay.Milliseconds(0);
             
             // Set to: 0d06:00:00.000
-            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d06:00:00.000\r\nSetting attribute Text to '00' on item 'DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.MinutesField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.MinutesFieldInfo, new RecordItemIndex(10));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.MinutesField.Element.SetAttributeValue("Text", "00");
+            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d06:00:00.000\r\nSetting attribute Text to '00' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.MinutesField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.MinutesFieldInfo, new RecordItemIndex(10));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.MinutesField.Element.SetAttributeValue("Text", "00");
             Delay.Milliseconds(0);
             
             // Set to: 0d06:00:00.000
-            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d06:00:00.000\r\nSetting attribute Text to '00' on item 'DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.SecondsField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.SecondsFieldInfo, new RecordItemIndex(11));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.SecondsField.Element.SetAttributeValue("Text", "00");
+            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d06:00:00.000\r\nSetting attribute Text to '00' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.SecondsField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.SecondsFieldInfo, new RecordItemIndex(11));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.SecondsField.Element.SetAttributeValue("Text", "00");
             Delay.Milliseconds(0);
             
             // Set to: 0d06:00:00.000
-            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d06:00:00.000\r\nSetting attribute Text to '000' on item 'DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.MilliSecondsField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.MilliSecondsFieldInfo, new RecordItemIndex(12));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.NodalUpdateInterval.MilliSecondsField.Element.SetAttributeValue("Text", "000");
+            Report.Log(ReportLevel.Info, "Set value", "Set to: 0d06:00:00.000\r\nSetting attribute Text to '000' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.MilliSecondsField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.MilliSecondsFieldInfo, new RecordItemIndex(12));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.NodalUpdateInterval.MilliSecondsField.Element.SetAttributeValue("Text", "000");
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '30' on item 'DSWindow.ListView.MainTabControl.TimeFrame.MaxTimeStepField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.MaxTimeStepFieldInfo, new RecordItemIndex(13));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.MaxTimeStepField.Element.SetAttributeValue("Text", "30");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '30' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.MaxTimeStepField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.MaxTimeStepFieldInfo, new RecordItemIndex(13));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.MaxTimeStepField.Element.SetAttributeValue("Text", "30");
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '1' on item 'DSWindow.ListView.MainTabControl.TimeFrame.InitialTimeStepField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.InitialTimeStepFieldInfo, new RecordItemIndex(14));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.InitialTimeStepField.Element.SetAttributeValue("Text", "1");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '1' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.InitialTimeStepField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.InitialTimeStepFieldInfo, new RecordItemIndex(14));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.InitialTimeStepField.Element.SetAttributeValue("Text", "1");
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '2001-01-01 00:00:00' on item 'DSWindow.ListView.MainTabControl.TimeFrame.StartTimeField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.StartTimeFieldInfo, new RecordItemIndex(15));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.StartTimeField.Element.SetAttributeValue("Text", "2001-01-01 00:00:00");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '2001-01-01 00:00:00' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.StartTimeField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.StartTimeFieldInfo, new RecordItemIndex(15));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.StartTimeField.Element.SetAttributeValue("Text", "2001-01-01 00:00:00");
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '2001-01-02 00:00:00' on item 'DSWindow.ListView.MainTabControl.TimeFrame.StopTimeField'.", repo.DSWindow.ListView.MainTabControl.TimeFrame.StopTimeFieldInfo, new RecordItemIndex(16));
-            repo.DSWindow.ListView.MainTabControl.TimeFrame.StopTimeField.Element.SetAttributeValue("Text", "2001-01-02 00:00:00");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '2001-01-02 00:00:00' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.StopTimeField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.StopTimeFieldInfo, new RecordItemIndex(16));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.TimeFrame.StopTimeField.Element.SetAttributeValue("Text", "2001-01-02 00:00:00");
             Delay.Milliseconds(0);
             
         }

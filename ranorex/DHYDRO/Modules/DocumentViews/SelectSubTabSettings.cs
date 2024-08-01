@@ -89,8 +89,8 @@ namespace DHYDRO.Modules.DocumentViews
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MainTabControl.Tabs.GenericSubTab' at Center.", repo.DSWindow.ListView.MainTabControl.Tabs.GenericSubTabInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MainTabControl.Tabs.GenericSubTab.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Tabs.GenericSubTab' at Center.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Tabs.GenericSubTabInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Tabs.GenericSubTab.Click();
             Delay.Milliseconds(0);
             
         }

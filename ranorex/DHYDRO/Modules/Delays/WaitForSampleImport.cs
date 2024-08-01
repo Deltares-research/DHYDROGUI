@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Delays
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Wait", "Waiting 1m to exist. Associated repository item: 'DSWindow.ListView.OperationTree.RootItem.ImportSample'", repo.DSWindow.ListView.OperationTree.RootItem.ImportSampleInfo, new ActionTimeout(60000), new RecordItemIndex(0));
-            repo.DSWindow.ListView.OperationTree.RootItem.ImportSampleInfo.WaitForExists(60000);
+            Report.Log(ReportLevel.Info, "Wait", "Waiting 1m to exist. Associated repository item: 'DSWindow.DocumentsPaneRight.OperationTree.RootItem.ImportSample'", repo.DSWindow.DocumentsPaneRight.OperationTree.RootItem.ImportSampleInfo, new ActionTimeout(60000), new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneRight.OperationTree.RootItem.ImportSampleInfo.WaitForExists(60000);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(1));
             Delay.Duration(300, false);

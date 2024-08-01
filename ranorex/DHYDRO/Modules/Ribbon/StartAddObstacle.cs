@@ -26,7 +26,7 @@ namespace DHYDRO.Modules.Ribbon
     /// <summary>
     ///The StartAddObstacle recording.
     /// </summary>
-    [TestModule("4e466133-8e56-4206-a5e9-ae3a77f13e2e", ModuleType.Recording, 1)]
+    [TestModule("957e18c7-6bbf-4c80-8192-47de9bdeffd9", ModuleType.Recording, 1)]
     public partial class StartAddObstacle : ITestModule
     {
         /// <summary>
@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.AddObstacleButton' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.AddObstacleButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.AddObstacleButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Waves_Region_2D__3D.AddObstacleButton' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Waves_Region_2D__3D.AddObstacleButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Waves_Region_2D__3D.AddObstacleButton.Click();
             Delay.Milliseconds(0);
             
         }

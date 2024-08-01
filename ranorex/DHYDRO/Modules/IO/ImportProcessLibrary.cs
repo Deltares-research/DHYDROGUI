@@ -86,12 +86,12 @@ namespace DHYDRO.Modules.IO
             repo.WizardDialog.ButtonNextWizard.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'WizardDialog.Container.CustomSubFile' at Center.", repo.WizardDialog.Container.CustomSubFileInfo, new RecordItemIndex(2));
-            repo.WizardDialog.Container.CustomSubFile.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'WizardDialog.CustomSubFile' at Center.", repo.WizardDialog.CustomSubFileInfo, new RecordItemIndex(2));
+            repo.WizardDialog.CustomSubFile.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'WizardDialog.Container.SubFileButton' at Center.", repo.WizardDialog.Container.SubFileButtonInfo, new RecordItemIndex(3));
-            repo.WizardDialog.Container.SubFileButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'WizardDialog.SubFileButton' at Center.", repo.WizardDialog.SubFileButtonInfo, new RecordItemIndex(3));
+            repo.WizardDialog.SubFileButton.Click();
             Delay.Milliseconds(0);
             
         }

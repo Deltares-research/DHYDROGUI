@@ -331,10 +331,10 @@ UAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//Z
 			<bindings>
 			</bindings>
 			<info
-			id="a19f3a45-f01b-48fd-8548-e032a1aebdd2"
+			id="b9c614ce-0ca9-4081-9f29-741121eeb2f1"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@controlname='WizardDialog']/element/container/container/button[@controlname='buttonOpenFile']
+					/form[@controlname='WizardDialog']//button[@controlname='buttonOpenFile']
 				</path>
 				<robustPath>
 				</robustPath>

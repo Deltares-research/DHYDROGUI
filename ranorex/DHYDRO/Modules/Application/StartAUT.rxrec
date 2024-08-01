@@ -30,7 +30,7 @@ mode="Desktop">
 		<var
 		id="77a8be37-3703-46ab-ac4e-fbc2db12af5a"
 		name="ExecutablePath">
-			..\..\..\bin\Debug\DeltaShell.Gui.exe
+			..\..\..\bin\Release\DeltaShell.Gui.exe
 		</var>
 	</variables>
 	<recorditems>
@@ -93,15 +93,15 @@ mode="Desktop">
 					name="appicon"
 					type="System.Drawing.Icon, System.Drawing, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 						iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
-jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAGlSURBVDhPlZJLKERRGMfvPNwrQ5MZI0lJmtSE
-SFPDLEg2ZEERC6WwISUm5TELC2RDFlJMiZUkIiU1YikrC4/xiDx2pCnNRnHH75hZiHn516/vO9/j
-nO/ec6QIMoMScv8vi0ajWcQWgzaMCayQC7E3pnlcp9NdY3fhQK/XP7W0db3vHPpUkznDT2xelIWq
-I6uLDc7hTqvVHmEv8wsKA2ePwSDrU/KdoPuujCIxYnYYC7iZ4n51z6dm5+S+seEVU2wTb4SYMlA4
-RvNDnrUwwOkn4fG7oQ7yRFE0ieYlmh+xm6yboQQaWE+CB78fIouCGdjHbYcK/AlGv3WOrqjOkWVV
-lpUXYnPkkkT9b9WS3MBWQQ2+19Yw/FEx5FEtpfXvfMox8VZIhz+iXrOALYcU/Hkl2eh3uOZUh8sb
-tNUNfiiK4ZX4FnnxSX+kBwcYQFzVAKPf2Pum1Z8QuyBXA3GVBnbo4dT9suqJT1mWn8VkxFJFQaLK
-oWlWXCl2inVWKBxd4qmKR1QEHTStwxp+ExghrjJBXKEbeqEyHBP/KGGJYnHPMd+9JEnSF/SxXR0U
-UqEBAAAAAElFTkSuQmCC
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAGkSURBVDhPlZJLKERRGMfvPMwtY0xovBpE2Qgp
+TQ0WI40FUoiSjcKGlMdYiFnMAllhoSlGFnaSiZSFmWxlpcYjj8hjR1KyUdzxO2YWMi/+9ev7zvc4
+9zv3HCmKMkAOuf+XSaVSLWPLQR0mHYqhAOJvTPOURqO5xO7CvlarfWhu63r37gUUQ6rxhZhblIWq
+o6uPDU7hRq1WH2DP8wqK3k7ug0HWx+R7QfNdGUNixNwwJnAyxe3aTkAxZeW8suEFU2wTb4W40lPo
+ovnOnF/0xtePwuP3QyMUiqJYEs2rNN9jvaw7oAJaWM+AB38EoouCOfDjdkM1/jSjX9dMrig1Ex5F
+p9M9EVsklyTqf6uB5Ca2Fuz4vpKmsY/qcbdiKq175yiHxDshDSJEvWoJWwXJ+G5ZTn6xOuYVq8MX
+LKkf/pBl+Zn4FnlxpAhpwQp6EFc1yuhXlqFZ5SfEzsjZIaEMYIEBvuqvtLk+Of+jmIxYiij4q8w0
+LYgrxc6yzg6FY0s8VfGIyqCHpg1Yx28HIyRUJogrdMIg2MIx8Y/+LFEs7jnuu5ckSfoCq55cNjuW
+GGcAAAAASUVORK5CYII=
 					</attribute>
 					<attribute
 					name="state"
@@ -928,7 +928,7 @@ AgICAgICI/DvWO3/D06Z0UIfuCRLHgs=
 		button="Left"
 		duration="300ms"
 		enabled="True"
-		loc="Center"
+		loc="CenterLeft"
 		movetime="300ms"
 		optional="False"
 		searchpropertyid="a42ac6b7-e7a7-4290-8a40-3a967a7227b5"

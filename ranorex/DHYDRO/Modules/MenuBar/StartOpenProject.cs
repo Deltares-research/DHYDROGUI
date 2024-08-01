@@ -79,16 +79,16 @@ namespace DHYDRO.Modules.MenuBar
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.FileTab' at Center.", repo.DSWindow.ListView.MenuBar.FileTabInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.FileTab.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.BackstageTabControl.FileTab' at Center.", repo.DSWindow.BackstageTabControl.FileTabInfo, new RecordItemIndex(0));
+            repo.DSWindow.BackstageTabControl.FileTab.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.BackstageTabControl.Open' at Center.", repo.DSWindow.ListView.MenuBar.BackstageTabControl.Open.SelfInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.MenuBar.BackstageTabControl.Open.Self.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.BackstageTabControl.OpenButton' at Center.", repo.DSWindow.BackstageTabControl.OpenButtonInfo, new RecordItemIndex(1));
+            repo.DSWindow.BackstageTabControl.OpenButton.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.BackstageTabControl.Open.Browse' at Center.", repo.DSWindow.ListView.MenuBar.BackstageTabControl.Open.BrowseInfo, new RecordItemIndex(2));
-            repo.DSWindow.ListView.MenuBar.BackstageTabControl.Open.Browse.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.BackstageTabControl.BackstageContentControl.BrowseButton' at Center.", repo.DSWindow.BackstageTabControl.BackstageContentControl.BrowseButtonInfo, new RecordItemIndex(2));
+            repo.DSWindow.BackstageTabControl.BackstageContentControl.BrowseButton.Click();
             Delay.Milliseconds(0);
             
         }

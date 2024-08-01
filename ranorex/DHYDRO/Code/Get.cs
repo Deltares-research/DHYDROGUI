@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-
-namespace DHYDRO.Code
+﻿namespace DHYDRO.Code
 {
     /// <summary>
     /// Class to retrieve data.
@@ -12,16 +8,21 @@ namespace DHYDRO.Code
         /// <summary>
         /// Gets the path to the DataSources folder.
         /// </summary>
-        public static string DataSourcesPath => Path.Combine(ExecutableDirectory, "DataSources");
-        
+        public static string DataSourcesDirectory => FileUtils.GetAbsolutePath("DataSources");
+
         /// <summary>
         /// Gets the path to the Resources folder.
         /// </summary>
-        public static string ResourcesPath => Path.Combine(ExecutableDirectory, "Resources");
+        public static string ResourcesDirectory => FileUtils.GetAbsolutePath("Resources");
 
         /// <summary>
-        /// Gets the path to the DHYDRO executable folder.
+        /// Gets the input directory path used by the currently running Test Suite.
         /// </summary>
-        private static string ExecutableDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static string InputDirectory => FileUtils.GetAbsolutePath(Current.GetParameter("InputDirectory"));
+
+        /// <summary>
+        /// Gets the output directory path used by the currently running Test Suite.
+        /// </summary>
+        public static string OutputDirectory => FileUtils.GetAbsolutePath(Current.GetParameter("OutputDirectory"));
     }
 }

@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Area.AddObservationCrossSectionButton' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Area.AddObservationCrossSectionButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Area.AddObservationCrossSectionButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Area.AddObservationCrossSectionButton' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Area.AddObservationCrossSectionButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Area.AddObservationCrossSectionButton.Click();
             Delay.Milliseconds(0);
             
         }

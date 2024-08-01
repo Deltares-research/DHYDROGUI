@@ -79,27 +79,27 @@ namespace DHYDRO.Modules.ProjectTree
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.ListView.ProjectTree.RootTreeItem'.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.SelfInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Self.Focus();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem'.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.SelfInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Self.Focus();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'DSWindow.ListView.ProjectTree.RootTreeItem'.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.SelfInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Self.Select();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem'.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.SelfInfo, new RecordItemIndex(1));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Self.Select();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.ListView.ProjectTree.RootTreeItem.Model'.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.SelfInfo, new RecordItemIndex(2));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.Self.Focus();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model'.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.SelfInfo, new RecordItemIndex(2));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.Self.Focus();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'DSWindow.ListView.ProjectTree.RootTreeItem.Model'.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.SelfInfo, new RecordItemIndex(3));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.Self.Select();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model'.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.SelfInfo, new RecordItemIndex(3));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.Self.Select();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(4));
             Delay.Duration(300, false);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Right Click item 'DSWindow.ListView.ProjectTree.RootTreeItem.Model' at Center.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.SelfInfo, new RecordItemIndex(5));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.Self.Click(System.Windows.Forms.MouseButtons.Right);
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Right Click item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model' at Center.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.SelfInfo, new RecordItemIndex(5));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.Self.Click(System.Windows.Forms.MouseButtons.Right);
             Delay.Milliseconds(0);
             
         }

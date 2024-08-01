@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Map
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MainWindowRibbon' at Center.", repo.DSWindow.ListView.MainWindowRibbonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MainWindowRibbon.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Tools.MainWindowRibbon' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Tools.MainWindowRibbonInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Tools.MainWindowRibbon.Click();
             Delay.Milliseconds(0);
             
         }

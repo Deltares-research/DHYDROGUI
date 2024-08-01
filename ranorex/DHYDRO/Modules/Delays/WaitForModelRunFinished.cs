@@ -79,8 +79,10 @@ namespace DHYDRO.Modules.Delays
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Wait", "Waiting 5s to exist. Associated repository item: 'ProgressDialog'", repo.ProgressDialog.SelfInfo, new ActionTimeout(5000), new RecordItemIndex(0));
-            repo.ProgressDialog.SelfInfo.WaitForExists(5000);
+            try {
+                Report.Log(ReportLevel.Info, "Wait", "(Optional Action)\r\nWaiting 5s to exist. Associated repository item: 'ProgressDialog'", repo.ProgressDialog.SelfInfo, new ActionTimeout(5000), new RecordItemIndex(0));
+                repo.ProgressDialog.SelfInfo.WaitForExists(5000);
+            } catch(Exception ex) { Report.Log(ReportLevel.Warn, "Module", "(Optional Action) " + ex.Message, new RecordItemIndex(0)); }
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 200ms.", new RecordItemIndex(1));
             Delay.Duration(200, false);

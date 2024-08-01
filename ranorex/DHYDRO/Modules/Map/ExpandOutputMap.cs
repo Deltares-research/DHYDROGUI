@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Map
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute IsChecked to 'True' on item 'DSWindow.ListView.OutputMapTreeItem.OutputMapTreeItemExpander'.", repo.DSWindow.ListView.OutputMapTreeItem.OutputMapTreeItemExpanderInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.OutputMapTreeItem.OutputMapTreeItemExpander.Element.SetAttributeValue("IsChecked", "True");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute IsChecked to 'True' on item 'DSWindow.DocumentsPaneRight.MapLegendTree.OutputMapTreeItem.OutputMapTreeItemExpander'.", repo.DSWindow.DocumentsPaneRight.MapLegendTree.OutputMapTreeItem.OutputMapTreeItemExpanderInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneRight.MapLegendTree.OutputMapTreeItem.OutputMapTreeItemExpander.Element.SetAttributeValue("IsChecked", "True");
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(1));

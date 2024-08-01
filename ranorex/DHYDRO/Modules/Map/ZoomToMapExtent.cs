@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Map
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.ZoomToExtentButtom' at Center.", repo.DSWindow.ListView.ZoomToExtentButtomInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.ZoomToExtentButtom.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Tools.ZoomToExtentButtom' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Tools.ZoomToExtentButtomInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Tools.ZoomToExtentButtom.Click();
             Delay.Milliseconds(0);
             
         }

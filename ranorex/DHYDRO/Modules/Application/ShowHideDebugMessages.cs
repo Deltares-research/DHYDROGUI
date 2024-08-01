@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Application
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MessagePanel.showHideDebugMessages' at Center.", repo.DSWindow.ListView.MessagePanel.showHideDebugMessagesInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MessagePanel.showHideDebugMessages.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneBottom.MessageTable.showHideDebugMessages' at Center.", repo.DSWindow.DocumentsPaneBottom.MessageTable.showHideDebugMessagesInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneBottom.MessageTable.showHideDebugMessages.Click();
             Delay.Milliseconds(0);
             
         }

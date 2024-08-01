@@ -112,7 +112,7 @@ namespace DHYDRO.Modules.AttributesTable
 
             Init();
 
-            FillInParameterValue(repo.DSWindow.ListView.CentralMapContainer.AttributeTableTab.AttributeTableData.AttributeTableCellInfo);
+            FillInParameterValue(repo.DSWindow.DocumentsPaneCentral.MapView.AttributeTableTab.AttributeTable.AttributeTableCellInfo);
             Delay.Milliseconds(0);
             
         }
