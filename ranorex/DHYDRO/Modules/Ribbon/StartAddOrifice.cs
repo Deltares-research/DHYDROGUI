@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Network1D.ButtonAddNewOrifice' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Network1D.ButtonAddNewOrificeInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Network1D.ButtonAddNewOrifice.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Network_1D.ButtonAddNewOrifice' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Network_1D.ButtonAddNewOrificeInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Network_1D.ButtonAddNewOrifice.Click();
             Delay.Milliseconds(0);
             
         }

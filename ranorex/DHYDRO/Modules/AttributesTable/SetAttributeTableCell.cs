@@ -67,16 +67,6 @@ namespace DHYDRO.Modules.AttributesTable
         }
 
         /// <summary>
-        /// Gets or sets the value of variable AttributeTableName.
-        /// </summary>
-        [TestVariable("3702f5ef-f369-4d0e-b6c1-9ea92f70a752")]
-        public string AttributeTableName
-        {
-            get { return repo.AttributeTableName; }
-            set { repo.AttributeTableName = value; }
-        }
-
-        /// <summary>
         /// Gets or sets the value of variable rowNumber.
         /// </summary>
         [TestVariable("8e9934c7-a04c-4bd8-b138-e1535118001c")]
@@ -87,13 +77,13 @@ namespace DHYDRO.Modules.AttributesTable
         }
 
         /// <summary>
-        /// Gets or sets the value of variable ColumnNumber.
+        /// Gets or sets the value of variable columnName.
         /// </summary>
-        [TestVariable("30a85af4-a76a-456d-8d70-14bc7274106b")]
-        public string ColumnNumber
+        [TestVariable("802b7a40-50d7-425c-b1bc-585751b36262")]
+        public string columnName
         {
-            get { return repo.ColumnNumber; }
-            set { repo.ColumnNumber = value; }
+            get { return repo.columnName; }
+            set { repo.columnName = value; }
         }
 
 #endregion
@@ -122,7 +112,7 @@ namespace DHYDRO.Modules.AttributesTable
 
             Init();
 
-            FillInParameterValue(repo.DSWindow.ListView.AttributeTableCellInfo);
+            FillInParameterValue(repo.DSWindow.DocumentsPaneCentral.MapView.AttributeTableTab.AttributeTable.AttributeTableCellInfo);
             Delay.Milliseconds(0);
             
         }

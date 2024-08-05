@@ -89,8 +89,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Edit.SpatialLayerCombobox' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Edit.SpatialLayerComboboxInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Edit.SpatialLayerCombobox.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Edit.SpatialLayerCombobox' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Edit.SpatialLayerComboboxInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Edit.SpatialLayerCombobox.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'ContextMenu.GenericListItemLayer' at Center.", repo.ContextMenu.GenericListItemLayerInfo, new RecordItemIndex(1));

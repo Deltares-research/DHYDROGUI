@@ -51,10 +51,10 @@ mode="Global">
 					<argvalue>
 					</argvalue>
 					<info
-					id="4830feb1-76e3-495f-9cdf-1d287d21d323"
+					id="904571a2-081d-4298-a0fb-c4b419c1b232"
 					sourcename="RepositoryEditor">
 						<path>
-							/form[@automationid='Window' and @title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Others']/text[@caption=$OtherGroupCaptionName]/container
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Others']/list/text[@caption=$OtherGroupCaptionName]/container
 						</path>
 						<robustPath>
 						</robustPath>

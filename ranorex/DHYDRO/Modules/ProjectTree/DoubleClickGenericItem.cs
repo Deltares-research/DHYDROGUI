@@ -89,8 +89,8 @@ namespace DHYDRO.Modules.ProjectTree
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left DoubleClick item 'DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNode' at Center.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNodeInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.GenericTreeItemNode.DoubleClick();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left DoubleClick item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNode' at Center.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNodeInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.GenericTreeItemNode.DoubleClick();
             Delay.Milliseconds(0);
             
         }

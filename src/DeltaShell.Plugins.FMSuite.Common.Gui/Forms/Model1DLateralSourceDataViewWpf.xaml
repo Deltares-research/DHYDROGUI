@@ -40,9 +40,9 @@
         </ObjectDataProvider>
     </UserControl.Resources>
     <Grid>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AutomationProperties.AutomationId="LateralSource1DSettings">
             <TabItem Header="Flow Data" >
-                <Grid>
+                <Grid AutomationProperties.AutomationId="FlowDataSettings">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -61,8 +61,8 @@
                         <Label Content="Type" Grid.Row="0" Grid.Column="0"/>
                         <Label Content="Flow [m³/s]" Grid.Row="1"  Grid.Column="0" Visibility="{Binding UseFlowConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                        <ComboBox Grid.Row="0"  Grid.Column="1" ItemsSource="{Binding Source={StaticResource FlowLateralTypeValues}}" SelectedValue="{Binding LateralDischargeDataType}" SelectionChanged="OnSelectionFlowDataTypeChanged"/>
-                        <TextBox Text="{Binding Flow}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="1" Grid.Column="1" Visibility="{Binding UseFlowConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <ComboBox Grid.Row="0"  Grid.Column="1" ItemsSource="{Binding Source={StaticResource FlowLateralTypeValues}}" SelectedValue="{Binding LateralDischargeDataType}" SelectionChanged="OnSelectionFlowDataTypeChanged" AutomationProperties.AutomationId="Type"/>
+                        <TextBox Text="{Binding Flow}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="1" Grid.Column="1" Visibility="{Binding UseFlowConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}" AutomationProperties.AutomationId="Flow"/>
                     </Grid>
                     <WindowsFormsHost local:WindowsFormsHostFunctionView.Data="{Binding Model1DLateralSourceData.Data}"  Grid.Row="1" Visibility="{Binding UseTimeseriesForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dsswf:FunctionView/>

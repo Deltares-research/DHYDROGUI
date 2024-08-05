@@ -75,6 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     Category = "General",
                     SubCategory = "Global Position",
+                    Name = "CoordinateSystem",
                     ToolTip = SetCoordinateSystemButton.ToolTip,
                     Label = SetCoordinateSystemButton.Label,
                     ValueType = typeof(string),

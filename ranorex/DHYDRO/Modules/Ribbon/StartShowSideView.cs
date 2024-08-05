@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.NetworkCoverage.ButtonShowSideView' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.NetworkCoverage.ButtonShowSideViewInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.NetworkCoverage.ButtonShowSideView.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.NetworkCoverage.ButtonShowSideView' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.NetworkCoverage.ButtonShowSideViewInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.NetworkCoverage.ButtonShowSideView.Click();
             Delay.Milliseconds(0);
             
         }

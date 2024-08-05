@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Add.NewModelButton' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Add.NewModelButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Add.NewModelButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Add.NewModelButton' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Add.NewModelButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Add.NewModelButton.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(1));

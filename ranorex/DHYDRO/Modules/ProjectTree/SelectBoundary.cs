@@ -89,12 +89,12 @@ namespace DHYDRO.Modules.ProjectTree
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.ListView.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.Boundary'.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.BoundaryInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.Boundary.Focus();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.Boundary'.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.BoundaryInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.Boundary.Focus();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left DoubleClick item 'DSWindow.ListView.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.Boundary' at -.05;.5.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.BoundaryInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.Boundary.DoubleClick("-.05;.5");
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left DoubleClick item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.Boundary' at -.05;.5.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.BoundaryInfo, new RecordItemIndex(1));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model._2D.BoundaryConditions.Boundary.DoubleClick("-.05;.5");
             Delay.Milliseconds(0);
             
         }

@@ -20,7 +20,7 @@ namespace DHYDRO.Code
             Keyboard.DefaultKeyPressTime = 5;
             Delay.SpeedFactor = 0.00;
             var cellAdapter = cellInfo.FindAdapter<Cell>();
-            cellAdapter.Click();
+            cellAdapter.Click(Location.Center);
             cellAdapter.PressKeys(cellValue + "{Return}");
         }
 	}

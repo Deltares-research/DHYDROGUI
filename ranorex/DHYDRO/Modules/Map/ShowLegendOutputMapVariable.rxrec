@@ -42,10 +42,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="b8c23e9d-1e09-4be3-a225-d24b9801a3ad"
+			id="893145eb-6d14-41d5-80fb-a8f400e3ec85"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window' and @title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/container/treeitem/text[@text='Output (map)']/parent::treeitem/container/treeitem/text[@text='water level (s1)']/parent::treeitem/text
+					/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output']/parent::treeitem//text[@caption='Map File 2D']/parent::treeitem//text[@text=$variableName]/parent::treeitem/text
 				</path>
 				<robustPath>
 				</robustPath>

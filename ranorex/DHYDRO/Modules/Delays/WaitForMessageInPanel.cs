@@ -92,8 +92,8 @@ namespace DHYDRO.Modules.Delays
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Wait", "Waiting 15s for the attribute 'Text' to contain the specified value $expectedMessage1stRow. Associated repository item: 'DSWindow.ListView.MessagePanel.textLastMessage'", repo.DSWindow.ListView.MessagePanel.textLastMessageInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MessagePanel.textLastMessageInfo.WaitForAttributeContains(15000, "Text", expectedMessage1stRow);
+            Report.Log(ReportLevel.Info, "Wait", "Waiting 15s for the attribute 'Text' to contain the specified value $expectedMessage1stRow. Associated repository item: 'DSWindow.DocumentsPaneBottom.MessageTable.textLastMessage'", repo.DSWindow.DocumentsPaneBottom.MessageTable.textLastMessageInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneBottom.MessageTable.textLastMessageInfo.WaitForAttributeContains(15000, "Text", expectedMessage1stRow);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(1));
             Delay.Duration(300, false);

@@ -93,15 +93,15 @@ mode="Desktop">
 					name="appicon"
 					type="System.Drawing.Icon, System.Drawing, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 						iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
-jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAGkSURBVDhPlZJLKERRGMfvPMwtY0xovBpE2Qgp
-TQ0WI40FUoiSjcKGlMdYiFnMAllhoSlGFnaSiZSFmWxlpcYjj8hjR1KyUdzxO2YWMi/+9ev7zvc4
-9zv3HCmKMkAOuf+XSaVSLWPLQR0mHYqhAOJvTPOURqO5xO7CvlarfWhu63r37gUUQ6rxhZhblIWq
-o6uPDU7hRq1WH2DP8wqK3k7ug0HWx+R7QfNdGUNixNwwJnAyxe3aTkAxZeW8suEFU2wTb4W40lPo
-ovnOnF/0xtePwuP3QyMUiqJYEs2rNN9jvaw7oAJaWM+AB38EoouCOfDjdkM1/jSjX9dMrig1Ex5F
-p9M9EVsklyTqf6uB5Ca2Fuz4vpKmsY/qcbdiKq175yiHxDshDSJEvWoJWwXJ+G5ZTn6xOuYVq8MX
-LKkf/pBl+Zn4FnlxpAhpwQp6EFc1yuhXlqFZ5SfEzsjZIaEMYIEBvuqvtLk+Of+jmIxYiij4q8w0
-LYgrxc6yzg6FY0s8VfGIyqCHpg1Yx28HIyRUJogrdMIg2MIx8Y/+LFEs7jnuu5ckSfoCq55cNjuW
-GGcAAAAASUVORK5CYII=
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAGiSURBVDhPlZJLKERRGMfvvXPNlBnJMBNjarKw
+MEVKapBGUh5ZUJSdwoZI2MijLJCFpEgexVqisWExk62sZuGRR8TYkaY0G8Udv2PuQuaBf/36Huf7
+zv3OPUdKoGwwxdz/yybL8jq2BBQdKxSCC1JvTPO0wWC4xh7Akaqqj/XNbW87h0Et3WwJk1sRZbHq
+xOphg3O4UxTlGHvpcLoiZ6FolPiU9W4wfFUmkRjRoWODCaa43/IFNWuO/ZUNr5hin3wrpJSZwima
+H/LyXRG+HtTH74UmKBBFySSaN2kOYfeI26EUWohnYQN/CBKLggUI4HZCJf4Mo99Wja9pVWOrmtFo
+fCa3zFqaqP+pRhZ3sTVQh+93Nwy9V44uabai6jeOckK+A7IgTtTLa9gKSMdfMZlMYc/IvOYZ8Ufd
+tQPvxC/kfayLI8VJBQ+YQVzVMKPflA/OaN8hd8FaHfyqDCiHPr4aKPNOfnD+JzEZOYso+KucNC2K
+K8XOEefG0sklnqp4RMXQRdMObOO3QSb8KjuIK5yAfvDqOfGP/ixRLO455buXJEn6BHR/W7yFvl1H
+AAAAAElFTkSuQmCC
 					</attribute>
 					<attribute
 					name="state"
@@ -928,7 +928,7 @@ AgICAgICI/DvWO3/D06Z0UIfuCRLHgs=
 		button="Left"
 		duration="300ms"
 		enabled="True"
-		loc="Center"
+		loc="CenterLeft"
 		movetime="300ms"
 		optional="False"
 		searchpropertyid="e69b9315-8205-41e6-9b18-2164f54748f4"
@@ -940,10 +940,10 @@ AgICAgICI/DvWO3/D06Z0UIfuCRLHgs=
 			<bindings>
 			</bindings>
 			<info
-			id="938a7dc3-c4ba-420f-91e0-f332c923eba3"
+			id="790b662d-f2e9-438e-ade8-731a21109a40"
 			sourcename="RepositoryEditor">
 				<path>
-					//list[@automationid='StartScreenTabControl']/container[@automationid='PART_LeftContentGrid']/button[1]
+					/form[@title~'Delta Shell']//list[@automationid='StartScreenTabControl']/container[@automationid='PART_LeftContentGrid']/button[1]
 				</path>
 				<robustPath>
 				</robustPath>

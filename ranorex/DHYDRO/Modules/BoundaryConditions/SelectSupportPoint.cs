@@ -89,16 +89,16 @@ namespace DHYDRO.Modules.BoundaryConditions
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.SupportPoint'.", repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.SupportPointInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.SupportPoint.Focus();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.LocationSettings.SupportPointCheckBox'.", repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.LocationSettings.SupportPointCheckBoxInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.LocationSettings.SupportPointCheckBox.Focus();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.SupportPoint' at Center.", repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.SupportPointInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.SupportPoint.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.LocationSettings.SupportPointCheckBox' at Center.", repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.LocationSettings.SupportPointCheckBoxInfo, new RecordItemIndex(1));
+            repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.LocationSettings.SupportPointCheckBox.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.SupportPoint' at .98;.5.", repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.SupportPointInfo, new RecordItemIndex(2));
-            repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.SupportPoint.Click(".98;.5");
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.LocationSettings.SupportPointCheckBox' at .98;.5.", repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.LocationSettings.SupportPointCheckBoxInfo, new RecordItemIndex(2));
+            repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.LocationSettings.SupportPointCheckBox.Click(".98;.5");
             Delay.Milliseconds(0);
             
         }

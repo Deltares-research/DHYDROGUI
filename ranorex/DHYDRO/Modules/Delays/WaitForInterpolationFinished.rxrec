@@ -36,69 +36,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="f0343b84-e854-46be-afff-3f39b849de18"
+			id="09e13ffb-13c9-4ce4-ad94-e385764a5ace"
 			sourcename="RepositoryEditor">
-				<element
-				capabilities="accessible, accessibletreeitem"
-				dontcache="False"
-				enabled="True"
-				flavor="msaa"
-				hasfocus="False"
-				index="2"
-				prefcap="treeitem"
-				rect="1673,300,89,22"
-				role="treeitem"
-				snapElem=""
-				valid="True"
-				visible="True">
-					<attribute
-					name="checked"
-					type="System.Boolean">
-						False
-					</attribute>
-					<attribute
-					name="expanded"
-					type="System.Boolean">
-						False
-					</attribute>
-					<attribute
-					name="selected"
-					type="System.Boolean">
-						True
-					</attribute>
-					<attribute
-					name="text"
-					type="System.String">
-						Interpolate 1
-					</attribute>
-					<attribute
-					name="accessibledefaultaction"
-					type="System.String">
-						Expand
-					</attribute>
-					<attribute
-					name="accessiblename"
-					type="System.String">
-						Interpolate 1
-					</attribute>
-					<attribute
-					name="accessiblerole"
-					type="System.Windows.Forms.AccessibleRole, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-						OutlineItem
-					</attribute>
-					<attribute
-					name="accessiblestate"
-					type="System.Windows.Forms.AccessibleStates, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-						Selected, Collapsed, Focusable, Selectable
-					</attribute>
-					<attribute
-					name="accessiblevalue"
-					type="System.String">
-						1
-					</attribute>
-				</element>
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']//container[@controlname='SpatialOperationSetLayerView']/tree[@controlname='treeView']//treeitem[@accessiblename='Interpolate 1']
+					/form[@title~'Delta Shell']//container[@controlname='SpatialOperationSetLayerView']/tree/tree/treeitem/treeitem[@accessiblename&gt;'Interpolate']
 				</path>
 				<robustPath>
 				</robustPath>

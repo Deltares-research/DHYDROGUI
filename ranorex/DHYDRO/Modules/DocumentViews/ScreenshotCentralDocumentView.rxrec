@@ -38,10 +38,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="38307eda-4f71-42f9-b0e5-b138d9c5f31b"
+			id="54e31427-43f2-45d0-823a-1118700a6b06"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container
+					/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..
 				</path>
 				<robustPath>
 				</robustPath>

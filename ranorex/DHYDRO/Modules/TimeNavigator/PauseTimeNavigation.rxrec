@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="982f40b7-06e9-4050-abaf-734d4dfa8a2b"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="PauseTimeNavigation"
+	namespace="DHYDRO.Modules.TimeNavigator">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="9be2f4ca-3b28-43d4-b21b-97716dda5083"
+		sx="0"
+		sy="0"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="c6319342-25b9-469b-86d2-8e26bbd62f7e"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']/list[@automationid='ListView']/?/container[@controltypename='WinFormsAdapter']/container[@controlname='TimeSeriesNavigator']/container[@controlname='panelControls']/toolbar/button[@name='Pause']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		PauseTimeNavigation.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

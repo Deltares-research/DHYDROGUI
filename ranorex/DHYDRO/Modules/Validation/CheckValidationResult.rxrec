@@ -51,10 +51,10 @@ mode="Global">
 					<argvalue>
 					</argvalue>
 					<info
-					id="1a2ee6df-b5aa-4103-8a30-a4f0111eb965"
-					sourcename="ItemRecorderEditor">
+					id="967bb5de-5b15-44fe-b753-5ca06eb3bf3e"
+					sourcename="RepositoryEditor">
 						<path>
-							/form[@automationid='Window']/list[@automationid='ListView']/container[8]/container[@caption='']/container[@automationid='ValidationView' and @controlname='ValidationView']
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='ValidationView']
 						</path>
 						<robustPath>
 						</robustPath>

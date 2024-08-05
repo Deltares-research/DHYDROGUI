@@ -36,10 +36,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="ed768f7b-76fa-421b-b8fa-59fcd7e7ca4f"
+			id="c4b2ba91-d064-4674-ac65-258850c6c94c"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window' and @title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem
+					/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem
 				</path>
 				<robustPath>
 				</robustPath>
@@ -71,10 +71,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="ed768f7b-76fa-421b-b8fa-59fcd7e7ca4f"
+			id="c4b2ba91-d064-4674-ac65-258850c6c94c"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem[@accessiblename=$modelName]
+					/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem
 				</path>
 				<robustPath>
 				</robustPath>
@@ -91,10 +91,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="b00bebdb-4d2d-43c3-824c-260e4330d8c7"
+			id="0d638e83-6c44-4920-9045-1d36c4d72162"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/element
+					/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']/element
 				</path>
 				<robustPath>
 				</robustPath>

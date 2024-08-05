@@ -1,43 +1,27 @@
-﻿/*
- * Created by Ranorex
- * User: groot_la
- * Date: 7-9-2023
- * Time: 10:16
- * 
- * To change this template use Tools > Options > Coding > Edit standard headers.
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Drawing;
-using System.Threading;
-using WinForms = System.Windows.Forms;
 using System.Linq;
-
 using Ranorex;
-using Ranorex.Core;
 using Ranorex.Core.Testing;
 
 namespace DHYDRO.Modules.MapTree
 {
-    /// <summary>
-    /// Description of UserCodeModule1.
-    /// </summary>
-    [TestModule("26534CEE-E257-4419-97E9-1FCF1B1BB060", ModuleType.UserCode, 1)]
+	/// <summary>
+	/// Description of UserCodeModule1.
+	/// </summary>
+	[TestModule("26534CEE-E257-4419-97E9-1FCF1B1BB060", ModuleType.UserCode, 1)]
     public class SelectNodeInMapTree : ITestModule
     {
-        
-    	
-    	string _fullPathToTreeItem = "";
-    	[TestVariable("ce7ec59a-1783-4e2f-8209-c83881b8e390")]
-    	public string fullPathToTreeItem
-    	{
-    		get { return _fullPathToTreeItem; }
-    		set { _fullPathToTreeItem = value; }
-    	}
-    	    	
-    	/// <summary>
+        private string _fullPathToTreeItem = "";
+
+        [TestVariable("ce7ec59a-1783-4e2f-8209-c83881b8e390")]
+        public string fullPathToTreeItem
+        {
+            get { return _fullPathToTreeItem; }
+            set { _fullPathToTreeItem = value; }
+        }
+
+        /// <summary>
         /// Constructs a new instance.
         /// </summary>
         public SelectNodeInMapTree()
@@ -48,26 +32,35 @@ namespace DHYDRO.Modules.MapTree
         /// <summary>
         /// Performs the playback of actions in this module.
         /// </summary>
-        /// <remarks>You should not call this method directly, instead pass the module
+        /// <remarks>
+        /// You should not call this method directly, instead pass the module
         /// instance to the <see cref="TestModuleRunner.Run(ITestModule)"/> method
-        /// that will in turn invoke this method.</remarks>
+        /// that will in turn invoke this method.
+        /// </remarks>
         void ITestModule.Run()
         {
             SetDefaultTiming();
-            var currentNode = LoadAllNodes();
-            var subPaths = fullPathToTreeItem.Split('>').ToList();
-            var lastSubPath = subPaths.Last();
+            SelectNode(fullPathToTreeItem);
+        }
 
-            foreach (var subPath in subPaths)
+        public static TreeItem SelectNode(string path)
+        {
+            TreeItem currentNode = LoadAllNodes();
+            List<string> subPaths = path.Split('>').ToList();
+            string lastSubPath = subPaths.Last();
+
+            foreach (string subPath in subPaths)
             {
-            	var children = GetChildren(currentNode).ToList();
+                List<TreeItem> children = GetChildNodes(currentNode).ToList();
 
                 if (children.Count == 0)
                 {
                     Report.Info("Subnodes found for tree item node " + currentNode.Text + ": ");
-                    foreach (var child in children) {
+                    foreach (TreeItem child in children)
+                    {
                         Report.Info("Child name: " + child.Text);
                     }
+
                     throw new RanorexException($"Could not find Node with the name \"{subPath}\"");
                 }
 
@@ -76,32 +69,34 @@ namespace DHYDRO.Modules.MapTree
                     continue;
                 }
 
-                var lastNode = string.Equals(lastSubPath, subPath, StringComparison.CurrentCultureIgnoreCase);
+                bool lastNode = string.Equals(lastSubPath, subPath, StringComparison.CurrentCultureIgnoreCase);
                 ActionsTreeItem(currentNode, lastNode);
             }
+
+            return currentNode;
         }
-        
-        private IEnumerable<TreeItem> GetChildren(Adapter treeitem)
+
+        private static IEnumerable<TreeItem> GetChildNodes(Adapter treeitem)
         {
-        	var treeitems = new List<TreeItem>();
-        	
-        	foreach (var child in treeitem.Children)
-        	{
-        		var childTreeitem = child.As<TreeItem>();
-        		if (childTreeitem != null)
-        		{
-        			treeitems.Add(childTreeitem);
-        			continue;
-        		}
-        		
-        		var childContainer = child.As<Container>();
-        		if (childContainer != null)
-        		{
-        			treeitems.AddRange(GetChildren(childContainer));
-        		}
-        	}
-        	
-        	return treeitems;
+            var treeitems = new List<TreeItem>();
+
+            foreach (Unknown child in treeitem.Children)
+            {
+                var childTreeitem = child.As<TreeItem>();
+                if (childTreeitem != null)
+                {
+                    treeitems.Add(childTreeitem);
+                    continue;
+                }
+
+                var childContainer = child.As<Container>();
+                if (childContainer != null)
+                {
+                    treeitems.AddRange(GetChildNodes(childContainer));
+                }
+            }
+
+            return treeitems;
         }
 
         private static bool FindCurrentNode(string subPath, IReadOnlyCollection<TreeItem> children, out TreeItem currentNode)
@@ -113,15 +108,15 @@ namespace DHYDRO.Modules.MapTree
                 return true;
             }
 
-            var nodesWithSubPath = children.Where(treeItem => GetTreeitemText(treeItem).Contains(subPath)).ToArray();
+            TreeItem[] nodesWithSubPath = children.Where(treeItem => GetTreeitemText(treeItem).Contains(subPath)).ToArray();
             if (nodesWithSubPath.Length == 0)
             {
                 throw new RanorexException("No occurrence of tree item with name '" + subPath + "' found.");
             }
 
             currentNode = nodesWithSubPath.Length == 1
-                ? nodesWithSubPath[0]
-                : children.FirstOrDefault(c => c.Text == subPath);
+                              ? nodesWithSubPath[0]
+                              : children.FirstOrDefault(c => c.Text == subPath);
 
             if (currentNode == null)
             {
@@ -130,22 +125,22 @@ namespace DHYDRO.Modules.MapTree
 
             return true;
         }
-        
+
         private static string GetTreeitemText(TreeItem treeitem)
         {
-        	var text = treeitem.Find<Text>("text").Single();
-        	return text.TextValue;
+            Text text = treeitem.Find<Text>("text").Single();
+            return text.TextValue;
         }
 
         private static TreeItem LoadAllNodes()
         {
-            var rootChild = DHYDRO1D2DRepository.Instance.DSWindow.ListView.MapTree.RootTreeItem.Self.As<TreeItem>();
+            var rootChild = DHYDRO1D2DRepository.Instance.DSWindow.DocumentsPaneRight.MapLegendTree.RootTreeItem.Self.As<TreeItem>();
             rootChild.Focus();
             rootChild.Select();
             rootChild.ExpandAll();
             Delay.Duration(300, false);
 
-            var stepChild = global::DHYDRO.DHYDRO1D2DRepository.Instance.DSWindow.ListView.MapTree.RootTreeItem.Self.As<TreeItem>();
+            var stepChild = DHYDRO1D2DRepository.Instance.DSWindow.DocumentsPaneRight.MapLegendTree.RootTreeItem.Self.As<TreeItem>();
             stepChild.Focus();
             stepChild.Select();
 
@@ -161,16 +156,16 @@ namespace DHYDRO.Modules.MapTree
                 ti.ClickWithoutBoundsCheck(new Location(-0.02, 0.5));
                 return;
             }
+
             ti.Expand();
             Delay.Duration(300, false);
         }
-        
+
         private static void SetDefaultTiming(int speedFactor = 0)
         {
             Mouse.DefaultMoveTime = speedFactor;
             Keyboard.DefaultKeyPressTime = speedFactor;
             Delay.SpeedFactor = speedFactor;
         }
-    	
     }
 }

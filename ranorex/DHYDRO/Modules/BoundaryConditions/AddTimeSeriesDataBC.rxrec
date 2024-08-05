@@ -51,10 +51,10 @@ mode="Global">
 					<argvalue>
 					</argvalue>
 					<info
-					id="269c6bb0-63f5-477d-be15-edae112b1adc"
-					sourcename="ItemRecorderEditor">
+					id="e9be3b18-91d4-4271-bbb3-7e37277f3dfc"
+					sourcename="RepositoryEditor">
 						<path>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblename='NewItem Row']/cell[@accessiblename&gt;$ParameterName]
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblename='NewItem Row']/cell[@accessiblename&gt;$ParameterName]
 						</path>
 						<robustPath>
 						</robustPath>

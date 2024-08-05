@@ -103,13 +103,13 @@ namespace DHYDRO.Modules.ProjectTree
 
         private static TreeItem LoadAllNodes()
         {
-            var rootChild = DHYDRO1D2DRepository.Instance.DSWindow.ListView.ProjectTree.RootTreeItem.Self.As<TreeItem>();
+            var rootChild = DHYDRO1D2DRepository.Instance.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Self.As<TreeItem>();
             rootChild.Focus();
             rootChild.Select();
             Keyboard.Press("{Apps}x");
             Delay.Duration(100, false);
 
-            var stepChild = global::DHYDRO.DHYDRO1D2DRepository.Instance.DSWindow.ListView.ProjectTree.RootTreeItem.Self.As<TreeItem>();
+            var stepChild = global::DHYDRO.DHYDRO1D2DRepository.Instance.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Self.As<TreeItem>();
             stepChild.CollapseAll();
             stepChild.Focus();
             stepChild.Select();

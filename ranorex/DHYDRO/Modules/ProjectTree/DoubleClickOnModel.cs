@@ -79,18 +79,18 @@ namespace DHYDRO.Modules.ProjectTree
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Wait", "Waiting 30s to exist. Associated repository item: 'DSWindow.ListView.ProjectTree.RootTreeItem.Model'", repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.SelfInfo, new ActionTimeout(30000), new RecordItemIndex(0));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.SelfInfo.WaitForExists(30000);
+            Report.Log(ReportLevel.Info, "Wait", "Waiting 30s to exist. Associated repository item: 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model'", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.SelfInfo, new ActionTimeout(30000), new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.SelfInfo.WaitForExists(30000);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(1));
             Delay.Duration(300, false);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left DoubleClick item 'DSWindow.ListView.ProjectTree.RootTreeItem.Model' at 37;9.", repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.SelfInfo, new RecordItemIndex(2));
-            repo.DSWindow.ListView.ProjectTree.RootTreeItem.Model.Self.DoubleClick("37;9");
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left DoubleClick item 'DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model' at 37;9.", repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.SelfInfo, new RecordItemIndex(2));
+            repo.DSWindow.DocumentsPaneLeft.ProjectTree.RootTreeItem.Model.Self.DoubleClick("37;9");
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Wait", "Waiting 20s to exist. Associated repository item: 'DSWindow.ListView.CentralMapContainer.CentralMap'", repo.DSWindow.ListView.CentralMapContainer.CentralMapInfo, new ActionTimeout(20000), new RecordItemIndex(3));
-            repo.DSWindow.ListView.CentralMapContainer.CentralMapInfo.WaitForExists(20000);
+            Report.Log(ReportLevel.Info, "Wait", "Waiting 20s to exist. Associated repository item: 'DSWindow.DocumentsPaneCentral.MapView.MapControl'", repo.DSWindow.DocumentsPaneCentral.MapView.MapControlInfo, new ActionTimeout(20000), new RecordItemIndex(3));
+            repo.DSWindow.DocumentsPaneCentral.MapView.MapControlInfo.WaitForExists(20000);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(4));
             Delay.Duration(300, false);

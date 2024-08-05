@@ -1,4 +1,4 @@
-﻿rowNumber,ColumnNumber,ParameterValue
-1,15,Constant_DWA
-2,15,Constant_DWA
-1,14,500
+﻿rowNumber,columnName,ParameterValue
+1,DWF definition,Constant_DWA
+2,DWF definition,Constant_DWA
+1,Number of units,500

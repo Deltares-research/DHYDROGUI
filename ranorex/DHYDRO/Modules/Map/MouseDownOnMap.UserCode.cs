@@ -37,6 +37,5 @@ namespace DHYDRO.Modules.Map
         {
             PixelCoordinates = MapCoordinateHelper.GetPixelCoordinatesValue(WorldCoordinates);
         }
-
     }
 }

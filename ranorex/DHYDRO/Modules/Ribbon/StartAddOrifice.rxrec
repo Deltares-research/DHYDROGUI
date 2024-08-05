@@ -42,10 +42,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="da83233e-0ba0-4191-a514-f13d15d7bba0"
+			id="a0491709-140c-40fe-95f0-33312d349170"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container[@basetype&lt;'ScrollViewer']/container[@caption='']/list[@automationid='Network1D']/button[@automationid='ButtonAddNewOrifice']
+					/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewOrifice']
 				</path>
 				<robustPath>
 				</robustPath>

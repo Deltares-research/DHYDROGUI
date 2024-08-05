@@ -100,7 +100,7 @@ namespace DHYDRO.Modules.IO
             repo.DialogSelectAFileToExportTo.ButtonSave.Click();
             Delay.Milliseconds(0);
             
-            Code.UserCodeLibrary.ClickIfExists(repo.ConfirmSaveAsDialog.ConfirmYesButtonInfo, ValueConverter.ArgumentFromString<int>("waitPeriodInMilliSeconds", "1000"));
+            Code.UserCodeLibrary.ClickIfExists(repo.ConfirmSaveAsDialog.ConfirmYesButtonInfo, ValueConverter.ArgumentFromString<int>("waitPeriodInMilliSeconds", "3000"));
             Delay.Milliseconds(0);
             
         }

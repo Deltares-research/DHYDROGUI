@@ -42,10 +42,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="5d4e9790-4712-48d4-a308-807646b1547d"
+			id="21ece29f-b279-416c-92ee-f9acca7a2060"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@automationid='ButtonMapZoomUsingRectangle']
+					/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@automationid='ButtonMapZoomUsingRectangle']
 				</path>
 				<robustPath>
 				</robustPath>

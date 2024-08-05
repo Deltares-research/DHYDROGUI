@@ -2,7 +2,6 @@
 
 :: SUMMARY:
 :: 		This script checks out all the test data in the specified location and builds the correct folder hierarchy.
-:: 		It also creates a mapping from S: to this location as needed by running the Ranorex tests.
 :: 		Note that running this script will also clean up and revert the SVN checkouts.
 
 :: REQUIREMENTS:
@@ -36,7 +35,6 @@
 :: ========== RUN SCRIPT ==========
 	CALL :NORMALIZE_PATH %root%
 	CALL :CREATE_FILE_STRUCTURE
-	CALL :CREATE_NETWORK_MAPPING
 	CALL :CHECKOUT_DATA
 	
 	EXIT /B
@@ -59,19 +57,7 @@
 		CALL :LOG "CREATING FILE STRUCTURE AT : %root%"
 		MKDIR %root%\%rel_dflowfm_tutorials%
 		
-		EXIT /B
-		
-	:CREATE_NETWORK_MAPPING
-		:: Creates a network mapping from S: to the root folder.
-		
-		CALL :SET_UNC
-		
-		CALL :LOG "MAP S: DRIVE TO            : %unc%"
-		net use S: /delete /y
-		net use S: %unc%
-		
-		EXIT /B
-		
+		EXIT /B		
 		
 	:SET_UNC
 		:: Sets the network location path. 

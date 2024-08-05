@@ -31,13 +31,6 @@ namespace DHYDRO.Modules.Map
         /// </summary>
         private void Init()
         {
-        	ConvertValuesToCurrentCulture();
-        }
-
-        private void ConvertValuesToCurrentCulture()
-        {
-        	MaximumValue = MaximumValue.ToCurrentCulture();
-        	MinimumValue = MinimumValue.ToCurrentCulture();
         }
     }
 }

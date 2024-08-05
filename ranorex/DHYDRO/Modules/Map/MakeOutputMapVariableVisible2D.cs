@@ -89,8 +89,8 @@ namespace DHYDRO.Modules.Map
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Checked to 'True' on item 'DSWindow.ListView.OutputMapTreeItem2D.OutputMapFileTreeItem2D.OutputMapVariableTreeItem2D.OutputMapVariableCheckBox2D'.", repo.DSWindow.ListView.OutputMapTreeItem2D.OutputMapFileTreeItem2D.OutputMapVariableTreeItem2D.OutputMapVariableCheckBox2DInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.OutputMapTreeItem2D.OutputMapFileTreeItem2D.OutputMapVariableTreeItem2D.OutputMapVariableCheckBox2D.Element.SetAttributeValue("Checked", "True");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Checked to 'True' on item 'DSWindow.DocumentsPaneRight.MapLegendTree.OutputMapTreeItem.OutputMapFileTreeItem_2D.OutputMapVariableTreeItem_2D.OutputMapVariableCheckBox_2D'.", repo.DSWindow.DocumentsPaneRight.MapLegendTree.OutputMapTreeItem.OutputMapFileTreeItem_2D.OutputMapVariableTreeItem_2D.OutputMapVariableCheckBox_2DInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneRight.MapLegendTree.OutputMapTreeItem.OutputMapFileTreeItem_2D.OutputMapVariableTreeItem_2D.OutputMapVariableCheckBox_2D.Element.SetAttributeValue("Checked", "True");
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(1));

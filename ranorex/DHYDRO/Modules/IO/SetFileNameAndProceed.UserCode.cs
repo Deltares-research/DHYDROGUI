@@ -33,15 +33,7 @@ namespace DHYDRO.Modules.IO
         /// </summary>
         private void Init()
         {
-        	UpdateFilePath();
-        }
-        
-        private void UpdateFilePath()
-        {
-        	if (!Path.IsPathRooted(FilePath))
-        	{
-        		FilePath = Path.Combine(Current.InputDirectory, FilePath);
-        	}
+	        FilePath = FileUtils.GetAbsolutePath(Get.InputDirectory, FilePath);
         }
     }
 }

@@ -52,7 +52,8 @@
                         Margin="2 0"
                         Padding="6 0"
                         Command="{Binding GenerateTimeSeriesCommand}"
-                        IsEnabled="{Binding Path=ActiveMeteoDataSource, Converter={StaticResource IsEnabledConverter}}">
+                        IsEnabled="{Binding Path=ActiveMeteoDataSource, Converter={StaticResource IsEnabledConverter}}"
+                        AutomationProperties.AutomationId="GenerateTimeSeries">
                     <DockPanel LastChildFill="True">
                         <Image Source="{StaticResource GenerateTimeSeriesImg}" 
                                Width="14" 

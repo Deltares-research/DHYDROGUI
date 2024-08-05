@@ -20,191 +20,804 @@ name="DHYDRO1D2DRepository">
 		name="DSWindow"
 		refimgid="19a9af42-e057-405f-9b9f-4aaf3d18d353"
 		searchtimeout="120000ms"
-		usecache="False">
-			<item
-			addcaps="button,accessible"
-			capname="button"
-			id="3b6f8cec-95ed-479c-a73b-e440fbe1478c"
-			name="GenericScrollBarButton"
-			refimgid="15bfc15f-efe1-494b-b46a-b1e8171012d9"
-			robustPath=""
-			searchtimeout="30000ms">
-				/form[@title~'Delta Shell']/list[@automationid='ListView']/container?/container/container/container/container/element?/tabpagelist?/tabpage?/container?/container?/container?/container?/element?/element?/scrollbar/button[@text=$ScrollButton]
-			</item>
+		usecache="True">
+			<folder
+			capname="container"
+			id="68071746-e297-47af-a98d-4a43baf2ca32"
+			isrooted="True"
+			name="ToolBarPanel"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="button,wpfelement,wpfgroupelement"
+				capname="button"
+				id="8d1f49a2-e25b-4cbc-b382-7738adef622b"
+				name="NewQuickAccessButton"
+				refimgid="04681a5b-8eeb-4e25-8557-7fb9eda90421"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//container[@automationid='PART_ToolBarPanel']/button[1]
+				</item>
+				<item
+				addcaps="button,wpfelement,wpfgroupelement"
+				capname="button"
+				id="e1c0eb58-1f1d-432e-ae50-714c0bc5b2f1"
+				name="SaveQuickAccessButton"
+				refimgid="04681a5b-8eeb-4e25-8557-7fb9eda90421"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//container[@automationid='PART_ToolBarPanel']/button[3]
+				</item>
+				<basepath>
+					/form[@title~'Delta Shell']//container[@automationid='PART_ToolBarPanel']
+				</basepath>
+			</folder>
 			<folder
 			capname="list"
-			id="91ac1b1a-67de-4128-a0a4-1ff79a82b484"
+			id="3434dd55-c991-40ec-b864-94fa45fe18a7"
 			isrooted="True"
-			name="ListView"
+			name="RibbonTabControl"
 			searchtimeout="30000ms"
-			usecache="False">
+			usecache="True">
+				<item
+				addcaps="text,wpfelement,wpfgroupelement"
+				capname="text"
+				id="44fa47f5-b83a-4c94-8537-1e7f987d192f"
+				name="GenericRibbonTab"
+				refimgid="04863fec-e9b3-4758-a399-bd736bd9f052"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/text[@caption=$TabName]
+				</item>
+				<item
+				addcaps="text,wpfelement,wpfgroupelement"
+				capname="text"
+				id="b908c2f0-e064-4dfc-8a8f-1acf77f37e86"
+				name="MapRibbonTab"
+				refimgid="04863fec-e9b3-4758-a399-bd736bd9f052"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/text[@caption='Map']
+				</item>
 				<folder
 				capname="container"
-				id="9804ee95-abec-4c13-8f5f-206f5fa03a85"
+				id="8f77de45-094f-48df-ab61-0f5bbfab995b"
 				isrooted="True"
-				name="BoundaryConditionsEditor"
+				name="Ribbon"
 				searchtimeout="30000ms"
 				usecache="False">
 					<folder
-					capname="container"
-					id="64dd22db-49be-4bd5-be2a-988745890f96"
+					capname="list"
+					id="6203a48f-3ce9-4486-9c8c-d1147ac8b847"
 					isrooted="True"
-					name="BoundaryConditionPanel"
+					name="Region_2D"
 					searchtimeout="30000ms"
 					usecache="False">
-						<folder
-						capname="container"
-						id="bd2770f9-7e44-4509-a0df-23b7f3d3d995"
-						isrooted="True"
-						name="BoundaryConditionSettings"
-						searchtimeout="30000ms"
-						usecache="False">
-							<item
-							addcaps="button,control,nativewindow"
-							capname="button"
-							id="faa53449-75da-4988-863d-babce7bba5fa"
-							name="AddDefinitionButton"
-							refimgid="6eee0b9d-3d34-40dd-bf7c-a8906aa474a5"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']/container/button[@controlname='addDefinitionButton']
-							</item>
-							<item
-							addcaps="combobox,control,nativewindow"
-							capname="combobox"
-							id="219d6b1f-2686-4167-a950-9d4784b5e14c"
-							name="QuantitiesComboBox"
-							refimgid="5dabd703-f3b8-4ea8-af6f-0f7a4f4c3d82"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']/container/combobox[@controlname='quantitiesComboBox']
-							</item>
-							<item
-							addcaps="combobox,control,nativewindow"
-							capname="combobox"
-							id="226210be-74f4-4921-bf75-94aef80d71cc"
-							name="ForcingTypeCombobox"
-							refimgid="79b1fe42-e682-4941-bfe6-c9a91b5297d1"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']/container/container/combobox[@controlname='dataTypeComboBox']
-							</item>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']
-							</basepath>
-						</folder>
 						<item
-						addcaps="checkbox,accessible"
-						capname="checkbox"
-						id="f3a0d7de-b1ea-4c38-a5a8-78b8168762b1"
-						name="SupportPoint"
-						refimgid="6ad34ba2-1995-4397-bc2a-3d4422a459e3"
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="b716df1a-cd82-4727-81cc-d151923c7488"
+						name="AddBoundaryButton"
+						refimgid="5f947feb-76c1-4571-99e6-6be6d2c6c1b7"
 						robustPath=""
 						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Location']/container/list/list/checkbox[@text=$SupportPointName]
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='2D Region']/button[@text='Add Flow Boundary']
 						</item>
 						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='2D Region']
 						</basepath>
 					</folder>
 					<folder
-					capname="container"
-					id="8b8998c4-c188-4d76-a2a9-142ee0d95466"
+					capname="list"
+					id="1fe1667d-bcf0-496b-9cfc-115011d9ba9b"
 					isrooted="True"
-					name="TableChartPanel"
+					name="Decorations"
 					searchtimeout="30000ms"
 					usecache="False">
 						<item
-						addcaps="button,control,nativewindow"
+						addcaps="text,wpfelement,wpfgroupelement"
 						capname="button"
-						id="3b45807b-8a1e-4304-89b3-75a268a4c466"
-						name="GenerateSeriesButton"
-						refimgid="924f8d13-afe3-483c-a231-a0d3640ef8a5"
+						id="d5dc7b3b-17ef-4041-bd7a-a186c0d95dca"
+						name="LegendButton"
+						refimgid="952186ce-0c11-4671-a066-8eb2fd3c2f18"
 						robustPath=""
 						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='tableLayoutPanel1']/button[@controlname='genDataButton']
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Decorations']/button[@header='Legend']
 						</item>
-						<folder
-						capname="container"
-						id="1b5b65d5-6515-4afb-9cd3-6cf48ca93166"
-						isrooted="True"
-						name="TableDataBC"
-						searchtimeout="30000ms"
-						usecache="False">
-							<item
-							addcaps="cell,accessible"
-							capname="cell"
-							id="c1573adb-283b-4e77-af6d-6284a61a48ec"
-							name="GenAstronComponentAmplitudeCell"
-							refimgid="5d20984a-d4fe-4d01-9e06-5f3341b304c4"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblevalue&gt;$NameAstronomicalComponent]/cell[@accessiblename&gt;$ParameterName]
-							</item>
-							<item
-							addcaps="cell,accessible"
-							capname="cell"
-							id="269c6bb0-63f5-477d-be15-edae112b1adc"
-							name="GenericCellLastRow"
-							refimgid="aa5928d1-2bfe-41b2-bc13-ab7de0c3754c"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblename='NewItem Row']/cell[@accessiblename&gt;$ParameterName]
-							</item>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']
-							</basepath>
-						</folder>
 						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Decorations']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="5e18dfc7-f86e-4bfd-9001-8ab82d53401f"
+					isrooted="True"
+					name="Add"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="898d5680-8335-42ec-8adb-22f6ff2ec311"
+						name="NewModelButton"
+						refimgid="6591ebfe-f5bc-4dce-94cd-a7732f5b8f8f"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Add']/button[@automationid='ButtonAddModel']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="button"
+						id="66d633d4-9ba7-4c42-9858-674ec2aded42"
+						name="PolygonButton"
+						refimgid="f7cff048-97ac-4a65-a10b-517e08493070"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Add']/button[@automationid='ButtonPolygonDraw']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="0a243a18-4719-4051-ade4-8af501ac8cb7"
+						name="ButtonImport"
+						refimgid="8ec3202a-4164-400a-9fa1-910571a2c635"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Add']/button[@automationid='ButtonImport']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Add']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="c5a2fe05-341a-4e83-9eda-85567af9e05a"
+					isrooted="True"
+					name="SpatialOperationsGroup"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="708ffb73-6fea-4f2a-b800-d9464c858f77"
+						name="ImportSamplesButton"
+						refimgid="9eeab777-0449-4ef4-8352-1e9d0b9aa835"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']/button[@automationid='ButtonImportSamples']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="button"
+						id="e2025a59-4749-44a9-ae31-687a57312f3f"
+						name="InterpolateButton"
+						refimgid="5545c9e7-fab5-43b4-8955-62763c37f6d3"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']/button[@automationid='DropDownButtonInterpolate']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="button"
+						id="cc769cdf-e346-4b92-beaa-6f4add5f542c"
+						name="SetValueButton"
+						refimgid="bdf27d3d-6678-46b3-82fc-efec892ad8b7"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']/button[@text='Set Value']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="d5c72ee2-fc0c-4cbb-a66b-6574288c5961"
+					isrooted="True"
+					name="Area_2D"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="d9e6e075-f299-45a4-a789-19712ce4b165"
+						name="AddObservationCrossSectionButton"
+						refimgid="b40ab5b0-e17a-41aa-9041-818fd23ef65f"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='2D Area']/button[@automationid='ButtonAddNewObsCs2D']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="5dbed00f-cf39-493b-aaa3-852e4f13d717"
+						name="AddObservationPointButton"
+						refimgid="86c714a1-c66f-4671-9332-038ea57c8640"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='2D Area']/button[@automationid='ButtonAddNewObsPoint2D']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='2D Area']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="bb93a6e8-15f8-4536-8b22-81b77a702754"
+					isrooted="True"
+					name="Tools"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="menubar,wpfelement,wpfgroupelement"
+						capname="button"
+						id="21ece29f-b279-416c-92ee-f9acca7a2060"
+						name="ZoomUsingRectangleButton"
+						refimgid="977c867c-c6e6-422c-8121-10f39e946926"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@automationid='ButtonMapZoomUsingRectangle']
+						</item>
+						<item
+						addcaps="tree,wpfelement,wpfgroupelement"
+						capname="button"
+						id="d5305c70-3765-4c71-ad36-e30899fb85e8"
+						name="ZoomToExtentButton"
+						refimgid="4d8b2cab-0e1c-4686-82e6-687d8c88532a"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@automationid='ButtonMapZoomToExtent']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="adda2eda-1125-4082-a3e7-ac9dbab5c7e5"
+						name="SelectButton"
+						refimgid="6a52ea6e-1fc6-4451-893c-07ba4a4e2c43"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@header='Select']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="button"
+						id="56b1a526-fcae-41fb-8298-7affa127d4fb"
+						name="QueryTimeSeries"
+						refimgid="751b2ab7-1ea6-4358-8d88-4dc8fe93c7e6"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@header='Query Time Series']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="99978f5f-e622-4698-88fe-8eecc8146c36"
+					isrooted="True"
+					name="Edit"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="466da7f1-c9df-4f27-ad0a-b91eb04ace8f"
+						name="SpatialLayerCombobox"
+						refimgid="ebd1af5e-4935-48e0-8ee5-0bc7d9ffefd6"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Edit']//combobox
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Edit']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="981e2710-fa6e-41e1-8918-49625cbde8bd"
+					isrooted="True"
+					name="Background_Layers"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="f6cd34ff-8599-4723-a235-ee758cf7299f"
+						name="AddDutchLayers"
+						refimgid="75fcdea7-2a03-4697-b222-e5fc10e93fba"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Background layers']//button[@text='Add dutch layers']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Background layers']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="9c18aefc-c46c-4026-87ae-3919c0838a6f"
+					isrooted="True"
+					name="Network_1D"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="72d48ba5-0d54-455b-83f6-a3ab8be449b0"
+						name="ButtonAddNewSewerConnection"
+						refimgid="4c8d5f24-6c82-4e50-b9a9-db77f67a937f"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewSewerConnection']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="d7740c1e-672a-4e55-b9f7-072f7c59dfd4"
+						name="ButtonAddNewPipe"
+						refimgid="538d778c-1d00-47fb-aa58-6cc677cf4ac0"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewPipe']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="19c88565-1399-41a4-b893-83f92f6aca3c"
+						name="ButtonAddNewPump"
+						refimgid="bc86ef66-6198-4a55-bcb5-5780f4057548"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewPump']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="a1125bd9-4ed0-4da8-b277-9396a50f68fd"
+						name="ButtonAddNewWeir"
+						refimgid="77dae679-9ac0-4a32-9dc5-95e10a15d13b"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewWeir']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="a0491709-140c-40fe-95f0-33312d349170"
+						name="ButtonAddNewOrifice"
+						refimgid="a6be0356-2ea5-4eea-9592-09261215ac48"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewOrifice']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="a2fa6805-1d94-49e5-9d46-01ab5c45a6ba"
+					isrooted="True"
+					name="NetworkCoverage"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="a5582972-4ebb-483d-80e1-f2ffce2c1fe5"
+						name="ButtonAddNewRoute"
+						refimgid="e836d170-d130-455c-9a56-dfc048dc9c8d"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='NetworkCoverage']/button[@automationid='ButtonAddNewRoute']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="ea3e48dc-cbf9-41f4-aa6b-c03e2564997b"
+						name="ButtonShowSideView"
+						refimgid="8f273887-c8b2-4c2e-97c2-5e27877bc6f6"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='NetworkCoverage']/button[@automationid='ButtonShowSideView']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='NetworkCoverage']
 						</basepath>
 					</folder>
 					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']
+						/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container
+					</basepath>
+				</folder>
+				<basepath>
+					/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']
+				</basepath>
+			</folder>
+			<folder
+			capname="list"
+			id="faf324fb-751e-4de0-a0d9-aec319ffb834"
+			isrooted="True"
+			name="BackstageTabControl"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="text,wpfelement,wpfgroupelement"
+				capname="text"
+				id="b812c711-09de-41de-9a9e-ba40c1c6f7c8"
+				name="FileTab"
+				refimgid="a3c1ea64-ccb4-47c9-b13d-93837e2fd979"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/text[@caption='File']
+				</item>
+				<item
+				addcaps="text,wpfelement,wpfgroupelement"
+				capname="text"
+				id="12a9dd49-db64-4cce-aa49-cef1aac05c68"
+				name="SaveAsButton"
+				refimgid="42dff791-6678-40bb-9a6e-ad26633b7a5e"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/button[@automationid='ButtonMenuFileSaveProjectAs']/text
+				</item>
+				<item
+				addcaps="text,wpfelement,wpfgroupelement"
+				capname="text"
+				id="88452aae-be69-4e88-a8eb-d2fb3fda15eb"
+				name="CloseButton"
+				refimgid="f6627f6d-1966-4dae-a6a0-8e442d2342d9"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/button[@text='Close']/text
+				</item>
+				<item
+				addcaps="container,wpfelement,wpfgroupelement"
+				capname="container"
+				id="dc98ff1c-2a46-470e-a0e1-e039f6cb2fbb"
+				name="OpenButton"
+				refimgid="8f53eff6-7004-4bae-9df8-0174e0b1a09e"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/container[@caption='Open']
+				</item>
+				<folder
+				capname="container"
+				id="c17b5989-b70d-4afd-8881-405d3f19c9c8"
+				isrooted="True"
+				name="BackstageContentControl"
+				refimgid="243cc397-a2e5-4afc-9954-f2970d6933c2"
+				searchtimeout="30000ms"
+				usecache="False">
+					<item
+					addcaps="text,wpfelement,wpfgroupelement"
+					capname="text"
+					id="13f1b285-9a6f-4c4d-9726-b85b406fc504"
+					name="BrowseButton"
+					refimgid="5ecc29b0-060b-41c4-9426-351d77b32a24"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']//container[@automationid='PART_SelectedContentGrid']//text[@caption='Browse']
+					</item>
+					<basepath>
+						/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']//container[@automationid='PART_SelectedContentGrid']
+					</basepath>
+				</folder>
+				<basepath>
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']
+				</basepath>
+			</folder>
+			<folder
+			capname="list"
+			id="f468cca1-a902-48c5-abd7-51495b5e34b0"
+			isrooted="True"
+			name="StartScreenTabControl"
+			refimgid="b1495b95-e16d-4bb1-818e-c637535a8383"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="button,wpfelement,wpfgroupelement"
+				capname="button"
+				id="790b662d-f2e9-438e-ade8-731a21109a40"
+				name="BackButton"
+				refimgid="6f4079be-ab94-4c37-8197-253a65add19f"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@automationid='StartScreenTabControl']/container[@automationid='PART_LeftContentGrid']/button[1]
+				</item>
+				<basepath>
+					/form[@title~'Delta Shell']//list[@automationid='StartScreenTabControl']
+				</basepath>
+			</folder>
+			<folder
+			capname="form"
+			id="f2ece247-7d3d-4c92-bb8a-86bdaad9af77"
+			isrooted="True"
+			name="DocumentsPaneLeft"
+			searchtimeout="30000ms"
+			usecache="True">
+				<folder
+				capname="tree"
+				id="faac1c0a-1bff-4dcd-a995-43ebf8c67795"
+				isrooted="True"
+				name="ProjectTree"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="treeitem"
+					id="e89ff324-991d-4cf3-91af-447a367c3ab7"
+					isrooted="True"
+					name="RootTreeItem"
+					searchtimeout="30000ms"
+					usecache="False">
+						<folder
+						capname="treeitem"
+						id="c4b2ba91-d064-4674-ac65-258850c6c94c"
+						isrooted="True"
+						name="Model"
+						searchtimeout="30000ms"
+						usecache="False">
+							<folder
+							capname="treeitem"
+							id="94800402-4f4d-4fab-bc83-5c9af2aada38"
+							isrooted="True"
+							name="_2D"
+							searchtimeout="30000ms"
+							usecache="False">
+								<folder
+								capname="treeitem"
+								id="44b55cbc-05ab-4a05-8320-56f2a7e65f67"
+								isrooted="True"
+								name="BoundaryConditions"
+								searchtimeout="30000ms"
+								usecache="True">
+									<item
+									addcaps="treeitem,accessible,accessibletreeitem"
+									capname="treeitem"
+									id="4159f057-49b8-4273-bb34-60029ba3a178"
+									name="Boundary"
+									refimgid="24a271d7-2b20-4e14-bb40-77e268ce2ebc"
+									robustPath=""
+									searchtimeout="30000ms">
+										/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem/treeitem[@accessiblename='2D']/treeitem[@accessiblename='Boundary Conditions']/treeitem[@accessiblename=$boundaryName]
+									</item>
+									<basepath>
+										/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem/treeitem[@accessiblename='2D']/treeitem[@accessiblename='Boundary Conditions']
+									</basepath>
+								</folder>
+								<item
+								addcaps="treeitem,accessible,accessibletreeitem"
+								capname="treeitem"
+								id="cc8c79c0-4497-4121-b99c-67645354c1da"
+								name="Grid"
+								refimgid="887a5ac4-7e31-47e2-983e-60c98cb8dbb1"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem/treeitem[@accessiblename='2D']/treeitem[@accessiblename='Grid']
+								</item>
+								<basepath>
+									/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem/treeitem[@accessiblename='2D']
+								</basepath>
+							</folder>
+							<basepath>
+								/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem
+							</basepath>
+						</folder>
+						<item
+						capname="treeitem"
+						id="c2503bad-b2b8-4490-83ca-f08f8fcf4757"
+						name="GenericTreeItemNode"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem?/treeitem?/treeitem?/treeitem[@accessiblename=$NameTreeItemNode]
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree
 					</basepath>
 				</folder>
 				<folder
 				capname="container"
-				id="38307eda-4f71-42f9-b0e5-b138d9c5f31b"
+				id="b33e5f12-b8c5-455a-95bb-4b329aa57a32"
 				isrooted="True"
-				name="CentralMapContainer"
+				name="PropertiesGrid"
+				refimgid="6da0c5c9-3b03-4cfe-94b0-1df37f7efca6"
 				searchtimeout="30000ms"
-				usecache="False">
+				usecache="True">
+					<folder
+					capname="table"
+					id="57598b26-1135-463a-895f-ec27fff1e0b0"
+					isrooted="True"
+					name="PropertyTable"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="text,control,nativewindow"
+						capname="unknown"
+						id="cc1d82a9-5811-40a8-9103-8641aeec295c"
+						name="Edit"
+						refimgid="8ddfaeb4-7054-4db4-b28f-a4f7f23755e6"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//container[@controlname='PropertyGrid']//table/element[@name=$PropertyItem]
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//container[@controlname='PropertyGrid']//table
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//container[@controlname='PropertyGrid']
+					</basepath>
+				</folder>
+				<basepath>
+					/form[@title~'Delta Shell']
+				</basepath>
+			</folder>
+			<folder
+			capname="unknown"
+			id="54e31427-43f2-45d0-823a-1118700a6b06"
+			isrooted="True"
+			name="DocumentsPaneCentral"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="button,wpfelement,wpfgroupelement"
+				capname="button"
+				id="dbee5d78-a953-416d-a1a2-1aef3a4f68bc"
+				name="DocumentCloseButton"
+				refimgid="a2b010f0-9f44-4cda-a5a1-8c9d6b0fdb04"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpage[@selected='true']/button[@automationid='DocumentCloseButton']
+				</item>
+				<item
+				addcaps="button,accessible"
+				capname="button"
+				id="102f5611-002e-40e1-9cd0-9ceb1d0ea927"
+				name="PageDown"
+				refimgid="a45ba9b6-5043-4d24-993d-be9bcb8c1f8f"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//button[@text='Page Down']
+				</item>
+				<folder
+				capname="container"
+				id="a77f6d5d-e3e9-4140-8428-84676f009037"
+				isrooted="True"
+				name="MapView"
+				searchtimeout="30000ms"
+				usecache="True">
+					<item
+					addcaps="unknown,control,nativewindow"
+					capname="unknown"
+					id="0d638e83-6c44-4920-9045-1d36c4d72162"
+					name="MapControl"
+					refimgid="dd9a8732-d56c-4ec0-9700-236be0179fe4"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']/element
+					</item>
 					<folder
 					capname="tabpagelist"
-					id="687aa761-e846-4028-9104-221eac220923"
+					id="d31bde77-4d24-4582-823c-0e7f499c1e30"
 					isrooted="True"
 					name="AttributeTableTab"
 					refimgid="7cb98304-4c52-4f0e-bb73-f00925d03054"
 					searchtimeout="30000ms"
 					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="56659c8b-064e-46b2-9348-133f48c19536"
+						name="CloseAttributeTableTabButton"
+						refimgid="a4ebaab6-cf6d-4a46-aa5d-eea3b10394ff"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//tabpage[@selected='true']/button[@automationid='DocumentCloseButton']
+						</item>
 						<folder
-						capname="container"
-						id="bcd833fa-4784-4471-a004-3d5726f8c748"
+						capname="table"
+						id="7c896bc3-0673-4bce-b9c0-002b1b4660d0"
 						isrooted="True"
-						name="AttributeTableData"
-						refimgid="3f83fd95-320b-4a22-954d-e7f2828e4056"
+						name="AttributeTable"
+						refimgid="ca48fde3-72eb-4ba5-a5d1-364ecba32b78"
 						searchtimeout="30000ms"
 						usecache="False">
 							<item
 							addcaps="cell,accessible"
 							capname="cell"
-							id="5941dfd8-a6be-4796-bc87-825d662ef119"
-							name="GenericBoundaryDataCell"
-							refimgid="1f98f90e-bfde-4c11-b0f3-63a9f54fd5db"
+							id="bee5d2f6-43a2-4416-99e8-73aa08168290"
+							name="AttributeTableCell"
+							refimgid="d77ed01b-9119-4c61-a774-7e2e8f715bd7"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/container/element/tabpagelist/container?/container?/container?/container?/element?/table/container/row[$RowNumber]/cell[@text=$CellText]
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//table[@accessiblerole='Table']//row[$rowNumber]/cell[@accessiblename&gt;$columnName]
 							</item>
 							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/container/element/tabpagelist/container?/container?/container?/container?/element?/table/container
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//table[@accessiblerole='Table']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist
+						</basepath>
+					</folder>
+					<folder
+					capname="tabpagelist"
+					id="2a93f00f-bcb1-45c1-b113-d5e502898df5"
+					isrooted="True"
+					name="IntegratedModelSettingsTab"
+					searchtimeout="30000ms"
+					usecache="False">
+						<folder
+						capname="text"
+						id="86ed7fdd-de72-4f47-b45a-466727d09422"
+						isrooted="True"
+						name="RunParameters"
+						searchtimeout="30000ms"
+						usecache="False">
+							<folder
+							capname="container"
+							id="b084d8ab-a1d1-4818-b386-bd0eb34343c6"
+							isrooted="True"
+							name="TimeSpanControl"
+							searchtimeout="30000ms"
+							usecache="False">
+								<item
+								capname="text"
+								id="1cd4f3d1-1b55-4350-895c-63cef3a29f66"
+								name="DaysField"
+								robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//container[@automationid='TimeSpanViewControl']/element"
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Run parameters']//container[@automationid='TimeSpanViewControl']//text[@automationid='InputFieldDays']
+								</item>
+								<item
+								capname="text"
+								id="89bdac78-adeb-4576-996e-9f21154e65d8"
+								name="HoursField"
+								robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//container[@automationid='TimeSpanViewControl']/element"
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Run parameters']//container[@automationid='TimeSpanViewControl']//text[@automationid='InputFieldHours']
+								</item>
+								<item
+								capname="text"
+								id="a17e1d67-c8c8-48b2-aff6-55916cede503"
+								name="MinutesField"
+								robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//container[@automationid='TimeSpanViewControl']/element"
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Run parameters']//container[@automationid='TimeSpanViewControl']//text[@automationid='InputFieldMinutes']
+								</item>
+								<item
+								capname="text"
+								id="e5fee086-07c3-4ade-a0d0-8a9b22e41f9e"
+								name="SecondsField"
+								robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//container[@automationid='TimeSpanViewControl']/element"
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Run parameters']//container[@automationid='TimeSpanViewControl']//text[@automationid='InputFieldSeconds']
+								</item>
+								<item
+								capname="text"
+								id="7481d6bc-3fc2-4717-9a13-e3727c40da97"
+								name="MilliSecondsField"
+								robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//container[@automationid='TimeSpanViewControl']/element"
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Run parameters']//container[@automationid='TimeSpanViewControl']//text[@automationid='InputFieldMilliSeconds']
+								</item>
+								<basepath>
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Run parameters']//container[@automationid='TimeSpanViewControl']
+								</basepath>
+							</folder>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Run parameters']
 							</basepath>
 						</folder>
 						<folder
-						capname="container"
+						capname="text"
 						id="143197bf-3772-4bb3-b314-c730d6d63c9e"
 						isrooted="True"
-						name="WorkflowsContainer"
+						name="Workflows"
 						searchtimeout="30000ms"
 						usecache="False">
 							<item
@@ -215,7 +828,7 @@ name="DHYDRO1D2DRepository">
 							refimgid="054cc1c8-998a-4f1a-8efe-5fbcb1d04307"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/container/element/tabpagelist/container/container/container/element/container/text[@caption='Workflows']/container/list/listitem[@text='(RR + FlowFM)']
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Workflows']//listitem[@text=$ListItem]
 							</item>
 							<item
 							addcaps="button,wpfelement,wpfgroupelement"
@@ -225,585 +838,40 @@ name="DHYDRO1D2DRepository">
 							refimgid="4028b90b-7706-4dc6-bf70-438d5c9d474c"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/container/element/tabpagelist/container/container/container/element/container/text[@caption='Workflows']/container/button[@text='Run']
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Workflows']/button[@text='Run']
 							</item>
 							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/container/element/tabpagelist/container/container/container/element/container/text[@caption='Workflows']/container
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Workflows']
 							</basepath>
 						</folder>
 						<item
 						addcaps="button,wpfelement,wpfgroupelement"
 						capname="button"
-						id="145b8214-90f4-47a6-95c4-bce87c9aa5d5"
-						name="ButtonDocumentClose"
+						id="00e85075-7ae3-4cf8-b601-8a28e06d384d"
+						name="CloseIntegratedModelSettingsTabButton"
 						refimgid="a4ebaab6-cf6d-4a46-aa5d-eea3b10394ff"
 						robustPath=""
 						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/container/element/tabpagelist/button/container?/tabpage/text[@caption=$TextAttributeTable]/../button
-						</item>
-						<item
-						addcaps="text,wpfelement,wpfgroupelement"
-						capname="text"
-						id="1f1d4917-015b-4f35-8bd2-7d751b075e00"
-						name="GenericInputField"
-						refimgid="ab763621-5244-4e92-805d-1c7f8497fead"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/container/element/tabpagelist/container/container/container/element/container/text/form/container/text[@automationid=$InputFieldTimeStep]
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//text[@caption='Integrated Model Settings']/../button
 						</item>
 						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/container/element/tabpagelist
-						</basepath>
-					</folder>
-					<item
-					addcaps="unknown,control,nativewindow"
-					capname="unknown"
-					id="b00bebdb-4d2d-43c3-824c-260e4330d8c7"
-					name="CentralMap"
-					refimgid="dd9a8732-d56c-4ec0-9700-236be0179fe4"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/element
-					</item>
-					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container
-					</basepath>
-				</folder>
-				<folder
-				capname="menubar"
-				id="8f6aca4e-fe16-4695-95e2-0f4b11e34d2a"
-				isrooted="True"
-				name="MenuBar"
-				searchtimeout="30000ms"
-				usecache="False">
-					<folder
-					capname="list"
-					id="96c1634c-1c09-4060-806c-771a35700c2c"
-					isrooted="True"
-					name="RibbonTabControl"
-					searchtimeout="30000ms"
-					usecache="False">
-						<item
-						addcaps="text,wpfelement,wpfgroupelement"
-						capname="text"
-						id="e3ec4f59-854c-446d-96e0-99ab975bb292"
-						name="GenericTab"
-						refimgid="04863fec-e9b3-4758-a399-bd736bd9f052"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/text[@caption=$TabName]
-						</item>
-						<folder
-						capname="container"
-						id="8be4c1eb-e483-44e0-9434-9d3c82fbd519"
-						isrooted="True"
-						name="Ribbon"
-						searchtimeout="30000ms"
-						usecache="False">
-							<folder
-							capname="list"
-							id="62682a85-92c4-43c4-9b73-8d14a228256f"
-							isrooted="True"
-							name="Add"
-							searchtimeout="30000ms"
-							usecache="False">
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="ae4d80d9-6cae-444e-99c9-5cf055705826"
-								name="NewModelButton"
-								refimgid="6591ebfe-f5bc-4dce-94cd-a7732f5b8f8f"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Add']/button[@automationid='ButtonAddModel']
-								</item>
-								<item
-								addcaps="text,wpfelement,wpfgroupelement"
-								capname="button"
-								id="f8614208-9771-46d8-9075-31ada6aaf7b8"
-								name="PolygonButton"
-								refimgid="f7cff048-97ac-4a65-a10b-517e08493070"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Add']/button[@automationid='ButtonPolygonDraw']
-								</item>
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="ba572ca3-a430-40f9-ad29-6e6577ae5073"
-								name="ButtonImport"
-								refimgid="8ec3202a-4164-400a-9fa1-910571a2c635"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Add']/button[@automationid='ButtonImport']
-								</item>
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Add']
-								</basepath>
-							</folder>
-							<folder
-							capname="list"
-							id="436ea7c9-2fe1-4912-a6c6-020166967255"
-							isrooted="True"
-							name="SpatialOperationsGroup"
-							searchtimeout="30000ms"
-							usecache="False">
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="3fb4f3b8-e141-4027-bf2b-45cd42f8239f"
-								name="ImportSamplesButton"
-								refimgid="9eeab777-0449-4ef4-8352-1e9d0b9aa835"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']/button[@automationid='ButtonImportSamples']
-								</item>
-								<item
-								addcaps="text,wpfelement,wpfgroupelement"
-								capname="button"
-								id="a3bc1a5d-dbbd-4bef-ba2d-e16a9f601100"
-								name="InterpolateButton"
-								refimgid="5545c9e7-fab5-43b4-8955-62763c37f6d3"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']/button[@automationid='DropDownButtonInterpolate']
-								</item>
-								<item
-								addcaps="text,wpfelement,wpfgroupelement"
-								capname="button"
-								id="86bf156a-f81d-46a2-acd9-f4eac1a2c9f9"
-								name="SetValueButton"
-								refimgid="bdf27d3d-6678-46b3-82fc-efec892ad8b7"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']/button[@text='Set Value']
-								</item>
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']
-								</basepath>
-							</folder>
-							<folder
-							capname="list"
-							id="dbe79188-f765-4c81-808b-e4469af11988"
-							isrooted="True"
-							name="Region2D"
-							searchtimeout="30000ms"
-							usecache="False">
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="cf3a87ac-0a92-4e3a-8b8c-d4f294c230a5"
-								name="AddBoundaryButton"
-								refimgid="5f947feb-76c1-4571-99e6-6be6d2c6c1b7"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='Region2D']/button[@automationid='ButtonAddBoundary']
-								</item>
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='Region2D']
-								</basepath>
-							</folder>
-							<folder
-							capname="list"
-							id="5b61846c-63ea-42bf-ad55-873c0e54542b"
-							isrooted="True"
-							name="Area2D"
-							searchtimeout="30000ms"
-							usecache="False">
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="9c6f8de4-a19e-47d0-b5cc-af7794df9c56"
-								name="AddObservationCrossSectionButton"
-								refimgid="b40ab5b0-e17a-41aa-9041-818fd23ef65f"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='2D Area']/button[@automationid='ButtonAddNewObsCs2D']
-								</item>
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="b4c03b6b-e716-4ec6-b4de-88bf12bed252"
-								name="AddObservationPointButton"
-								refimgid="86c714a1-c66f-4671-9332-038ea57c8640"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='2D Area']/button[@automationid='ButtonAddNewObsPoint2D']
-								</item>
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='2D Area']
-								</basepath>
-							</folder>
-							<folder
-							capname="list"
-							id="ae76ad76-d4bd-4ec6-b9da-f3c0db4b39f4"
-							isrooted="True"
-							name="Tools"
-							searchtimeout="30000ms"
-							usecache="False">
-								<item
-								addcaps="text,wpfelement,wpfgroupelement"
-								capname="button"
-								id="a0d39bda-0b34-4cce-9eee-5a71b11de28b"
-								name="QueryTimeSeries"
-								refimgid="751b2ab7-1ea6-4358-8d88-4dc8fe93c7e6"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@header='Query Time Series']
-								</item>
-								<item
-								capname="button"
-								id="5d4e9790-4712-48d4-a308-807646b1547d"
-								name="ButtonMapZoomUsingRectangle"
-								robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/element"
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@automationid='ButtonMapZoomUsingRectangle']
-								</item>
-								<item
-								capname="button"
-								id="1b9a7e5d-461b-47f9-8b00-257182667fbb"
-								name="ButtonMapSelect"
-								robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/element"
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@automationid='ButtonMapSelect']
-								</item>
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Tools']
-								</basepath>
-							</folder>
-							<folder
-							capname="list"
-							id="a2eda5cf-00e3-4804-875c-3c1b1c7f2074"
-							isrooted="True"
-							name="Network1D"
-							searchtimeout="30000ms"
-							usecache="False">
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="ff2d1301-c673-4aea-97cd-253a2a45f810"
-								name="ButtonAddNewSewerConnection"
-								refimgid="4c8d5f24-6c82-4e50-b9a9-db77f67a937f"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewSewerConnection']
-								</item>
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="02667b01-c2ad-47bb-b3aa-0e7d56c87b5b"
-								name="ButtonAddNewPipe"
-								refimgid="538d778c-1d00-47fb-aa58-6cc677cf4ac0"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewPipe']
-								</item>
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="63f1effe-5595-485a-babf-d0adc2f37e24"
-								name="ButtonAddNewPump"
-								refimgid="bc86ef66-6198-4a55-bcb5-5780f4057548"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewPump']
-								</item>
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="5339db22-8876-46f5-a69c-b74903813bb1"
-								name="ButtonAddNewWeir"
-								refimgid="77dae679-9ac0-4a32-9dc5-95e10a15d13b"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewWeir']
-								</item>
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="da83233e-0ba0-4191-a514-f13d15d7bba0"
-								name="ButtonAddNewOrifice"
-								refimgid="a6be0356-2ea5-4eea-9592-09261215ac48"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']/button[@automationid='ButtonAddNewOrifice']
-								</item>
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='Network1D']
-								</basepath>
-							</folder>
-							<folder
-							capname="list"
-							id="304eedf0-a7ac-429a-a05e-7a2740cc5a98"
-							isrooted="True"
-							name="NetworkCoverage"
-							searchtimeout="30000ms"
-							usecache="False">
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="6acbd19f-6fe4-4538-9022-f3748b23cbc9"
-								name="ButtonAddNewRoute"
-								refimgid="e836d170-d130-455c-9a56-dfc048dc9c8d"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='NetworkCoverage']/button[@automationid='ButtonAddNewRoute']
-								</item>
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="button"
-								id="0718994f-7746-4942-bcb1-0a68df76503f"
-								name="ButtonShowSideView"
-								refimgid="8f273887-c8b2-4c2e-97c2-5e27877bc6f6"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='NetworkCoverage']/button[@automationid='ButtonShowSideView']
-								</item>
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='NetworkCoverage']
-								</basepath>
-							</folder>
-							<folder
-							capname="list"
-							id="f5c28706-0d12-44ea-a22c-8ad72550a1f8"
-							isrooted="True"
-							name="Decorations"
-							searchtimeout="30000ms"
-							usecache="False">
-								<item
-								addcaps="text,wpfelement,wpfgroupelement"
-								capname="button"
-								id="b8295716-abb4-47fd-8213-0a02952d4ac7"
-								name="LegendButton"
-								refimgid="952186ce-0c11-4671-a066-8eb2fd3c2f18"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Decorations']/button[@header='Legend']
-								</item>
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Decorations']
-								</basepath>
-							</folder>
-							<folder
-							capname="list"
-							id="911d1be8-0f85-4576-b9af-ad559d06ce84"
-							isrooted="True"
-							name="Edit"
-							searchtimeout="30000ms"
-							usecache="False">
-								<item
-								addcaps="button,wpfelement,wpfgroupelement"
-								capname="combobox"
-								id="abbc5b90-1546-4cf4-b2b9-f5d1c4f633a0"
-								name="SpatialLayerCombobox"
-								refimgid="ebd1af5e-4935-48e0-8ee5-0bc7d9ffefd6"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Edit']//combobox
-								</item>
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@header='Edit']
-								</basepath>
-							</folder>
-							<item
-							addcaps="button,wpfelement,wpfgroupelement"
-							capname="button"
-							id="f6cd34ff-8599-4723-a235-ee758cf7299f"
-							name="AddDutchLayers"
-							refimgid="75fcdea7-2a03-4697-b222-e5fc10e93fba"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/container?/list/button[@text='Add dutch layers']
-							</item>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container
-							</basepath>
-						</folder>
-						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']
-						</basepath>
-					</folder>
-					<folder
-					capname="list"
-					id="520b4907-8937-43dd-96c3-3011ef75726a"
-					isrooted="True"
-					name="BackstageTabControl"
-					searchtimeout="30000ms"
-					usecache="False">
-						<item
-						addcaps="text,wpfelement,wpfgroupelement"
-						capname="text"
-						id="824b9629-3609-4dd7-91f1-f7ec431fac1b"
-						name="SaveAsButton"
-						refimgid="42dff791-6678-40bb-9a6e-ad26633b7a5e"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@automationid='BackstageTabControl']/button[@automationid='ButtonMenuFileSaveProjectAs']/text
-						</item>
-						<item
-						addcaps="text,wpfelement,wpfgroupelement"
-						capname="text"
-						id="2e717603-c5e8-4478-9c0f-b1b6cc77c845"
-						name="CloseButton"
-						refimgid="f6627f6d-1966-4dae-a6a0-8e442d2342d9"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@automationid='BackstageTabControl']/button[@text='Close']/text
-						</item>
-						<folder
-						capname="container"
-						id="24627a28-73d2-42d2-8122-983feb72cec8"
-						isrooted="True"
-						name="Open"
-						refimgid="9fe41663-913f-4e28-9732-c1100a6ed131"
-						searchtimeout="30000ms"
-						usecache="False">
-							<item
-							addcaps="text,wpfelement,wpfgroupelement"
-							capname="text"
-							id="5bff030b-d5c6-4f52-88de-075eeb0a107e"
-							name="Browse"
-							refimgid="5ecc29b0-060b-41c4-9426-351d77b32a24"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@automationid='BackstageTabControl']/container[@caption='Open']/container/tabpagelist/tabpage/text[@caption='Browse']
-							</item>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@automationid='BackstageTabControl']/container[@caption='Open']
-							</basepath>
-						</folder>
-						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@automationid='BackstageTabControl']
-						</basepath>
-					</folder>
-					<item
-					addcaps="text,wpfelement,wpfgroupelement"
-					capname="text"
-					id="a68fb73a-7efc-4c61-9b11-a931d9c30d45"
-					name="FileTab"
-					refimgid="a3c1ea64-ccb4-47c9-b13d-93837e2fd979"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/text[@caption='File']
-					</item>
-					<item
-					addcaps="button,wpfelement,wpfgroupelement"
-					capname="button"
-					id="24add380-41fd-473f-ba49-9771c5d5c69a"
-					name="NewQuickAccessButton"
-					refimgid="04681a5b-8eeb-4e25-8557-7fb9eda90421"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/container[@automationid='PART_ToolBarPanel']/button[1]
-					</item>
-					<item
-					addcaps="button,wpfelement,wpfgroupelement"
-					capname="button"
-					id="78b3e34a-6de8-41b4-aad1-382393c49c84"
-					name="SaveQuickAccessButton"
-					refimgid="04681a5b-8eeb-4e25-8557-7fb9eda90421"
-					refpath="/form[@automationid='Window']/list[@automationid='ListView']/menubar[@automationid='MainWindowRibbon']/container[@automationid='PART_ToolBarPanel']/button[3]"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/container[@automationid='PART_ToolBarPanel']/button[3]
-					</item>
-					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar
-					</basepath>
-				</folder>
-				<folder
-				capname="tree"
-				id="253da277-463e-47ff-83b9-2a4b09e9f827"
-				isrooted="True"
-				name="ProjectTree"
-				searchtimeout="30000ms"
-				usecache="False">
-					<folder
-					capname="treeitem"
-					id="4926a31b-1fe7-4a0a-8b0e-499a6063c231"
-					isrooted="True"
-					name="RootTreeItem"
-					searchtimeout="30000ms"
-					usecache="False">
-						<folder
-						capname="treeitem"
-						id="ed768f7b-76fa-421b-b8fa-59fcd7e7ca4f"
-						isrooted="True"
-						name="Model"
-						searchtimeout="30000ms"
-						usecache="False">
-							<folder
-							capname="treeitem"
-							id="59dbf07a-71f3-4659-8ae5-9ee5714c6011"
-							isrooted="True"
-							name="_2D"
-							searchtimeout="30000ms"
-							usecache="False">
-								<folder
-								capname="treeitem"
-								id="a296d5fa-9ba8-463e-8284-d939a0ab8235"
-								isrooted="True"
-								name="BoundaryConditions"
-								searchtimeout="30000ms"
-								usecache="False">
-									<item
-									addcaps="treeitem,accessible,accessibletreeitem"
-									capname="treeitem"
-									id="c50e5b83-3150-4f34-b001-391b203abe2a"
-									name="Boundary"
-									refimgid="24a271d7-2b20-4e14-bb40-77e268ce2ebc"
-									robustPath=""
-									searchtimeout="30000ms">
-										/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem/treeitem[@accessiblename='2D']/treeitem[@accessiblename='Boundary Conditions']/treeitem[@accessiblename=$boundaryName]
-									</item>
-									<basepath>
-										/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem/treeitem[@accessiblename='2D']/treeitem[@accessiblename='Boundary Conditions']
-									</basepath>
-								</folder>
-								<item
-								addcaps="treeitem,accessible,accessibletreeitem"
-								capname="treeitem"
-								id="c18f2c7f-4a32-4e53-9a5f-71d56e85112b"
-								name="Grid"
-								refimgid="887a5ac4-7e31-47e2-983e-60c98cb8dbb1"
-								robustPath=""
-								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem/treeitem[@accessiblename='2D']/treeitem/treeitem[@accessiblename='Grid']
-								</item>
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem/treeitem[@accessiblename='2D']
-								</basepath>
-							</folder>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem
-							</basepath>
-						</folder>
-						<item
-						capname="treeitem"
-						id="e523434d-5228-4615-a475-a16752ae51db"
-						name="GenericTreeItemNode"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem?/treeitem?/treeitem?/treeitem[@accessiblename=$NameTreeItemNode]
-						</item>
-						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist
 						</basepath>
 					</folder>
 					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']
 					</basepath>
 				</folder>
 				<folder
 				capname="tabpagelist"
-				id="d3a2f2a5-5af3-4efa-a3ac-f56dc54ecef0"
+				id="797749c3-d719-4d91-a12a-2d39f9c7ea57"
 				isrooted="True"
-				name="MainTabControl"
+				name="ModelSettingsTabControl"
 				searchtimeout="30000ms"
-				usecache="False">
+				usecache="True">
 					<folder
 					capname="container"
-					id="9e70b14e-cfb1-46e0-bb3e-9fbe527b21e3"
+					id="53647ad9-6129-4487-99f2-77a37c3e3a64"
 					isrooted="True"
 					name="Tabs"
 					searchtimeout="30000ms"
@@ -811,414 +879,885 @@ name="DHYDRO1D2DRepository">
 						<item
 						addcaps="text,wpfelement,wpfgroupelement"
 						capname="text"
-						id="cf4e8c0d-c556-481d-a546-6882444c36b7"
+						id="32456736-2e02-489c-ac16-979ec133ee7f"
 						name="GenericSubTab"
 						refimgid="40657279-169c-4a4b-8ac0-7cffc9e3ac14"
 						robustPath=""
 						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/container[@automationid='HeaderPanel']/tabpage/text[@caption=$NameSubTab]
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/container[@automationid='HeaderPanel']/tabpage/text[@caption=$NameSubTab]
 						</item>
 						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/container[@automationid='HeaderPanel']
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/container[@automationid='HeaderPanel']
 						</basepath>
 					</folder>
 					<folder
 					capname="list"
-					id="d86e1279-3f40-4d6f-a8f7-dc30ebce8cf5"
+					id="6f4e3e2e-5d19-4876-8a5c-61a5a40ab7d7"
 					isrooted="True"
-					name="ListGroupTimeFrameSettings"
+					name="TimeFrame"
 					searchtimeout="30000ms"
-					usecache="False">
+					usecache="True">
+						<item
+						capname="text"
+						id="a0ca93e5-e2b9-474e-b6c5-fb9bd717d045"
+						name="InitialTimeStepField"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='DtInitTextBox']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="964adaa2-0226-4d62-a38f-cb34859ab54c"
+						name="MaxCourantNrField"
+						refimgid="92455de9-548b-431a-9ec4-4f8cb275852d"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='CFLMaxTextBox']
+						</item>
+						<item
+						capname="text"
+						id="f6ae2faf-5d10-4c33-88ee-60e17004caa2"
+						name="MaxTimeStepField"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='DtMaxTextBox']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="e4c3cde2-6ecf-4e0b-9267-5ef606d154ae"
+						name="TimeZoneField"
+						refimgid="00e3c26b-7f95-4c8c-b638-889967022cb3"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='TzoneTextBox']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="c18ee311-0213-40f6-ba2b-b4164856115f"
+						name="ReferenceTimeField"
+						refimgid="1f039b25-45e0-4d0f-9abc-deecef47356a"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='RefDate']
+						</item>
+						<item
+						capname="text"
+						id="e3dc3e62-2257-4588-8636-f4bbfa812060"
+						name="StartTimeField"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='StartTime']
+						</item>
+						<item
+						capname="text"
+						id="89e69212-7e2b-40e4-a31f-4d2abbf76c09"
+						name="StopTimeField"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='StopTime']
+						</item>
 						<folder
-						capname="list"
-						id="2f206713-8a55-4e6e-b4da-37546e3933df"
+						capname="container"
+						id="d549dea1-2f8d-4aee-94da-db810ae16430"
 						isrooted="True"
-						name="TimeFrame"
+						name="UserTimeStep"
 						searchtimeout="30000ms"
-						usecache="False">
+						usecache="True">
 							<item
+							addcaps="text,wpfelement,wpfgroupelement"
 							capname="text"
-							id="96a6380d-941a-46d0-9ec9-d7bb7ce88ee7"
-							name="InitialTimeStepField"
+							id="b5452543-ea74-4ec3-bcef-bff9c738489a"
+							name="DaysField"
+							refimgid="43478fb9-c307-42bb-9688-3402eafa2918"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/container/text[@text='Initial time step']/parent::container/text[@focusable='true']
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//container[@automationid='DtUser']/text[@automationid='InputFieldDays']
 							</item>
 							<item
 							addcaps="text,wpfelement,wpfgroupelement"
 							capname="text"
-							id="dd3af7bc-2c5b-4424-95bf-72e41f45eb01"
-							name="MaxCourantNrField"
-							refimgid="92455de9-548b-431a-9ec4-4f8cb275852d"
+							id="e5613ad8-87f4-4c33-9e81-282c0b562e54"
+							name="HoursField"
+							refimgid="93121df5-fa35-48e8-8592-37732f29a548"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/container/text[@text='Max Courant nr']/parent::container/text[@focusable='true']
-							</item>
-							<item
-							capname="text"
-							id="22caf7da-7f46-4f3b-960c-45900e26158d"
-							name="MaxTimeStepField"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/container/text[@text='Max. time step']/parent::container/text[@focusable='true']
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//container[@automationid='DtUser']/text[@automationid='InputFieldHours']
 							</item>
 							<item
 							addcaps="text,wpfelement,wpfgroupelement"
 							capname="text"
-							id="28b2266d-17f5-4155-ba6b-f933e428c7ff"
-							name="TimeZoneField"
-							refimgid="00e3c26b-7f95-4c8c-b638-889967022cb3"
+							id="a6fb1801-fd69-4374-a3f2-959383cee6e9"
+							name="MinutesField"
+							refimgid="91f8ee9a-ad98-4931-adff-c16d96f94b91"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/container/text[@text='Time zone']/parent::container/text[@focusable='true']
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//container[@automationid='DtUser']/text[@automationid='InputFieldMinutes']
 							</item>
 							<item
 							addcaps="text,wpfelement,wpfgroupelement"
 							capname="text"
-							id="fc578e8f-1cb0-4edf-a290-f490104dda2c"
-							name="ReferenceTimeField"
-							refimgid="1f039b25-45e0-4d0f-9abc-deecef47356a"
+							id="68c3cf65-23da-45a6-8ac8-01644551bd41"
+							name="SecondsField"
+							refimgid="c19a74a5-f91e-48f4-b202-62c0f1ef93e3"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/text[@caption='Reference date']/button/text
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//container[@automationid='DtUser']/text[@automationid='InputFieldSeconds']
 							</item>
 							<item
+							addcaps="text,wpfelement,wpfgroupelement"
 							capname="text"
-							id="bbd599b8-a499-4b94-b128-cba2a03f15b7"
-							name="StartTimeField"
+							id="19a84b38-a779-4983-a835-26bfead4eb85"
+							name="MilliSecondsField"
+							refimgid="98f4f885-7789-4665-88c0-b8ebc2b50e43"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/text[@caption='Start Time']/button/text
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//container[@automationid='DtUser']/text[@automationid='InputFieldMilliSeconds']
 							</item>
 							<item
-							capname="text"
-							id="3d9d28d0-079b-4112-b891-cea622a7f36e"
-							name="StopTimeField"
+							addcaps="button,wpfelement,wpfgroupelement"
+							capname="button"
+							id="42f77c8e-2ac5-44cd-9ada-b6ace6b1c422"
+							name="SynchronizeButton"
+							refimgid="65b4c0d4-a965-4ece-8b78-dea53db2ae13"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/text[@caption='Stop Time']/button/text
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//container[@automationid='DtUser']/../button
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//container[@automationid='DtUser']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="e89969be-96c6-4dc5-b70b-cf1057a07cb3"
+					isrooted="True"
+					name="Initial_Conditions"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="a5a2f852-72d6-400d-867e-6a6402c442f8"
+						name="InitialConditionGlobalValue2D"
+						refimgid="0d0be099-31d4-43e4-84eb-bd1cff4b8a2a"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='WaterLevIniTextBox']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="ea2fc4e6-cd53-4f9a-a66c-b39f531e53ed"
+						name="InitialConditionGlobalValue1D"
+						refimgid="0d0be099-31d4-43e4-84eb-bd1cff4b8a2a"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='InitialConditionGlobalValue1DTextBox']
+						</item>
+						<item
+						addcaps="combobox,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="24759387-35fc-4298-adc2-684e5cc9bc0d"
+						name="InitialConditionGlobalQuantity1D"
+						refimgid="4c8d1b97-1cf2-4ea8-aa34-d67ff5ed6f4e"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//combobox[@automationid='InitialConditionGlobalQuantity1D']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="b2045bde-2841-4e31-a1b7-3f97cd5f1f56"
+					isrooted="True"
+					name="Output_Parameters"
+					searchtimeout="30000ms"
+					usecache="True">
+						<folder
+						capname="button"
+						id="6cad57e5-e085-4391-bb9e-4a7dfa855b92"
+						isrooted="True"
+						name="Restart"
+						searchtimeout="30000ms"
+						usecache="True">
+							<item
+							addcaps="checkbox,wpfelement,wpfgroupelement"
+							capname="checkbox"
+							id="f4472336-6514-4f6d-b3a6-01f8bd75e3e0"
+							name="WriteRstFile"
+							refimgid="5ee14f7e-c54d-4a32-94d9-38b9138a4caa"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//checkbox[@automationid='WriteRstFile']
 							</item>
 							<folder
 							capname="container"
-							id="0ec137e4-a0af-4cc4-804c-7c788ae84858"
+							id="08e254d4-3c70-4a73-8092-47e1da95511f"
 							isrooted="True"
-							name="UserTimeStep"
+							name="RstOutputDeltaT"
+							refimgid="b6d779e4-03bf-48c1-a7fe-26f90d30f826"
 							searchtimeout="30000ms"
 							usecache="False">
 								<item
 								addcaps="text,wpfelement,wpfgroupelement"
 								capname="text"
-								id="8f78e354-9b96-4856-9e24-0850d34e5d88"
-								name="DaysField"
-								refimgid="43478fb9-c307-42bb-9688-3402eafa2918"
+								id="91b29d80-98be-42d5-9afc-24734d5d0389"
+								name="InputFieldDays"
+								refimgid="3104e84a-d4d1-4538-9561-ad0362d5432c"
 								robustPath=""
 								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/container/text[@caption='User time step']/../container/text[@automationid='InputFieldDays']
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']/text[@automationid='InputFieldDays']
 								</item>
 								<item
 								addcaps="text,wpfelement,wpfgroupelement"
 								capname="text"
-								id="f79ef1e4-9173-40e5-b5e4-8484beb6554b"
-								name="HoursField"
-								refimgid="93121df5-fa35-48e8-8592-37732f29a548"
+								id="70c197c0-1211-4e55-803e-4955322e23fd"
+								name="InputFieldHours"
+								refimgid="3d67486d-9e70-4337-9646-23373851d400"
 								robustPath=""
 								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/container/text[@caption='User time step']/../container/text[@automationid='InputFieldHours']
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']/text[@automationid='InputFieldHours']
 								</item>
 								<item
 								addcaps="text,wpfelement,wpfgroupelement"
 								capname="text"
-								id="b57cbc46-9761-4052-a37b-f11f3a92a621"
-								name="MinutesField"
-								refimgid="91f8ee9a-ad98-4931-adff-c16d96f94b91"
+								id="e9cc391a-5cca-46aa-bb27-91c61a333225"
+								name="InputFieldMinutes"
+								refimgid="441a4da9-a7d9-4bed-8e28-2c7ef7babc48"
 								robustPath=""
 								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/container/text[@caption='User time step']/../container/text[@automationid='InputFieldMinutes']
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']/text[@automationid='InputFieldMinutes']
 								</item>
 								<item
 								addcaps="text,wpfelement,wpfgroupelement"
 								capname="text"
-								id="7e4f8483-5881-41aa-9e05-ee668ef5db5d"
-								name="SecondsField"
-								refimgid="c19a74a5-f91e-48f4-b202-62c0f1ef93e3"
+								id="6a7b1e18-8fb7-4787-a2a7-4a515093895a"
+								name="InputFieldSeconds"
+								refimgid="b309a95f-2c86-4fc0-8cb2-1801ac4b2de4"
 								robustPath=""
 								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/container/text[@caption='User time step']/../container/text[@automationid='InputFieldSeconds']
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']/text[@automationid='InputFieldSeconds']
 								</item>
 								<item
 								addcaps="text,wpfelement,wpfgroupelement"
 								capname="text"
-								id="ab0d445b-9e2a-432a-b917-461b918dca48"
-								name="MilliSecondsField"
-								refimgid="98f4f885-7789-4665-88c0-b8ebc2b50e43"
+								id="0e1ea17d-1ec6-4c50-baa4-9d271d019da1"
+								name="InputFieldMilliSeconds"
+								refimgid="ae90058a-0e0e-4401-9dfa-07e90a81db21"
 								robustPath=""
 								searchtimeout="30000ms">
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/container/text[@caption='User time step']/../container/text[@automationid='InputFieldMilliSeconds']
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']/text[@automationid='InputFieldMilliSeconds']
 								</item>
 								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']/container/text[@caption='User time step']/../container
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']
 								</basepath>
 							</folder>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Time Frame']
-							</basepath>
-						</folder>
-						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list
-						</basepath>
-					</folder>
-					<folder
-					capname="list"
-					id="63ec8820-f20e-448b-beb5-e788e52f6f96"
-					isrooted="True"
-					name="ListGroupInitialConditionsSettings"
-					searchtimeout="30000ms"
-					usecache="False">
-						<folder
-						capname="list"
-						id="163cc44d-5737-416b-b5b4-f058ab7b8b54"
-						isrooted="True"
-						name="_1D"
-						searchtimeout="30000ms"
-						usecache="False">
 							<item
-							capname="text"
-							id="af01ce06-5304-412b-8897-a6525bf7efe5"
-							name="InitialWaterLevelField"
+							addcaps="checkbox,wpfelement,wpfgroupelement"
+							capname="checkbox"
+							id="562407d3-91bc-46e1-bf09-52007e09a92d"
+							name="SpecifyRstStart"
+							refimgid="ee6b4306-cc56-423e-af09-48fcbc0522bd"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Initial conditions (1D)']/container/text[@caption='Value']/parent::container/text[@focusable='true']
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//checkbox[@automationid='SpecifyRstStart']
 							</item>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Initial conditions (1D)']
-							</basepath>
-						</folder>
-						<folder
-						capname="list"
-						id="4430377b-304b-4bdf-b25b-c00510cdbb74"
-						isrooted="True"
-						name="_2D"
-						searchtimeout="30000ms"
-						usecache="False">
-							<item
-							capname="text"
-							id="ecb9d1cc-0584-478f-be5f-595357468adf"
-							name="InitialWaterLevelField"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Initial conditions (2D)']/container/text[@caption='Value']/parent::container/text[@focusable='true']
-							</item>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Initial conditions (2D)']
-							</basepath>
-						</folder>
-						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list
-						</basepath>
-					</folder>
-					<folder
-					capname="list"
-					id="c6c9440c-a8f3-4194-a871-aad4a22b6298"
-					isrooted="True"
-					name="ListGroupsOutputSettings"
-					searchtimeout="30000ms"
-					usecache="False">
-						<folder
-						capname="list"
-						id="c1b86382-c3ec-4f1d-b1f6-49ea22dc97c7"
-						isrooted="True"
-						name="Map"
-						searchtimeout="30000ms"
-						usecache="False">
 							<item
 							addcaps="text,wpfelement,wpfgroupelement"
 							capname="text"
-							id="22ede231-9ae7-45f7-87a2-a84563fbfcaa"
-							name="SpecificMapOutputTimesField"
-							refimgid="637b67eb-effe-42ab-a219-f5d00beb6fa5"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Map']/container/text[@text='Specific Map output times']/parent::container/text[@caption='']
-							</item>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Map']
-							</basepath>
-						</folder>
-						<folder
-						capname="list"
-						id="43c22bba-9e0c-4df3-90e2-72b4b6f813df"
-						isrooted="True"
-						name="Restart"
-						searchtimeout="30000ms"
-						usecache="False">
-							<item
-							addcaps="text,wpfelement,wpfgroupelement"
-							capname="text"
-							id="b63c0915-280b-4900-9068-2caed3a89651"
+							id="0daece48-caeb-4746-babb-b08d1fa61feb"
 							name="RstOutputStartTimeField"
 							refimgid="b6da5696-b830-4102-bb03-b52fc1b06f52"
 							robustPath=""
 							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Restart']/text[@caption='Rst output start time']/button/text
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//text[@automationid='RstOutputStartTime']
 							</item>
 							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Restart']
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']
 							</basepath>
 						</folder>
 						<folder
-						capname="list"
-						id="7788766e-bcde-495a-b436-7a4bf61a4b6e"
+						capname="button"
+						id="a1405ab6-55c1-41e9-a8c6-7627e1271282"
 						isrooted="True"
 						name="Other"
 						searchtimeout="30000ms"
-						usecache="False">
+						usecache="True">
 							<folder
-							capname="container"
-							id="4830feb1-76e3-495f-9cdf-1d287d21d323"
+							capname="unknown"
+							id="904571a2-081d-4298-a0fb-c4b419c1b232"
 							isrooted="True"
 							name="OthersOutputGroup"
 							searchtimeout="30000ms"
 							usecache="False">
 								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Others']/container/text[@caption=$OtherGroupCaptionName]/parent::container
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Others']//text[@caption=$OtherGroupCaptionName]/..
 								</basepath>
 							</folder>
 							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Others']
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Others']
 							</basepath>
 						</folder>
 						<folder
 						capname="list"
-						id="73241a1e-af1d-47b9-8e25-3e1198f66a07"
+						id="212581c0-50d8-40cd-80d0-e4c82d2d8873"
 						isrooted="True"
 						name="OutputGroup"
 						searchtimeout="30000ms"
-						usecache="False">
+						usecache="True">
 							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header=$OutputGroupHeaderName]
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header=$OutputGroupHeaderName]/list
 							</basepath>
 						</folder>
-						<item
-						addcaps="combobox,wpfelement,wpfgroupelement"
-						capname="combobox"
-						id="dca18eb0-8e70-4185-8191-fa637805478a"
-						name="GenericComboBoxInSettings"
-						refimgid="1b7fd41e-67c5-4158-b184-b945bd193087"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[$ListNumber]/container[$ContainerNumber]/combobox
-						</item>
-						<item
-						addcaps="text,wpfelement,wpfgroupelement"
-						capname="text"
-						id="97229bdf-e9f0-4117-9974-027c3410a86d"
-						name="GenericTextBoxInSettings"
-						refimgid="e9b9e46f-cfda-4544-8127-ded51d6852d8"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[$ListNumber]/container[$ContainerNumber]/text[$TextNumber]
-						</item>
-						<item
-						addcaps="button,wpfelement,wpfgroupelement"
-						capname="button"
-						id="42f77c8e-2ac5-44cd-9ada-b6ace6b1c422"
-						name="GenericIconButton"
-						refimgid="65b4c0d4-a965-4ece-8b78-dea53db2ae13"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[$ListNumber]/container[$ContainerNumber]/button
-						</item>
 						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list
 						</basepath>
 					</folder>
 					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']
 					</basepath>
 				</folder>
 				<folder
-				capname="table"
-				id="ad1b1f15-978f-4bf7-bc1a-06369e3c454f"
+				capname="container"
+				id="967bb5de-5b15-44fe-b753-5ca06eb3bf3e"
 				isrooted="True"
-				name="PropertyPanel"
-				refimgid="2836953b-486f-4481-b96e-35759c0d6523"
+				name="ValidationView"
 				searchtimeout="30000ms"
-				usecache="False">
-					<item
-					addcaps="text,control,nativewindow"
-					capname="unknown"
-					id="abee9d83-340f-4744-9e0e-19bbd43408aa"
-					name="Edit"
-					refimgid="8ddfaeb4-7054-4db4-b28f-a4f7f23755e6"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@caption='']/container[@automationid='PropertyGrid']/container[@automationid='splitContainer1']/container/container[@automationid='propertyGrid1']/table/element[@name=$PropertyItem]
-					</item>
+				usecache="True">
 					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@caption='']/container[@automationid='PropertyGrid']/container[@automationid='splitContainer1']/container/container[@automationid='propertyGrid1']/table
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='ValidationView']
 					</basepath>
 				</folder>
 				<folder
-				capname="table"
-				id="ea3edbbc-c9b8-466f-97a7-789d8b5967b9"
+				capname="container"
+				id="a961803c-1580-4260-b0f4-d1a158149ed7"
 				isrooted="True"
-				name="PropertiesPanel"
+				name="MultipleDataEditor"
 				searchtimeout="30000ms"
-				usecache="False">
-					<item
-					capname="cell"
-					id="f31ee88a-4dca-4acb-8656-f7e1b3ea9373"
-					name="CellHydrodynamics_source"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='PropertyGrid']//element[@controlname='gridView']/table/cell[@accessiblename='Hydrodynamics source']
-					</item>
+				usecache="True">
+					<folder
+					capname="table"
+					id="898e744b-639f-4c47-bf04-05cb7bb3a397"
+					isrooted="True"
+					name="Table"
+					searchtimeout="30000ms"
+					usecache="True">
+						<folder
+						capname="container"
+						id="b3fbc7c8-e393-4e7d-869c-4e7b02c815fc"
+						isrooted="True"
+						name="TableData"
+						searchtimeout="30000ms"
+						usecache="True">
+							<item
+							addcaps="cell,accessible"
+							capname="cell"
+							id="1f4b826a-7767-4600-99e9-db6108815ea6"
+							name="GenericTableCell"
+							refimgid="f24869b8-d0ea-4959-8d49-4540075ed15a"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MultipleDataEditor']//table/container[@accessiblename='Data Panel']/row[$rowNumber]/cell[@accessiblename&gt;$columnName]
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MultipleDataEditor']//table/container[@accessiblename='Data Panel']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MultipleDataEditor']//table
+						</basepath>
+					</folder>
 					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='PropertyGrid']//element[@controlname='gridView']/table
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MultipleDataEditor']
 					</basepath>
 				</folder>
 				<folder
-				capname="button"
-				id="a1068127-4dd0-4fe7-8589-bec4283db94d"
+				capname="container"
+				id="c7433b09-f83c-4778-a6f3-23dd86d7b925"
 				isrooted="True"
-				name="TabsDocumentsCentralView"
-				refimgid="e2979f3f-c89c-453d-a56a-813ebf15c12f"
-				searchtimeout="30000ms"
-				usecache="False">
-					<item
-					addcaps="button,wpfelement,wpfgroupelement"
-					capname="button"
-					id="09fa9d83-1f6e-4186-b988-7e045aace5da"
-					name="DocumentCloseButton"
-					refimgid="01e350a2-30b5-46e2-98bf-3f6cad782de9"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/tabpagelist/button/container?/tabpage/container/text[@caption~$HeaderPanelText]/parent::container/parent::tabpage/button
-					</item>
-					<item
-					addcaps="text,wpfelement"
-					capname="text"
-					id="e19d0df9-a851-4fce-bdf5-40a45899316a"
-					name="GenericTab"
-					refimgid="456ed6d6-6f7f-4fa0-8e1d-e666d80a01ff"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/tabpagelist/button/container/tabpage/container/text[@caption=$TabName]
-					</item>
-					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/tabpagelist/button
-					</basepath>
-				</folder>
-				<folder
-				capname="tree"
-				id="e882bcc2-2787-47d4-b645-fbe938ac842b"
-				isrooted="True"
-				name="OperationTree"
+				name="MultipleFunctionView"
 				searchtimeout="30000ms"
 				usecache="False">
 					<folder
+					capname="table"
+					id="a040953d-12dc-49de-b1b9-3a84f0163005"
+					isrooted="True"
+					name="Table"
+					searchtimeout="30000ms"
+					usecache="False">
+						<folder
+						capname="container"
+						id="02ef1cec-dec6-48e1-b31c-740f320c8ef8"
+						isrooted="True"
+						name="TableData"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							addcaps="cell,accessible"
+							capname="cell"
+							id="ad8aa233-efc0-4072-9c3e-b58ad48adb6d"
+							name="GenericTableCell"
+							refimgid="f24869b8-d0ea-4959-8d49-4540075ed15a"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MultipleFunctionView']//table/container[@accessiblename='Data Panel']/row[$rowNumber]/cell[@accessiblename&gt;$columnName]
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MultipleFunctionView']//table/container[@accessiblename='Data Panel']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MultipleFunctionView']//table
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MultipleFunctionView']
+					</basepath>
+				</folder>
+				<folder
+				capname="unknown"
+				id="5c525066-d879-4cb3-8f8c-d9247547af48"
+				isrooted="True"
+				name="FeatureEditors"
+				searchtimeout="30000ms"
+				usecache="False">
+					<folder
+					capname="container"
+					id="c3543530-0d3d-4b15-befa-956a1203710d"
+					isrooted="True"
+					name="CompositeStructureView"
+					searchtimeout="30000ms"
+					usecache="True">
+						<folder
+						capname="container"
+						id="b66620b1-ce01-46f7-9e75-d0339be56f26"
+						isrooted="True"
+						name="PumpView"
+						searchtimeout="30000ms"
+						usecache="True">
+							<item
+							capname="text"
+							id="f83c5e74-8e49-43b8-b757-04ab65e820cf"
+							name="CapacityField"
+							robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='PumpView']/element"
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='PumpView']//text[@controlname='textBoxCapacity']
+							</item>
+							<item
+							capname="text"
+							id="8f035444-ebcf-417f-9994-c1e2904c9ec3"
+							name="SuctionOnField"
+							robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='PumpView']/element"
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='PumpView']//text[@controlname='txtSuctionOn']
+							</item>
+							<item
+							capname="text"
+							id="a508c4dc-3588-44e7-820a-02ff56673d23"
+							name="SuctionOffField"
+							robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='PumpView']/element"
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='PumpView']//text[@controlname='txtSuctionOff']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='PumpView']
+							</basepath>
+						</folder>
+						<folder
+						capname="container"
+						id="21472301-6287-4fb3-966d-1f1135fa9699"
+						isrooted="True"
+						name="WeirView"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							capname="text"
+							id="80fd0bd8-5cce-41c7-b995-61b8a76c0db7"
+							name="CrestLevelField"
+							robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='WeirView']/element"
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='WeirView']//text[@controlname='textBoxCrestLevel']
+							</item>
+							<item
+							capname="text"
+							id="8745a174-6cc8-4d55-ab52-c40f2652008a"
+							name="CrestWidthField"
+							robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='WeirView']/element"
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='WeirView']//text[@controlname='textBoxCrestWidth']
+							</item>
+							<item
+							capname="text"
+							id="873dde97-1895-41c7-a72a-71196233bfd6"
+							name="LowerEdgeLevelField"
+							robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='WeirView']/element"
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='WeirView']//text[@controlname='textBoxLowerEdgeLevel']
+							</item>
+							<item
+							capname="text"
+							id="5b2ea797-4df5-41b4-b689-5a526e593c88"
+							name="CorrectionCoefficientField"
+							robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='WeirView']/element"
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='WeirView']//text[@controlname='textBoxDischargeCoefficient']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']//container[@controlname='WeirView']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CompositeStructureView']
+						</basepath>
+					</folder>
+					<folder
+					capname="container"
+					id="f7127faf-1519-4480-ac62-d3a2a4a2b416"
+					isrooted="True"
+					name="NwrwDryWeatherFlowDefinitionView"
+					searchtimeout="30000ms"
+					usecache="True">
+						<folder
+						capname="table"
+						id="0b88f070-142b-460c-982b-f2cdbb4d1315"
+						isrooted="True"
+						name="Table"
+						searchtimeout="30000ms"
+						usecache="True">
+							<folder
+							capname="container"
+							id="8cefb07c-7256-449d-9725-ea8658425f8f"
+							isrooted="True"
+							name="TableData"
+							searchtimeout="30000ms"
+							usecache="True">
+								<item
+								addcaps="cell,accessible"
+								capname="cell"
+								id="ce0e36ec-ee07-4eaf-863c-3db7d53d37a2"
+								name="GenericTableCell"
+								refimgid="f24869b8-d0ea-4959-8d49-4540075ed15a"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='NwrwDryWeatherFlowDefinitionView']//table/container[@accessiblename='Data Panel']/row[$rowNumber]/cell[@accessiblename&gt;$columnName]
+								</item>
+								<basepath>
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='NwrwDryWeatherFlowDefinitionView']//table/container[@accessiblename='Data Panel']
+								</basepath>
+							</folder>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='NwrwDryWeatherFlowDefinitionView']//table
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='NwrwDryWeatherFlowDefinitionView']
+						</basepath>
+					</folder>
+					<folder
+					capname="container"
+					id="8bcf8485-46c9-43d5-9d67-1a115bde5013"
+					isrooted="True"
+					name="BoundaryConditionsEditor"
+					searchtimeout="30000ms"
+					usecache="True">
+						<folder
+						capname="container"
+						id="7c04f0a7-25f9-4e33-bbfe-60072a71494e"
+						isrooted="True"
+						name="BoundaryConditionPanel"
+						searchtimeout="30000ms"
+						usecache="True">
+							<folder
+							capname="container"
+							id="a18d27e0-c2d4-49f9-b2d4-3c26663a2232"
+							isrooted="True"
+							name="BoundaryConditionSettings"
+							searchtimeout="30000ms"
+							usecache="True">
+								<item
+								addcaps="button,control,nativewindow"
+								capname="button"
+								id="5063f3bf-3ee7-4bfa-abae-f4703f8edcb6"
+								name="AddDefinitionButton"
+								refimgid="6eee0b9d-3d34-40dd-bf7c-a8906aa474a5"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']//button[@controlname='addDefinitionButton']
+								</item>
+								<item
+								addcaps="combobox,control,nativewindow"
+								capname="combobox"
+								id="95dc4e91-d0a6-4efc-8f23-0175eecb7792"
+								name="QuantitiesComboBox"
+								refimgid="5dabd703-f3b8-4ea8-af6f-0f7a4f4c3d82"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']//combobox[@controlname='quantitiesComboBox']
+								</item>
+								<item
+								addcaps="combobox,control,nativewindow"
+								capname="combobox"
+								id="aaa12a99-c432-42c4-a2b5-960fa957ba32"
+								name="ForcingTypeCombobox"
+								refimgid="79b1fe42-e682-4941-bfe6-c9a91b5297d1"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']//combobox[@controlname='dataTypeComboBox']
+								</item>
+								<basepath>
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']
+								</basepath>
+							</folder>
+							<folder
+							capname="container"
+							id="80401fb0-8e3c-43b7-b433-bd80617be96d"
+							isrooted="True"
+							name="LocationSettings"
+							searchtimeout="30000ms"
+							usecache="False">
+								<item
+								addcaps="checkbox,accessible"
+								capname="checkbox"
+								id="93a27745-5409-445b-a6f2-ffee70385873"
+								name="SupportPointCheckBox"
+								refimgid="6ad34ba2-1995-4397-bc2a-3d4422a459e3"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Location']//checkbox[@text=$SupportPointName]
+								</item>
+								<basepath>
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Location']
+								</basepath>
+							</folder>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']
+							</basepath>
+						</folder>
+						<folder
+						capname="container"
+						id="6dd191d2-ef7a-4b61-99ab-3b3573a4ec67"
+						isrooted="True"
+						name="TableChartPanel"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							addcaps="button,control,nativewindow"
+							capname="button"
+							id="bfd93dc3-a961-4547-9be0-03b6a601d2d6"
+							name="GenerateSeriesButton"
+							refimgid="924f8d13-afe3-483c-a231-a0d3640ef8a5"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='tableLayoutPanel1']/button[@controlname='genDataButton']
+							</item>
+							<folder
+							capname="container"
+							id="1401bf66-95c5-4679-9c7e-9a9698861d87"
+							isrooted="True"
+							name="TableDataBC"
+							searchtimeout="30000ms"
+							usecache="False">
+								<item
+								addcaps="cell,accessible"
+								capname="cell"
+								id="3cc7f234-ec63-4cfc-922b-5ea88f2001b8"
+								name="GenAstronComponentAmplitudeCell"
+								refimgid="5d20984a-d4fe-4d01-9e06-5f3341b304c4"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblevalue&gt;$NameAstronomicalComponent]/cell[@accessiblename&gt;$ParameterName]
+								</item>
+								<item
+								addcaps="cell,accessible"
+								capname="cell"
+								id="e9be3b18-91d4-4271-bbb3-7e37277f3dfc"
+								name="GenericCellLastRow"
+								refimgid="aa5928d1-2bfe-41b2-bc13-ab7de0c3754c"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblename='NewItem Row']/cell[@accessiblename&gt;$ParameterName]
+								</item>
+								<basepath>
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']
+								</basepath>
+							</folder>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']
+						</basepath>
+					</folder>
+					<folder
+					capname="tabpagelist"
+					id="59964979-74a0-46fb-83aa-355af1b4c823"
+					isrooted="True"
+					name="BoundaryData1DEditor"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						capname="text"
+						id="796e02c8-f8d0-4337-aeaa-54d99b2fae3f"
+						name="WaterLevelField"
+						robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='BoundaryData1DSettings']/element"
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='BoundaryData1DSettings']//text[@automationid='WaterLevel']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='BoundaryData1DSettings']
+						</basepath>
+					</folder>
+					<folder
+					capname="container"
+					id="3a308dc6-b163-43ab-becd-7fe3f1ac3c82"
+					isrooted="True"
+					name="SewerConnectionView"
+					searchtimeout="30000ms"
+					usecache="True">
+						<folder
+						capname="container"
+						id="33ce7c2a-64a6-4287-a83b-5e153dfafdc9"
+						isrooted="True"
+						name="CrossSectionPipeView"
+						searchtimeout="30000ms"
+						usecache="True">
+							<item
+							addcaps="button,control,nativewindow"
+							capname="button"
+							id="1a021cbd-b677-4426-95e8-17a0746d329b"
+							name="BtnEdit"
+							refimgid="52b03e36-745a-4461-842c-a8aa2ed9ff30"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@automationid='SewerConnectionView']//container[@controlname='CrossSectionPipeView']//button[@controlname='btnEdit']
+							</item>
+							<item
+							addcaps="button,control,nativewindow"
+							capname="button"
+							id="0dec05bf-6400-49d2-a171-d4e3900d8a6b"
+							name="BtnNewSharedDefinition"
+							refimgid="a2408514-0145-4176-9bfc-2b80b2573b50"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@automationid='SewerConnectionView']//container[@controlname='CrossSectionPipeView']//button[@controlname='btnNewSharedDefinition']
+							</item>
+							<item
+							addcaps="combobox,control,nativewindow"
+							capname="combobox"
+							id="f6580909-c82e-4b7e-b106-61d818634649"
+							name="ComboBoxDefinitions"
+							refimgid="82bbc45c-006c-4847-bce7-40b59ae7036e"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@automationid='SewerConnectionView']//container[@controlname='CrossSectionPipeView']//combobox[@controlname='comboBoxDefinitions']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@automationid='SewerConnectionView']//container[@controlname='CrossSectionPipeView']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@automationid='SewerConnectionView']
+						</basepath>
+					</folder>
+					<folder
+					capname="container"
+					id="d0837fd9-83de-4b37-b5ce-269aef0362f1"
+					isrooted="True"
+					name="CrossSectionDefinitionView"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						capname="combobox"
+						id="b2297f7d-8b03-4a19-8f60-16d399f4cab3"
+						name="ShapeType"
+						robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@automationid='SewerConnectionView']//container[@controlname='CrossSectionDefinitionView']/element"
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CrossSectionDefinitionView']//combobox[@controlname='comboBoxShapeType']
+						</item>
+						<item
+						addcaps="text,accessible"
+						capname="text"
+						id="51cb294a-89fb-43de-b3b6-9fb7f7c8961a"
+						name="DiameterField"
+						refimgid="cd6ad2fb-8f5f-488a-99a4-89012a0a068a"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CrossSectionDefinitionView']//text[@controlname='textBoxDiameter']
+						</item>
+						<item
+						capname="text"
+						id="cd59bce2-15f5-4b9a-8c60-9b6bc50a1201"
+						name="HeightField"
+						robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CrossSectionDefinitionView']/element"
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CrossSectionDefinitionView']//text[@controlname='textBoxHeight']
+						</item>
+						<item
+						capname="text"
+						id="18d81903-91a7-499a-b225-08d56077a1d0"
+						name="WidthField"
+						robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CrossSectionDefinitionView']/element"
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CrossSectionDefinitionView']//text[@controlname='textBoxWidth']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='CrossSectionDefinitionView']
+						</basepath>
+					</folder>
+					<folder
+					capname="unknown"
+					id="f62df1ef-8224-4588-98b3-25275b37bf67"
+					isrooted="True"
+					name="MeteoEditorView"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						capname="button"
+						id="03292039-e20a-440d-be19-5ca1f9d3999f"
+						name="GenerateTimeSeriesButton"
+						robustPath="/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/../element"
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//button[@automationid='GenerateTimeSeries']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..
+					</basepath>
+				</folder>
+				<basepath>
+					/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..
+				</basepath>
+			</folder>
+			<folder
+			capname="form"
+			id="df1060c7-e006-41b5-af92-553280567c60"
+			isrooted="True"
+			name="DocumentsPaneRight"
+			searchtimeout="30000ms"
+			usecache="True">
+				<folder
+				capname="tree"
+				id="bb8a1d6d-6ff1-423f-b47f-a2c7f8ddd736"
+				isrooted="True"
+				name="OperationTree"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
 					capname="treeitem"
-					id="01e729e0-6c41-433a-a1ab-cdcc0b428142"
+					id="dad25ed1-d69e-4a8f-8fe9-3b02d20b6b3f"
 					isrooted="True"
 					name="RootItem"
 					searchtimeout="30000ms"
@@ -1226,394 +1765,37 @@ name="DHYDRO1D2DRepository">
 						<item
 						addcaps="treeitem,accessible,accessibletreeitem"
 						capname="treeitem"
-						id="6600559d-abdd-40d5-b1df-9d5c2cdf87fd"
+						id="aea0da24-4096-4c5a-b81e-64ddcea5236a"
 						name="ImportSample"
 						refimgid="7d1131db-4e3e-4a9f-aab9-260f3e8cca86"
 						robustPath=""
 						searchtimeout="120000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='SpatialOperationSetLayerView']/tree[@controlname='treeView']/tree[@accessiblerole='Outline']/treeitem/treeitem[@accessiblename&gt;'set']/treeitem[@accessiblename&gt;'Import samples']
+							/form[@title~'Delta Shell']//container[@controlname='SpatialOperationSetLayerView']/tree/tree/treeitem/treeitem[@accessiblename&gt;'set']/treeitem[@accessiblename&gt;'Import samples']
 						</item>
 						<item
 						addcaps="treeitem,accessible,accessibletreeitem"
 						capname="treeitem"
-						id="f0343b84-e854-46be-afff-3f39b849de18"
+						id="09e13ffb-13c9-4ce4-ad94-e385764a5ace"
 						name="Interpolate"
 						refimgid="ff23d252-1455-4330-bc7f-2f61eb85b6f1"
 						robustPath=""
 						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='SpatialOperationSetLayerView']/tree[@controlname='treeView']/tree[@accessiblerole='Outline']/treeitem/treeitem[@accessiblename&gt;'Interpolate']
+							/form[@title~'Delta Shell']//container[@controlname='SpatialOperationSetLayerView']/tree/tree/treeitem/treeitem[@accessiblename&gt;'Interpolate']
 						</item>
 						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='SpatialOperationSetLayerView']/tree[@controlname='treeView']/tree[@accessiblerole='Outline']/treeitem
+							/form[@title~'Delta Shell']//container[@controlname='SpatialOperationSetLayerView']/tree/tree/treeitem
 						</basepath>
 					</folder>
 					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='SpatialOperationSetLayerView']/tree[@controlname='treeView']/tree[@accessiblerole='Outline']
-					</basepath>
-				</folder>
-				<folder
-				capname="container"
-				id="ac07df73-5932-48f4-bd59-9179c87d2c2c"
-				isrooted="True"
-				name="WinFormsAdapter"
-				searchtimeout="30000ms"
-				usecache="False">
-					<folder
-					capname="container"
-					id="299cea35-d04a-4675-ae43-a2122a1f4f5d"
-					isrooted="True"
-					name="ParametersDocumentView"
-					refimgid="552c19a9-c86b-44ab-a649-81dbab3f9f81"
-					searchtimeout="30000ms"
-					usecache="False">
-						<folder
-						capname="table"
-						id="b885f380-e3cf-477a-8a95-a28fbed14721"
-						isrooted="True"
-						name="Table"
-						refimgid="75745939-3cad-48d0-989a-9ce57aee930e"
-						searchtimeout="30000ms"
-						usecache="False">
-							<item
-							capname="container"
-							id="30aa980d-8c1a-48b5-9e2b-b6445d4fe1ba"
-							name="Header"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='FunctionListView']/container[@controlname='splitContainer1']//table/container[@accessiblename='Header Panel']
-							</item>
-							<folder
-							capname="container"
-							id="1d155697-b478-4211-9050-b179b95696f9"
-							isrooted="True"
-							name="Data"
-							searchtimeout="30000ms"
-							usecache="False">
-								<basepath>
-									/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='FunctionListView']/container[@controlname='splitContainer1']//table/container[@accessiblename='Data Panel']
-								</basepath>
-							</folder>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='FunctionListView']/container[@controlname='splitContainer1']//table
-							</basepath>
-						</folder>
-						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='FunctionListView']/container[@controlname='splitContainer1']
-						</basepath>
-					</folder>
-					<item
-					addcaps="text,accessible"
-					capname="text"
-					id="51cb294a-89fb-43de-b3b6-9fb7f7c8961a"
-					name="Diameter"
-					refimgid="cd6ad2fb-8f5f-488a-99a4-89012a0a068a"
-					refpath="/form[@name='Window']/list[@automationid='ListView']/container[9]/container[@caption='']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeRoundView']/text[@controlname='textBoxDiameter']/text[@accessiblerole='Text']"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeRoundView']/text[@controlname='textBoxDiameter']/text[@accessiblerole='Text']
-					</item>
-					<item
-					addcaps="combobox,control,nativewindow"
-					capname="combobox"
-					id="4eaa0e8b-6211-42fc-939f-7c29ac191806"
-					name="ComboBoxShapeType"
-					refimgid="13519291-b577-4302-bdbf-bc2933a86585"
-					refpath="/form[@name='Window']/list[@automationid='ListView']/container[11]/container[@caption='']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='tableLayoutPanel1']/combobox[@controlname='comboBoxShapeType']"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='tableLayoutPanel1']/combobox[@controlname='comboBoxShapeType']
-					</item>
-					<item
-					addcaps="checkbox,control,nativewindow"
-					capname="checkbox"
-					id="f8952caa-c50a-4aa9-b311-a92134854a4c"
-					name="CheckboxIsClosedProfile"
-					refimgid="abd94836-e7e7-4861-88d2-3bcd8193dda1"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeWidthHeightView']/container[@controlname='tableLayoutPanel1']/checkbox[@controlname='checkboxIsClosedProfile']
-					</item>
-					<item
-					addcaps="listitem,wpfelement,wpfgroupelement"
-					capname="listitem"
-					id="3b8a01b6-2698-49db-aca9-7e6d05f72b40"
-					name="GenericWorkflowsListItemOld"
-					refimgid="e7c3cbac-b3cd-48ce-9962-27c48c7776dd"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container/container/container/element/tabpagelist/container[1]/container[@controltypename='WinFormsAdapter']/container/element/container/text[@caption='Workflows']/container[@caption='']/list[1]/listitem[@text=$WorkflowName]
-					</item>
-					<item
-					addcaps="text,control,nativewindow"
-					capname="text"
-					id="24acb30f-51a1-4497-b6ff-06fc49cd7336"
-					name="LabelWidth"
-					refimgid="3c78ef89-e624-46f5-bf0b-2546061bd502"
-					refpath="/form[@name='Window']/list[@automationid='ListView']/container[13]/container[@caption='']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeWidthHeightView']/container[@controlname='tableLayoutPanel1']/text[@controlname='labelWidth']"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeWidthHeightView']/container[@controlname='tableLayoutPanel1']/text[@controlname='labelWidth']
-					</item>
-					<item
-					addcaps="text,accessible"
-					capname="text"
-					id="0d61ac1d-c0d4-4627-8c53-0b6bf26c1b4a"
-					name="Text"
-					refimgid="e122d591-b505-4a5d-a99d-4412ba0a653f"
-					refpath="/form[@name='Window']/list[@automationid='ListView']/container[14]/container[@caption='']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeWidthHeightView']/container[@controlname='tableLayoutPanel1']/text[@controlname='textBoxHeight']/text[@accessiblerole='Text']"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeWidthHeightView']/container[@controlname='tableLayoutPanel1']/text[@controlname='textBoxHeight']/text[@accessiblerole='Text']
-					</item>
-					<item
-					addcaps="button,accessible"
-					capname="button"
-					id="a027f363-70a4-4b97-a499-1905dfa28388"
-					name="Append"
-					refimgid="d73b4a96-ff53-4681-b72e-41cff7b22a47"
-					refpath="/form[@name='Window']/list[@automationid='ListView']/container[13]/container[@caption='']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel2']/container[@controlname='rightSplitContainer']/container[@controlname='panel2']/container[@controlname='splitContainerSectionViews']/container[@controlname='panel1']/container[@controlname='crossSectionSectionsTable']/container[@controlname='tableViewSections']/element[@controlname='dxGridControl']/element[@controlname='_embeddedNavigator']/button[@text='Append']"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel2']/container[@controlname='rightSplitContainer']/container[@controlname='panel2']/container[@controlname='splitContainerSectionViews']/container[@controlname='panel1']/container[@controlname='crossSectionSectionsTable']/container[@controlname='tableViewSections']/element[@controlname='dxGridControl']/element[@controlname='_embeddedNavigator']/button[@text='Append']
-					</item>
-					<item
-					addcaps="button,accessible"
-					capname="button"
-					id="9f4ad95f-a330-45a1-9c56-bdc23e948e33"
-					name="CancelEdit"
-					refimgid="ac19dc2a-cb25-44fe-8b9e-bbc3d01f50f4"
-					refpath="/form[@name='Window']/list[@automationid='ListView']/container[13]/container[@caption='']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel2']/container[@controlname='rightSplitContainer']/container[@controlname='panel2']/container[@controlname='splitContainerSectionViews']/container[@controlname='panel1']/container[@controlname='crossSectionSectionsTable']/container[@controlname='tableViewSections']/element[@controlname='dxGridControl']/element[@controlname='_embeddedNavigator']/button[@text='Cancel Edit']"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel2']/container[@controlname='rightSplitContainer']/container[@controlname='panel2']/container[@controlname='splitContainerSectionViews']/container[@controlname='panel1']/container[@controlname='crossSectionSectionsTable']/container[@controlname='tableViewSections']/element[@controlname='dxGridControl']/element[@controlname='_embeddedNavigator']/button[@text='Cancel Edit']
-					</item>
-					<item
-					addcaps="cell,accessible"
-					capname="cell"
-					id="620a7463-fd38-4cd9-826f-678ac6f87da2"
-					name="StartRow0"
-					refimgid="21f6c89d-7324-490e-8fdc-7870ad146299"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel2']/container[@controlname='rightSplitContainer']/container[@controlname='panel2']/container[@controlname='splitContainerSectionViews']/container[@controlname='panel1']/container[@controlname='crossSectionSectionsTable']/container[@controlname='tableViewSections']/element[@controlname='dxGridControl']/table[@accessiblerole='Table']/container[@caption='Data Panel']/row/cell
-					</item>
-					<item
-					addcaps="button,accessible"
-					capname="button"
-					id="47740fb7-4876-4a03-b478-72aded569c9b"
-					name="GenericTimeNavigatorButton"
-					refimgid="bc990c85-0afd-40db-a283-ea79d296fcbc"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='TimeSeriesNavigator']/container[@controlname='panelControls']/toolbar[@controlname='toolStrip1']/button[@accessiblename=$ButtonName]
-					</item>
-					<item
-					addcaps="cell,accessible"
-					capname="cell"
-					id="0bed291b-d13e-434f-a686-431a7b048aaa"
-					name="ConstantVolumeLDayRow1"
-					refimgid="a0c8858d-2f5a-4aa8-afd2-12b01d6999e7"
-					refpath="/form[@name='Window']/list[@automationid='ListView']/container[8]/container[@caption='']/container[@controlname='NwrwDryWeatherFlowDefinitionView']/container[@controlname='tableView']/element[@controlname='dxGridControl']/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblename='Row 2']/cell[@accessiblename='Constant volume [L/day] row 1']"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='NwrwDryWeatherFlowDefinitionView']/container[@controlname='tableView']/element[@controlname='dxGridControl']/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblename='Row 2']/cell[@accessiblename&gt;'Constant volume [L/day] row']
-					</item>
-					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']
-					</basepath>
-				</folder>
-				<folder
-				capname="treeitem"
-				id="db53fc2d-0702-479a-8a30-0be27f21b5f3"
-				isrooted="True"
-				name="OutputMapTreeItem2D"
-				searchtimeout="30000ms"
-				usecache="False">
-					<item
-					addcaps="button,wpfelement,wpfgroupelement"
-					capname="button"
-					id="d5c6da69-605f-42ba-a793-eefe1c316dac"
-					name="OutputMapTreeItemExpander"
-					refimgid="1aa50458-f522-4e76-a8b3-2e7d379812b2"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/button
-					</item>
-					<folder
-					capname="treeitem"
-					id="75306f78-f0cf-4c54-ab47-20eee31e7008"
-					isrooted="True"
-					name="OutputMapFileTreeItem2D"
-					searchtimeout="30000ms"
-					usecache="False">
-						<item
-						addcaps="button,wpfelement,wpfgroupelement"
-						capname="button"
-						id="f0297ad5-1265-4c0b-87f3-d624da343355"
-						name="OutputMapFileTreeItemExpander"
-						refimgid="1aa50458-f522-4e76-a8b3-2e7d379812b2"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='Map File 2D']/parent::treeitem/button
-						</item>
-						<folder
-						capname="treeitem"
-						id="8725183d-8432-4a72-a855-0596fd34e808"
-						isrooted="True"
-						name="OutputMapVariableTreeItem2D"
-						searchtimeout="30000ms"
-						usecache="False">
-							<item
-							addcaps="checkbox,wpfelement,wpfgroupelement"
-							capname="checkbox"
-							id="ed28cbfb-94cf-422c-aaf2-5659a2c0a39c"
-							name="OutputMapVariableCheckBox2D"
-							refimgid="50d2de6e-a268-47b8-b332-2a0bc8d49e6e"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='Map File 2D']/parent::treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem/checkbox
-							</item>
-							<item
-							addcaps="checkbox,wpfelement,wpfgroupelement"
-							capname="text"
-							id="b8c23e9d-1e09-4be3-a225-d24b9801a3ad"
-							name="OutputMapVariableText2D"
-							refimgid="50d2de6e-a268-47b8-b332-2a0bc8d49e6e"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='Map File 2D']/parent::treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem/text
-							</item>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='Map File 2D']/parent::treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem
-							</basepath>
-						</folder>
-						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='Map File 2D']/parent::treeitem
-						</basepath>
-					</folder>
-					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/container/treeitem/text[@caption='Output']/parent::treeitem
-					</basepath>
-				</folder>
-				<folder
-				capname="treeitem"
-				id="7aea68f8-cfac-4492-8879-a6abe90cfd64"
-				isrooted="True"
-				name="OutputMapTreeItem1D"
-				searchtimeout="30000ms"
-				usecache="False">
-					<folder
-					capname="treeitem"
-					id="8127d39b-0534-49bb-b53e-14b5615bb8bd"
-					isrooted="True"
-					name="OutputMapFileTreeItem1D"
-					searchtimeout="30000ms"
-					usecache="False">
-						<item
-						addcaps="button,wpfelement,wpfgroupelement"
-						capname="button"
-						id="f06ecad2-8719-475c-b4a2-5bd50bebe254"
-						name="OutputMapFileTreeItemExpander"
-						refimgid="1aa50458-f522-4e76-a8b3-2e7d379812b2"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/text[@caption='Integrated Model']/parent::treeitem/container/treeitem/text[@caption='FlowFM']/parent::treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='Map File 1D']/parent::treeitem/button
-						</item>
-						<folder
-						capname="treeitem"
-						id="f5e48b6d-523b-44b3-9d80-915f0c27718c"
-						isrooted="True"
-						name="OutputMapVariableTreeItem1D"
-						searchtimeout="30000ms"
-						usecache="False">
-							<item
-							addcaps="checkbox,wpfelement,wpfgroupelement"
-							capname="checkbox"
-							id="71c05921-11e1-49af-ae5d-fd97ebab8bb2"
-							name="OutputMapVariableCheckBox1D"
-							refimgid="50d2de6e-a268-47b8-b332-2a0bc8d49e6e"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/text[@caption='Integrated Model']/parent::treeitem/container/treeitem/text[@caption='FlowFM']/parent::treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='Map File 1D']/parent::treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem/checkbox
-							</item>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/text[@caption='Integrated Model']/parent::treeitem/container/treeitem/text[@caption='FlowFM']/parent::treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='Map File 1D']/parent::treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem
-							</basepath>
-						</folder>
-						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/text[@caption='Integrated Model']/parent::treeitem/container/treeitem/text[@caption='FlowFM']/parent::treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='Map File 1D']/parent::treeitem
-						</basepath>
-					</folder>
-					<folder
-					capname="treeitem"
-					id="6a5bd784-e772-48d3-a133-4c26dc29525b"
-					isrooted="True"
-					name="OutputHisHileTreeItem1D"
-					searchtimeout="30000ms"
-					usecache="False">
-						<folder
-						capname="treeitem"
-						id="e6d7ef34-553e-41f1-a048-10a9c258dace"
-						isrooted="True"
-						name="OutputHisFileVariableTreeItem1D"
-						searchtimeout="30000ms"
-						usecache="False">
-							<item
-							addcaps="checkbox,wpfelement,wpfgroupelement"
-							capname="checkbox"
-							id="22048e22-b5a1-47a6-bdbf-c48f3d09ecdb"
-							name="HisFileVariableCheckBox1D"
-							refimgid="50d2de6e-a268-47b8-b332-2a0bc8d49e6e"
-							robustPath=""
-							searchtimeout="30000ms">
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/text[@caption='Integrated Model']/parent::treeitem/container/treeitem/text[@caption='FlowFM']/parent::treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='His File']/parent::treeitem/container/treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem/checkbox
-							</item>
-							<basepath>
-								/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/text[@caption='Integrated Model']/parent::treeitem/container/treeitem/text[@caption='FlowFM']/parent::treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='His File']/parent::treeitem/container/treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem
-							</basepath>
-						</folder>
-						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/text[@caption='Integrated Model']/parent::treeitem/container/treeitem/text[@caption='FlowFM']/parent::treeitem/container/treeitem/text[@caption='Output']/parent::treeitem/container/treeitem/text[@caption='His File']/parent::treeitem
-						</basepath>
-					</folder>
-					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container/treeitem/text[@caption='Integrated Model']/parent::treeitem/container/treeitem/text[@caption='FlowFM']/parent::treeitem/container/treeitem/text[@caption='Output']/parent::treeitem
-					</basepath>
-				</folder>
-				<folder
-				capname="table"
-				id="eccc4836-918e-42e9-873e-6ba25dcfa8b1"
-				isrooted="True"
-				name="MessagePanel"
-				searchtimeout="30000ms"
-				usecache="False">
-					<item
-					addcaps="cell,wpfelement,wpfgroupelement"
-					capname="cell"
-					id="37caece3-bd3a-4e48-9dbf-3b4fe072251b"
-					name="textLastMessage"
-					refimgid="e321f076-ae03-475e-8bdc-2734270e8fe4"
-					robustPath=""
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/table[@automationid='dataGrid']/container/row[1]/list/cell[2]
-					</item>
-					<item
-					capname="button"
-					id="8601c315-49d4-43c8-a726-691b762a1f2f"
-					name="showHideDebugMessages"
-					robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/table[@automationid='dataGrid']/element"
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/table[@automationid='dataGrid']/container[2]/button[1]
-					</item>
-					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/table[@automationid='dataGrid']
+						/form[@title~'Delta Shell']//container[@controlname='SpatialOperationSetLayerView']/tree/tree
 					</basepath>
 				</folder>
 				<folder
 				capname="tree"
-				id="50ad9820-e430-4c87-9dfd-3470e3a03d83"
+				id="763abf70-ee0b-419b-8f17-0b0515907837"
 				isrooted="True"
-				name="MapTree"
+				name="MapLegendTree"
+				refimgid="9dd436d1-0607-4e50-9229-f54d691ce82d"
 				searchtimeout="30000ms"
 				usecache="False">
 					<folder
@@ -1623,221 +1805,270 @@ name="DHYDRO1D2DRepository">
 					name="RootTreeItem"
 					searchtimeout="30000ms"
 					usecache="False">
-						<item
-						capname="text"
-						id="e1c32e82-b0fa-449e-8fb1-6fd4c66e9eb6"
-						name="GenericMapTreeItemNode"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container?/treeitem?/container?/treeitem?/container?/treeitem?/container?/treeitem?/container?/treeitem?/text[@caption=$NameMapTreeItemNode]
-						</item>
-						<item
-						capname="text"
-						id="afc692af-3aad-4788-a11f-6b0695b4ad88"
-						name="GenericMapTreeItemNodeWithParent"
-						robustPath=""
-						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container?/treeitem?/container?/treeitem?/container?/treeitem?/container?/treeitem?/container?/treeitem?/text[@caption~$ParentNodeName]/parent::treeitem/container?/treeitem?/text[@caption=$NameMapTreeItemNode]
-						</item>
 						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem
+							/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']/treeitem
 						</basepath>
 					</folder>
+					<folder
+					capname="treeitem"
+					id="305a8eaf-898e-4397-983e-65d32d7edfbc"
+					isrooted="True"
+					name="OutputMapTreeItem"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="696b7ae2-6f39-47b6-9125-70b0beb2ffe8"
+						name="OutputMapTreeItemExpander"
+						refimgid="1aa50458-f522-4e76-a8b3-2e7d379812b2"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output']/parent::treeitem/button
+						</item>
+						<folder
+						capname="treeitem"
+						id="ae016c1c-01a0-4666-83eb-d25fbc0d8819"
+						isrooted="True"
+						name="OutputMapFileTreeItem_2D"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							addcaps="button,wpfelement,wpfgroupelement"
+							capname="button"
+							id="c7e5f6dc-c7d5-449b-bc26-9dfa291551f1"
+							name="OutputMapFileTreeItemExpander"
+							refimgid="1aa50458-f522-4e76-a8b3-2e7d379812b2"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output']/parent::treeitem//text[@caption='Map File 2D']/parent::treeitem/button
+							</item>
+							<folder
+							capname="treeitem"
+							id="1dee203f-4aee-4c7d-be49-689d51665fce"
+							isrooted="True"
+							name="OutputMapVariableTreeItem_2D"
+							searchtimeout="30000ms"
+							usecache="False">
+								<item
+								addcaps="checkbox,wpfelement,wpfgroupelement"
+								capname="checkbox"
+								id="0bdf7a91-86c5-4db3-9974-2ccf2f5e0e69"
+								name="OutputMapVariableCheckBox_2D"
+								refimgid="50d2de6e-a268-47b8-b332-2a0bc8d49e6e"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output']/parent::treeitem//text[@caption='Map File 2D']/parent::treeitem//text[@text=$variableName]/parent::treeitem/checkbox
+								</item>
+								<item
+								addcaps="checkbox,wpfelement,wpfgroupelement"
+								capname="text"
+								id="893145eb-6d14-41d5-80fb-a8f400e3ec85"
+								name="OutputMapVariableText_2D"
+								refimgid="50d2de6e-a268-47b8-b332-2a0bc8d49e6e"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output']/parent::treeitem//text[@caption='Map File 2D']/parent::treeitem//text[@text=$variableName]/parent::treeitem/text
+								</item>
+								<basepath>
+									/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output']/parent::treeitem//text[@caption='Map File 2D']/parent::treeitem//text[@text=$variableName]/parent::treeitem
+								</basepath>
+							</folder>
+							<basepath>
+								/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output']/parent::treeitem//text[@caption='Map File 2D']/parent::treeitem
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output']/parent::treeitem
+						</basepath>
+					</folder>
+					<item
+					addcaps="button,wpfelement,wpfgroupelement"
+					capname="button"
+					id="c2568b39-ae5d-470d-935a-1e1935682900"
+					name="AddNewLayerButton"
+					refimgid="e4672522-e71b-4423-b6f8-febc625e8d8d"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//button[@automationid='AddLayerButton']
+					</item>
+					<item
+					addcaps="button,wpfelement,wpfgroupelement"
+					capname="button"
+					id="e63ff055-b2be-4b21-a3dc-8a8fa087d5c8"
+					name="AddNewWmsLayerButton"
+					refimgid="d8b00b1d-30f5-41b5-bb65-958014ac4363"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//button[@automationid='AddTileLayerButton']
+					</item>
 					<item
 					addcaps="checkbox,wpfelement,wpfgroupelement"
 					capname="checkbox"
 					id="6030cd71-bf6d-47a3-94d2-231673de8890"
 					name="UseFocusedLayer"
 					refimgid="7c32ac4e-a629-406c-8e53-49d3fa8dee1a"
-					refpath="/form[@name='Window']/list[@automationid='ListView']/tree[1]/container[2]/checkbox[@text='Use focused layer']"
 					robustPath=""
 					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/container[2]/checkbox[@text='Use focused layer']
+						/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//checkbox[@text='Use focused layer']
+					</item>
+					<item
+					capname="text"
+					id="dd27b32b-6b5f-4d38-9e33-17805508de07"
+					name="GenericMapTreeItemNode"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//treeitem/text[@text=$NameMapTreeItemNode]
+					</item>
+					<item
+					capname="text"
+					id="afc692af-3aad-4788-a11f-6b0695b4ad88"
+					name="GenericMapTreeChildItemNode"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//treeitem/text[@text~$ParentNodeName]/parent::treeitem//treeitem/text[@text=$NameMapTreeItemNode]
 					</item>
 					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/tree
+						/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']
+					</basepath>
+				</folder>
+				<item
+				addcaps="tabpagelist,wpfelement,wpfgroupelement"
+				capname="text"
+				id="a40a6408-0a72-4c67-a1ba-2f8bfc13cd7a"
+				name="AnchorableMapTab"
+				refimgid="38b34e41-a673-4dca-afb6-a7d8dc18ae0e"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//container[@automationid='HeaderPanel']/tabpage//text[@text='Map']
+				</item>
+				<basepath>
+					/form[@title~'Delta Shell']
+				</basepath>
+			</folder>
+			<folder
+			capname="form"
+			id="547c3fb5-e9f8-4ad5-8622-113efaea1045"
+			isrooted="True"
+			name="DocumentsPaneBottom"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				capname="text"
+				id="b9764484-a72b-40bf-bab1-d1922c0a4275"
+				name="MessagesTab"
+				robustPath="/form[@title~'Delta Shell']/element"
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//container[@automationid='HeaderPanel']/tabpage//text[@text='Messages']
+				</item>
+				<item
+				capname="text"
+				id="0e528756-5bee-409d-8969-754a8602f5b9"
+				name="TimeSeriesNavigatorTab"
+				robustPath="/form[@title~'Delta Shell']/element"
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//container[@automationid='HeaderPanel']/tabpage//text[@text='Time Navigator']
+				</item>
+				<folder
+				capname="table"
+				id="20c871a0-5647-42ce-9eec-89f727c8e379"
+				isrooted="True"
+				name="MessageTable"
+				searchtimeout="30000ms"
+				usecache="True">
+					<item
+					addcaps="cell,wpfelement,wpfgroupelement"
+					capname="cell"
+					id="34453287-12e7-43be-bc98-cb29b792ac25"
+					name="textLastMessage"
+					refimgid="e321f076-ae03-475e-8bdc-2734270e8fe4"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//table[@automationid='dataGrid']/container/row[1]/list/cell[2]
+					</item>
+					<item
+					capname="button"
+					id="4c81b3eb-95e1-4112-892e-d93e697a0d31"
+					name="showHideDebugMessages"
+					robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/table[@automationid='dataGrid']/element"
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//table[@automationid='dataGrid']/container[2]/button[1]
+					</item>
+					<basepath>
+						/form[@title~'Delta Shell']//table[@automationid='dataGrid']
 					</basepath>
 				</folder>
 				<folder
-				capname="tabpagelist"
-				id="ad534c00-e78f-48b6-b113-1c85a38e87bd"
+				capname="container"
+				id="5c81b39c-d6d9-4e04-a466-0c089a21981f"
 				isrooted="True"
-				name="TabPageListRight"
+				name="TimeSeriesNavigator"
 				searchtimeout="30000ms"
-				usecache="False">
+				usecache="True">
 					<folder
-					capname="container"
-					id="4297159b-63ad-438f-b0e7-390698759ecd"
+					capname="toolbar"
+					id="d8a51878-6de6-4b66-81e7-14b4f1c98adb"
 					isrooted="True"
-					name="HeaderPanel"
+					name="ButtonsStrip"
 					searchtimeout="30000ms"
-					usecache="False">
+					usecache="True">
 						<item
-						capname="text"
-						id="9a4a6608-cb3c-4e0d-9860-3342496b6851"
-						name="MapTabButton"
-						robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/container/tabpagelist/container[@automationid='HeaderPanel']/element"
+						capname="button"
+						id="9ff65be2-00be-40d9-a1c8-20fb2c488052"
+						name="PlayButton"
+						refimgid="9b81d738-5d91-4193-ad33-108b68c4c92e"
+						robustPath=""
 						searchtimeout="30000ms">
-							/form[@title~'Delta Shell']/list[@automationid='ListView']//tabpagelist/container[@automationid='HeaderPanel']/tabpage/container/text[@text='Map']
+							/form[@title~'Delta Shell']//container[@controlname='TimeSeriesNavigator']//toolbar/button[@name='Play']
+						</item>
+						<item
+						capname="button"
+						id="c6319342-25b9-469b-86d2-8e26bbd62f7e"
+						name="PauseButton"
+						refimgid="dbd57107-dac5-41ff-9bb1-73cfa4a25b2d"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//container[@controlname='TimeSeriesNavigator']//toolbar/button[@name='Pause']
+						</item>
+						<item
+						capname="button"
+						id="86250720-fe37-4e0e-b875-77b9c693bfd5"
+						name="NextButton"
+						robustPath="/form[@title~'Delta Shell']//container[@controlname='TimeSeriesNavigator']//toolbar/element"
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//container[@controlname='TimeSeriesNavigator']//toolbar/button[@name='Next']
 						</item>
 						<basepath>
-							/form[@title~'Delta Shell']/list[@automationid='ListView']//tabpagelist/container[@automationid='HeaderPanel']
+							/form[@title~'Delta Shell']//container[@controlname='TimeSeriesNavigator']//toolbar
 						</basepath>
 					</folder>
 					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']//tabpagelist
-					</basepath>
-				</folder>
-				<item
-				addcaps="cell,accessible"
-				capname="cell"
-				id="1f4b826a-7767-4600-99e9-db6108815ea6"
-				name="GenericTableCell"
-				refimgid="f24869b8-d0ea-4959-8d49-4540075ed15a"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container?/container[@controltypename='WinFormsAdapter']/container[@controlname=$HeanerPanelName]/container/container?/container?/element[@controlname='dxGridControl']/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[$RowNumber]/cell[$ColumnNumber]
-				</item>
-				<item
-				addcaps="button,wpfelement,wpfgroupelement"
-				capname="button"
-				id="68ffbb56-69e5-4f83-8042-51c644ba1f0b"
-				name="AddNewWmsLayerButton"
-				refimgid="d8b00b1d-30f5-41b5-bb65-958014ac4363"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/container[2]/button[2]
-				</item>
-				<item
-				addcaps="statusbar,wpfelement,wpfgroupelement"
-				capname="listitem"
-				id="87c2038d-508d-4607-91e9-b91dc7bfc239"
-				name="StatusBar"
-				refimgid="5ad47dfb-31de-4b07-92b8-ced2d040a1b8"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/statusbar/listitem
-				</item>
-				<item
-				addcaps="button,control,nativewindow"
-				capname="button"
-				id="1a021cbd-b677-4426-95e8-17a0746d329b"
-				name="BtnEdit"
-				refimgid="52b03e36-745a-4461-842c-a8aa2ed9ff30"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/button/container/container/container/container/button[@controlname='btnEdit']
-				</item>
-				<item
-				addcaps="button,control,nativewindow"
-				capname="button"
-				id="0dec05bf-6400-49d2-a171-d4e3900d8a6b"
-				name="BtnNewSharedDefinition"
-				refimgid="a2408514-0145-4176-9bfc-2b80b2573b50"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/button/container/container/container/container/button[@controlname='btnNewSharedDefinition']
-				</item>
-				<item
-				addcaps="text,wpfelement"
-				capname="text"
-				id="d4695166-3cd2-4f48-90fe-ace02f90e801"
-				name="Standaard"
-				refimgid="009d1032-677f-406c-9cd6-4483bdb4f2f8"
-				refpath="/form[@name='Window']/list[@automationid='ListView']/tree/treeitem/container[@automationid='ItemsHost']/treeitem[2]/container[@automationid='ItemsHost']/treeitem[1]/text[@caption='standaard']"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/tree/treeitem/container[@automationid='ItemsHost']/treeitem[2]/container[@automationid='ItemsHost']/treeitem[1]/text[@caption='standaard']
-				</item>
-				<item
-				addcaps="text,wpfelement,wpfgroupelement"
-				capname="text"
-				id="51915702-9fd8-4830-8301-4f6873f4e1d2"
-				name="TextBoxHeight"
-				refimgid="6c95cea0-e72a-423f-a78d-53118508438e"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container/container/container/container/container/container/container/container/container/container/container/text[@controlname='textBoxHeight']
-				</item>
-				<item
-				addcaps="text,wpfelement,wpfgroupelement"
-				capname="text"
-				id="14830c7b-c534-4e05-8ac6-890ffa5d1e40"
-				name="TextBoxWidth"
-				refimgid="6c95cea0-e72a-423f-a78d-53118508438e"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container/container/container/container/container/container/container/container/container/container/container/text[@controlname='textBoxWidth']
-				</item>
-				<item
-				addcaps="text,wpfelement"
-				capname="text"
-				id="ecc2bef3-9ce3-4bac-b985-15c0ed2f75a5"
-				name="GenericButtonText"
-				refimgid="5b0071d4-0438-4562-8e2c-4c0d47dbe09b"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container?/text?/container?/button?/container?/text[@caption=$ButtonText]
-				</item>
-				<item
-				addcaps="combobox,control,nativewindow"
-				capname="combobox"
-				id="d8604b5a-1b74-4368-8d91-5cca1b72d5bc"
-				name="ComboBoxSharedDefinition"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container[@automationid='UserControl']/button[@automationid='HeaderSite']/container[1]/container[@controltypename='WinFormsAdapter']/container/container/combobox
-				</item>
-				<item
-				capname="text"
-				id="21af3cc1-a8a6-4716-9e5d-58842cc546ea"
-				name="MapTapPanel"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/tabpagelist/container[@automationid='HeaderPanel']/tabpage/container/picture[@automationid='icon']/parent::container/text[@text='Map']
-				</item>
-				<item
-				addcaps="tabpage,wpfelement,wpfgroupelement"
-				capname="tabpage"
-				id="0f07e436-a447-4cb5-835e-a5cb4b85341f"
-				name="TimeNavigatorTabPage"
-				refimgid="add3dd87-b325-419c-9916-24c279741bdf"
-				refpath="/form[@name='Window']/list[@automationid='ListView']/container[6]/container[2]/tabpagelist[2]/container[@automationid='HeaderPanel']/tabpage[@index='1']"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container[6]/container[2]/tabpagelist[2]/container[@automationid='HeaderPanel']/tabpage[@index='1']
-				</item>
-				<item
-				addcaps="cell,accessible"
-				capname="cell"
-				id="befe169b-b3cb-4d94-9c03-18bfb15c8b31"
-				name="AttributeTableCell"
-				refimgid="d77ed01b-9119-4c61-a774-7e2e8f715bd7"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='ProjectItemMapView']/container[@controlname='MapView']/container[@controlname='MapViewTabControl']/element[@controlname='elementHost']/tabpagelist[@instance='0']/container/container[@controltypename='WinFormsAdapter']/container[@controltext=$AttributeTableName]/container[@controlname='TableView']//row[$rowNumber]/cell[$columnNumber]
-				</item>
-				<folder
-				capname="container"
-				id="29221779-e90d-4656-9864-04cde11555b3"
-				isrooted="True"
-				name="HeaderPanel"
-				searchtimeout="30000ms"
-				usecache="False">
-					<item
-					capname="text"
-					id="a0fbeb62-75cd-4bf3-aa17-5e5c8d50681a"
-					name="MapTabButton"
-					robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/element"
-					searchtimeout="30000ms">
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/tabpagelist/container[@automationid='HeaderPanel']/tabpage/container/picture[@automationid='icon']/parent::container/text[@text='Map']
-					</item>
-					<basepath>
-						/form[@title~'Delta Shell']/list[@automationid='ListView']/container/tabpagelist/container[@automationid='HeaderPanel']
+						/form[@title~'Delta Shell']//container[@controlname='TimeSeriesNavigator']
 					</basepath>
 				</folder>
 				<basepath>
-					/form[@title~'Delta Shell']/list[@automationid='ListView']
+					/form[@title~'Delta Shell']
+				</basepath>
+			</folder>
+			<folder
+			capname="statusbar"
+			id="daef23b2-2fce-4903-bc95-b79450aba4f8"
+			isrooted="True"
+			name="StatusBar"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="statusbar,wpfelement,wpfgroupelement"
+				capname="listitem"
+				id="3805cda9-c8ce-469b-90f4-860525a2caaf"
+				name="StatusBarItem"
+				refimgid="5ad47dfb-31de-4b07-92b8-ced2d040a1b8"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//statusbar/listitem
+				</item>
+				<basepath>
+					/form[@title~'Delta Shell']//statusbar
 				</basepath>
 			</folder>
 			<basepath>
@@ -1859,28 +2090,6 @@ rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
 QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
 			</icon>
 		</appfolder>
-		<folder
-		capname="list"
-		id="e4ccab27-b381-4c73-8926-25868eeac74b"
-		isrooted="True"
-		name="StartScreenTabControl"
-		refimgid="b1495b95-e16d-4bb1-818e-c637535a8383"
-		searchtimeout="30000ms"
-		usecache="False">
-			<item
-			addcaps="button,wpfelement,wpfgroupelement"
-			capname="button"
-			id="938a7dc3-c4ba-420f-91e0-f332c923eba3"
-			name="BackButton"
-			refimgid="6f4079be-ab94-4c37-8197-253a65add19f"
-			robustPath=""
-			searchtimeout="30000ms">
-				//list[@automationid='StartScreenTabControl']/container[@automationid='PART_LeftContentGrid']/button[1]
-			</item>
-			<basepath>
-				//list[@automationid='StartScreenTabControl']
-			</basepath>
-		</folder>
 		<appfolder
 		addcaps="contextmenu,nativewindow,wpfwin32element,wpfelement,wpfgroupelement"
 		capname="contextmenu"
@@ -1893,13 +2102,13 @@ QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
 		usecache="False">
 			<item
 			addcaps="text,wpfelement,wpfgroupelement"
-			capname="text"
+			capname="menuitem"
 			id="5f11e83f-94e4-48a2-9c49-559fff4b2cdf"
 			name="InterpolateSelectedSetMenuItem"
 			refimgid="8b0c71bb-f924-4344-98db-5160407955ef"
 			robustPath=""
 			searchtimeout="30000ms">
-				/contextmenu[@processname='DeltaShell.Gui']/menuitem[@text='Interpolate selected set']/text
+				/contextmenu[@processname='DeltaShell.Gui']//menuitem[@text='Interpolate selected set']
 			</item>
 			<item
 			addcaps="text,wpfelement,wpfgroupelement"
@@ -1914,21 +2123,11 @@ QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
 			<item
 			capname="menuitem"
 			id="2807b26f-970f-4752-b9a6-080e851cc489"
-			name="Option"
+			name="GenericMenuItem"
 			refimgid="235a94e1-a17d-40e8-ae4f-07d62f640d93"
 			robustPath=""
 			searchtimeout="30000ms">
 				/contextmenu[@processname='DeltaShell.Gui']/menuitem[@text~$SubstringInOptionName]
-			</item>
-			<item
-			addcaps="menuitem,accessible"
-			capname="menuitem"
-			id="53b2838c-c44a-436d-bd5b-ed578f195fd7"
-			name="Export"
-			refimgid="38ec2401-5e97-4c64-967a-ee87458fe74b"
-			robustPath=""
-			searchtimeout="30000ms">
-				/contextmenu[@processname='DeltaShell.Gui']/menuitem[@accessiblename&gt;'Export']
 			</item>
 			<item
 			addcaps="listitem,wpfelement,wpfgroupelement"
@@ -1974,11 +2173,11 @@ QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
 			addcaps="button,wpfelement,wpfgroupelement"
 			capname="button"
 			id="5dd067c9-e0ea-4e2b-9b1d-fe7c9d2676c5"
-			name="GenericButtonLayer"
+			name="SchematicLayer"
 			refimgid="e929782f-16ae-4eb8-913f-f672fc0b3538"
 			robustPath=""
 			searchtimeout="30000ms">
-				/contextmenu[@processname='DeltaShell.Gui']/button[@text=$NameDutchLayer]
+				/contextmenu[@processname='DeltaShell.Gui']//button[@text='Schematic layer']
 			</item>
 			<basepath>
 				/contextmenu[@processname='DeltaShell.Gui']
@@ -2312,6 +2511,50 @@ QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
 			</icon>
 		</appfolder>
 		<appfolder
+		capname="form"
+		id="aef726fd-ff7b-4b26-905e-78720bfc524c"
+		isrooted="True"
+		name="DialogSelectFolder"
+		searchtimeout="30000ms"
+		usecache="True">
+			<item
+			addcaps="text,nativewindow"
+			capname="text"
+			id="8d42d2c0-2f52-424a-b72d-0311c5355961"
+			name="DirectoryPath"
+			refpath="/form[@title='Select folder']/text[@controlid='1152']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&gt;'Select folder']/text[@controlid='1152']
+			</item>
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="e1f7bed0-b1c0-40f1-b802-96fcbe055124"
+			name="SelectFolder"
+			refpath="/form[@title='Select folder']/button[@text='Select Folder']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&gt;'Select folder']/button[@text='Select Folder']
+			</item>
+			<basepath>
+				/form[@title&gt;'Select folder']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlz
+AAAOxAAADsQBlSsOGwAAAedJREFUOE9joDo4dOZuVklVSzCUSxpo7pkne/7Wp3cLVu7JP3HlZfa1
+Rz+P3H7299etZ3//AvGfrQevpUCVYgc2rp7Wlx/8/n3l0d9/GPjBnz8RcZkxUKXYgbGxMSuQ0gIx
+gVhZQkLG7tzdP3/O3f/7b8/pF6/mrzmydtOh+0X19avYQOrxgvq+pUqHr/54fOLW338gvHr3zftp
+eQ0LXbzDq2Rl1aWgyrCD9YdfOxy88vvH9tMfPzt7RzYAhTSEVFT4FJ2z1TSC29xUPOr5ICqxgN5F
+x1S2nPr2ITmvbT4DB4e8snuBtnnJgRtWVSf+WlWf+AfC6qGdC6HKUUHazJms87c+PGvhFFggp2sj
+aJy+Yq515eF/MGxeuOMjn4xRFgMfnxBUCyqIL5wQ7BmS0ygvL8+h6l2dalmy5x8y1o+fd0PNv7UM
+GEJMUC2oIDZvQq2MjBbYdAnjsHSzgq3/0LFh+oqXEgYeomANWAAjlAYCYV42HjF/MT3fKfpJiz6Y
+ZK/9B8Jy9mkLGbS0CEcjAhizSplG9hukLPsrbZO0goGbWwwqQRjY29ezaIT2VOjETv/ELaWVzcAg
+yA+VwgOAAShtkzpF0a30nJxD5i52UaVEoKgiEDOD5YkEoCTNDcQcQIwULuiAgQEAi6TYUx9nx94A
+AAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
 		addcaps="form,control,nativewindow"
 		capname="form"
 		id="28fbb5fe-4925-4966-8b63-3292b11412cd"
@@ -2464,6 +2707,28 @@ xiBBEMYnDmIcOHAALM6watspkCQYICvEL84A5oANWLz+KJgBwzCFuMRBGFkMLkguZmicuOp/UfO8
 OsYqSDz+zwAAaK/nDj2T/r4AAAAASUVORK5CYII=
 			</icon>
 		</appfolder>
+		<folder
+		capname="list"
+		id="d2b5c394-37ec-4b03-a0c2-1ab9f9046c77"
+		isrooted="True"
+		name="TableCellComboBoxList"
+		refimgid="5b7a2005-a7c0-4f7f-b2ac-e5116465f7ed"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="listitem,nativeitem,checkable"
+			capname="listitem"
+			id="b010ec05-2628-458c-84c9-44edf170bb33"
+			name="ListItem"
+			refimgid="26c7faff-d574-4826-9fc9-3bb9797aabc6"
+			robustPath=""
+			searchtimeout="30000ms">
+				//element[@controlname='listBox']/list/listitem[@text=$listItemName]
+			</item>
+			<basepath>
+				//element[@controlname='listBox']/list
+			</basepath>
+		</folder>
 		<appfolder
 		addcaps="form,nativewindow"
 		capname="form"
@@ -2712,10 +2977,10 @@ QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
 			refimgid="24c4f3b3-9245-4c3f-a9e6-a590a693b7ed"
 			robustPath=""
 			searchtimeout="30000ms">
-				/form[@title&lt;'ave As']/?/container?/button[@accessiblename='Yes']
+				/form[@title&lt;'Save As']//button[@accessiblename='Yes']
 			</item>
 			<basepath>
-				/form[@title&lt;'ave As']
+				/form[@title&lt;'Save As']
 			</basepath>
 			<icon>
 				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
@@ -2868,81 +3133,71 @@ QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
 		</appfolder>
 		<folder
 		capname="form"
-		id="237e9fe0-c24b-4361-bb9a-966226de47c9"
+		id="0341532a-41c3-4425-b232-80ac131ca3ca"
 		isrooted="True"
-		name="LegendProperties"
+		name="PropertiesDialog"
+		refimgid="eea3c6f8-5b67-4073-b782-bc20c97d9058"
 		searchtimeout="30000ms"
 		usecache="False">
-			<folder
-			capname="container"
-			id="49462c0d-e802-4b95-8459-2e62c6a49838"
-			isrooted="True"
-			name="ContainerLayerThemeSettings"
-			searchtimeout="30000ms"
-			usecache="False">
-				<item
-				addcaps="radiobutton,wpfelement,wpfgroupelement"
-				capname="radiobutton"
-				id="e51b9ca1-dece-4c16-963e-65a89e56787e"
-				name="CustomRange"
-				refimgid="1167ad74-a713-4108-b4c2-1cac055ab8ce"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/radiobutton[@text='Custom range']
-				</item>
-				<item
-				addcaps="text,wpfelement,wpfgroupelement"
-				capname="text"
-				id="fa3ff240-c3fa-4ca7-acb5-d68803ab2d4c"
-				name="NumberOfClassesField"
-				refimgid="b0cc911a-a139-4e53-8eca-325fc247d131"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/text/container/parent::text
-				</item>
-				<item
-				addcaps="button,wpfelement,wpfgroupelement"
-				capname="button"
-				id="6dad6ee3-70a8-4303-b245-3c24bb85c6af"
-				name="Generate"
-				refimgid="a96b08be-133f-4ffa-8949-7b316bdad129"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/button[@text='Generate']
-				</item>
-				<item
-				addcaps="text,wpfelement,wpfgroupelement"
-				capname="text"
-				id="901777c3-8e49-403e-bd77-90541d99329f"
-				name="MinField"
-				refimgid="8e669f59-6d62-45e3-9711-fa509d5f756e"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/container[2]/text[@caption='min :']/parent::container/text[2]
-				</item>
-				<item
-				addcaps="text,wpfelement,wpfgroupelement"
-				capname="text"
-				id="5de193b6-da89-4444-b426-af05474748ef"
-				name="MaxField"
-				refimgid="537b6745-3d2c-4041-b66c-c665630ce246"
-				robustPath=""
-				searchtimeout="30000ms">
-					/form[@title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/container[2]/text[@caption='max :']/parent::container/text[4]
-				</item>
-				<basepath>
-					/form[@title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']
-				</basepath>
-			</folder>
 			<item
 			addcaps="button,wpfelement,wpfgroupelement"
 			capname="button"
-			id="6bfe1807-936e-47e3-85ce-b06d9e6eea81"
+			id="b319701a-e762-4827-8299-ca0359775e65"
 			name="ButtonOk"
 			refimgid="a42d562c-9598-41af-ba6a-2be14125382c"
 			robustPath=""
 			searchtimeout="30000ms">
-				/form[@title='Properties']/tabpagelist/container[@caption='']/button[@text='Ok']
+				/form[@title='Properties']//button[@automationid='Ok']
+			</item>
+			<item
+			addcaps="radiobutton,wpfelement,wpfgroupelement"
+			capname="radiobutton"
+			id="41837715-34ff-462b-8dab-400e2b9ad306"
+			name="CustomRange"
+			refimgid="1167ad74-a713-4108-b4c2-1cac055ab8ce"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//radiobutton[@automationid='CustomRange']
+			</item>
+			<item
+			addcaps="text,wpfelement,wpfgroupelement"
+			capname="text"
+			id="1544bc02-c9bc-4d86-bbbc-259ae977b7cf"
+			name="NumberOfClassesField"
+			refimgid="b0cc911a-a139-4e53-8eca-325fc247d131"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//text[@automationid='NumberOfClasses']
+			</item>
+			<item
+			addcaps="button,wpfelement,wpfgroupelement"
+			capname="button"
+			id="54164226-3b7e-425e-a4b2-c946339f48c5"
+			name="ButtonGenerate"
+			refimgid="a96b08be-133f-4ffa-8949-7b316bdad129"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//button[@automationid='Generate']
+			</item>
+			<item
+			addcaps="text,wpfelement,wpfgroupelement"
+			capname="text"
+			id="ceb627ec-5314-4b66-94a8-d17ed68931ba"
+			name="MinField"
+			refimgid="8e669f59-6d62-45e3-9711-fa509d5f756e"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//text[@automationid='MinRange']
+			</item>
+			<item
+			addcaps="text,wpfelement,wpfgroupelement"
+			capname="text"
+			id="14e2af8c-da79-46a3-ad7d-3ffc163e6742"
+			name="MaxField"
+			refimgid="537b6745-3d2c-4041-b66c-c665630ce246"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//text[@automationid='MaxRange']
 			</item>
 			<basepath>
 				/form[@title='Properties']
@@ -2986,123 +3241,26 @@ QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
 			</icon>
 		</appfolder>
 		<appfolder
-		addcaps="contextmenu,nativewindow,wpfwin32element,wpfelement,wpfgroupelement"
-		capname="contextmenu"
-		id="451a3a81-ab54-49f5-93e7-2c905d714314"
-		isrooted="True"
-		name="ContextMenuInMapTree"
-		refpath="/contextmenu"
-		searchtimeout="30000ms"
-		usecache="False">
-			<item
-			addcaps="text,wpfelement,wpfgroupelement"
-			capname="text"
-			id="8a0c5f58-9d57-437e-9243-7e1b3acd9414"
-			name="ZoomToExtents"
-			refpath="/contextmenu/menuitem[@text='Zoom to extents']/text[@caption='Zoom to extents']"
-			robustPath=""
-			searchtimeout="30000ms">
-				/contextmenu/menuitem[@text='Zoom to extents']/text[@caption='Zoom to extents']
-			</item>
-			<item
-			addcaps="menuitem,accessible"
-			capname="menuitem"
-			id="903bd53b-8b01-4140-92e8-3a554e5eb4b0"
-			name="GenericMenuItem"
-			refimgid="bd5e1ced-b0a0-40c2-89ea-c93b5a934d39"
-			robustPath=""
-			searchtimeout="30000ms">
-				/contextmenu/menuitem[@text=$MenuItemName]
-			</item>
-			<basepath>
-				/contextmenu
-			</basepath>
-			<icon>
-				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGOfPtRkwAAACBjSFJN
-AACHDwAAjA8AAP1SAACBQAAAfXkAAOmLAAA85QAAGcxzPIV3AAAKOWlDQ1BQaG90b3Nob3AgSUND
-IHByb2ZpbGUAAEjHnZZ3VFTXFofPvXd6oc0wAlKG3rvAANJ7k15FYZgZYCgDDjM0sSGiAhFFRJoi
-SFDEgNFQJFZEsRAUVLAHJAgoMRhFVCxvRtaLrqy89/Ly++Osb+2z97n77L3PWhcAkqcvl5cGSwGQ
-yhPwgzyc6RGRUXTsAIABHmCAKQBMVka6X7B7CBDJy82FniFyAl8EAfB6WLwCcNPQM4BOB/+fpFnp
-fIHomAARm7M5GSwRF4g4JUuQLrbPipgalyxmGCVmvihBEcuJOWGRDT77LLKjmNmpPLaIxTmns1PZ
-Yu4V8bZMIUfEiK+ICzO5nCwR3xKxRoowlSviN+LYVA4zAwAUSWwXcFiJIjYRMYkfEuQi4uUA4EgJ
-X3HcVyzgZAvEl3JJS8/hcxMSBXQdli7d1NqaQffkZKVwBALDACYrmcln013SUtOZvBwAFu/8WTLi
-2tJFRbY0tba0NDQzMv2qUP91829K3NtFehn4uWcQrf+L7a/80hoAYMyJarPziy2uCoDOLQDI3fti
-0zgAgKSobx3Xv7oPTTwviQJBuo2xcVZWlhGXwzISF/QP/U+Hv6GvvmckPu6P8tBdOfFMYYqALq4b
-Ky0lTcinZ6QzWRy64Z+H+B8H/nUeBkGceA6fwxNFhImmjMtLELWbx+YKuGk8Opf3n5r4D8P+pMW5
-FonS+BFQY4yA1HUqQH7tBygKESDR+8Vd/6NvvvgwIH554SqTi3P/7zf9Z8Gl4iWDm/A5ziUohM4S
-8jMX98TPEqABAUgCKpAHykAd6ABDYAasgC1wBG7AG/iDEBAJVgMWSASpgA+yQB7YBApBMdgJ9oBq
-UAcaQTNoBcdBJzgFzoNL4Bq4AW6D+2AUTIBnYBa8BgsQBGEhMkSB5CEVSBPSh8wgBmQPuUG+UBAU
-CcVCCRAPEkJ50GaoGCqDqqF6qBn6HjoJnYeuQIPQXWgMmoZ+h97BCEyCqbASrAUbwwzYCfaBQ+BV
-cAK8Bs6FC+AdcCXcAB+FO+Dz8DX4NjwKP4PnEIAQERqiihgiDMQF8UeikHiEj6xHipAKpAFpRbqR
-PuQmMorMIG9RGBQFRUcZomxRnqhQFAu1BrUeVYKqRh1GdaB6UTdRY6hZ1Ec0Ga2I1kfboL3QEegE
-dBa6EF2BbkK3oy+ib6Mn0K8xGAwNo42xwnhiIjFJmLWYEsw+TBvmHGYQM46Zw2Kx8lh9rB3WH8vE
-CrCF2CrsUexZ7BB2AvsGR8Sp4Mxw7rgoHA+Xj6vAHcGdwQ3hJnELeCm8Jt4G749n43PwpfhGfDf+
-On4Cv0CQJmgT7AghhCTCJkIloZVwkfCA8JJIJKoRrYmBRC5xI7GSeIx4mThGfEuSIemRXEjRJCFp
-B+kQ6RzpLuklmUzWIjuSo8gC8g5yM/kC+RH5jQRFwkjCS4ItsUGiRqJDYkjiuSReUlPSSXK1ZK5k
-heQJyeuSM1J4KS0pFymm1HqpGqmTUiNSc9IUaVNpf+lU6RLpI9JXpKdksDJaMm4ybJkCmYMyF2TG
-KQhFneJCYVE2UxopFykTVAxVm+pFTaIWU7+jDlBnZWVkl8mGyWbL1sielh2lITQtmhcthVZKO04b
-pr1borTEaQlnyfYlrUuGlszLLZVzlOPIFcm1yd2WeydPl3eTT5bfJd8p/1ABpaCnEKiQpbBf4aLC
-zFLqUtulrKVFS48vvacIK+opBimuVTyo2K84p6Ss5KGUrlSldEFpRpmm7KicpFyufEZ5WoWiYq/C
-VSlXOavylC5Ld6Kn0CvpvfRZVUVVT1Whar3qgOqCmrZaqFq+WpvaQ3WCOkM9Xr1cvUd9VkNFw08j
-T6NF454mXpOhmai5V7NPc15LWytca6tWp9aUtpy2l3audov2Ax2yjoPOGp0GnVu6GF2GbrLuPt0b
-erCehV6iXo3edX1Y31Kfq79Pf9AAbWBtwDNoMBgxJBk6GWYathiOGdGMfI3yjTqNnhtrGEcZ7zLu
-M/5oYmGSYtJoct9UxtTbNN+02/R3Mz0zllmN2S1zsrm7+QbzLvMXy/SXcZbtX3bHgmLhZ7HVosfi
-g6WVJd+y1XLaSsMq1qrWaoRBZQQwShiXrdHWztYbrE9Zv7WxtBHYHLf5zdbQNtn2iO3Ucu3lnOWN
-y8ft1OyYdvV2o/Z0+1j7A/ajDqoOTIcGh8eO6o5sxybHSSddpySno07PnU2c+c7tzvMuNi7rXM65
-Iq4erkWuA24ybqFu1W6P3NXcE9xb3Gc9LDzWepzzRHv6eO7yHPFS8mJ5NXvNelt5r/Pu9SH5BPtU
-+zz21fPl+3b7wX7efrv9HqzQXMFb0ekP/L38d/s/DNAOWBPwYyAmMCCwJvBJkGlQXlBfMCU4JvhI
-8OsQ55DSkPuhOqHC0J4wybDosOaw+XDX8LLw0QjjiHUR1yIVIrmRXVHYqLCopqi5lW4r96yciLaI
-LoweXqW9KnvVldUKq1NWn46RjGHGnIhFx4bHHol9z/RnNjDn4rziauNmWS6svaxnbEd2OXuaY8cp
-40zG28WXxU8l2CXsTphOdEisSJzhunCruS+SPJPqkuaT/ZMPJX9KCU9pS8Wlxqae5Mnwknm9acpp
-2WmD6frphemja2zW7Fkzy/fhN2VAGasyugRU0c9Uv1BHuEU4lmmfWZP5Jiss60S2dDYvuz9HL2d7
-zmSue+63a1FrWWt78lTzNuWNrXNaV78eWh+3vmeD+oaCDRMbPTYe3kTYlLzpp3yT/LL8V5vDN3cX
-KBVsLBjf4rGlpVCikF84stV2a9021DbutoHt5turtn8sYhddLTYprih+X8IqufqN6TeV33zaEb9j
-oNSydP9OzE7ezuFdDrsOl0mX5ZaN7/bb3VFOLy8qf7UnZs+VimUVdXsJe4V7Ryt9K7uqNKp2Vr2v
-Tqy+XeNc01arWLu9dn4fe9/Qfsf9rXVKdcV17w5wD9yp96jvaNBqqDiIOZh58EljWGPft4xvm5sU
-moqbPhziHRo9HHS4t9mqufmI4pHSFrhF2DJ9NProje9cv+tqNWytb6O1FR8Dx4THnn4f+/3wcZ/j
-PScYJ1p/0Pyhtp3SXtQBdeR0zHYmdo52RXYNnvQ+2dNt293+o9GPh06pnqo5LXu69AzhTMGZT2dz
-z86dSz83cz7h/HhPTM/9CxEXbvUG9g5c9Ll4+ZL7pQt9Tn1nL9tdPnXF5srJq4yrndcsr3X0W/S3
-/2TxU/uA5UDHdavrXTesb3QPLh88M+QwdP6m681Lt7xuXbu94vbgcOjwnZHokdE77DtTd1PuvriX
-eW/h/sYH6AdFD6UeVjxSfNTws+7PbaOWo6fHXMf6Hwc/vj/OGn/2S8Yv7ycKnpCfVEyqTDZPmU2d
-mnafvvF05dOJZ+nPFmYKf5X+tfa5zvMffnP8rX82YnbiBf/Fp99LXsq/PPRq2aueuYC5R69TXy/M
-F72Rf3P4LeNt37vwd5MLWe+x7ys/6H7o/ujz8cGn1E+f/gUDmPP8usTo0wAAAAlwSFlzAAAOxAAA
-DsQBlSsOGwAAAKtJREFUOE9j+P//P0UYzrAJyP6/ZsVMojFWAxjAXMIApwEgADJkx8Hz/8va5/7P
-qJr4PzK75b9XbNl/mDwI4DUABAi5hKABIAAyZNnGff8jc5r/e8aWk+YCGMDlEqJdAMNTF64nzgUw
-DSAAos+dOwfG6ACnATANyIY0dE4iLgy6OqpBgmCA7gp0gNUAqCAYbD8IcQVJLkA2AARg3iHJBaRg
-DAPIxVgFicf/GQCdrAkiuOdOjQAAAABJRU5ErkJggg==
-			</icon>
-		</appfolder>
-		<appfolder
 		addcaps="form,control,nativewindow"
 		capname="form"
-		id="b278adb8-8ec1-464f-9784-2e82e7dd87bf"
+		id="aa0b7a34-bf82-4e93-98b6-78a25376c736"
 		isrooted="True"
-		name="DeltaShellGui"
-		refpath="/form"
+		name="TimeSeriesGeneratorDialog"
+		refimgid="2ad71090-2cbf-4248-a61e-dddf06b19366"
 		searchtimeout="30000ms"
 		usecache="False">
-			<item
-			addcaps="listitem,accessible"
-			capname="listitem"
-			id="a6055e32-24bb-40f1-ade0-039f9d4818dd"
-			name="GenericListItem"
-			refimgid="982b2177-147a-4635-9706-b4da6af51e4a"
-			robustPath=""
-			searchtimeout="30000ms">
-				/form/element[@controlname='listBox']/list/listitem[@text=$ListItemName]
-			</item>
 			<item
 			addcaps="button,control,nativewindow"
 			capname="button"
-			id="471aecd5-3376-46b6-97f6-e44aabca3158"
+			id="b1518fc5-0b7b-4148-bffd-858c978c978e"
 			name="OkButton"
 			refimgid="0d2861dd-8bdf-48d6-a16f-642dad9d824d"
 			robustPath=""
 			searchtimeout="30000ms">
-				/form/button[@controlname='okButton']
+				/form[@controlname='TimeSeriesGeneratorDialog']/button[@controlname='okButton']
 			</item>
 			<basepath>
-				/form
+				/form[@controlname='TimeSeriesGeneratorDialog']
 			</basepath>
 			<icon>
 				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
@@ -3116,92 +3274,6 @@ IAfenzqB+3AxzvwdvMjZTPWSFCy1CfivRuGVVscuCV63CZxGQX1RrBxwFe5idFsWTzPXMZKh4aAq
 7a9/P7fS+SxQkZrKEdVSipPS2J24jAJlOlV9b+l08Kftd+GsDequw7Fu2HrcJgekpyxlZhdGO5y5
 DTVWONoF+9qgoOUH67U9kYG9hiectECpCbTnIV/3ndz6ADmVr1iReyEykFc3yJ5zsLM5zPZaH1sq
 XrLp0EM2aG+RntUiB+ZT6fxfIsRPbYnQgbXhGFYAAAAASUVORK5CYII=
-			</icon>
-		</appfolder>
-		<folder
-		addcaps="container,wpfelement,wpfgroupelement"
-		capname="container"
-		id="b969a557-35f9-48d2-b4f2-e71497aaf824"
-		isrooted="True"
-		name="BoundaryEditorContainer"
-		searchtimeout="30000ms"
-		usecache="False">
-			<item
-			addcaps="container,control,nativewindow"
-			capname="container"
-			id="1a2ee6df-b5aa-4103-8a30-a4f0111eb965"
-			name="ValidationView"
-			refimgid="ac59a2fc-986b-479f-880a-7331b2466372"
-			robustPath=""
-			searchtimeout="30000ms">
-				/form[@title~'Delta Shell']/list[@automationid='ListView']/container[8]/container[@caption='']/container[@controlname='ValidationView']
-			</item>
-			<basepath>
-				/form[@title~'Delta Shell']/list[@automationid='ListView']/container[8]
-			</basepath>
-		</folder>
-		<item
-		addcaps="tree,wpfelement,wpfgroupelement"
-		capname="row"
-		id="56806a57-af65-4e10-86c5-5ad41f1a55e0"
-		name="PropertyItemTree"
-		refimgid="dd7b09d2-4105-447d-8ce6-efbb74fd7b96"
-		robustPath=""
-		searchtimeout="30000ms">
-			/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@caption='']/container[@controlname='PropertyGrid']/container[@controlname='splitContainer1']/container[@controlname='panel2']/container[@controlname='propertyGrid1']/element[@controlname='gridView']/table[@accessiblename='Properties Window']/row[@accessiblename=$PropertyItem]
-		</item>
-		<item
-		addcaps="text,wpfelement,wpfgroupelement"
-		capname="text"
-		id="436b89da-f70d-45df-909e-357442adcfbf"
-		name="GenericTextBox"
-		refimgid="6c95cea0-e72a-423f-a78d-53118508438e"
-		robustPath=""
-		searchtimeout="30000ms">
-			/form/list/container?/container?/container?/container?/container?/tabpagelist/tabpage/container?/container?/container?/container/container[$ContainerNumber]/container?/container?/text[$TextContainer]
-		</item>
-		<appfolder
-		capname="form"
-		id="2168a1d1-d0ba-4018-8170-6a841010a5a4"
-		isrooted="True"
-		name="DialogSelectFolder"
-		searchtimeout="30000ms"
-		usecache="True">
-			<item
-			addcaps="text,nativewindow"
-			capname="text"
-			id="1c7da5d7-be87-4c96-8a8c-5fdf90c69bef"
-			name="DirectoryPath"
-			refpath="/form[@title='Select folder']/text[@controlid='1152']"
-			robustPath=""
-			searchtimeout="30000ms">
-				/form[@title&gt;'Select folder']/text[@controlid='1152']
-			</item>
-			<item
-			addcaps="button,nativewindow"
-			capname="button"
-			id="71ea78b2-de6a-416d-a036-978744bc4e54"
-			name="SelectFolder"
-			refpath="/form[@title='Select folder']/button[@text='Select Folder']"
-			robustPath=""
-			searchtimeout="30000ms">
-				/form[@title&gt;'Select folder']/button[@text='Select Folder']
-			</item>
-			<basepath>
-				/form[@title&gt;'Select folder']
-			</basepath>
-			<icon>
-				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlz
-AAAOxAAADsQBlSsOGwAAAedJREFUOE9joDo4dOZuVklVSzCUSxpo7pkne/7Wp3cLVu7JP3HlZfa1
-Rz+P3H7299etZ3//AvGfrQevpUCVYgc2rp7Wlx/8/n3l0d9/GPjBnz8RcZkxUKXYgbGxMSuQ0gIx
-gVhZQkLG7tzdP3/O3f/7b8/pF6/mrzmydtOh+0X19avYQOrxgvq+pUqHr/54fOLW338gvHr3zftp
-eQ0LXbzDq2Rl1aWgyrCD9YdfOxy88vvH9tMfPzt7RzYAhTSEVFT4FJ2z1TSC29xUPOr5ICqxgN5F
-x1S2nPr2ITmvbT4DB4e8snuBtnnJgRtWVSf+WlWf+AfC6qGdC6HKUUHazJms87c+PGvhFFggp2sj
-aJy+Yq515eF/MGxeuOMjn4xRFgMfnxBUCyqIL5wQ7BmS0ygvL8+h6l2dalmy5x8y1o+fd0PNv7UM
-GEJMUC2oIDZvQq2MjBbYdAnjsHSzgq3/0LFh+oqXEgYeomANWAAjlAYCYV42HjF/MT3fKfpJiz6Y
-ZK/9B8Jy9mkLGbS0CEcjAhizSplG9hukLPsrbZO0goGbWwwqQRjY29ezaIT2VOjETv/ELaWVzcAg
-yA+VwgOAAShtkzpF0a30nJxD5i52UaVEoKgiEDOD5YkEoCTNDcQcQIwULuiAgQEAi6TYUx9nx94A
-AAAASUVORK5CYII=
 			</icon>
 		</appfolder>
 		<basepath>
@@ -3431,6 +3503,14 @@ AAAASUVORK5CYII=
 		<var
 		id="3702f5ef-f369-4d0e-b6c1-9ea92f70a752"
 		name="AttributeTableName">
+		</var>
+		<var
+		id="19820313-3511-4348-aff8-bba93c5ddd0c"
+		name="BoundaryDataName">
+		</var>
+		<var
+		id="b62e928a-3cf8-4712-8632-463373784060"
+		name="ListItem">
 		</var>
 	</variables>
 </repository>

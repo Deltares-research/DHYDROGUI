@@ -143,14 +143,14 @@
     <Compile Include="AssemblyInfo.cs">
       <id>2cc9f13d-ef72-4313-9c52-57c55418d17a</id>
     </Compile>
-    <Compile Include="Code\Create.cs">
-      <id>4e3942cf-26ea-47ca-83ca-7151cd6c96d2</id>
-    </Compile>
     <Compile Include="Code\CsvParser.cs">
       <id>7d287ad7-2793-4d44-b1ce-b8fd51ecae23</id>
     </Compile>
     <Compile Include="Code\Current.cs">
       <id>a35d1a7b-8955-4eb0-a693-01381a957401</id>
+    </Compile>
+    <Compile Include="Code\FileUtils.cs">
+      <id>d10a6ac3-03a9-4f65-9e67-a8924ee7aebf</id>
     </Compile>
     <Compile Include="Code\Get.cs">
       <id>f435a795-3f51-44c6-bfd2-127944815e28</id>
@@ -194,50 +194,290 @@
       <UserCode>true</UserCode>
       <id>931318d7-caaa-478d-a0e9-42d2c2154c88</id>
     </Compile>
-    <Compile Include="Modules\Application\ShowHideDebugMessages.cs">
-      <BoundTo>4e1a3c3e-465a-47e3-b95b-f83023b74ae8</BoundTo>
-      <DependentUpon>ShowHideDebugMessages.rxrec</DependentUpon>
+    <Compile Include="Modules\AttributesTable\CloseAttributeTableTab.cs">
+      <BoundTo>f51dd75e-d880-4807-a90b-c7b4936a8572</BoundTo>
+      <DependentUpon>CloseAttributeTableTab.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
-      <id>a8b7227e-a8f4-4584-a1a0-a8f1234f49ae</id>
+      <id>65e46757-2f09-4e10-859d-5d464d7a179b</id>
     </Compile>
-    <Compile Include="Modules\Application\ShowHideDebugMessages.UserCode.cs">
-      <BoundTo>4e1a3c3e-465a-47e3-b95b-f83023b74ae8</BoundTo>
-      <DependentUpon>ShowHideDebugMessages.rxrec</DependentUpon>
+    <Compile Include="Modules\AttributesTable\CloseAttributeTableTab.UserCode.cs">
+      <BoundTo>f51dd75e-d880-4807-a90b-c7b4936a8572</BoundTo>
+      <DependentUpon>CloseAttributeTableTab.rxrec</DependentUpon>
       <UserCode>true</UserCode>
-      <id>52e56e57-97ce-41e6-9253-bebe5031c519</id>
+      <id>82694402-3918-4b62-9580-71c02e45b6ab</id>
+    </Compile>
+    <Compile Include="Modules\Dialogs\ClickOkTimeSeriesGeneratorDialog.cs">
+      <BoundTo>5b33bd68-7e34-4dbf-9b99-639786719053</BoundTo>
+      <DependentUpon>ClickOkTimeSeriesGeneratorDialog.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>0f9ff67d-a862-47c0-950c-2ccc0032c050</id>
+    </Compile>
+    <Compile Include="Modules\Dialogs\ClickOkTimeSeriesGeneratorDialog.UserCode.cs">
+      <BoundTo>5b33bd68-7e34-4dbf-9b99-639786719053</BoundTo>
+      <DependentUpon>ClickOkTimeSeriesGeneratorDialog.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>de998273-bc16-4f5e-8d40-e013297705d4</id>
+    </Compile>
+    <Compile Include="Modules\Dialogs\SelectContextMenuItem.cs">
+      <DependentUpon>SelectContextMenuItem.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>1a118007-8ccc-4cd1-a170-a55ad301e193</id>
+      <BoundTo>0cbb5f26-e731-4fd9-b2cc-fc2fdb592cd3</BoundTo>
+    </Compile>
+    <Compile Include="Modules\Dialogs\SelectContextMenuItem.UserCode.cs">
+      <DependentUpon>SelectContextMenuItem.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>a598175d-8257-4f1d-9bef-e5c7258bf63f</id>
+      <BoundTo>0cbb5f26-e731-4fd9-b2cc-fc2fdb592cd3</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\BoundaryDataEditor\SetBoundaryData1DWaterLevel.cs">
+      <DependentUpon>SetBoundaryData1DWaterLevel.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>ffabdd37-7d4d-490b-a5af-acae5b6acf7c</id>
+      <BoundTo>b4dde287-ae86-4c3a-b023-d1a95d7a6d53</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\BoundaryDataEditor\SetBoundaryData1DWaterLevel.UserCode.cs">
+      <DependentUpon>SetBoundaryData1DWaterLevel.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>518555d4-e8b6-4271-a770-0c59f0cadf0a</id>
+      <BoundTo>b4dde287-ae86-4c3a-b023-d1a95d7a6d53</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CompositeStructureView\PumpView\SetPumpControlLevels.cs">
+      <DependentUpon>SetPumpControlLevels.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>0ca913bd-3403-43ec-8759-8a726d1463b1</id>
+      <BoundTo>7bad7ce1-d727-4528-9d9e-045590b6f582</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CompositeStructureView\PumpView\SetPumpControlLevels.UserCode.cs">
+      <DependentUpon>SetPumpControlLevels.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>043515bd-3f93-4532-b82d-7ed9224b186b</id>
+      <BoundTo>7bad7ce1-d727-4528-9d9e-045590b6f582</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CompositeStructureView\PumpView\SetPumpProperties.cs">
+      <DependentUpon>SetPumpProperties.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>1c8d847e-5f1f-4e95-868c-737a3c284c0d</id>
+      <BoundTo>b021ba6c-e8a8-4198-923c-9e2d6f91c495</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CompositeStructureView\PumpView\SetPumpProperties.UserCode.cs">
+      <DependentUpon>SetPumpProperties.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>e31840b5-94c5-41ad-9353-08e44b7637e7</id>
+      <BoundTo>b021ba6c-e8a8-4198-923c-9e2d6f91c495</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CompositeStructureView\WeirView\SetCorrectionCoefficient.cs">
+      <BoundTo>d6761bf1-a128-4883-a5b2-802129a1f65a</BoundTo>
+      <DependentUpon>SetCorrectionCoefficient.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>2be59551-3f4f-4b3f-91f5-a3e9b4932e7e</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CompositeStructureView\WeirView\SetCorrectionCoefficient.UserCode.cs">
+      <BoundTo>d6761bf1-a128-4883-a5b2-802129a1f65a</BoundTo>
+      <DependentUpon>SetCorrectionCoefficient.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>d20a4163-19fd-4fc4-947b-618b6c94191b</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CompositeStructureView\WeirView\SetCrestLevelAndWidth.cs">
+      <BoundTo>9fd642eb-ce1a-4b3c-a5e6-72e2647f54af</BoundTo>
+      <DependentUpon>SetCrestLevelAndWidth.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>97be9eca-8cc0-4715-b7f4-8324a55bb400</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CompositeStructureView\WeirView\SetCrestLevelAndWidth.UserCode.cs">
+      <BoundTo>9fd642eb-ce1a-4b3c-a5e6-72e2647f54af</BoundTo>
+      <DependentUpon>SetCrestLevelAndWidth.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>b9a85222-5694-4185-9d21-5d506111b707</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CompositeStructureView\WeirView\SetGateProperties.cs">
+      <BoundTo>e3e2d194-8bfd-484a-ad5e-800d7827d111</BoundTo>
+      <DependentUpon>SetGateProperties.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>72249a12-4101-4bcc-bc10-18340066f051</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CompositeStructureView\WeirView\SetGateProperties.UserCode.cs">
+      <BoundTo>e3e2d194-8bfd-484a-ad5e-800d7827d111</BoundTo>
+      <DependentUpon>SetGateProperties.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>f314d36a-eed0-4b61-b718-ebdff451e29b</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CrossSectionDefinitionView\SetCrossSectionRectangle.cs">
+      <BoundTo>a36d9511-a175-41db-96c3-2614086f0fb1</BoundTo>
+      <DependentUpon>SetCrossSectionRectangle.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>5598436f-0234-43eb-8b60-2c0407086ed8</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CrossSectionDefinitionView\SetCrossSectionRectangle.UserCode.cs">
+      <BoundTo>a36d9511-a175-41db-96c3-2614086f0fb1</BoundTo>
+      <DependentUpon>SetCrossSectionRectangle.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>ee5f4d1a-2525-4c56-986c-f570f647196c</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CrossSectionDefinitionView\SetCrossSectionDiameter.cs">
+      <BoundTo>60beb2e6-0d5a-4d69-ae02-1870cf9944a6</BoundTo>
+      <DependentUpon>SetCrossSectionDiameter.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>1a2f5481-ef76-4f1f-8a26-642341409b92</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CrossSectionDefinitionView\SetCrossSectionDiameter.UserCode.cs">
+      <BoundTo>60beb2e6-0d5a-4d69-ae02-1870cf9944a6</BoundTo>
+      <DependentUpon>SetCrossSectionDiameter.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>36f50009-b245-49d7-9f8c-60dc75f5e681</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CrossSectionDefinitionView\SetCrossSectionType.cs">
+      <BoundTo>dee630db-4b24-49a0-ae93-8885f29c47e7</BoundTo>
+      <DependentUpon>SetCrossSectionType.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>09242b3e-bb17-4e0e-a20b-cadfad6ce267</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\CrossSectionDefinitionView\SetCrossSectionType.UserCode.cs">
+      <BoundTo>dee630db-4b24-49a0-ae93-8885f29c47e7</BoundTo>
+      <DependentUpon>SetCrossSectionType.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>170866e5-e8c5-4133-a788-a23564ed2d89</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\MeteoView\GenerateTimeSeries.cs">
+      <BoundTo>51e7d31b-21d8-4a02-b35b-c822e7c180ca</BoundTo>
+      <DependentUpon>GenerateTimeSeries.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>d3a643e4-83bf-4269-a282-6954d4ba9f7e</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\MeteoView\GenerateTimeSeries.UserCode.cs">
+      <BoundTo>51e7d31b-21d8-4a02-b35b-c822e7c180ca</BoundTo>
+      <DependentUpon>GenerateTimeSeries.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>48fd7676-534d-419e-961b-1b0396cc0b91</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\MultipleDataEditor\SetMultipleDataEditorTableCell.cs">
+      <DependentUpon>SetMultipleDataEditorTableCell.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>34944e6e-0e13-4a62-911c-8b9d3939f972</id>
+      <BoundTo>728dc187-fc77-4150-9e94-e3fb5e578871</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\MultipleDataEditor\SetMultipleDataEditorTableCell.UserCode.cs">
+      <DependentUpon>SetMultipleDataEditorTableCell.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>869632fa-c349-4c17-8850-66010b1546ce</id>
+      <BoundTo>728dc187-fc77-4150-9e94-e3fb5e578871</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\MultipleFunctionView\SetMultipleFunctionViewTableCell.cs">
+      <BoundTo>7d9a61b3-86e3-489e-9736-a30eb4ee17d4</BoundTo>
+      <DependentUpon>SetMultipleFunctionViewTableCell.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>5bae4d1b-7941-4480-b0a1-966cd73eb07b</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\MultipleFunctionView\SetMultipleFunctionViewTableCell.UserCode.cs">
+      <BoundTo>7d9a61b3-86e3-489e-9736-a30eb4ee17d4</BoundTo>
+      <DependentUpon>SetMultipleFunctionViewTableCell.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>5c0ac73b-7a7a-40ad-ba19-8c589faad19d</id>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\NwrwDryWeatherFlowDefinitionView\SetNwrwDryWeatherFlowDefinitionCell.cs">
+      <DependentUpon>SetNwrwDryWeatherFlowDefinitionCell.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>857bfdbb-e8ef-40f3-a326-5a9b4f5e1f09</id>
+      <BoundTo>e2202c84-dd8f-466e-a0f1-70ee1f8b1e02</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\NwrwDryWeatherFlowDefinitionView\SetNwrwDryWeatherFlowDefinitionCell.UserCode.cs">
+      <DependentUpon>SetNwrwDryWeatherFlowDefinitionCell.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>daf3e5f7-e17b-48c7-8826-9e0c34415609</id>
+      <BoundTo>e2202c84-dd8f-466e-a0f1-70ee1f8b1e02</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\SewerConnectionView\CreateNewSharedDefinition.cs">
+      <DependentUpon>CreateNewSharedDefinition.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>41688583-a7e7-4f41-968c-da9672cfb190</id>
+      <BoundTo>7b13d3f4-542d-4bbc-9b47-dd612927cdbe</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\SewerConnectionView\CreateNewSharedDefinition.UserCode.cs">
+      <DependentUpon>CreateNewSharedDefinition.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>56afcea0-7b53-4d13-bd60-c7883988440b</id>
+      <BoundTo>7b13d3f4-542d-4bbc-9b47-dd612927cdbe</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\SewerConnectionView\SelectComboboxListItem.UserCode.cs">
+      <DependentUpon>SelectSharedDefinition.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>17ef21c7-5ad3-4583-a970-980b9472a51e</id>
+      <BoundTo>5dccb3a7-934c-4244-9c6f-941b7d3343b0</BoundTo>
+    </Compile>
+    <Compile Include="Modules\FeatureEditors\SewerConnectionView\SelectSharedDefinition.cs">
+      <DependentUpon>SelectSharedDefinition.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>ec4c923d-00e8-4d6f-8b67-44d2565ccc05</id>
+      <BoundTo>5dccb3a7-934c-4244-9c6f-941b7d3343b0</BoundTo>
+    </Compile>
+    <Compile Include="Modules\IntegratedModelSettings\CloseIntegratedModelSettings.cs">
+      <DependentUpon>CloseIntegratedModelSettings.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>ea1f867a-ff40-4c90-a821-00e30cea9189</id>
+      <BoundTo>b23a516c-e353-47ad-8a81-f65540ad9372</BoundTo>
+    </Compile>
+    <Compile Include="Modules\IntegratedModelSettings\CloseIntegratedModelSettings.UserCode.cs">
+      <DependentUpon>CloseIntegratedModelSettings.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>9b807fbf-5881-4402-8adc-e44eefc8e98a</id>
+      <BoundTo>b23a516c-e353-47ad-8a81-f65540ad9372</BoundTo>
     </Compile>
     <Compile Include="Modules\IO\SpecifyDirectoryToExportTo.cs">
-      <BoundTo>f778dbbf-86c1-42fd-bff1-d823627f526f</BoundTo>
+      <BoundTo>d7f133d7-47d8-4be0-a5a9-8001cc2eaadd</BoundTo>
       <DependentUpon>SpecifyDirectoryToExportTo.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
-      <id>bd9bfb17-30e9-4061-b7d5-53a1bf78c09e</id>
+      <id>042dbeb4-3c03-4fb0-a801-8fe9e6dc4232</id>
     </Compile>
     <Compile Include="Modules\IO\SpecifyDirectoryToExportTo.UserCode.cs">
-      <BoundTo>f778dbbf-86c1-42fd-bff1-d823627f526f</BoundTo>
+      <BoundTo>d7f133d7-47d8-4be0-a5a9-8001cc2eaadd</BoundTo>
       <DependentUpon>SpecifyDirectoryToExportTo.rxrec</DependentUpon>
       <UserCode>true</UserCode>
-      <id>8ce3ce0d-b077-4f7d-bf69-c9c25427f601</id>
+      <id>5fac3807-73f5-4561-9c5c-c13d42920cc2</id>
     </Compile>
-    <Compile Include="Modules\MapTree\RightClickGenericItemInMapTreeWithUniqueParent.cs">
+    <Compile Include="Modules\KeySequence\EscapeKeyDown.cs">
+      <DependentUpon>EscapeKeyDown.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>499fe27f-4200-4a7c-a3a1-6bc46a2ac91b</id>
+      <BoundTo>134d8761-c551-4c95-a7ce-ca7e441f635c</BoundTo>
+    </Compile>
+    <Compile Include="Modules\KeySequence\EscapeKeyDown.UserCode.cs">
+      <DependentUpon>EscapeKeyDown.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>d3b803d5-98a7-4988-bf36-6d3553abbcdb</id>
+      <BoundTo>134d8761-c551-4c95-a7ce-ca7e441f635c</BoundTo>
+    </Compile>
+    <Compile Include="Modules\MapTree\ClickUseFocusedLayer.cs">
+      <DependentUpon>ClickUseFocusedLayer.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>61d0e18a-fac3-4f2c-9554-f65c84afe1bc</id>
+      <BoundTo>e42bad06-ff87-4861-80ad-4bcbc468c4ed</BoundTo>
+    </Compile>
+    <Compile Include="Modules\MapTree\ClickUseFocusedLayer.UserCode.cs">
+      <DependentUpon>ClickUseFocusedLayer.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>b5b71b4f-2b36-46b5-a350-38902dbf91d1</id>
+      <BoundTo>e42bad06-ff87-4861-80ad-4bcbc468c4ed</BoundTo>
+    </Compile>
+    <Compile Include="Modules\MapTree\RightClickGenericChildTreeItem.cs">
       <BoundTo>4b02e51f-754f-4617-a136-b251938f29f9</BoundTo>
-      <DependentUpon>RightClickGenericItemInMapTreeWithUniqueParent.rxrec</DependentUpon>
+      <DependentUpon>RightClickGenericChildTreeItem.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>839decfb-4fa0-41a1-a51c-e285563037db</id>
     </Compile>
-    <Compile Include="Modules\MapTree\RightClickGenericItemInMapTreeWithUniqueParent.UserCode.cs">
+    <Compile Include="Modules\MapTree\RightClickGenericChildTreeItem.UserCode.cs">
       <BoundTo>4b02e51f-754f-4617-a136-b251938f29f9</BoundTo>
-      <DependentUpon>RightClickGenericItemInMapTreeWithUniqueParent.rxrec</DependentUpon>
+      <DependentUpon>RightClickGenericChildTreeItem.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>d8ee2df4-019c-4f3d-a2c9-aff0a1cd4420</id>
     </Compile>
-    <Compile Include="Modules\MapTree\ShowMapPanel.cs">
-      <DependentUpon>ShowMapPanel.rxrec</DependentUpon>
+    <Compile Include="Modules\MapTree\ShowMapTree.cs">
+      <DependentUpon>ShowMapTree.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>892bd27f-58bd-403c-bbe9-e103d3b9633e</id>
       <BoundTo>1bb31a1e-7e35-485d-95f1-dc0d34e24004</BoundTo>
     </Compile>
-    <Compile Include="Modules\MapTree\ShowMapPanel.UserCode.cs">
-      <DependentUpon>ShowMapPanel.rxrec</DependentUpon>
+    <Compile Include="Modules\MapTree\ShowMapTree.UserCode.cs">
+      <DependentUpon>ShowMapTree.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>a1d370e9-6199-4245-b249-1b549d34eabe</id>
       <BoundTo>1bb31a1e-7e35-485d-95f1-dc0d34e24004</BoundTo>
@@ -254,29 +494,30 @@
       <id>30f87131-2cf9-4276-b67a-4e4af37988ea</id>
       <BoundTo>191dec72-944a-4d7e-b7f0-82786454c1b7</BoundTo>
     </Compile>
-    <Compile Include="Modules\AttributesTable\ChooseDropdownOptionInAttributesTableCell.cs">
+    <Compile Include="Modules\AttributesTable\SelectComboBoxItemInTableCell.cs">
       <BoundTo>2898646e-4bdb-44b5-8e2d-e1c3a5ebda51</BoundTo>
-      <DependentUpon>ChooseDropdownOptionInAttributesTableCell.rxrec</DependentUpon>
+      <DependentUpon>SelectComboBoxItemInTableCell.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>d85a3bdd-c328-4aa7-9163-14b3af9e5667</id>
     </Compile>
-    <Compile Include="Modules\AttributesTable\ChooseDropdownOptionInAttributesTableCell.UserCode.cs">
+    <Compile Include="Modules\AttributesTable\SelectComboBoxItemInTableCell.UserCode.cs">
       <BoundTo>2898646e-4bdb-44b5-8e2d-e1c3a5ebda51</BoundTo>
-      <DependentUpon>ChooseDropdownOptionInAttributesTableCell.rxrec</DependentUpon>
+      <DependentUpon>SelectComboBoxItemInTableCell.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>16a74780-3d98-4e51-b436-aebf39d75e9a</id>
     </Compile>
-    <Compile Include="Modules\AttributesTable\RightClickAndChooseOptionInCell.cs">
+    <Compile Include="Modules\AttributesTable\RightClickGenericTableCell.cs">
       <BoundTo>887216fe-a363-4e9a-95d8-f50a6841f4ff</BoundTo>
-      <DependentUpon>RightClickAndChooseOptionInCell.rxrec</DependentUpon>
+      <DependentUpon>RightClickGenericTableCell.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>4bd81efa-0c26-458a-85c1-9a5b82dbf21a</id>
     </Compile>
-    <Compile Include="Modules\AttributesTable\RightClickAndChooseOptionInCell.UserCode.cs">
+    <Compile Include="Modules\AttributesTable\RightClickGenericTableCell.UserCode.cs">
       <BoundTo>887216fe-a363-4e9a-95d8-f50a6841f4ff</BoundTo>
-      <DependentUpon>RightClickAndChooseOptionInCell.rxrec</DependentUpon>
+      <DependentUpon>RightClickGenericTableCell.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>60932f67-3038-4fe8-a7af-ca97766311a2</id>
+      <RecorderCode>true</RecorderCode>
     </Compile>
     <Compile Include="Modules\AttributesTable\SetAttributeTableCell.cs">
       <DependentUpon>SetAttributeTableCell.rxrec</DependentUpon>
@@ -385,18 +626,6 @@
       <UserCode>true</UserCode>
       <id>47e1d056-7edc-4939-868c-17141c497318</id>
       <BoundTo>a8605d81-019f-4ca6-8fd0-06d310777659</BoundTo>
-    </Compile>
-    <Compile Include="Modules\BoundaryData\SpecifyValueRowBoundaryData1D.cs">
-      <BoundTo>9992220e-2b46-4945-aec3-eebae64f226d</BoundTo>
-      <DependentUpon>SpecifyValueRowBoundaryData1D.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>c8203771-afea-4756-bf5d-b7e37ef4d943</id>
-    </Compile>
-    <Compile Include="Modules\BoundaryData\SpecifyValueRowBoundaryData1D.UserCode.cs">
-      <BoundTo>9992220e-2b46-4945-aec3-eebae64f226d</BoundTo>
-      <DependentUpon>SpecifyValueRowBoundaryData1D.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>a9a1be5b-66bb-4f9e-94dd-93a76f17c295</id>
     </Compile>
     <Compile Include="Modules\Calculations\ConvertDoubleToCurrentCulture.cs">
       <id>4550e3f0-27cf-4105-933a-fb605a3a37f6</id>
@@ -545,27 +774,15 @@
       <UserCode>true</UserCode>
       <id>52088bf3-f4e6-4373-b092-19bbd9e778ad</id>
     </Compile>
-    <Compile Include="Modules\Dialogs\ClickOKButtonInApplication.cs">
-      <BoundTo>4908c7be-8755-4a58-b685-218b5a6b9336</BoundTo>
-      <DependentUpon>ClickOKButtonInApplication.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>6899119b-c991-4912-a0f1-4b8e71360426</id>
-    </Compile>
-    <Compile Include="Modules\Dialogs\ClickOKButtonInApplication.UserCode.cs">
-      <BoundTo>4908c7be-8755-4a58-b685-218b5a6b9336</BoundTo>
-      <DependentUpon>ClickOKButtonInApplication.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>0eb26535-ee7f-4f7f-91c4-25fd7ffabdde</id>
-    </Compile>
-    <Compile Include="Modules\Dialogs\CloseOkDialog.cs">
+    <Compile Include="Modules\Dialogs\ClickOkSelectItemDialog.cs">
       <BoundTo>56e03f24-dd0a-48d1-ac8b-fa35bd747153</BoundTo>
-      <DependentUpon>CloseOkDialog.rxrec</DependentUpon>
+      <DependentUpon>ClickOkSelectItemDialog.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>8767ff25-4034-44e7-9a15-123f5ce17805</id>
     </Compile>
-    <Compile Include="Modules\Dialogs\CloseOkDialog.UserCode.cs">
+    <Compile Include="Modules\Dialogs\ClickOkSelectItemDialog.UserCode.cs">
       <BoundTo>56e03f24-dd0a-48d1-ac8b-fa35bd747153</BoundTo>
-      <DependentUpon>CloseOkDialog.rxrec</DependentUpon>
+      <DependentUpon>ClickOkSelectItemDialog.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>fcebcef4-4f24-445a-abe3-4dc99260aa2d</id>
     </Compile>
@@ -605,164 +822,17 @@
       <id>1912b84d-67d5-4ed9-b4d0-6ccd46a2c1f5</id>
       <BoundTo>4e05924a-b21d-43f5-bfae-ce8823a97833</BoundTo>
     </Compile>
-    <Compile Include="Modules\DocumentViews\ChangeSettingInEditorView.cs">
-      <BoundTo>b4dde287-ae86-4c3a-b023-d1a95d7a6d53</BoundTo>
-      <DependentUpon>ChangeSettingInEditorView.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>ffabdd37-7d4d-490b-a5af-acae5b6acf7c</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ChangeSettingInEditorView.UserCode.cs">
-      <BoundTo>b4dde287-ae86-4c3a-b023-d1a95d7a6d53</BoundTo>
-      <DependentUpon>ChangeSettingInEditorView.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>518555d4-e8b6-4271-a770-0c59f0cadf0a</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ChangeTabInCentralView.cs">
-      <BoundTo>27ae38f6-20ec-4c3c-80c1-06514f4fef32</BoundTo>
-      <DependentUpon>ChangeTabInCentralView.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>8bfc04f6-733d-473e-b59e-1f091be6a697</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ChangeTabInCentralView.UserCode.cs">
-      <BoundTo>27ae38f6-20ec-4c3c-80c1-06514f4fef32</BoundTo>
-      <DependentUpon>ChangeTabInCentralView.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>ed3b973f-3f1e-44dd-8967-fff17c1a74d4</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ChangeTableValueInEditor.cs">
-      <BoundTo>728dc187-fc77-4150-9e94-e3fb5e578871</BoundTo>
-      <DependentUpon>ChangeTableValueInEditor.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>34944e6e-0e13-4a62-911c-8b9d3939f972</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ChangeTableValueInEditor.UserCode.cs">
-      <BoundTo>728dc187-fc77-4150-9e94-e3fb5e578871</BoundTo>
-      <DependentUpon>ChangeTableValueInEditor.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>869632fa-c349-4c17-8850-66010b1546ce</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ClickIconButton.cs">
-      <BoundTo>9194dd96-e863-4c11-ab1c-421a7065fbcb</BoundTo>
-      <DependentUpon>ClickIconButton.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>4b8b0956-c27f-46f3-8845-1a22b94a2764</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ClickIconButton.UserCode.cs">
-      <BoundTo>9194dd96-e863-4c11-ab1c-421a7065fbcb</BoundTo>
-      <DependentUpon>ClickIconButton.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>b58cd521-fdf2-4411-816a-8070bc6054e7</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ClickTextButton.cs">
-      <BoundTo>765e5b48-3bb1-4c17-a8b3-5b83768187cd</BoundTo>
-      <DependentUpon>ClickTextButton.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>b8ec1a2c-fee1-4ee5-99b5-de0c05461ae8</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ClickTextButton.UserCode.cs">
-      <BoundTo>765e5b48-3bb1-4c17-a8b3-5b83768187cd</BoundTo>
-      <DependentUpon>ClickTextButton.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>b8b1e2a0-1b51-429e-965a-9b9f073caceb</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\CloseMapViewTabControl.cs">
-      <DependentUpon>CloseMapViewTabControl.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>ea1f867a-ff40-4c90-a821-00e30cea9189</id>
-      <BoundTo>b23a516c-e353-47ad-8a81-f65540ad9372</BoundTo>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\CloseMapViewTabControl.UserCode.cs">
-      <DependentUpon>CloseMapViewTabControl.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>9b807fbf-5881-4402-8adc-e44eefc8e98a</id>
-      <BoundTo>b23a516c-e353-47ad-8a81-f65540ad9372</BoundTo>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\CloseUniqueDocumentView.cs">
-      <DependentUpon>CloseUniqueDocumentView.rxrec</DependentUpon>
+    <Compile Include="Modules\DocumentViews\CloseDocumentView.cs">
+      <DependentUpon>CloseDocumentView.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>23f3e4e4-db36-4e43-b3d1-05cf8989f751</id>
       <BoundTo>2b6d8813-c825-4a89-b6ea-a83c158fb6ae</BoundTo>
     </Compile>
-    <Compile Include="Modules\DocumentViews\CloseUniqueDocumentView.UserCode.cs">
-      <DependentUpon>CloseUniqueDocumentView.rxrec</DependentUpon>
+    <Compile Include="Modules\DocumentViews\CloseDocumentView.UserCode.cs">
+      <DependentUpon>CloseDocumentView.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>3d9c6334-e364-49d8-9431-c7cc649ee96d</id>
       <BoundTo>2b6d8813-c825-4a89-b6ea-a83c158fb6ae</BoundTo>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\CreateNewSharedDefinitionCircle.cs">
-      <BoundTo>7b13d3f4-542d-4bbc-9b47-dd612927cdbe</BoundTo>
-      <DependentUpon>CreateNewSharedDefinitionCircle.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>41688583-a7e7-4f41-968c-da9672cfb190</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\CreateNewSharedDefinitionCircle.UserCode.cs">
-      <BoundTo>7b13d3f4-542d-4bbc-9b47-dd612927cdbe</BoundTo>
-      <DependentUpon>CreateNewSharedDefinitionCircle.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>56afcea0-7b53-4d13-bd60-c7883988440b</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\CreateNewSharedDefinitionRectangle.cs">
-      <BoundTo>224c3fe8-59ef-4643-b485-4de92ca3a468</BoundTo>
-      <DependentUpon>CreateNewSharedDefinitionRectangle.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>4db65fe0-eaf8-4cd6-b42d-a967ffc59d40</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\CreateNewSharedDefinitionRectangle.UserCode.cs">
-      <BoundTo>224c3fe8-59ef-4643-b485-4de92ca3a468</BoundTo>
-      <DependentUpon>CreateNewSharedDefinitionRectangle.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>bcec2c7c-0b0c-4ede-98ff-69ca2be69b7d</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\SelectSharedDefinition.cs">
-      <BoundTo>5dccb3a7-934c-4244-9c6f-941b7d3343b0</BoundTo>
-      <DependentUpon>SelectSharedDefinition.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>ec4c923d-00e8-4d6f-8b67-44d2565ccc05</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\SelectComboboxListItem.UserCode.cs">
-      <BoundTo>5dccb3a7-934c-4244-9c6f-941b7d3343b0</BoundTo>
-      <DependentUpon>SelectSharedDefinition.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>17ef21c7-5ad3-4583-a970-980b9472a51e</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\UseScrollBar.cs">
-      <BoundTo>5f373f17-6b18-45a6-9599-24705a25b811</BoundTo>
-      <DependentUpon>UseScrollBar.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>2ad2eaad-7f5b-4149-bba2-a9dcd023046f</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\UseScrollBar.UserCode.cs">
-      <BoundTo>5f373f17-6b18-45a6-9599-24705a25b811</BoundTo>
-      <DependentUpon>UseScrollBar.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>d3339f24-6a4e-4b0f-b4df-3eb4988e1952</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\GetColumnIndex.cs">
-      <id>e963db3c-429e-4670-979e-83846577e396</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ZoomMouseTo.cs">
-      <BoundTo>9dcb6345-2e16-4d59-ad7b-2d89e17575d6</BoundTo>
-      <DependentUpon>ZoomMouseTo.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>0da84d8a-e991-41c6-b59d-de75be3e94d2</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\ZoomMouseTo.UserCode.cs">
-      <BoundTo>9dcb6345-2e16-4d59-ad7b-2d89e17575d6</BoundTo>
-      <DependentUpon>ZoomMouseTo.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>1e0116df-1852-4b08-a83e-c7ec1d2ba6de</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\MoveMouseWheelUpwards.cs">
-      <BoundTo>28b58c57-5c2b-4d2a-ad1f-e3eb8b88a666</BoundTo>
-      <DependentUpon>MoveMouseWheelUpwards.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>dc8171fe-4d06-4be0-bb7d-06e3f205ad0a</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\MoveMousewheelUpwards.UserCode.cs">
-      <BoundTo>28b58c57-5c2b-4d2a-ad1f-e3eb8b88a666</BoundTo>
-      <DependentUpon>MoveMouseWheelUpwards.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>12d4458e-f7d8-45c1-aa6b-1476eb4d3816</id>
     </Compile>
     <Compile Include="Modules\DocumentViews\ScreenshotCentralDocumentView.cs">
       <BoundTo>258f4e7c-c57b-48b2-8c4e-ef0e2d85629b</BoundTo>
@@ -776,56 +846,29 @@
       <UserCode>true</UserCode>
       <id>998c307c-6e56-475e-af14-ed9c50b509b1</id>
     </Compile>
-    <Compile Include="Modules\DocumentViews\SelectSubTabSettings.cs">
-      <BoundTo>e7de03d3-1503-4b11-bc2e-3aa2eed9c913</BoundTo>
-      <DependentUpon>SelectSubTabSettings.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>7aad1132-fb1a-4372-840e-63a1243b0f77</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\SelectSubTabSettings.UserCode.cs">
-      <BoundTo>e7de03d3-1503-4b11-bc2e-3aa2eed9c913</BoundTo>
-      <DependentUpon>SelectSubTabSettings.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>fd78d6d3-7c07-401a-a7bc-6c02c59236e9</id>
-    </Compile>
-    <Compile Include="Modules\DocumentViews\SetParameterValueInTableDocumentView.cs">
-      <id>fec4e74a-bd6e-427b-a047-4b56c0d49c24</id>
-    </Compile>
-    <Compile Include="Modules\IntegratedModelSettings\ChangeTimeStepInputField.cs">
-      <DependentUpon>ChangeTimeStepInputField.rxrec</DependentUpon>
+    <Compile Include="Modules\IntegratedModelSettings\SetIntegratedModelTimeStep.cs">
+      <DependentUpon>SetIntegratedModelTimeStep.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>72232cc0-cc15-494b-98ae-6253f8b346f0</id>
       <BoundTo>86c95d27-bb51-4976-a968-982308bd8ad4</BoundTo>
     </Compile>
-    <Compile Include="Modules\IntegratedModelSettings\ChangeTimeStepInputField.UserCode.cs">
-      <DependentUpon>ChangeTimeStepInputField.rxrec</DependentUpon>
+    <Compile Include="Modules\IntegratedModelSettings\SetIntegratedModelTimeStep.UserCode.cs">
+      <DependentUpon>SetIntegratedModelTimeStep.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>38ed54e2-c5e2-404b-ab39-e7ddec65645a</id>
       <BoundTo>86c95d27-bb51-4976-a968-982308bd8ad4</BoundTo>
     </Compile>
-    <Compile Include="Modules\IntegratedModelSettings\ChooseIntegratedModelWorkflows.cs">
-      <DependentUpon>ChooseIntegratedModelWorkflows.rxrec</DependentUpon>
+    <Compile Include="Modules\IntegratedModelSettings\SelectIntegratedModelWorkflow.cs">
+      <DependentUpon>SelectIntegratedModelWorkflow.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>a09fda49-bda0-4229-baa5-bfd5b9fd159a</id>
       <BoundTo>e6a8c1cf-8ea2-4b0a-b6f5-cb2f6004f40a</BoundTo>
     </Compile>
-    <Compile Include="Modules\IntegratedModelSettings\ChooseIntegratedModelWorkflows.UserCode.cs">
-      <DependentUpon>ChooseIntegratedModelWorkflows.rxrec</DependentUpon>
+    <Compile Include="Modules\IntegratedModelSettings\SelectIntegratedModelWorkflow.UserCode.cs">
+      <DependentUpon>SelectIntegratedModelWorkflow.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>b4d15b2e-e9d1-421f-b9f9-d51c953b9d44</id>
       <BoundTo>e6a8c1cf-8ea2-4b0a-b6f5-cb2f6004f40a</BoundTo>
-    </Compile>
-    <Compile Include="Modules\IntegratedModelSettings\RunIntegratedModel.cs">
-      <BoundTo>a06ced7a-13aa-4afd-bc99-38eaf71d5d37</BoundTo>
-      <DependentUpon>RunIntegratedModel.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>5d725b68-5b75-4418-8ce9-142cd803de23</id>
-    </Compile>
-    <Compile Include="Modules\IntegratedModelSettings\RunIntegratedModel.UserCode.cs">
-      <BoundTo>a06ced7a-13aa-4afd-bc99-38eaf71d5d37</BoundTo>
-      <DependentUpon>RunIntegratedModel.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>dfc61e99-6f07-42b4-b555-9918e5154577</id>
     </Compile>
     <Compile Include="Modules\IO\AcceptCurrentCoordinateTransformationDialog.cs">
       <DependentUpon>AcceptCurrentCoordinateTransformationDialog.rxrec</DependentUpon>
@@ -838,9 +881,6 @@
       <UserCode>true</UserCode>
       <id>61ad403d-0db6-4ebc-8a9a-8e2ac7b7065d</id>
       <BoundTo>a6d0604c-94a3-41b4-a6ce-9301746c7605</BoundTo>
-    </Compile>
-    <Compile Include="Modules\IO\CreateProjectList.cs">
-      <id>2a0332f1-ca6e-4c21-895e-f8cb47c5665f</id>
     </Compile>
     <Compile Include="Modules\IO\ConfirmSelectionInDialog.cs">
       <BoundTo>93e7f6e8-6c33-4a3d-9c72-e4b2c3893b7a</BoundTo>
@@ -914,47 +954,38 @@
       <UserCode>true</UserCode>
       <id>8f1403ef-a8cc-4479-b129-fc89c04f8be1</id>
     </Compile>
-    <Compile Include="Modules\MapTree\DoubleClickGenericItemInMapTree.cs">
+    <Compile Include="Modules\MapTree\DoubleClickGenericTreeItem.cs">
       <BoundTo>35a8563d-9eb8-4074-8248-009bdc3f2b16</BoundTo>
-      <DependentUpon>DoubleClickGenericItemInMapTree.rxrec</DependentUpon>
+      <DependentUpon>DoubleClickGenericTreeItem.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>8f76024f-631d-421a-90e9-cca9e006d832</id>
     </Compile>
-    <Compile Include="Modules\MapTree\DoubleClickGenericItemInMapTree.UserCode.cs">
+    <Compile Include="Modules\MapTree\DoubleClickGenericTreeItem.UserCode.cs">
       <BoundTo>35a8563d-9eb8-4074-8248-009bdc3f2b16</BoundTo>
-      <DependentUpon>DoubleClickGenericItemInMapTree.rxrec</DependentUpon>
+      <DependentUpon>DoubleClickGenericTreeItem.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>4ce3ef05-6b6f-4760-9f8d-9825c1feb24d</id>
     </Compile>
-    <Compile Include="Modules\MapTree\RightClickGenericItemInMapTree.cs">
+    <Compile Include="Modules\MapTree\RightClickGenericTreeItem.cs">
       <BoundTo>752d89d6-8035-4488-91ac-7d8b0bc86cfb</BoundTo>
-      <DependentUpon>RightClickGenericItemInMapTree.rxrec</DependentUpon>
+      <DependentUpon>RightClickGenericTreeItem.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>7362ba68-97f7-4c89-be91-dcfb672c377b</id>
     </Compile>
-    <Compile Include="Modules\MapTree\RightClickGenericItemInMapTree.UserCode.cs">
+    <Compile Include="Modules\MapTree\RightClickGenericTreeItem.UserCode.cs">
       <BoundTo>752d89d6-8035-4488-91ac-7d8b0bc86cfb</BoundTo>
-      <DependentUpon>RightClickGenericItemInMapTree.rxrec</DependentUpon>
+      <DependentUpon>RightClickGenericTreeItem.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>fce801bd-e69a-44da-8033-c059edbb5fc2</id>
     </Compile>
     <Compile Include="Modules\MapTree\SelectNodeInMapTree.cs">
       <id>55b1dc19-737e-4671-82dc-12f8b48cc30b</id>
     </Compile>
+    <Compile Include="Modules\MapTree\SetCheckStateInMapTree.cs">
+      <id>e8e5d2e3-4a09-4149-9f70-92518b47ae33</id>
+    </Compile>
     <Compile Include="Modules\Map\CalibrateMap.cs">
       <id>bad564eb-e048-47fb-afdc-d4fce9747162</id>
-    </Compile>
-    <Compile Include="Modules\Map\ClickOutputHisFileVariable1D.cs">
-      <BoundTo>dd69b795-bb33-4515-90c1-6bc1110ecc09</BoundTo>
-      <DependentUpon>ClickOutputHisFileVariable1D.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>51fd256d-2f3c-46ab-86cb-a8a121064d2f</id>
-    </Compile>
-    <Compile Include="Modules\Map\ClickOutputHisFileVariable1D.UserCode.cs">
-      <BoundTo>dd69b795-bb33-4515-90c1-6bc1110ecc09</BoundTo>
-      <DependentUpon>ClickOutputHisFileVariable1D.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>da161b5c-843c-48bd-916d-28d8af73ecff</id>
     </Compile>
     <Compile Include="Modules\Map\ConfigureLegendProperties.cs">
       <BoundTo>1fbec34e-ebe9-4681-86cd-7419e4ca68bb</BoundTo>
@@ -980,30 +1011,6 @@
       <id>70767aa1-7e26-4ad0-96b2-3b6a2678a086</id>
       <BoundTo>0878ae78-83f3-42e1-8b14-93c92272e505</BoundTo>
     </Compile>
-    <Compile Include="Modules\Map\ClickOutputMapVariableCheckbox1D.cs">
-      <DependentUpon>ClickOutputMapVariableCheckbox1D.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>eccc444c-07ea-4ac3-bee4-2c10cb8add6c</id>
-      <BoundTo>285e2ba9-0423-448e-afdb-cff00a3abb4c</BoundTo>
-    </Compile>
-    <Compile Include="Modules\Map\ClickOutputMapVariableCheckbox1D.UserCode.cs">
-      <DependentUpon>ClickOutputMapVariableCheckbox1D.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>ee4fcdec-070c-4976-bab4-5db9b0e49285</id>
-      <BoundTo>285e2ba9-0423-448e-afdb-cff00a3abb4c</BoundTo>
-    </Compile>
-    <Compile Include="Modules\Map\MakeOutputMapVariableVisible1D.cs">
-      <BoundTo>e75b85ca-f7b0-44b4-8768-c271644cd448</BoundTo>
-      <DependentUpon>MakeOutputMapVariableVisible1D.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>0fbd19f8-837a-4282-8daf-570a5db7cc83</id>
-    </Compile>
-    <Compile Include="Modules\Map\MakeOutputMapVariableVisible1D.UserCode.cs">
-      <BoundTo>e75b85ca-f7b0-44b4-8768-c271644cd448</BoundTo>
-      <DependentUpon>MakeOutputMapVariableVisible1D.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>0e8367bd-76b4-46cb-9ab7-c18d35170eb6</id>
-    </Compile>
     <Compile Include="Modules\Map\MouseDownOnMap.cs">
       <BoundTo>13599fbc-33b0-482b-b976-fa0725624706</BoundTo>
       <DependentUpon>MouseDownOnMap.rxrec</DependentUpon>
@@ -1016,15 +1023,15 @@
       <UserCode>true</UserCode>
       <id>330d8610-eb7c-4b29-9145-1b773c093b75</id>
     </Compile>
-    <Compile Include="Modules\Map\ExpandOutputMap.cs">
+    <Compile Include="Modules\Map\ExpandOutputMapFile2D.cs">
       <BoundTo>9019f0fe-355b-4938-9a71-d4324bb36920</BoundTo>
-      <DependentUpon>ExpandOutputMap.rxrec</DependentUpon>
+      <DependentUpon>ExpandOutputMapFile2D.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>536d10bb-83c5-4350-bbe9-5a28c5e7834d</id>
     </Compile>
-    <Compile Include="Modules\Map\ExpandOutputMap.UserCode.cs">
+    <Compile Include="Modules\Map\ExpandOutputMapFile2D.UserCode.cs">
       <BoundTo>9019f0fe-355b-4938-9a71-d4324bb36920</BoundTo>
-      <DependentUpon>ExpandOutputMap.rxrec</DependentUpon>
+      <DependentUpon>ExpandOutputMapFile2D.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>12f445e8-62ba-4c2e-b333-7a0a6ce82925</id>
     </Compile>
@@ -1054,6 +1061,18 @@
       <DependentUpon>MouseUpOnMap.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>45094b56-ca4a-458c-8e5c-653e1a18e6c0</id>
+    </Compile>
+    <Compile Include="Modules\Map\MoveMouseWheelUpwards.cs">
+      <DependentUpon>MoveMouseWheelUpwards.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>dc8171fe-4d06-4be0-bb7d-06e3f205ad0a</id>
+      <BoundTo>28b58c57-5c2b-4d2a-ad1f-e3eb8b88a666</BoundTo>
+    </Compile>
+    <Compile Include="Modules\Map\MoveMousewheelUpwards.UserCode.cs">
+      <DependentUpon>MoveMouseWheelUpwards.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>12d4458e-f7d8-45c1-aa6b-1476eb4d3816</id>
+      <BoundTo>28b58c57-5c2b-4d2a-ad1f-e3eb8b88a666</BoundTo>
     </Compile>
     <Compile Include="Modules\Map\RightClickOnMap.cs">
       <BoundTo>009c9ec2-b581-48ae-8487-05e258e72bff</BoundTo>
@@ -1127,29 +1146,65 @@
       <id>5bbec227-05b4-49c1-82de-8806770c2246</id>
       <BoundTo>4e7fb193-d102-4ca8-b9cd-dcc27ad6dee4</BoundTo>
     </Compile>
-    <Compile Include="Modules\ModelSettings\ChangeComboBoxItemInModelSettings.cs">
+    <Compile Include="Modules\MessageWindow\ActivateMessageWindow.cs">
+      <BoundTo>95c0e277-7c45-4a81-b5e9-795c6ecd6ee1</BoundTo>
+      <DependentUpon>ActivateMessageWindow.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>c66c25b8-13bf-4671-81e8-3b5b2630ec16</id>
+    </Compile>
+    <Compile Include="Modules\MessageWindow\ActivateMessageWindow.UserCode.cs">
+      <BoundTo>95c0e277-7c45-4a81-b5e9-795c6ecd6ee1</BoundTo>
+      <DependentUpon>ActivateMessageWindow.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>8a04ee53-125e-4be3-8343-e3932f03d6c6</id>
+    </Compile>
+    <Compile Include="Modules\MessageWindow\ShowHideDebugMessages.cs">
+      <DependentUpon>ShowHideDebugMessages.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>a8b7227e-a8f4-4584-a1a0-a8f1234f49ae</id>
+      <BoundTo>4e1a3c3e-465a-47e3-b95b-f83023b74ae8</BoundTo>
+    </Compile>
+    <Compile Include="Modules\MessageWindow\ShowHideDebugMessages.UserCode.cs">
+      <DependentUpon>ShowHideDebugMessages.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>52e56e57-97ce-41e6-9253-bebe5031c519</id>
+      <BoundTo>4e1a3c3e-465a-47e3-b95b-f83023b74ae8</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings\SetInitialConditionsQuantity1D.cs">
       <BoundTo>e097abf3-74a4-4d80-b807-0fc04a5dfe3f</BoundTo>
-      <DependentUpon>ChangeComboBoxItemInModelSettings.rxrec</DependentUpon>
+      <DependentUpon>SetInitialConditionsQuantity1D.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>d41dfbce-741f-48a4-968e-9d11b0c036aa</id>
     </Compile>
-    <Compile Include="Modules\ModelSettings\ChangeComboBoxItemInModelSettings.UserCode.cs">
+    <Compile Include="Modules\ModelSettings\SetInitialConditionsQuantity1D.UserCode.cs">
       <BoundTo>e097abf3-74a4-4d80-b807-0fc04a5dfe3f</BoundTo>
-      <DependentUpon>ChangeComboBoxItemInModelSettings.rxrec</DependentUpon>
+      <DependentUpon>SetInitialConditionsQuantity1D.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>2f8f5ea1-53b5-4fc8-b469-7a05e250a55d</id>
     </Compile>
-    <Compile Include="Modules\ModelSettings\SetModelProperties.cs">
-      <BoundTo>2a95ee97-0a5f-4138-8cf3-68dab415bf7c</BoundTo>
-      <DependentUpon>SetModelProperties.rxrec</DependentUpon>
+    <Compile Include="Modules\ModelSettings\PressTimeFrameSynchronizeButton.cs">
+      <DependentUpon>PressTimeFrameSynchronizeButton.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
-      <id>be936f3a-a47f-4930-a3cb-ee4e54056ccd</id>
+      <id>4b8b0956-c27f-46f3-8845-1a22b94a2764</id>
+      <BoundTo>9194dd96-e863-4c11-ab1c-421a7065fbcb</BoundTo>
     </Compile>
-    <Compile Include="Modules\ModelSettings\SetModelProperties.UserCode.cs">
-      <BoundTo>2a95ee97-0a5f-4138-8cf3-68dab415bf7c</BoundTo>
-      <DependentUpon>SetModelProperties.rxrec</DependentUpon>
+    <Compile Include="Modules\ModelSettings\PressTimeFrameSynchronizeButton.UserCode.cs">
+      <DependentUpon>PressTimeFrameSynchronizeButton.rxrec</DependentUpon>
       <UserCode>true</UserCode>
-      <id>f79d61f9-73cb-4515-abf2-60e9370c2784</id>
+      <id>b58cd521-fdf2-4411-816a-8070bc6054e7</id>
+      <BoundTo>9194dd96-e863-4c11-ab1c-421a7065fbcb</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings\SelectSubTabSettings.cs">
+      <DependentUpon>SelectSubTabSettings.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>7aad1132-fb1a-4372-840e-63a1243b0f77</id>
+      <BoundTo>e7de03d3-1503-4b11-bc2e-3aa2eed9c913</BoundTo>
+    </Compile>
+    <Compile Include="Modules\ModelSettings\SelectSubTabSettings.UserCode.cs">
+      <DependentUpon>SelectSubTabSettings.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>fd78d6d3-7c07-401a-a7bc-6c02c59236e9</id>
+      <BoundTo>e7de03d3-1503-4b11-bc2e-3aa2eed9c913</BoundTo>
     </Compile>
     <Compile Include="Modules\ModelSettings\SetOthersOutputSettings.cs">
       <BoundTo>b42b3c5c-bb8d-49d7-befb-a72071aae5e5</BoundTo>
@@ -1187,18 +1242,6 @@
       <id>2859d2c3-30e9-47f1-b996-9f0774a01cf3</id>
       <BoundTo>35daaecc-6e69-4575-a297-dbe749e725d9</BoundTo>
     </Compile>
-    <Compile Include="Modules\ModelSettings\SetMapOutputSettings.cs">
-      <DependentUpon>SetMapOutputSettings.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>638b1bbd-8ebf-4408-9bd9-ac2bd0378a22</id>
-      <BoundTo>90e64b26-d77b-444c-b92b-d67909684763</BoundTo>
-    </Compile>
-    <Compile Include="Modules\ModelSettings\SetMapOutputSettings.UserCode.cs">
-      <DependentUpon>SetMapOutputSettings.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>cec7f8b6-4b62-4a79-ae96-6838aa59d69d</id>
-      <BoundTo>90e64b26-d77b-444c-b92b-d67909684763</BoundTo>
-    </Compile>
     <Compile Include="Modules\ModelSettings\SetRestartSettings.cs">
       <DependentUpon>SetRestartSettings.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
@@ -1211,15 +1254,15 @@
       <id>4fce1d67-4295-4c2b-ae52-d8c43811bba0</id>
       <BoundTo>ee0e6eb1-faeb-4c99-b02a-c8e27fba5df6</BoundTo>
     </Compile>
-    <Compile Include="Modules\ModelSettings\SetTextBoxValueInModelSettings.cs">
+    <Compile Include="Modules\ModelSettings\SetInitialConditionsValue1D.cs">
       <BoundTo>ccb240e7-5ab2-4092-9b90-b3507bf239a2</BoundTo>
-      <DependentUpon>SetTextBoxValueInModelSettings.rxrec</DependentUpon>
+      <DependentUpon>SetInitialConditionsValue1D.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>c41e3794-edbc-4418-b44f-b44cef7b7f7b</id>
     </Compile>
-    <Compile Include="Modules\ModelSettings\SetTextBoxValueInModelSettings.UserCode.cs">
+    <Compile Include="Modules\ModelSettings\SetInitialConditionsValue1D.UserCode.cs">
       <BoundTo>ccb240e7-5ab2-4092-9b90-b3507bf239a2</BoundTo>
-      <DependentUpon>SetTextBoxValueInModelSettings.rxrec</DependentUpon>
+      <DependentUpon>SetInitialConditionsValue1D.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>f58436a9-425d-4129-bbfd-9d893b6b6a6b</id>
     </Compile>
@@ -1294,18 +1337,6 @@
       <DependentUpon>RightClickGenericTreeItem.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>fe30d7a6-d3d3-41ae-babe-f586149403c7</id>
-    </Compile>
-    <Compile Include="Modules\ProjectTree\SelectContextMenuItem.cs">
-      <BoundTo>0cbb5f26-e731-4fd9-b2cc-fc2fdb592cd3</BoundTo>
-      <DependentUpon>SelectContextMenuItem.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>1a118007-8ccc-4cd1-a170-a55ad301e193</id>
-    </Compile>
-    <Compile Include="Modules\ProjectTree\SelectContextMenuItem.UserCode.cs">
-      <BoundTo>0cbb5f26-e731-4fd9-b2cc-fc2fdb592cd3</BoundTo>
-      <DependentUpon>SelectContextMenuItem.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>a598175d-8257-4f1d-9bef-e5c7258bf63f</id>
     </Compile>
     <Compile Include="Modules\ProjectTree\ContextMenuModel.cs">
       <DependentUpon>ContextMenuModel.rxrec</DependentUpon>
@@ -1385,15 +1416,15 @@
       <UserCode>true</UserCode>
       <id>5be9ebfd-982d-401b-b454-e65fdaada9c5</id>
     </Compile>
-    <Compile Include="Modules\Ribbon\AddDutchLayer.cs">
+    <Compile Include="Modules\Ribbon\AddSchematicLayer.cs">
       <BoundTo>35ff498e-1eaa-44de-a6bc-184126c8c305</BoundTo>
-      <DependentUpon>AddDutchLayer.rxrec</DependentUpon>
+      <DependentUpon>AddSchematicLayer.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
       <id>fec0c5d4-5424-4a08-a0db-a9389919eaa0</id>
     </Compile>
-    <Compile Include="Modules\Ribbon\AddDutchLayer.UserCode.cs">
+    <Compile Include="Modules\Ribbon\AddSchematicLayer.UserCode.cs">
       <BoundTo>35ff498e-1eaa-44de-a6bc-184126c8c305</BoundTo>
-      <DependentUpon>AddDutchLayer.rxrec</DependentUpon>
+      <DependentUpon>AddSchematicLayer.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>1021eebe-2813-408e-b634-bd2e5993b8b3</id>
     </Compile>
@@ -1432,18 +1463,6 @@
       <DependentUpon>AddWmsLayer.rxrec</DependentUpon>
       <UserCode>true</UserCode>
       <id>f332d3fd-de4e-4ef7-b22d-774ea910fd7f</id>
-    </Compile>
-    <Compile Include="Modules\Ribbon\ClickUseFocusedLayer.cs">
-      <BoundTo>e42bad06-ff87-4861-80ad-4bcbc468c4ed</BoundTo>
-      <DependentUpon>ClickUseFocusedLayer.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>61d0e18a-fac3-4f2c-9554-f65c84afe1bc</id>
-    </Compile>
-    <Compile Include="Modules\Ribbon\ClickUseFocusedLayer.UserCode.cs">
-      <BoundTo>e42bad06-ff87-4861-80ad-4bcbc468c4ed</BoundTo>
-      <DependentUpon>ClickUseFocusedLayer.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>b5b71b4f-2b36-46b5-a350-38902dbf91d1</id>
     </Compile>
     <Compile Include="Modules\Ribbon\StartAddNewPipe.cs">
       <BoundTo>aefcec28-662e-4380-9aeb-5f856df33bc9</BoundTo>
@@ -1703,29 +1722,53 @@
     <Compile Include="Modules\SettingsTestSuite\ShowRanorexProgressDialog.cs">
       <id>a4154f42-ddf5-4c28-9a47-69a3ca4cae23</id>
     </Compile>
-    <Compile Include="Modules\TimeNavigator\ClickButtonInTimeNavigator.cs">
-      <BoundTo>4ff93465-c002-451d-a2f1-8ef7c63ebc8d</BoundTo>
-      <DependentUpon>ClickButtonInTimeNavigator.rxrec</DependentUpon>
+    <Compile Include="Modules\TimeNavigator\ActivateTimeNavigator.cs">
+      <BoundTo>e51517a8-8bee-464c-ad72-cc9eb60f7f1e</BoundTo>
+      <DependentUpon>ActivateTimeNavigator.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
-      <id>95c04b70-7b90-4e6b-9280-711128fa6999</id>
+      <id>e0f41eb1-c8fc-4d93-a48c-0a9e13179dd0</id>
     </Compile>
-    <Compile Include="Modules\TimeNavigator\ClickButtonInTimeNavigator.UserCode.cs">
-      <BoundTo>4ff93465-c002-451d-a2f1-8ef7c63ebc8d</BoundTo>
-      <DependentUpon>ClickButtonInTimeNavigator.rxrec</DependentUpon>
+    <Compile Include="Modules\TimeNavigator\ActivateTimeNavigator.UserCode.cs">
+      <BoundTo>e51517a8-8bee-464c-ad72-cc9eb60f7f1e</BoundTo>
+      <DependentUpon>ActivateTimeNavigator.rxrec</DependentUpon>
       <UserCode>true</UserCode>
-      <id>ab5b2f32-fdca-4b32-bb6c-60aa7a112ed3</id>
+      <id>0b8e505c-cb17-4ab9-b70a-2558bdc1c8fd</id>
     </Compile>
-    <Compile Include="Modules\TimeNavigator\OpenTimeNavigatorPanel.cs">
-      <BoundTo>7ae51fdc-0702-452a-9c42-c71f2e6ecbaf</BoundTo>
-      <DependentUpon>OpenTimeNavigatorPanel.rxrec</DependentUpon>
+    <Compile Include="Modules\TimeNavigator\NextTimeNavigation.cs">
+      <BoundTo>a271d381-2151-4740-b237-e35ac3567f89</BoundTo>
+      <DependentUpon>NextTimeNavigation.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
-      <id>36fecfcb-4465-40c0-8944-2232c452a585</id>
+      <id>110844fd-8985-4b4a-8f55-17a8f151dd32</id>
     </Compile>
-    <Compile Include="Modules\TimeNavigator\OpenTimeNavigatorPanel.UserCode.cs">
-      <BoundTo>7ae51fdc-0702-452a-9c42-c71f2e6ecbaf</BoundTo>
-      <DependentUpon>OpenTimeNavigatorPanel.rxrec</DependentUpon>
+    <Compile Include="Modules\TimeNavigator\NextTimeNavigation.UserCode.cs">
+      <BoundTo>a271d381-2151-4740-b237-e35ac3567f89</BoundTo>
+      <DependentUpon>NextTimeNavigation.rxrec</DependentUpon>
       <UserCode>true</UserCode>
-      <id>ed588f3a-6a97-4ed5-8ec0-15053089d08b</id>
+      <id>2ad5e0fa-653f-4d8c-8577-63f033fe8377</id>
+    </Compile>
+    <Compile Include="Modules\TimeNavigator\PauseTimeNavigation.cs">
+      <BoundTo>40b5c227-dac5-47a2-8d32-e55e58d88974</BoundTo>
+      <DependentUpon>PauseTimeNavigation.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>0da8db79-b7d8-4223-9c86-e75c17708c0e</id>
+    </Compile>
+    <Compile Include="Modules\TimeNavigator\PauseTimeNavigation.UserCode.cs">
+      <BoundTo>40b5c227-dac5-47a2-8d32-e55e58d88974</BoundTo>
+      <DependentUpon>PauseTimeNavigation.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>34649e11-0994-4aac-be53-cfc53283b486</id>
+    </Compile>
+    <Compile Include="Modules\TimeNavigator\PlayTimeNavigation.cs">
+      <BoundTo>fed4c1a6-6340-4ea8-824d-177b47952083</BoundTo>
+      <DependentUpon>PlayTimeNavigation.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>f6509ab9-48b5-4526-926f-5c2c7f593032</id>
+    </Compile>
+    <Compile Include="Modules\TimeNavigator\PlayTimeNavigation.UserCode.cs">
+      <BoundTo>fed4c1a6-6340-4ea8-824d-177b47952083</BoundTo>
+      <DependentUpon>PlayTimeNavigation.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>ed71a2e4-8cf3-480f-ba33-a453894fafe6</id>
     </Compile>
     <Compile Include="Modules\Validation\CheckValidationResult.cs">
       <DependentUpon>CheckValidationResult.rxrec</DependentUpon>
@@ -1843,42 +1886,6 @@
       <id>d35f7a9c-47e7-4ae4-bc1f-639ee8817685</id>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataSources\Coastal_hydrodynamic_modelling\exercise_08\ClassMapOutputSettings.txt">
-      <id>390bfc09-7da6-46d5-8403-9b46c6b2037b</id>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DataSources\Coastal_hydrodynamic_modelling\exercise_08\HistoryOutputSettings.txt">
-      <id>f3429847-7dec-4549-a9de-bc6346d9db69</id>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DataSources\Coastal_hydrodynamic_modelling\exercise_08\MapOutputSettings.txt">
-      <id>450ad44c-b03b-4eee-8401-f24fcd735d8d</id>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DataSources\Coastal_hydrodynamic_modelling\exercise_08\OthersOutputSettings.txt">
-      <id>e5a6a675-417b-4bfd-b10c-8ba2035d7c46</id>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DataSources\Coastal_hydrodynamic_modelling\exercise_08\RestartOutputSettings.txt">
-      <id>30fd92bb-64aa-4913-be02-9029116546ea</id>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DataSources\Coastal_hydrodynamic_modelling\exercise_08\ShapeFileOutputSettings.txt">
-      <id>9588aeae-8bb8-480c-bad0-acef16c08c74</id>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DataSources\Coastal_hydrodynamic_modelling\exercise_08\StatisticsOutputSettings.txt">
-      <id>0dcb19a4-8383-41e3-8e24-0bb9b26ea12a</id>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DataSources\Coastal_hydrodynamic_modelling\exercise_08\TimingStatisticsOutputSettings.txt">
-      <id>3184cb39-a0df-412c-b454-fb40c7b0777c</id>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DataSources\Coastal_hydrodynamic_modelling\exercise_08\WaterQualityOutputSettings.txt">
-      <id>99da28e5-4098-4330-a970-e3a032923e36</id>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="ClickTimeNavigatorButtons_DataSource.csv">
       <Link>ClickTimeNavigatorButtons_DataSource.csv</Link>
       <BoundTo>5c4f566f-c2c8-4c51-9d32-03c0622be4d2</BoundTo>
@@ -1886,10 +1893,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <id>b8a40807-9119-4464-8e6a-6731041600f6</id>
     </Content>
-    <None Include="DataSources\Open_Many_Projects\Open_Many_Projects.csv">
-      <id>8153ed92-1657-4ec1-a721-fbc99120679d</id>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Content Include="CreateSetup_DataSource.csv">
       <Link>CreateSetup_DataSource.csv</Link>
       <BoundTo>5c4f566f-c2c8-4c51-9d32-03c0622be4d2</BoundTo>
@@ -1946,13 +1949,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <id>9bc56040-3772-42e4-a8fe-20e72c040ac4</id>
     </Content>
-    <Content Include="Change_DataSource.csv">
-      <Link>Change_DataSource.csv</Link>
-      <BoundTo>5c4f566f-c2c8-4c51-9d32-03c0622be4d2</BoundTo>
-      <DependentUpon>Urban_Modelling_1_Workflow.rxtst</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <id>a4ce7f3a-6080-47d7-b032-cb72aad15fc2</id>
-    </Content>
     <Content Include="ChangeSettings_DataSource1.csv">
       <Link>ChangeSettings_DataSource1.csv</Link>
       <BoundTo>5c4f566f-c2c8-4c51-9d32-03c0622be4d2</BoundTo>
@@ -2002,22 +1998,122 @@
       <id>9e25f12b-67b7-4ae1-ac6d-de7165a630f4</id>
       <recordtableid>ddffc9b9-4be0-4e72-8684-7850c9641a25</recordtableid>
     </None>
-    <None Include="Modules\Application\ShowHideDebugMessages.rxrec">
+    <None Include="Modules\AttributesTable\CloseAttributeTableTab.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>4e1a3c3e-465a-47e3-b95b-f83023b74ae8</id>
-      <recordtableid>ecda4d4e-4232-4dca-b667-838664544bdb</recordtableid>
+      <id>f51dd75e-d880-4807-a90b-c7b4936a8572</id>
+      <recordtableid>aa879e9a-95a1-4d72-954c-508cda27b2c8</recordtableid>
+    </None>
+    <None Include="Modules\Dialogs\ClickOkTimeSeriesGeneratorDialog.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>5b33bd68-7e34-4dbf-9b99-639786719053</id>
+      <recordtableid>be4fbb1d-749f-43b5-aeb3-90a972a8d6dd</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\BoundaryDataEditor\SetBoundaryData1DWaterLevel.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>b4dde287-ae86-4c3a-b023-d1a95d7a6d53</id>
+      <recordtableid>d4d44bab-26a7-4734-80cc-f598bbb32ed0</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\CompositeStructureView\PumpView\SetPumpControlLevels.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>7bad7ce1-d727-4528-9d9e-045590b6f582</id>
+      <recordtableid>aab6796f-bf5d-4bd4-9a65-069c6d4a7d4a</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\CompositeStructureView\PumpView\SetPumpProperties.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>b021ba6c-e8a8-4198-923c-9e2d6f91c495</id>
+      <recordtableid>02e36185-a699-4162-9087-af5d8a9bd580</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\CompositeStructureView\WeirView\SetCorrectionCoefficient.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>d6761bf1-a128-4883-a5b2-802129a1f65a</id>
+      <recordtableid>0730fec9-2f6c-4690-8c3b-381c067cccf7</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\CompositeStructureView\WeirView\SetCrestLevelAndWidth.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>9fd642eb-ce1a-4b3c-a5e6-72e2647f54af</id>
+      <recordtableid>b81fba35-f5ee-40d0-a7ba-f7eb4de82a92</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\CompositeStructureView\WeirView\SetGateProperties.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>e3e2d194-8bfd-484a-ad5e-800d7827d111</id>
+      <recordtableid>20d4e9fd-6a7e-4595-a8d9-567e0ca8b047</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\CrossSectionDefinitionView\SetCrossSectionRectangle.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>a36d9511-a175-41db-96c3-2614086f0fb1</id>
+      <recordtableid>64550d5f-7ddf-47c9-9cb6-4a7fcb5dd106</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\CrossSectionDefinitionView\SetCrossSectionDiameter.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>60beb2e6-0d5a-4d69-ae02-1870cf9944a6</id>
+      <recordtableid>6ecb0d81-2e15-4630-9a04-2ee969729238</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\CrossSectionDefinitionView\SetCrossSectionType.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>dee630db-4b24-49a0-ae93-8885f29c47e7</id>
+      <recordtableid>ea1040b9-bd69-461d-851f-bc39300465fb</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\MeteoView\GenerateTimeSeries.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>51e7d31b-21d8-4a02-b35b-c822e7c180ca</id>
+      <recordtableid>47e168b3-bd6d-4724-ad8b-5346d5eeff55</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\MultipleDataEditor\SetMultipleDataEditorTableCell.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>728dc187-fc77-4150-9e94-e3fb5e578871</id>
+      <recordtableid>384dceff-2b7a-4a9b-ba6a-a0efa395e4ed</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\MultipleFunctionView\SetMultipleFunctionViewTableCell.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>7d9a61b3-86e3-489e-9736-a30eb4ee17d4</id>
+      <recordtableid>78a03ee6-745d-47fd-b2a9-aeeb39932b48</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\NwrwDryWeatherFlowDefinitionView\SetNwrwDryWeatherFlowDefinitionCell.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>e2202c84-dd8f-466e-a0f1-70ee1f8b1e02</id>
+      <recordtableid>c7b4f90d-a739-4f16-b364-058ccbf887fe</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\SewerConnectionView\CreateNewSharedDefinition.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>7b13d3f4-542d-4bbc-9b47-dd612927cdbe</id>
+      <recordtableid>48af12fa-d69d-4193-b33d-9c3acca05e1b</recordtableid>
+    </None>
+    <None Include="Modules\FeatureEditors\SewerConnectionView\SelectSharedDefinition.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>5dccb3a7-934c-4244-9c6f-941b7d3343b0</id>
+      <recordtableid>e5bb1907-5f32-4ace-a4d4-1faa92a49297</recordtableid>
+    </None>
+    <None Include="Modules\IntegratedModelSettings\CloseIntegratedModelSettings.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>b23a516c-e353-47ad-8a81-f65540ad9372</id>
+      <recordtableid>ea292564-9c6e-4072-8380-ce96f8a1fefb</recordtableid>
+    </None>
+    <None Include="Modules\KeySequence\EscapeKeyDown.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>134d8761-c551-4c95-a7ce-ca7e441f635c</id>
+      <recordtableid>2b26a635-d099-4d8c-bbab-3aecdd53aba1</recordtableid>
+    </None>
+    <None Include="Modules\Dialogs\SelectContextMenuItem.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>0cbb5f26-e731-4fd9-b2cc-fc2fdb592cd3</id>
+      <recordtableid>fa859b34-a160-4f2c-95ba-14fbb46bee3d</recordtableid>
     </None>
     <None Include="Modules\IO\SpecifyDirectoryToExportTo.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>f778dbbf-86c1-42fd-bff1-d823627f526f</id>
-      <recordtableid>d64b5925-da03-437f-98c7-66281361b624</recordtableid>
+      <id>d7f133d7-47d8-4be0-a5a9-8001cc2eaadd</id>
+      <recordtableid>bf42891b-2a61-409d-bedf-0b979f0db30e</recordtableid>
     </None>
-    <None Include="Modules\MapTree\RightClickGenericItemInMapTreeWithUniqueParent.rxrec">
+    <None Include="Modules\MapTree\ClickUseFocusedLayer.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>e42bad06-ff87-4861-80ad-4bcbc468c4ed</id>
+      <recordtableid>41598c35-9720-4dc6-8b8e-0e8b10ef1569</recordtableid>
+    </None>
+    <None Include="Modules\MapTree\RightClickGenericChildTreeItem.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>4b02e51f-754f-4617-a136-b251938f29f9</id>
       <recordtableid>18479f35-96c1-4350-8764-398c2c015bbc</recordtableid>
     </None>
-    <None Include="Modules\MapTree\ShowMapPanel.rxrec">
+    <None Include="Modules\MapTree\ShowMapTree.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>1bb31a1e-7e35-485d-95f1-dc0d34e24004</id>
       <recordtableid>e1f3b6bc-e4fc-4ba9-99b9-ba696dc7b753</recordtableid>
@@ -2027,12 +2123,12 @@
       <id>191dec72-944a-4d7e-b7f0-82786454c1b7</id>
       <recordtableid>aa59d88e-f833-4794-8403-e75ddc532777</recordtableid>
     </None>
-    <None Include="Modules\AttributesTable\ChooseDropdownOptionInAttributesTableCell.rxrec">
+    <None Include="Modules\AttributesTable\SelectComboBoxItemInTableCell.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>2898646e-4bdb-44b5-8e2d-e1c3a5ebda51</id>
       <recordtableid>ef0e56e9-baa1-4fdc-b71e-11233988fd0e</recordtableid>
     </None>
-    <None Include="Modules\AttributesTable\RightClickAndChooseOptionInCell.rxrec">
+    <None Include="Modules\AttributesTable\RightClickGenericTableCell.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>887216fe-a363-4e9a-95d8-f50a6841f4ff</id>
       <recordtableid>0b04c9ae-3284-4368-a866-092d8c413bb7</recordtableid>
@@ -2081,11 +2177,6 @@
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>a8605d81-019f-4ca6-8fd0-06d310777659</id>
       <recordtableid>4cb70866-10ba-4e04-ac99-bd07283b4da8</recordtableid>
-    </None>
-    <None Include="Modules\BoundaryData\SpecifyValueRowBoundaryData1D.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>9992220e-2b46-4945-aec3-eebae64f226d</id>
-      <recordtableid>470d5503-dab5-4321-91bb-4d674633d8cc</recordtableid>
     </None>
     <None Include="Modules\Delays\DelayXMiliseconds.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -2147,12 +2238,7 @@
       <id>cf4e45fd-7a51-4375-abe2-3c96e2946a0b</id>
       <recordtableid>fa564459-810d-4480-8455-520ab3933b5b</recordtableid>
     </None>
-    <None Include="Modules\Dialogs\ClickOKButtonInApplication.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>4908c7be-8755-4a58-b685-218b5a6b9336</id>
-      <recordtableid>0d936a61-60d5-4e9c-9101-10027a765ffc</recordtableid>
-    </None>
-    <None Include="Modules\Dialogs\CloseOkDialog.rxrec">
+    <None Include="Modules\Dialogs\ClickOkSelectItemDialog.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>56e03f24-dd0a-48d1-ac8b-fa35bd747153</id>
       <recordtableid>d4da8175-ae96-47dc-9cd3-d7301667ef12</recordtableid>
@@ -2172,95 +2258,25 @@
       <id>4e05924a-b21d-43f5-bfae-ce8823a97833</id>
       <recordtableid>5845c792-4a69-4693-b578-b022b9740f8f</recordtableid>
     </None>
-    <None Include="Modules\DocumentViews\ChangeSettingInEditorView.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>b4dde287-ae86-4c3a-b023-d1a95d7a6d53</id>
-      <recordtableid>d4d44bab-26a7-4734-80cc-f598bbb32ed0</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\ChangeTabInCentralView.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>27ae38f6-20ec-4c3c-80c1-06514f4fef32</id>
-      <recordtableid>f1ee49aa-cf68-4e08-af35-71024fba39da</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\ChangeTableValueInEditor.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>728dc187-fc77-4150-9e94-e3fb5e578871</id>
-      <recordtableid>384dceff-2b7a-4a9b-ba6a-a0efa395e4ed</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\ClickIconButton.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>9194dd96-e863-4c11-ab1c-421a7065fbcb</id>
-      <recordtableid>fdefa161-d28e-47a4-b1f4-4ab906ae401f</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\ClickTextButton.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>765e5b48-3bb1-4c17-a8b3-5b83768187cd</id>
-      <recordtableid>84506e5c-a1b6-4509-bbce-46a9a04b5e2b</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\CloseMapViewTabControl.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>b23a516c-e353-47ad-8a81-f65540ad9372</id>
-      <recordtableid>ea292564-9c6e-4072-8380-ce96f8a1fefb</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\CloseUniqueDocumentView.rxrec">
+    <None Include="Modules\DocumentViews\CloseDocumentView.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>2b6d8813-c825-4a89-b6ea-a83c158fb6ae</id>
       <recordtableid>00a1264a-0541-4204-af34-49b608e5c993</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\CreateNewSharedDefinitionCircle.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>7b13d3f4-542d-4bbc-9b47-dd612927cdbe</id>
-      <recordtableid>48af12fa-d69d-4193-b33d-9c3acca05e1b</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\CreateNewSharedDefinitionRectangle.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>224c3fe8-59ef-4643-b485-4de92ca3a468</id>
-      <recordtableid>968fc015-0f25-452c-85f5-917657460dae</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\SelectSharedDefinition.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>5dccb3a7-934c-4244-9c6f-941b7d3343b0</id>
-      <recordtableid>e5bb1907-5f32-4ace-a4d4-1faa92a49297</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\UseScrollBar.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>5f373f17-6b18-45a6-9599-24705a25b811</id>
-      <recordtableid>4e56a3e2-7934-42bc-8ccb-45bfdf4ea080</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\ZoomMouseTo.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>9dcb6345-2e16-4d59-ad7b-2d89e17575d6</id>
-      <recordtableid>c4641196-7958-45e5-95ce-ab27177030bc</recordtableid>
-    </None>
-    <None Include="Modules\DocumentViews\MoveMouseWheelUpwards.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>28b58c57-5c2b-4d2a-ad1f-e3eb8b88a666</id>
-      <recordtableid>1cc8d8f9-47fe-41a8-9b0a-7e0063144f08</recordtableid>
     </None>
     <None Include="Modules\DocumentViews\ScreenshotCentralDocumentView.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>258f4e7c-c57b-48b2-8c4e-ef0e2d85629b</id>
       <recordtableid>c5295c58-dc47-4006-937a-9ec7192f25b8</recordtableid>
     </None>
-    <None Include="Modules\DocumentViews\SelectSubTabSettings.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>e7de03d3-1503-4b11-bc2e-3aa2eed9c913</id>
-      <recordtableid>f9775878-6727-409e-8319-2ee399166bb6</recordtableid>
-    </None>
-    <None Include="Modules\IntegratedModelSettings\ChangeTimeStepInputField.rxrec">
+    <None Include="Modules\IntegratedModelSettings\SetIntegratedModelTimeStep.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>86c95d27-bb51-4976-a968-982308bd8ad4</id>
       <recordtableid>e3015181-ca3f-42a1-a177-fede791dc554</recordtableid>
     </None>
-    <None Include="Modules\IntegratedModelSettings\ChooseIntegratedModelWorkflows.rxrec">
+    <None Include="Modules\IntegratedModelSettings\SelectIntegratedModelWorkflow.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>e6a8c1cf-8ea2-4b0a-b6f5-cb2f6004f40a</id>
       <recordtableid>5f2caeff-1d50-4d78-b6dc-ea9d4cb19c9b</recordtableid>
-    </None>
-    <None Include="Modules\IntegratedModelSettings\RunIntegratedModel.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>a06ced7a-13aa-4afd-bc99-38eaf71d5d37</id>
-      <recordtableid>4a87fd22-0092-4a00-bc50-8f2547d0eb19</recordtableid>
     </None>
     <None Include="Modules\IO\AcceptCurrentCoordinateTransformationDialog.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -2297,20 +2313,15 @@
       <id>2ad358a4-7e50-4aae-8f51-b7db80027551</id>
       <recordtableid>94b2ed80-5246-40bd-8a07-b36291dec1c7</recordtableid>
     </None>
-    <None Include="Modules\MapTree\DoubleClickGenericItemInMapTree.rxrec">
+    <None Include="Modules\MapTree\DoubleClickGenericTreeItem.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>35a8563d-9eb8-4074-8248-009bdc3f2b16</id>
       <recordtableid>1bf6f2e1-918f-4110-8c42-f1bc4a8e5782</recordtableid>
     </None>
-    <None Include="Modules\MapTree\RightClickGenericItemInMapTree.rxrec">
+    <None Include="Modules\MapTree\RightClickGenericTreeItem.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>752d89d6-8035-4488-91ac-7d8b0bc86cfb</id>
       <recordtableid>35b485e4-02c5-4f79-ba17-5dc83a25e680</recordtableid>
-    </None>
-    <None Include="Modules\Map\ClickOutputHisFileVariable1D.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>dd69b795-bb33-4515-90c1-6bc1110ecc09</id>
-      <recordtableid>af884821-5082-469f-94be-6fe52661e61d</recordtableid>
     </None>
     <None Include="Modules\Map\ConfigureLegendProperties.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -2322,22 +2333,12 @@
       <id>0878ae78-83f3-42e1-8b14-93c92272e505</id>
       <recordtableid>370e08fb-dfdd-4ca5-a04a-006d54548a71</recordtableid>
     </None>
-    <None Include="Modules\Map\ClickOutputMapVariableCheckbox1D.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>285e2ba9-0423-448e-afdb-cff00a3abb4c</id>
-      <recordtableid>1cb166ab-862c-4dfe-ba71-ffe061c9d7eb</recordtableid>
-    </None>
-    <None Include="Modules\Map\MakeOutputMapVariableVisible1D.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>e75b85ca-f7b0-44b4-8768-c271644cd448</id>
-      <recordtableid>df7d5e19-2cd9-4fab-a6ed-4e552441a043</recordtableid>
-    </None>
     <None Include="Modules\Map\MouseDownOnMap.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>13599fbc-33b0-482b-b976-fa0725624706</id>
       <recordtableid>80528f69-6f29-40fe-8157-d456f83d1c33</recordtableid>
     </None>
-    <None Include="Modules\Map\ExpandOutputMap.rxrec">
+    <None Include="Modules\Map\ExpandOutputMapFile2D.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>9019f0fe-355b-4938-9a71-d4324bb36920</id>
       <recordtableid>ee37b9b7-757c-4578-b808-1352c32b922b</recordtableid>
@@ -2351,6 +2352,11 @@
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>347c94e0-b637-448f-a67e-42e50574e409</id>
       <recordtableid>3f3af7ed-e00f-4efa-89c8-8b38604f8911</recordtableid>
+    </None>
+    <None Include="Modules\Map\MoveMouseWheelUpwards.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>28b58c57-5c2b-4d2a-ad1f-e3eb8b88a666</id>
+      <recordtableid>1cc8d8f9-47fe-41a8-9b0a-7e0063144f08</recordtableid>
     </None>
     <None Include="Modules\Map\RightClickOnMap.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -2382,15 +2388,30 @@
       <id>4e7fb193-d102-4ca8-b9cd-dcc27ad6dee4</id>
       <recordtableid>afdf4c01-a73b-49fc-8985-3bf446d2ebcd</recordtableid>
     </None>
-    <None Include="Modules\ModelSettings\ChangeComboBoxItemInModelSettings.rxrec">
+    <None Include="Modules\MessageWindow\ActivateMessageWindow.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>95c0e277-7c45-4a81-b5e9-795c6ecd6ee1</id>
+      <recordtableid>bc5063f0-84a7-4072-aee0-a6dd856aa29a</recordtableid>
+    </None>
+    <None Include="Modules\MessageWindow\ShowHideDebugMessages.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>4e1a3c3e-465a-47e3-b95b-f83023b74ae8</id>
+      <recordtableid>ecda4d4e-4232-4dca-b667-838664544bdb</recordtableid>
+    </None>
+    <None Include="Modules\ModelSettings\SetInitialConditionsQuantity1D.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>e097abf3-74a4-4d80-b807-0fc04a5dfe3f</id>
       <recordtableid>99891479-340d-4c30-a3cf-ea5263b35ec9</recordtableid>
     </None>
-    <None Include="Modules\ModelSettings\SetModelProperties.rxrec">
+    <None Include="Modules\ModelSettings\PressTimeFrameSynchronizeButton.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>2a95ee97-0a5f-4138-8cf3-68dab415bf7c</id>
-      <recordtableid>b3e0153c-9b5d-4e9b-9953-83e8843fa1f9</recordtableid>
+      <id>9194dd96-e863-4c11-ab1c-421a7065fbcb</id>
+      <recordtableid>fdefa161-d28e-47a4-b1f4-4ab906ae401f</recordtableid>
+    </None>
+    <None Include="Modules\ModelSettings\SelectSubTabSettings.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>e7de03d3-1503-4b11-bc2e-3aa2eed9c913</id>
+      <recordtableid>f9775878-6727-409e-8319-2ee399166bb6</recordtableid>
     </None>
     <None Include="Modules\ModelSettings\SetOthersOutputSettings.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -2407,17 +2428,22 @@
       <id>35daaecc-6e69-4575-a297-dbe749e725d9</id>
       <recordtableid>0ad9d5c1-9e98-447f-a7b4-294677146b2e</recordtableid>
     </None>
-    <None Include="Modules\ModelSettings\SetMapOutputSettings.rxrec">
+    <None Include="Modules\Map\ExpandOutputMapFile2D.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>90e64b26-d77b-444c-b92b-d67909684763</id>
-      <recordtableid>d2d170aa-97ab-410b-a768-292db4e582bb</recordtableid>
+      <id>9019f0fe-355b-4938-9a71-d4324bb36920</id>
+      <recordtableid>ee37b9b7-757c-4578-b808-1352c32b922b</recordtableid>
+    </None>
+    <None Include="Modules\DocumentViews\CloseDocumentView.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>2b6d8813-c825-4a89-b6ea-a83c158fb6ae</id>
+      <recordtableid>00a1264a-0541-4204-af34-49b608e5c993</recordtableid>
     </None>
     <None Include="Modules\ModelSettings\SetRestartSettings.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>ee0e6eb1-faeb-4c99-b02a-c8e27fba5df6</id>
       <recordtableid>982f95be-ef94-48ae-963c-65ed5e0c6a8a</recordtableid>
     </None>
-    <None Include="Modules\ModelSettings\SetTextBoxValueInModelSettings.rxrec">
+    <None Include="Modules\ModelSettings\SetInitialConditionsValue1D.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>ccb240e7-5ab2-4092-9b90-b3507bf239a2</id>
       <recordtableid>b04ad49c-8360-4367-805a-e24ae22111de</recordtableid>
@@ -2452,11 +2478,6 @@
       <id>4c6abc5c-be88-4d5b-bbba-59c73de7e758</id>
       <recordtableid>3b1738c3-58ee-4c9b-90b4-f068e2aad82a</recordtableid>
     </None>
-    <None Include="Modules\ProjectTree\SelectContextMenuItem.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>0cbb5f26-e731-4fd9-b2cc-fc2fdb592cd3</id>
-      <recordtableid>fa859b34-a160-4f2c-95ba-14fbb46bee3d</recordtableid>
-    </None>
     <None Include="Modules\ProjectTree\ContextMenuModel.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>c987abf6-f270-4c9b-8654-023ce2893a94</id>
@@ -2487,7 +2508,7 @@
       <id>47fbe5ad-eddb-4f22-893b-b3a70f193e27</id>
       <recordtableid>8e85d648-0fad-42bd-93b7-4bd398863173</recordtableid>
     </None>
-    <None Include="Modules\Ribbon\AddDutchLayer.rxrec">
+    <None Include="Modules\Ribbon\AddSchematicLayer.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>35ff498e-1eaa-44de-a6bc-184126c8c305</id>
       <recordtableid>c2d1fb80-ce99-47d6-a705-e34dbe587033</recordtableid>
@@ -2496,11 +2517,6 @@
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>99577484-aba5-4054-ba60-485780ed0133</id>
       <recordtableid>70157195-dbbd-46da-b3b4-f2ce9638759a</recordtableid>
-    </None>
-    <None Include="Modules\Ribbon\ClickUseFocusedLayer.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>e42bad06-ff87-4861-80ad-4bcbc468c4ed</id>
-      <recordtableid>41598c35-9720-4dc6-8b8e-0e8b10ef1569</recordtableid>
     </None>
     <None Include="Modules\Ribbon\StartAddRoute.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -2628,15 +2644,25 @@
       <id>6e3da310-30cb-4b29-aaef-6795375cd004</id>
       <recordtableid>4ee3e88f-a9b0-4267-b0bd-202fc08ac081</recordtableid>
     </None>
-    <None Include="Modules\TimeNavigator\ClickButtonInTimeNavigator.rxrec">
+    <None Include="Modules\TimeNavigator\ActivateTimeNavigator.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>4ff93465-c002-451d-a2f1-8ef7c63ebc8d</id>
-      <recordtableid>67b3d6fd-6b0c-4563-8f6e-17eb15b3d49f</recordtableid>
+      <id>e51517a8-8bee-464c-ad72-cc9eb60f7f1e</id>
+      <recordtableid>d4de30eb-9d48-43a0-8b09-5654dedaec83</recordtableid>
     </None>
-    <None Include="Modules\TimeNavigator\OpenTimeNavigatorPanel.rxrec">
+    <None Include="Modules\TimeNavigator\NextTimeNavigation.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>7ae51fdc-0702-452a-9c42-c71f2e6ecbaf</id>
-      <recordtableid>dd36826f-9f81-4f9b-9d8f-a6d58cb953cc</recordtableid>
+      <id>a271d381-2151-4740-b237-e35ac3567f89</id>
+      <recordtableid>25ddd19a-5f6a-464e-b212-067bcad4b5c8</recordtableid>
+    </None>
+    <None Include="Modules\TimeNavigator\PauseTimeNavigation.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>40b5c227-dac5-47a2-8d32-e55e58d88974</id>
+      <recordtableid>982f40b7-06e9-4050-abaf-734d4dfa8a2b</recordtableid>
+    </None>
+    <None Include="Modules\TimeNavigator\PlayTimeNavigation.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>fed4c1a6-6340-4ea8-824d-177b47952083</id>
+      <recordtableid>433d51c9-9812-4649-a11c-e8e17d5f2531</recordtableid>
     </None>
     <None Include="Modules\Validation\CheckValidationResult.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
@@ -2703,13 +2729,6 @@
       <id>4895aa9e-8a5d-46fc-9db9-9b8fae226471</id>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="SmartFolder_DataSource.csv">
-      <Link>SmartFolder_DataSource.csv</Link>
-      <BoundTo>5c4f566f-c2c8-4c51-9d32-03c0622be4d2</BoundTo>
-      <DependentUpon>Urban_Modelling_1_Workflow.rxtst</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <id>cd84d041-0dd0-441d-8854-761301525d1c</id>
-    </Content>
     <Content Include="SetHeightAndWidth_DataSource.csv">
       <Link>SetHeightAndWidth_DataSource.csv</Link>
       <BoundTo>5c4f566f-c2c8-4c51-9d32-03c0622be4d2</BoundTo>
@@ -2750,17 +2769,50 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Modules\FeatureEditors">
+      <id>0facf21a-5c59-424a-9185-c973d2881e35</id>
+    </Folder>
+    <Folder Include="Modules\FeatureEditors\BoundaryDataEditor">
+      <id>5a985369-e161-44d5-857b-4e155e298fad</id>
+    </Folder>
+    <Folder Include="Modules\FeatureEditors\CompositeStructureView\WeirView">
+      <id>16ac5303-a881-4b12-8fb4-686957941845</id>
+    </Folder>
+    <Folder Include="Modules\FeatureEditors\CompositeStructureView\PumpView">
+      <id>116ebc6f-614b-43fc-a264-698bc9427674</id>
+    </Folder>
+    <Folder Include="Modules\FeatureEditors\CrossSectionDefinitionView">
+      <id>3121a3d4-9b6b-488e-9f2f-11901c0ee432</id>
+    </Folder>
+    <Folder Include="Modules\FeatureEditors\CompositeStructureView">
+      <id>3f490148-c482-4934-8997-f0bab3f4acb7</id>
+    </Folder>
+    <Folder Include="Modules\FeatureEditors\MeteoView">
+      <id>89a25eb3-07aa-4382-a801-c2b226123acf</id>
+    </Folder>
+    <Folder Include="Modules\FeatureEditors\MultipleDataEditor">
+      <id>e515674a-2d91-4774-9d01-19885f7bbf1a</id>
+    </Folder>
+    <Folder Include="Modules\FeatureEditors\MultipleFunctionView">
+      <id>22cd8a21-efe3-4e01-9dcc-111a4da56534</id>
+    </Folder>
+    <Folder Include="Modules\FeatureEditors\NwrwDryWeatherFlowDefinitionView">
+      <id>1aaf649f-8bbb-471f-988b-6b4f2fa5bf68</id>
+    </Folder>
+    <Folder Include="Modules\FeatureEditors\SewerConnectionView">
+      <id>4ad43e89-3bbf-4644-9546-ae1d299e3cbd</id>
+    </Folder>
     <Folder Include="Modules\MapTree">
       <id>91d59238-3087-4001-8728-b57f3944538b</id>
-    </Folder>
-    <Folder Include="Modules\BoundaryData">
-      <id>6647fc2e-64e4-4583-b477-44e160a6c3de</id>
     </Folder>
     <Folder Include="Modules\KeySequence">
       <id>37886348-f93f-4497-8eae-eb3176ad34a1</id>
     </Folder>
     <Folder Include="Modules\IntegratedModelSettings">
       <id>22a2cbff-e114-434b-b9c0-670c055acd5a</id>
+    </Folder>
+    <Folder Include="Modules\MessageWindow">
+      <id>8627fdb6-1a75-4b6b-87d8-449951b74347</id>
     </Folder>
     <Folder Include="Modules\TimeNavigator">
       <id>6e09a67a-264f-4a7a-89b5-002fa9696cfc</id>

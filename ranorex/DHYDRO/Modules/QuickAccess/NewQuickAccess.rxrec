@@ -42,10 +42,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="24add380-41fd-473f-ba49-9771c5d5c69a"
+			id="8d1f49a2-e25b-4cbc-b382-7738adef622b"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/container[@automationid='PART_ToolBarPanel']/button[1]
+					/form[@title~'Delta Shell']//container[@automationid='PART_ToolBarPanel']/button[1]
 				</path>
 				<robustPath>
 				</robustPath>

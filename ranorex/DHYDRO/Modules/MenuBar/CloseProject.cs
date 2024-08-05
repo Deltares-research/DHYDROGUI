@@ -79,12 +79,15 @@ namespace DHYDRO.Modules.MenuBar
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.FileTab' at Center.", repo.DSWindow.ListView.MenuBar.FileTabInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.FileTab.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.BackstageTabControl.FileTab' at Center.", repo.DSWindow.BackstageTabControl.FileTabInfo, new RecordItemIndex(0));
+            repo.DSWindow.BackstageTabControl.FileTab.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.BackstageTabControl.CloseButton' at Center.", repo.DSWindow.ListView.MenuBar.BackstageTabControl.CloseButtonInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.MenuBar.BackstageTabControl.CloseButton.Click();
+            Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(1));
+            Delay.Duration(300, false);
+            
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.BackstageTabControl.CloseButton' at Center.", repo.DSWindow.BackstageTabControl.CloseButtonInfo, new RecordItemIndex(2));
+            repo.DSWindow.BackstageTabControl.CloseButton.Click();
             Delay.Milliseconds(0);
             
         }

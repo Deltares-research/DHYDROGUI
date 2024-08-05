@@ -42,10 +42,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="e3ec4f59-854c-446d-96e0-99ab975bb292"
+			id="44fa47f5-b83a-4c94-8537-1e7f987d192f"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/text[@caption=$TabName]
+					/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/text[@caption=$TabName]
 				</path>
 				<robustPath>
 				</robustPath>

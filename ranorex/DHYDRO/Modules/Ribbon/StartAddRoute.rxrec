@@ -42,10 +42,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="6acbd19f-6fe4-4538-9022-f3748b23cbc9"
+			id="a5582972-4ebb-483d-80e1-f2ffce2c1fe5"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container/list[@automationid='NetworkCoverage']/button[@automationid='ButtonAddNewRoute']
+					/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@automationid='NetworkCoverage']/button[@automationid='ButtonAddNewRoute']
 				</path>
 				<robustPath>
 				</robustPath>

@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Network1D.ButtonAddNewWeir' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Network1D.ButtonAddNewWeirInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Network1D.ButtonAddNewWeir.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Network_1D.ButtonAddNewWeir' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Network_1D.ButtonAddNewWeirInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Network_1D.ButtonAddNewWeir.Click();
             Delay.Milliseconds(0);
             
         }

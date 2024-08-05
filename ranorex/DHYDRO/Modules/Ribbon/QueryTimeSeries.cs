@@ -89,8 +89,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Tools.QueryTimeSeries' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Tools.QueryTimeSeriesInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Tools.QueryTimeSeries.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Tools.QueryTimeSeries' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Tools.QueryTimeSeriesInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Tools.QueryTimeSeries.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'GridBasedDialog.GenericQueryTimeSeriesCell' at 25;12.", repo.GridBasedDialog.GenericQueryTimeSeriesCellInfo, new RecordItemIndex(1));

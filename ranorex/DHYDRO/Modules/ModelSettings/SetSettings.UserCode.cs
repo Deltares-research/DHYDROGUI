@@ -47,7 +47,7 @@ namespace DHYDRO.Modules.ModelSettings
         	container.FindAdapter<List>().Focus();
         	container.FindAdapter<List>().MoveTo(Duration.FromMilliseconds(0));
         	Report.Info(dataSource);
-        	var file = Path.Combine(Get.DataSourcesPath, dataSource);
+        	var file = Path.Combine(Get.DataSourcesDirectory, dataSource);
             var data = GetDataMapping(CsvParser.Parse(file));
             var elements = GetElementMapping(container);
 

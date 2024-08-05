@@ -79,12 +79,8 @@ namespace DHYDRO.Modules.ModelSettings
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '0.5' on item 'DSWindow.ListView.MainTabControl.ListGroupInitialConditionsSettings._1D.InitialWaterLevelField'.", repo.DSWindow.ListView.MainTabControl.ListGroupInitialConditionsSettings._1D.InitialWaterLevelFieldInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MainTabControl.ListGroupInitialConditionsSettings._1D.InitialWaterLevelField.Element.SetAttributeValue("Text", "0.5");
-            Delay.Milliseconds(0);
-            
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '0.5' on item 'DSWindow.ListView.MainTabControl.ListGroupInitialConditionsSettings._2D.InitialWaterLevelField'.", repo.DSWindow.ListView.MainTabControl.ListGroupInitialConditionsSettings._2D.InitialWaterLevelFieldInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.MainTabControl.ListGroupInitialConditionsSettings._2D.InitialWaterLevelField.Element.SetAttributeValue("Text", "0.5");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '0.5' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Initial_Conditions.InitialConditionGlobalValue2D'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Initial_Conditions.InitialConditionGlobalValue2DInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Initial_Conditions.InitialConditionGlobalValue2D.Element.SetAttributeValue("Text", "0.5");
             Delay.Milliseconds(0);
             
         }

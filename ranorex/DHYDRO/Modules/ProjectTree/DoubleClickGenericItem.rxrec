@@ -42,10 +42,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="e523434d-5228-4615-a475-a16752ae51db"
+			id="c2503bad-b2b8-4490-83ca-f08f8fcf4757"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem?/treeitem?/treeitem?/treeitem[@accessiblename=$NameTreeItemNode]
+					/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem?/treeitem?/treeitem?/treeitem[@accessiblename=$NameTreeItemNode]
 				</path>
 				<robustPath>
 				</robustPath>

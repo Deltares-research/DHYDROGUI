@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="433d51c9-9812-4649-a11c-e8e17d5f2531"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="PlayTimeNavigation"
+	namespace="DHYDRO.Modules.TimeNavigator">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="2e3a6fc6-970f-471b-8add-a6ee138e09cd"
+		sx="0"
+		sy="0"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="9ff65be2-00be-40d9-a1c8-20fb2c488052"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']/list[@automationid='ListView']/?/container[@controltypename='WinFormsAdapter']/container[@controlname='TimeSeriesNavigator']/container[@controlname='panelControls']/toolbar/button[@name='Play']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		PlayTimeNavigation.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

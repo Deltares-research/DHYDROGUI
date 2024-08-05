@@ -88,10 +88,10 @@ mode="Global">
 				</binding>
 			</bindings>
 			<info
-			id="b00bebdb-4d2d-43c3-824c-260e4330d8c7"
+			id="0d638e83-6c44-4920-9045-1d36c4d72162"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/element
+					/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']/element
 				</path>
 				<robustPath>
 				</robustPath>

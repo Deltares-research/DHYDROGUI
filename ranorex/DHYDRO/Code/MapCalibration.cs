@@ -23,7 +23,7 @@ namespace DHYDRO.Code
             Keyboard.DefaultKeyPressTime = 0;
             Delay.SpeedFactor = 0.0;
             
-            var centralMap = DHYDRO1D2DRepository.Instance.DSWindow.ListView.CentralMapContainer.CentralMap.Element.ScreenRectangle;
+            var centralMap = DHYDRO1D2DRepository.Instance.DSWindow.DocumentsPaneCentral.MapView.MapControl.ScreenRectangle;
             var mapWidth = centralMap.Width;
             var mapHeight = centralMap.Height;
 
@@ -58,13 +58,13 @@ namespace DHYDRO.Code
         
         private static Point GetWorldPoint(Point pixelsPoint)
         {
-            DHYDRO1D2DRepository.Instance.DSWindow.ListView.CentralMapContainer.CentralMap.MoveTo($"{pixelsPoint.X};{pixelsPoint.Y}");
+            DHYDRO1D2DRepository.Instance.DSWindow.DocumentsPaneCentral.MapView.MapControl.MoveTo($"{pixelsPoint.X};{pixelsPoint.Y}");
             Delay.Duration(20, false);
             
             // The <statusBarText> will be in the following form:
-            // "Current map coordinates: 123.123, 456.456" or "Current map coordinates: 123,123, 456,456" depending on the Culture.
+            // "Current map coordinates: 123.123, 456.456"
                 
-            var statusBarText = DHYDRO1D2DRepository.Instance.DSWindow.ListView.StatusBar.Element.GetAttributeValueText("Text");
+            var statusBarText = DHYDRO1D2DRepository.Instance.DSWindow.StatusBar.StatusBarItem.Element.GetAttributeValueText("Text");
             Report.Info("statusBarText= " + statusBarText );
 
             return string.IsNullOrEmpty(statusBarText) ? Point.Empty : ToPoint(statusBarText);
@@ -81,7 +81,7 @@ namespace DHYDRO.Code
 
         private static double ToDouble(string doubleStr)
         {
-        	return double.Parse(doubleStr, NumberStyles.Any, CultureInfo.CurrentCulture);
+        	return double.Parse(doubleStr, NumberStyles.Any, CultureInfo.InvariantCulture);
         }
     }
 }

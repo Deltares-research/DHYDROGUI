@@ -89,16 +89,16 @@ namespace DHYDRO.Modules.BoundaryConditions
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.QuantitiesComboBox' at Center.", repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.QuantitiesComboBoxInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.QuantitiesComboBox.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.QuantitiesComboBox' at Center.", repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.QuantitiesComboBoxInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.QuantitiesComboBox.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'ComboBoxList.ListItem' at Center.", repo.ComboBoxList.ListItemInfo, new RecordItemIndex(1));
             repo.ComboBoxList.ListItem.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.AddDefinitionButton' at Center.", repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.AddDefinitionButtonInfo, new RecordItemIndex(2));
-            repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.AddDefinitionButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.AddDefinitionButton' at Center.", repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.AddDefinitionButtonInfo, new RecordItemIndex(2));
+            repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.AddDefinitionButton.Click();
             Delay.Milliseconds(0);
             
         }

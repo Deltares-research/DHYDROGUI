@@ -79,8 +79,36 @@ namespace DHYDRO.Modules.ModelSettings
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '2019-01-01 00:00:00' on item 'DSWindow.ListView.MainTabControl.ListGroupsOutputSettings.Restart.RstOutputStartTimeField'.", repo.DSWindow.ListView.MainTabControl.ListGroupsOutputSettings.Restart.RstOutputStartTimeFieldInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MainTabControl.ListGroupsOutputSettings.Restart.RstOutputStartTimeField.Element.SetAttributeValue("Text", "2019-01-01 00:00:00");
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Checked to 'True' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.WriteRstFile'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.WriteRstFileInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.WriteRstFile.Element.SetAttributeValue("Checked", "True");
+            Delay.Milliseconds(0);
+            
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '0' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldDays'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldDaysInfo, new RecordItemIndex(1));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldDays.Element.SetAttributeValue("Text", "0");
+            Delay.Milliseconds(0);
+            
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '12' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldHours'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldHoursInfo, new RecordItemIndex(2));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldHours.Element.SetAttributeValue("Text", "12");
+            Delay.Milliseconds(0);
+            
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '00' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldMinutes'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldMinutesInfo, new RecordItemIndex(3));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldMinutes.Element.SetAttributeValue("Text", "00");
+            Delay.Milliseconds(0);
+            
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '00' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldSeconds'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldSecondsInfo, new RecordItemIndex(4));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldSeconds.Element.SetAttributeValue("Text", "00");
+            Delay.Milliseconds(0);
+            
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '000' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldMilliSeconds'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldMilliSecondsInfo, new RecordItemIndex(5));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputDeltaT.InputFieldMilliSeconds.Element.SetAttributeValue("Text", "000");
+            Delay.Milliseconds(0);
+            
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Checked to 'True' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.SpecifyRstStart'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.SpecifyRstStartInfo, new RecordItemIndex(6));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.SpecifyRstStart.Element.SetAttributeValue("Checked", "True");
+            Delay.Milliseconds(0);
+            
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '2019-01-01 00:00:00' on item 'DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputStartTimeField'.", repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputStartTimeFieldInfo, new RecordItemIndex(7));
+            repo.DSWindow.DocumentsPaneCentral.ModelSettingsTabControl.Output_Parameters.Restart.RstOutputStartTimeField.Element.SetAttributeValue("Text", "2019-01-01 00:00:00");
             Delay.Milliseconds(0);
             
         }

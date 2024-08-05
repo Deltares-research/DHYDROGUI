@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <recordtable
 embeddedrepository="False"
-id="d64b5925-da03-437f-98c7-66281361b624"
+id="bf42891b-2a61-409d-bedf-0b979f0db30e"
 mode="Global">
 	<repeatcount>
 		1
@@ -24,7 +24,7 @@ mode="Global">
 	</codegen>
 	<variables>
 		<var
-		id="ff26bdf8-296e-429c-b3d0-839b2518e1e2"
+		id="0e0f1963-53cc-4802-b5fe-91ea4d29e3e6"
 		name="DirectoryName">
 		</var>
 	</variables>
@@ -43,7 +43,7 @@ mode="Global">
 				</binding>
 			</bindings>
 			<info
-			id="1c7da5d7-be87-4c96-8a8c-5fdf90c69bef"
+			id="8d42d2c0-2f52-424a-b72d-0311c5355961"
 			sourcename="RepositoryEditor">
 				<path>
 					/form[@title&gt;'Select folder']/text[@controlid='1152']
@@ -72,7 +72,7 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="71ea78b2-de6a-416d-a036-978744bc4e54"
+			id="e1f7bed0-b1c0-40f1-b802-96fcbe055124"
 			sourcename="RepositoryEditor">
 				<path>
 					/form[@title&gt;'Select folder']/button[@text='Select Folder']
@@ -119,7 +119,7 @@ mode="Global">
 						System.Int32
 					</argvaluetype>
 					<argvalue>
-						1000
+						3000
 					</argvalue>
 				</argument>
 			</arguments>

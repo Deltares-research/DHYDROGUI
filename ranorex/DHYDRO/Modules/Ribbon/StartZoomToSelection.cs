@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Tools.ButtonMapZoomUsingRectangle' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Tools.ButtonMapZoomUsingRectangleInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Tools.ButtonMapZoomUsingRectangle.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.Tools.ZoomUsingRectangleButton' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.Tools.ZoomUsingRectangleButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.Tools.ZoomUsingRectangleButton.Click();
             Delay.Milliseconds(0);
             
         }

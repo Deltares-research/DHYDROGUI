@@ -79,7 +79,7 @@ namespace DHYDRO.Modules.DocumentViews
 
             Init();
 
-            Report.Screenshot(ReportLevel.Info, "User", "", repo.DSWindow.ListView.CentralMapContainer.Self, false, new RecordItemIndex(0));
+            Report.Screenshot(ReportLevel.Info, "User", "", repo.DSWindow.DocumentsPaneCentral.Self, false, new RecordItemIndex(0));
             
         }
 

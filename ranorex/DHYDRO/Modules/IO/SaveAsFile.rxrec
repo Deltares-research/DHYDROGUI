@@ -277,7 +277,7 @@ mode="Global">
 						System.Int32
 					</argvaluetype>
 					<argvalue>
-						1000
+						3000
 					</argvalue>
 				</argument>
 			</arguments>

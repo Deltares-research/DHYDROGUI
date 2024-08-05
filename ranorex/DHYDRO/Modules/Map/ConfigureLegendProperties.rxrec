@@ -54,10 +54,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="fa3ff240-c3fa-4ca7-acb5-d68803ab2d4c"
-			sourcename="ItemRecorderEditor">
+			id="1544bc02-c9bc-4d86-bbbc-259ae977b7cf"
+			sourcename="RepositoryEditor">
 				<path>
-					/form[@title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/text/container/parent::text
+					/form[@title='Properties']//text[@automationid='PART_TextBox']
 				</path>
 				<robustPath>
 				</robustPath>
@@ -77,10 +77,10 @@ mode="Global">
 				</binding>
 			</bindings>
 			<info
-			id="fa3ff240-c3fa-4ca7-acb5-d68803ab2d4c"
+			id="1544bc02-c9bc-4d86-bbbc-259ae977b7cf"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window' and @title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/text/container/parent::text
+					/form[@title='Properties']//text[@automationid='PART_TextBox']
 				</path>
 				<robustPath>
 				</robustPath>
@@ -106,10 +106,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="e51b9ca1-dece-4c16-963e-65a89e56787e"
+			id="41837715-34ff-462b-8dab-400e2b9ad306"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window' and @title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/radiobutton[@text='Custom range']
+					/form[@title='Properties']//radiobutton[@text='Custom range']
 				</path>
 				<robustPath>
 				</robustPath>
@@ -132,10 +132,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="901777c3-8e49-403e-bd77-90541d99329f"
-			sourcename="ItemRecorderEditor">
+			id="ceb627ec-5314-4b66-94a8-d17ed68931ba"
+			sourcename="RepositoryEditor">
 				<path>
-					/form[@title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/container[2]/text[@caption='min :']/parent::container/text[2]
+					/form[@title='Properties']//text[@caption='min :']/parent::container/text[2]
 				</path>
 				<robustPath>
 				</robustPath>
@@ -155,10 +155,10 @@ mode="Global">
 				</binding>
 			</bindings>
 			<info
-			id="901777c3-8e49-403e-bd77-90541d99329f"
+			id="ceb627ec-5314-4b66-94a8-d17ed68931ba"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window' and @title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/container[2]/text[@caption='min :']/parent::container/text[2]
+					/form[@title='Properties']//text[@caption='min :']/parent::container/text[2]
 				</path>
 				<robustPath>
 				</robustPath>
@@ -184,10 +184,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="5de193b6-da89-4444-b426-af05474748ef"
-			sourcename="ItemRecorderEditor">
+			id="14e2af8c-da79-46a3-ad7d-3ffc163e6742"
+			sourcename="RepositoryEditor">
 				<path>
-					/form[@title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/container[2]/text[@caption='max :']/parent::container/text[4]
+					/form[@title='Properties']//text[@caption='max :']/parent::container/text[4]
 				</path>
 				<robustPath>
 				</robustPath>
@@ -207,10 +207,10 @@ mode="Global">
 				</binding>
 			</bindings>
 			<info
-			id="5de193b6-da89-4444-b426-af05474748ef"
+			id="14e2af8c-da79-46a3-ad7d-3ffc163e6742"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window' and @title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/container[2]/text[@caption='max :']/parent::container/text[4]
+					/form[@title='Properties']//text[@caption='max :']/parent::container/text[4]
 				</path>
 				<robustPath>
 				</robustPath>
@@ -236,10 +236,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="6dad6ee3-70a8-4303-b245-3c24bb85c6af"
+			id="54164226-3b7e-425e-a4b2-c946339f48c5"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window' and @title='Properties']/tabpagelist/tabpage[@title='Theme']/container[@caption='']/container[@caption='']/button[@text='Generate']
+					/form[@title='Properties']//button[@text='Generate']
 				</path>
 				<robustPath>
 				</robustPath>
@@ -262,10 +262,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="6bfe1807-936e-47e3-85ce-b06d9e6eea81"
+			id="b319701a-e762-4827-8299-ca0359775e65"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window' and @title='Properties']/tabpagelist/container[@caption='']/button[@text='Ok']
+					/form[@title='Properties']/tabpagelist/container[@caption='']/button[@text='Ok']
 				</path>
 				<robustPath>
 				</robustPath>

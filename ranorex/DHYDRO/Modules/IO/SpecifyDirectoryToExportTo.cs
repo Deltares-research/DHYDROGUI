@@ -26,7 +26,7 @@ namespace DHYDRO.Modules.IO
     /// <summary>
     ///The SpecifyDirectoryToExportTo recording.
     /// </summary>
-    [TestModule("d64b5925-da03-437f-98c7-66281361b624", ModuleType.Recording, 1)]
+    [TestModule("bf42891b-2a61-409d-bedf-0b979f0db30e", ModuleType.Recording, 1)]
     public partial class SpecifyDirectoryToExportTo : ITestModule
     {
         /// <summary>
@@ -59,7 +59,7 @@ namespace DHYDRO.Modules.IO
         /// <summary>
         /// Gets or sets the value of variable DirectoryName.
         /// </summary>
-        [TestVariable("ff26bdf8-296e-429c-b3d0-839b2518e1e2")]
+        [TestVariable("0e0f1963-53cc-4802-b5fe-91ea4d29e3e6")]
         public string DirectoryName
         {
             get { return _DirectoryName; }
@@ -100,7 +100,7 @@ namespace DHYDRO.Modules.IO
             repo.DialogSelectFolder.SelectFolder.Click();
             Delay.Milliseconds(0);
             
-            Code.UserCodeLibrary.ClickIfExists(repo.ConfirmSaveAsDialog.ConfirmYesButtonInfo, ValueConverter.ArgumentFromString<int>("waitPeriodInMilliSeconds", "1000"));
+            Code.UserCodeLibrary.ClickIfExists(repo.ConfirmSaveAsDialog.ConfirmYesButtonInfo, ValueConverter.ArgumentFromString<int>("waitPeriodInMilliSeconds", "3000"));
             Delay.Milliseconds(0);
             
         }

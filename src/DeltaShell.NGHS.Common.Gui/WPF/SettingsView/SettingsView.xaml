@@ -135,8 +135,8 @@
                              Style="{StaticResource ControlWithErrorStyle}"
                              VerticalAlignment="Center"
                              Text="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, Converter={StaticResource DoubleToStringConverter}}" 
-                             LostKeyboardFocus="WpfSettingsView_Textbox_OnLostKeyboardFocus"/>
-
+                             LostKeyboardFocus="WpfSettingsView_Textbox_OnLostKeyboardFocus"
+                             AutomationProperties.AutomationId="{Binding Name, StringFormat={}{0}TextBox}" />
                     
                     <Button Grid.Column="3"
                             Width="{StaticResource UnitWidth}"
@@ -144,7 +144,8 @@
                             VerticalAlignment="Center"
                             Command="{Binding CustomCommand.CustomCommand}"
                             ToolTip="{Binding ToolTip}"
-                            Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource BoolToVisibility}}">
+                            Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource BoolToVisibility}}"
+                            AutomationProperties.AutomationId="{Binding Name, StringFormat={}{0}Button}">
                         <Image Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}" />
                     </Button>
                 </Grid>
@@ -190,7 +191,14 @@
                                          FormatString="yyyy-MM-dd HH:mm:ss"
                                          Style="{StaticResource ControlWithErrorStyle}"
                                          TextAlignment="Left"
-                                         Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}" />
+                                         Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}"
+                                         AutomationProperties.AutomationId="{Binding Name}">
+                        <xctk:DateTimePicker.Resources>
+                            <Style TargetType="{x:Type xctk:WatermarkTextBox}" BasedOn="{StaticResource {x:Type xctk:WatermarkTextBox}}">
+                                <Setter Property="AutomationProperties.AutomationId" Value="{Binding Name}" />
+                            </Style>
+                        </xctk:DateTimePicker.Resources>
+                    </xctk:DateTimePicker>
                 </Grid>
             </DataTemplate>
 
@@ -214,8 +222,14 @@
                                      Style="{StaticResource ControlWithErrorStyle}"
                                      TextAlignment="Left"
                                      TimePickerVisibility="Collapsed"
-                                     Value="{Binding Value, Converter={StaticResource DateTimeToDateOnlyConverter}, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}" />
-                
+                                     Value="{Binding Value, Converter={StaticResource DateTimeToDateOnlyConverter}, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}"
+                                     AutomationProperties.AutomationId="{Binding Name}">
+                    <xctk:DateTimePicker.Resources>
+                        <Style TargetType="{x:Type xctk:WatermarkTextBox}" BasedOn="{StaticResource {x:Type xctk:WatermarkTextBox}}">
+                            <Setter Property="AutomationProperties.AutomationId" Value="{Binding Name}" />
+                        </Style>
+                    </xctk:DateTimePicker.Resources>
+                </xctk:DateTimePicker>
               </Grid>
             </DataTemplate>
 
@@ -234,7 +248,8 @@
                     <controls:TimeSpanView Grid.Column="1"
                                            BorderBrush="{StaticResource DefaultLightColorBrush}"
                                            CurrentTimeSpan="{Binding Value}"
-                                           Style="{StaticResource ControlStyle}" />
+                                           Style="{StaticResource ControlStyle}"
+                                           AutomationProperties.AutomationId="{Binding Name}" />
 
                     <Button Grid.Column="2"
                             Width="{StaticResource UnitWidth}"
@@ -263,7 +278,8 @@
                     <ComboBox Grid.Column="1"
                               ItemsSource="{Binding Path=ValueType, Converter={StaticResource GuiEnumConverter}}"
                               SelectedItem="{Binding Path=Value}"
-                              Style="{StaticResource ControlStyle}">
+                              Style="{StaticResource ControlStyle}"
+                              AutomationProperties.AutomationId="{Binding Name}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock MaxWidth="140"
@@ -291,7 +307,8 @@
                     <ItemsControl Grid.Column="1"
                                   HorizontalContentAlignment="Stretch"
                                   ItemsSource="{Binding ValueCollection, Mode=TwoWay}"
-                                  Style="{StaticResource ControlStyle}">
+                                  Style="{StaticResource ControlStyle}"
+                                  AutomationProperties.AutomationId="{Binding Name}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBox Name="TextBoxList"

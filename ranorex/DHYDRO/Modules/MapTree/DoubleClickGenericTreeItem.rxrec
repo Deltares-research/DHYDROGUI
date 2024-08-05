@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="1bf6f2e1-918f-4110-8c42-f1bc4a8e5782"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="DoubleClickGenericTreeItem"
+	namespace="DHYDRO.Modules.MapTree">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<mouseitem
+		action="DoubleClick"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="adcdd772-cf06-4718-b23d-157c4d40acd5"
+		sx="0"
+		sy="0"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="dd27b32b-6b5f-4d38-9e33-17805508de07"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//treeitem[@caption=$NameMapTreeItemNode]
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		DoubleClickGenericTreeItem.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

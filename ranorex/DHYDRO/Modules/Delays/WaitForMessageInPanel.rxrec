@@ -46,10 +46,10 @@ mode="Global">
 				</binding>
 			</bindings>
 			<info
-			id="37caece3-bd3a-4e48-9dbf-3b4fe072251b"
+			id="34453287-12e7-43be-bc98-cb29b792ac25"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']/table[@automationid='dataGrid']/container/row[1]/text
+					/form[@title~'Delta Shell']//table[@automationid='dataGrid']/container/row[1]/list/cell[2]
 				</path>
 				<robustPath>
 				</robustPath>

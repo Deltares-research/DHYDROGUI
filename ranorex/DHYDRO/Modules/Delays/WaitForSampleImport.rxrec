@@ -36,10 +36,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="6600559d-abdd-40d5-b1df-9d5c2cdf87fd"
+			id="aea0da24-4096-4c5a-b81e-64ddcea5236a"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']/container/container/container[@controlname='SpatialOperationSetLayerView']/tree[@controlname='treeView']/tree[@accessiblerole='Outline']/treeitem[@accessiblename='Bed Level']/treeitem[@accessiblename&gt;'set']/treeitem[@accessiblename&gt;'Import samples']
+					/form[@title~'Delta Shell']//container[@controlname='SpatialOperationSetLayerView']/tree/tree/treeitem/treeitem[@accessiblename&gt;'set']/treeitem[@accessiblename&gt;'Import samples']
 				</path>
 				<robustPath>
 				</robustPath>

@@ -89,8 +89,8 @@ namespace DHYDRO.Modules.BoundaryConditions
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.ForcingTypeCombobox' at Center.", repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.ForcingTypeComboboxInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.ForcingTypeCombobox.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.ForcingTypeCombobox' at Center.", repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.ForcingTypeComboboxInfo, new RecordItemIndex(0));
+            repo.DSWindow.DocumentsPaneCentral.FeatureEditors.BoundaryConditionsEditor.BoundaryConditionPanel.BoundaryConditionSettings.ForcingTypeCombobox.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'ComboBoxList.ListItem' at Center.", repo.ComboBoxList.ListItemInfo, new RecordItemIndex(1));

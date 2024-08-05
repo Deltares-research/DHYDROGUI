@@ -32,13 +32,8 @@ namespace DHYDRO.Modules.IO
         /// </summary>
         private void Init()
         {
-        	UpdateFilePath();
-        	Create.ParentDirectory(FilePath);
-        }
-        
-        private void UpdateFilePath()
-        {
-            FilePath = Path.Combine(Current.OutputDirectory, Current.TestCaseName, FilePath);
+            FilePath = Path.Combine(Get.OutputDirectory, Current.TestCaseName, FilePath);
+            FileUtils.CreateParentDirectory(FilePath);
         }
     }
 }

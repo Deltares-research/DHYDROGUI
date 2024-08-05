@@ -38,8 +38,8 @@
         </ObjectDataProvider>
     </UserControl.Resources>
     <Grid>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <TabItem Header="Flow Data" >
+        <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AutomationProperties.AutomationId="BoundaryData1DSettings">
+            <TabItem Header="Flow Data">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -61,9 +61,9 @@
                         <Label Content="Flow [m³/s]" Grid.Row="1"  Grid.Column="0" Visibility="{Binding UseFlowConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         <Label Content="Water level [m]" Grid.Row="2"  Grid.Column="0" Visibility="{Binding UseWaterLevelConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                        <ComboBox Grid.Row="0"  Grid.Column="1" ItemsSource="{Binding Source={StaticResource FlowConditionTypeValues}}" SelectedValue="{Binding BoundaryNodeDataType}" SelectionChanged="OnSelectionFlowDataTypeChanged"/>
-                        <TextBox Text="{Binding Flow}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="1" Grid.Column="1" Visibility="{Binding UseFlowConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <TextBox Text="{Binding WaterLevel}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="2" Grid.Column="1" Visibility="{Binding UseWaterLevelConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <ComboBox Grid.Row="0"  Grid.Column="1" ItemsSource="{Binding Source={StaticResource FlowConditionTypeValues}}" SelectedValue="{Binding BoundaryNodeDataType}" SelectionChanged="OnSelectionFlowDataTypeChanged" AutomationProperties.AutomationId="Flow"/>
+                        <TextBox Text="{Binding Flow}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="1" Grid.Column="1" Visibility="{Binding UseFlowConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}" AutomationProperties.AutomationId="Type"/>
+                        <TextBox Text="{Binding WaterLevel}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="2" Grid.Column="1" Visibility="{Binding UseWaterLevelConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}" AutomationProperties.AutomationId="WaterLevel"/>
                     </Grid>
                     <WindowsFormsHost local:WindowsFormsHostFunctionView.Data="{Binding Model1DBoundaryNodeData.Data}"  Grid.Row="1" Visibility="{Binding UseTimeseriesForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dsswf:FunctionView/>

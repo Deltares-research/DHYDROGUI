@@ -35,10 +35,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="4926a31b-1fe7-4a0a-8b0e-499a6063c231"
+			id="e89ff324-991d-4cf3-91af-447a367c3ab7"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem
+					/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem
 				</path>
 				<robustPath>
 				</robustPath>
@@ -57,10 +57,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="e523434d-5228-4615-a475-a16752ae51db"
+			id="c2503bad-b2b8-4490-83ca-f08f8fcf4757"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem?/treeitem?/treeitem[@accessiblename=$NameTreeItemNode]
+					/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem?/treeitem?/treeitem?/treeitem[@accessiblename=$NameTreeItemNode]
 				</path>
 				<robustPath>
 				</robustPath>
@@ -86,10 +86,10 @@ mode="Global">
 			<bindings>
 			</bindings>
 			<info
-			id="e523434d-5228-4615-a475-a16752ae51db"
+			id="c2503bad-b2b8-4490-83ca-f08f8fcf4757"
 			sourcename="RepositoryEditor">
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']/container/container/container[@controlname='ProjectExplorer']/container/container/tree/tree/treeitem/treeitem?/treeitem?/treeitem[@accessiblename=$NameTreeItemNode]
+					/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem?/treeitem?/treeitem?/treeitem[@accessiblename=$NameTreeItemNode]
 				</path>
 				<robustPath>
 				</robustPath>

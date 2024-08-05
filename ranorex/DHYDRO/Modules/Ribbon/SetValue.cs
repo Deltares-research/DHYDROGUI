@@ -92,8 +92,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.SpatialOperationsGroup.SetValueButton' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.SpatialOperationsGroup.SetValueButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.SpatialOperationsGroup.SetValueButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.RibbonTabControl.Ribbon.SpatialOperationsGroup.SetValueButton' at Center.", repo.DSWindow.RibbonTabControl.Ribbon.SpatialOperationsGroup.SetValueButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.RibbonTabControl.Ribbon.SpatialOperationsGroup.SetValueButton.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Set value", "Setting attribute Text to '$NewValueToSet' on item 'FormInterpolationOperation.ValueField'.", repo.FormInterpolationOperation.ValueFieldInfo, new RecordItemIndex(1));

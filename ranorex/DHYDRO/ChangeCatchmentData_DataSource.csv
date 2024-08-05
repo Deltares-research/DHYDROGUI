@@ -1,19 +1,19 @@
-﻿rowNumber,ColumnNumber,NewValue
-3,3,1000
-4,3,1000
-5,3,1000
-6,3,1000
-7,3,1000
-8,3,1000
-9,3,1000
-10,3,1000
-3,8,1000
-4,8,1000
-5,8,1000
-6,8,1000
-7,8,1000
-8,8,1000
-9,8,1000
-10,8,1000
-1,14,500
-2,14,500
+﻿rowNumber,columnName,NewValue
+3,Closed Flat area,1000
+4,Closed Flat area,1000
+5,Closed Flat area,1000
+6,Closed Flat area,1000
+7,Closed Flat area,1000
+8,Closed Flat area,1000
+9,Closed Flat area,1000
+10,Closed Flat area,1000
+3,Roof Sloped area,1000
+4,Roof Sloped area,1000
+5,Roof Sloped area,1000
+6,Roof Sloped area,1000
+7,Roof Sloped area,1000
+8,Roof Sloped area,1000
+9,Roof Sloped area,1000
+10,Roof Sloped area,1000
+1,Number of units,500
+2,Number of units,500
