@@ -24,8 +24,6 @@
 
         <NoWarn>$(NoWarn);1591;NU1507;NU1803</NoWarn>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-
-        <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <!--Source Link-->
