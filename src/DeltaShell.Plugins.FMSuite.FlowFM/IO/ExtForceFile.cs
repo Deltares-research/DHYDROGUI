@@ -18,7 +18,6 @@ using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
-using SharpMap;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
@@ -36,12 +35,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private readonly IDictionary<ExtForceData, object> existingForceFileItems;
         private readonly IDictionary<IFeatureData, ExtForceData> polylineForceFileItems;
 
+        private readonly HashSet<ExtForceData> supportedExtForceFileItems;
+
         private readonly IFileSystem fileSystem;
         
         public ExtForceFile() : base(true)
         {
             existingForceFileItems = new Dictionary<ExtForceData, object>();
             polylineForceFileItems = new Dictionary<IFeatureData, ExtForceData>();
+            supportedExtForceFileItems = new HashSet<ExtForceData>();
             fileSystem = new FileSystem();
             WriteToDisk = true;
         }
@@ -73,14 +75,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var extForceFileItems = WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions);
             
-            foreach (var notUsedExtForceFileItem in modelDefinition.UnsupportedFileBasedExtForceFileItems)
-            {
-                extForceFileItems.Add(notUsedExtForceFileItem.UnsupportedExtForceFileItem);
-                var newPath = Path.Combine(Path.GetDirectoryName(FilePath),
-                    Path.GetFileName(notUsedExtForceFileItem.UnsupportedExtForceFileItem.FileName));
-                notUsedExtForceFileItem.CopyTo(newPath);
-            }
-
             if (extForceFileItems.Count > 0)
             {
                 WriteExtForceFile(new ExtForceFileData(extForceFileItems));
@@ -159,6 +153,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             extForceFileItems.AddRange(WriteWindItems(modelDefinition).Distinct());
 
             extForceFileItems.AddRange(WriteHeatFluxModelData(modelDefinition).Distinct());
+            
+            extForceFileItems.AddRange(WriteUnknownQuantities(modelDefinition));
 
             foreach (var tracerName in modelDefinition.InitialTracerNames)
             {
@@ -263,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var importSamplesOperation = spatialOperation as ImportSamplesOperationImportData;
                     if (importSamplesOperation != null)
                     {
-                        var existingItem = GetExistingForceFileItemOrNull(importSamplesOperation);
+                        var existingItem = GetExistingForceFileItem(importSamplesOperation);
                         yield return
                             ExtForceFileHelper.WriteInitialConditionsSamples(FilePath, quantity, importSamplesOperation,
                                 existingItem, WriteToDisk, prefix);
@@ -273,7 +269,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var polygonOperation = spatialOperation as SetValueOperation;
                     if (polygonOperation != null)
                     {
-                        var existingItem = GetExistingForceFileItemOrNull(spatialOperation);
+                        var existingItem = GetExistingForceFileItem(spatialOperation);
                         yield return
                             ExtForceFileHelper.WriteInitialConditionsPolygon(FilePath, quantity, polygonOperation,
                                 existingItem, WriteToDisk, prefix);
@@ -312,7 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var fileBasedWindField = windField as IFileBased;
                 if (fileBasedWindField != null)
                 {
-                    var extForceFileItem = GetExistingForceFileItemOrNull(windField) ??
+                    var extForceFileItem = GetExistingForceFileItem(windField) ??
                                            ExtForceFileHelper.CreateWindFieldExtForceFileItem(windField,
                                                Path.GetFileName(((IFileBased)windField).Path));
                     var newPath = Path.Combine(Path.GetDirectoryName(FilePath), Path.GetFileName(extForceFileItem.FileName));
@@ -325,7 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     var fileName = string.Join(".", ExtForceQuantNames.WindQuantityNames[windField.Quantity],
                         ExtForceQuantNames.TimFileExtension);
-                    var extForceFileItem = GetExistingForceFileItemOrNull(windField) ??
+                    var extForceFileItem = GetExistingForceFileItem(windField) ??
                                            ExtForceFileHelper.CreateWindFieldExtForceFileItem(windField, fileName);
                     ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
                     var timFile = new TimFile();
@@ -355,7 +351,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ReadWindItems(forceFileItems, modelDefinition);
                 ReadHeatFluxModelData(forceFileItems, modelDefinition);
                 ReadSpatialData(forceFileItems, modelDefinition);
-                ReadInternalTidesFrictionCoefficientIfAvailable(forceFileItems, modelDefinition);
+                StoreUnknownQuantities(forceFileItems, modelDefinition);
         }
 
         private ExtForceFileData ParseExtForceFile()
@@ -447,12 +443,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 // check what type of polyline to read
                 bool isSourceAndSink = Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink);
-                if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out FlowBoundaryQuantityType _) &&
-                    !isSourceAndSink)
+                if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out FlowBoundaryQuantityType _) && !isSourceAndSink)
                 {
-                    log.ErrorFormat(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, extForceFileItem.Quantity, FilePath);
                     continue;
                 }
+                
+                supportedExtForceFileItems.Add(extForceFileItem);
 
                 // read the pli file
                 var pliFilePath = GetOtherFilePathInSameDirectory(FilePath, extForceFileItem.FileName);
@@ -576,7 +572,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 extForceFileItems.LastOrDefault(e => e.Quantity == ExtForceQuantNames.MeteoData ||
                                                      e.Quantity == ExtForceQuantNames.MeteoDataWithRadiation);
 
-            if (forceFileItem == null) return;
+            if (forceFileItem == null)
+            {
+                return;
+            }
+            
+            supportedExtForceFileItems.Add(forceFileItem);
 
             heatFluxModel.ContainsSolarRadiation = forceFileItem.Quantity == ExtForceQuantNames.MeteoDataWithRadiation;
 
@@ -589,7 +590,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (modelDefinition.HeatFluxModel.MeteoData == null) yield break;
 
-            var extForceFileItem = GetExistingForceFileItemOrNull(modelDefinition.HeatFluxModel)
+            var extForceFileItem = GetExistingForceFileItem(modelDefinition.HeatFluxModel)
                                    ??
                                    new ExtForceData
                                    {
@@ -610,6 +611,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             yield return extForceFileItem;
         }
+        
+        private IEnumerable<ExtForceData> WriteUnknownQuantities(WaterFlowFMModelDefinition modelDefinition)
+        {
+            foreach (var unknownQuantitiesItem in GetUnknownQuantitiesItems(modelDefinition))
+            {
+                ExtForceData extForceFileItem = unknownQuantitiesItem.Value;
+
+                string targetPath = GetOtherFilePathInSameDirectory(FilePath, extForceFileItem.FileName);
+                unknownQuantitiesItem.Key.CopyTo(targetPath);
+                
+                yield return extForceFileItem;
+            }
+        }
+        
+        private IDictionary<IUnsupportedFileBasedExtForceFileItem, ExtForceData> GetUnknownQuantitiesItems(WaterFlowFMModelDefinition modelDefinition) 
+            => modelDefinition.UnsupportedFileBasedExtForceFileItems.ToDictionary(i => i, i => i.UnsupportedExtForceFileItem);
 
         private void ReadSpatialData(IList<ExtForceData> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)
         {
@@ -628,14 +645,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var quantityPair in knownQuantities)
             {
                 var readItems = unReadExtForceFileItems.Where(i => i.Quantity == quantityPair.Key).ToList();
+                
+                foreach (var readItem in readItems)
+                {
+                    supportedExtForceFileItems.Add(readItem);
+                }
+
                 if (quantityPair.Key.Equals(ExtForceQuantNames.FrictCoef))
+                {
                     readItems = FilterByFrictionType(unReadExtForceFileItems, modelDefinition).ToList();
+                }
 
                 ReadSpatialOperationData(readItems, modelDefinition, quantityPair.Key, quantityPair.Value);
                 
                 //Remove read items.
                 unReadExtForceFileItems = unReadExtForceFileItems.Except(readItems).ToList();
-                if (!unReadExtForceFileItems.Any()) return;
+                if (!unReadExtForceFileItems.Any())
+                {
+                    return;
+                }
             }
 
             //Read tracer items.
@@ -646,7 +674,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ReadSpatialOperationData(initialTracerItems, modelDefinition, tracerItem.Quantity, tracerName);
             }
             unReadExtForceFileItems = unReadExtForceFileItems.Except(initialTracerItems).ToList();
-            if (!unReadExtForceFileItems.Any()) return;
+            if (!unReadExtForceFileItems.Any())
+            {
+                return;
+            }
 
             //Read sediment items.
             var initialSedimentItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)).ToList();
@@ -658,21 +689,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                  * way it's meant to be written in said file, we need to add the postfix */
                 string spatialvaryingSedConc = sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) + ExtForceQuantNames.SedConcPostfix;
                 ReadSpatialOperationData(initialSedimentItems, modelDefinition, sedimentItem.Quantity,spatialvaryingSedConc);
-            }
-            unReadExtForceFileItems = unReadExtForceFileItems.Except(initialSedimentItems).ToList();
-            if (!unReadExtForceFileItems.Any()) return;
-
-            //If there are any XYZ items left means they are not a known quantity.
-            var xyzUnreadItems = unReadExtForceFileItems.Where(fi => fi.FileName.EndsWith(XyzFile.Extension));
-            foreach (var xyzItem in xyzUnreadItems)
-            {
-                if (xyzItem.Quantity != ExtForceQuantNames.UnsupportedQuantityInMemory)
-                {
-                    log.WarnFormat(
-                        Resources
-                            .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
-                        xyzItem.Quantity, ExtForceQuantNames.InitialTracerPrefix, ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix);
-                }
             }
         }
 
@@ -730,6 +746,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             spatialOperations.Clear();
             foreach (var extForceFileItem in forcingsItems)
             {
+                supportedExtForceFileItems.Add(extForceFileItem);
+
                 var spatialOperation = CreateSpatialOperation(extForceFileItem);
                 if (spatialOperation != null)
                 {
@@ -815,6 +833,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var extForceFileItem in
                     extForceFileItems.Where(i => ExtForceQuantNames.WindQuantityNames.Values.Contains(i.Quantity)))
             {
+                supportedExtForceFileItems.Add(extForceFileItem);
+
                 try
                 {
                     var windField = ExtForceFileHelper.CreateWindField(extForceFileItem, FilePath);
@@ -838,46 +858,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private void ReadInternalTidesFrictionCoefficientIfAvailable(IEnumerable<ExtForceData> extForceFileItems,
-            WaterFlowFMModelDefinition modelDefinition)
+        private void StoreUnknownQuantities(IEnumerable<ExtForceData> allExtForceFileItems, WaterFlowFMModelDefinition modelDefinition)
         {
-            try
+            List<ExtForceData> unknownForceFileItems = GetUnknownExtForceFileItems(allExtForceFileItems).ToList();
+            
+            foreach (ExtForceData unknownForceFileItem in unknownForceFileItems)
             {
-                var unsupportedFileBasedExtForceFileItems = extForceFileItems.ToList()
-                    .Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.UnsupportedQuantityInMemory)).ToList();
+                log.WarnFormat(
+                    Resources.ExtForceFile_StoreUnknownQuantities_Spatial_varying_quantity__0__detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, 
+                    unknownForceFileItem.Quantity);
 
-                if (unsupportedFileBasedExtForceFileItems.Count > 0)
-                {
-                    log.WarnFormat(
-                        "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",
-                        ExtForceQuantNames.UnsupportedQuantityInMemory);
+                var referencedFilePath = GetOtherFilePathInSameDirectory(FilePath, unknownForceFileItem.FileName);
+                var unsupportedFileBasedExtForceFileItem = new UnsupportedFileBasedExtForceFileItem(referencedFilePath, unknownForceFileItem);
 
-                    foreach (var forceFileItem in unsupportedFileBasedExtForceFileItems)
-                    {
-                        var unsupportedFileBaseExtForceFile =
-                            Path.Combine(Path.GetDirectoryName(FilePath), forceFileItem.FileName);
-                        if (!File.Exists(unsupportedFileBaseExtForceFile))
-                        {
-                            throw new FileNotFoundException(string.Format("File {0} could not be found for an internaltidesfrictioncoefficient quantity in the external force file",
-                                unsupportedFileBaseExtForceFile));
-                        }
-
-                        var unsupportedFileBasedExtForceFileItem = new UnsupportedFileBasedExtForceFileItem(
-                            Path.Combine(Path.GetDirectoryName(FilePath), forceFileItem.FileName), forceFileItem);
-
-                        modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(unsupportedFileBasedExtForceFileItem);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                log.Warn(e.Message);
+                modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(unsupportedFileBasedExtForceFileItem);
             }
         }
+        
+        private IEnumerable<ExtForceData> GetUnknownExtForceFileItems(IEnumerable<ExtForceData> allExtForceFileItems)
+            => allExtForceFileItems.Except(supportedExtForceFileItems);
 
-        private ExtForceData GetExistingForceFileItemOrNull(object value)
-        {
-            return existingForceFileItems.Where(kvp => Equals(kvp.Value, value)).Select(kvp => kvp.Key).FirstOrDefault();
-        }
+        private ExtForceData GetExistingForceFileItem(object value) 
+            => existingForceFileItems.Where(kvp => Equals(kvp.Value, value)).Select(kvp => kvp.Key).FirstOrDefault();
     }
 }

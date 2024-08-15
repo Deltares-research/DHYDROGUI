@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadXyzFile_WithUnknownSpatiallyVaryingProperties_ShouldGiveAWarningMessage()
+        public void ReadXyzFile_WithUnknownSpatiallyVaryingPrefix_ShouldGiveAWarningMessage()
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\incorrect_prefix.ext");
@@ -136,17 +136,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 () => extForceFile.Read(extPath, def),
                 String.Format(
                     Resources
-                        .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
-                    "initialspatialvaryingsedimentSediment_sand_SedConc", 
-                    ExtForceQuantNames.InitialTracerPrefix,
-                    ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix));
+                        .ExtForceFile_StoreUnknownQuantities_Spatial_varying_quantity__0__detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_,
+                    "initialspatialvaryingsedimentSediment_sand_SedConc"));
 
             FileUtils.DeleteIfExists(extPath);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadXyzFile_WithKnownSpatiallyVaryingProperties_ShouldNotGiveAWarningMessage()
+        public void ReadXyzFile_WithKnownSpatiallyVaryingPrefix_ShouldNotGiveAWarningMessage()
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correctKnownQuantity.ext");
@@ -159,10 +157,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     () => extForceFile.Read(extPath, def),
                     String.Format(
                         Resources
-                            .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
-                        ExtForceQuantNames.FrictCoef, 
-                        ExtForceQuantNames.InitialTracerPrefix,
-                        ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)),
+                            .ExtForceFile_StoreUnknownQuantities_Spatial_varying_quantity__0__detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_,
+                        ExtForceQuantNames.FrictCoef)),
                 "The warn message was logged, but we were not expecting it to appear");
             
 
@@ -180,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             extPath = TestHelper.CreateLocalCopy(extPath);
             Assert.IsTrue(File.Exists(extPath));
 
-            var expectedMessage = string.Format(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, "generalstructure", extPath);
+            var expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Spatial_varying_quantity__0__detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "generalstructure", extPath);
             var extForceFile = new ExtForceFile();
             TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), expectedMessage);
         }
@@ -196,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             extPath = TestHelper.CreateLocalCopy(extPath);
             Assert.IsTrue(File.Exists(extPath));
 
-            var expectedMessage = string.Format(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, "generalstructure", extPath);
+            var expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Spatial_varying_quantity__0__detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "generalstructure", extPath);
             var extForceFile = new ExtForceFile();
 
             Assert.IsFalse(def.BoundaryConditions.Any());
@@ -207,6 +203,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var boundaryCondition = def.BoundaryConditions.First();
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
             Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadWriteExtFileWithUnknownQuantity()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var extForceFileParser = new ExtForceFileParser();
+            var extForceFile = new ExtForceFile();
+            
+            string extForceFileSource = TestHelper.GetTestFilePath(@"ExtFileTest\withOnlyUnknownQuantity.ext");
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string extForceFileTarget = Path.Combine(tempDirectory.Path, "export.ext");
+                
+                extForceFile.Read(extForceFileSource, modelDefinition);
+                extForceFile.Write(extForceFileTarget, modelDefinition);
+
+                string str = File.ReadAllText(extForceFileTarget);
+                ExtForceFileData data = extForceFileParser.Parse(str);
+                
+                Assert.That(data.Forcings, Has.One.Items);
+                Assert.That(data.Forcings, Has.One.Matches<ExtForceData>(x => x.Quantity == "generalstructure" && x.FileName == "schaar.pli"));
+            }
         }
 
         [Test]
@@ -223,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var extForceFile = new ExtForceFile();
             var expectedMessage =
                 string.Format(
-                    "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",
+                    Resources.ExtForceFile_StoreUnknownQuantities_Spatial_varying_quantity__0__detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_,
                     ExtForceQuantNames.UnsupportedQuantityInMemory);
            
 

@@ -202,9 +202,6 @@
   <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or" xml:space="preserve">
     <value>Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation. Please interpolate the operation to the grid or click the "Copy to spatial data"-button to generate the xyz file.</value>
   </data>
-  <data name="ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_" xml:space="preserve">
-    <value>The model may not run. Spatial varying quantity {0} could not be imported because the prefix does not match {1} for Tracers or {2} for Spatial Varying Sediments.</value>
-  </data>
   <data name="SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_path__0_" xml:space="preserve">
     <value>Could not get directory name from file path {0}</value>
   </data>
@@ -363,9 +360,6 @@ File import of structures file '{1}' has failed.</value>
   </data>
   <data name="Could_not_export_data_for_SourceAndSink___0___no_Function_was_found" xml:space="preserve">
     <value>Could not export data for SourceAndSink: {0}, no Function was found</value>
-  </data>
-  <data name="ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_" xml:space="preserve">
-    <value>Unsupported quantity type: {0}, in the .ext file {1} detected. It will not be imported.</value>
   </data>
   <data name="UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_" xml:space="preserve">
     <value>API failed to generate snapped feature {0}. Try reopening the project if the problem persists.</value>
@@ -708,5 +702,8 @@ File import of structures file '{1}' has failed.</value>
   </data>
   <data name="Reading_external_forcings_file_from_0_" xml:space="preserve">
     <value>Reading external forcings file from {0}</value>
+  </data>
+  <data name="ExtForceFile_StoreUnknownQuantities_Spatial_varying_quantity__0__detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_" xml:space="preserve">
+    <value>Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.</value>
   </data>
 </root>

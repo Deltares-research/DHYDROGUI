@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 TryRetreivingMessage(Resources.BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target);
                 TryRetreivingMessage(Resources.ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct);
-                TryRetreivingMessage(Resources.ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_);
+                TryRetreivingMessage(Resources.ExtForceFile_StoreUnknownQuantities_Spatial_varying_quantity__0__detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_);
                 TryRetreivingMessage(Resources.FlowFMApplicationPlugin_Description);
                 TryRetreivingMessage(Resources.FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out);
                 TryRetreivingMessage(Resources.FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set);
