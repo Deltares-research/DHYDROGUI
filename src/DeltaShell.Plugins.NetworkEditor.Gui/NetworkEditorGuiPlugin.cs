@@ -556,15 +556,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 SetActiveRegion(GetRegionFromActiveView());
             }
 
-            
-            if (Gui.Application.ProjectService.Project != null)
-            {
-                // if project already exist call registered handler
-                ApplicationProjectOpened(this, new EventArgs<Project>(Gui.Application.ProjectService.Project));
-            }
-            
-            ImportBranchesFromSelectionMapTool.BeforeExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = true;
-            ImportBranchesFromSelectionMapTool.AfterExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = false; 
+            ImportBranchesFromSelectionMapTool.BeforeExecute += BeforeImportBranches;
+            ImportBranchesFromSelectionMapTool.AfterExecute += AfterImportBranches; 
 
             base.Activate();
         }
@@ -582,6 +575,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 hydroRegionTreeView.TreeView.SelectedNodeChanged -= TreeViewSelectedNodeChanged;
                 hydroRegionTreeView.Dispose();
             }
+
+            ImportBranchesFromSelectionMapTool.BeforeExecute -= BeforeImportBranches;
+            ImportBranchesFromSelectionMapTool.AfterExecute -= AfterImportBranches; 
             
             base.Deactivate();
         }
@@ -595,6 +591,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (disposing)
             {
+                generateCalculationGridLocationsToolStripMenuItem.Click -= GenerateCalculationGridLocationsToolStripMenuItemClick;
+                removeCalculationGridLocationsToolStripMenuItem.Click -= removeCalculationGridLocationsToolStripMenuItem_Click;
+                addNewHydroRegionToolStripMenuItem.Click -= AddNewHydroRegionToolStripMenuItemClick;
+                convertCoordinateSystemToolStripMenuItem.Click -= ConvertCoordinateSystemToolStripMenuItemClick;
+                
                 if (hydroRegionTreeView != null)
                 {
                     ((IView)hydroRegionTreeView).Data = null;
@@ -704,7 +705,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             Gui.ToolWindowViews.ActiveView = hydroRegionTreeView;
         }
 
-        public void SetActiveRegion(IHydroRegion region)
+        private void SetActiveRegion(IHydroRegion region)
         {
             if (hydroRegionTreeView == null)
             {
@@ -1222,6 +1223,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             var model = models.FirstOrDefault();
             return model != null ? model.Name : "";
+        }
+
+        private void BeforeImportBranches()
+        {
+            Gui.IsViewRemoveOnItemDeleteSuspended = true;
+        }
+
+        private void AfterImportBranches()
+        {
+            Gui.IsViewRemoveOnItemDeleteSuspended = false;
         }
     }
 }
