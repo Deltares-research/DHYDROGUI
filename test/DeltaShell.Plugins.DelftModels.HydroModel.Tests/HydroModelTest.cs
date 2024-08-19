@@ -17,10 +17,14 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.Extensions;
 using DeltaShell.Core.Services;
 using DeltaShell.Dimr;
+using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.Dimr.Export;
 using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Functions;
@@ -597,6 +601,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Setup
             HydroModel hydroModel = CreateIntegratedModel();
+            AddCatchmentsAndLateralToModel(hydroModel);
             RainfallRunoffModel rrModel = hydroModel.GetActivitiesOfType<RainfallRunoffModel>().First();
             
             // Call
@@ -888,6 +893,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var tempDir = new TemporaryDirectory())
             using (HydroModel integratedModel = CreateIntegratedModel())
             {
+                AddCatchmentsAndLateralToModel(integratedModel);
                 string dimrPath = Path.Combine(tempDir.Path, "dimr.xml");
 
                 // Call
@@ -921,6 +927,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var tempDir = new TemporaryDirectory())
             using (HydroModel integratedModel = CreateIntegratedModel())
             {
+                AddCatchmentsAndLateralToModel(integratedModel);
+                
                 string dimrPath = Path.Combine(tempDir.Path, "dimr.xml");
                 
                 ExportToDimrXml(integratedModel, dimrPath);
@@ -961,6 +969,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (IApplication app = GetConfiguredApplication())
             using (HydroModel integratedModel = CreateIntegratedModel())
             {
+                AddCatchmentsAndLateralToModel(integratedModel);
+                
                 IProjectService projectService = app.ProjectService;
                 projectService.Project.RootFolder.Add(integratedModel);
 
@@ -989,12 +999,45 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void ExportingDimrModelWithWWTPLinkedToLateralSource_WritesExchangesToDimrFile()
+        {
+            // Setup
+            SetRequiredSettingsForDimrImport();
+            
+            using (var tempDir = new TemporaryDirectory())
+            using (HydroModel integratedModel = CreateIntegratedModel())
+            {
+                AddWWTPLinkedLateralToModel(integratedModel);
+                
+                string dimrPath = Path.Combine(tempDir.Path, "dimr.xml");
+                
+                
+                // Call
+                ExportToDimrXml(integratedModel, dimrPath);
+
+                // Assert
+                var parser = new DelftConfigXmlFileParser(Substitute.For<ILogHandler>());
+                var dimrContents = parser.Read<dimrXML>(dimrPath);
+
+                dimrCouplerXML rrToFlowCoupler = dimrContents.coupler.First(c => c.name.EqualsCaseInsensitive("rr_to_flow"));
+                Assert.That(rrToFlowCoupler.item.Length, Is.EqualTo(1)); // (boundary of) WWTP --> LateralSource
+
+                dimrCoupledItemXML couplerItem = rrToFlowCoupler.item[0];
+                Assert.That(couplerItem.sourceName, Is.EqualTo("catchments/LateralSource_1D_1/water_discharge"));
+                Assert.That(couplerItem.targetName, Is.EqualTo("laterals/LateralSource_1D_1/water_discharge"));
+
+                bool hasFlowToRRCoupling = dimrContents.coupler.Any(c => c.name.EqualsCaseInsensitive("flow_to_r"));
+                Assert.That(hasFlowToRRCoupling, Is.False);
+            }
+        }
+
         /// <summary>
-        /// This creates a valid integrated model with FM and RR with:
+        /// Creates a valid integrated model with FM and RR with:
         /// <list type="bullet">
-        /// <item><description>1 branch with a cross section, grid points and a lateral source.</description></item>
-        /// <item><description>1 paved catchment linked to a lateral source on the branch.</description></item>
-        /// <item><description>1 unpaved catchment linked to a rainfall runoff boundary.</description></item>
+        /// <item><description>1 branch with a cross-section and grid points.</description></item>
+        /// <item><description>timeseries for precipitation and evaporation.</description></item>
         /// </list>
         /// </summary>
         /// <returns>Created integrated model.</returns>
@@ -1035,14 +1078,44 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             crossSection.Name = "Marlon";
             channel.BranchFeatures.Add(crossSection);
 
-            var lateralSource = LateralSource.CreateDefault(channel);
-            lateralSource.Chainage = 10;
-            channel.BranchFeatures.Add(lateralSource);
-
             // Generate grid points
             var offsets = new double[] { 0, 30, 60, 100 };
             HydroNetworkHelper.GenerateDiscretization(fmModel.NetworkDiscretization, channel, offsets);
 
+            // Set PrecipitationMeteoData
+            MeteoData precipitation = rrModel.Precipitation;
+            var timeseriesGenerator = new TimeSeriesGenerator();
+            var hourTimestep = new TimeSpan(1, 0, 0);
+            timeseriesGenerator.GenerateTimeSeries(precipitation.Data, integratedModel.StartTime, integratedModel.StopTime, hourTimestep);
+
+            // Set Evaporation
+            MeteoData evap = rrModel.Evaporation;
+            var dayTimestep = new TimeSpan(1, 0, 0, 0);
+            timeseriesGenerator.GenerateTimeSeries(evap.Data, integratedModel.StartTime, integratedModel.StopTime, dayTimestep);
+            return integratedModel;
+        }
+        
+        /// <summary>
+        /// Adds the following to the given integrated model:
+        /// <list type="bullet">
+        /// <item><description>A lateral source.</description></item>
+        /// <item><description>A RR boundary.</description></item>
+        /// <item><description>A paved catchment linked to the lateral source.</description></item>
+        /// <item><description>An unpaved catchment linked to the RR boundary.</description></item>
+        /// </list>
+        /// </summary>
+        /// <param name="integratedModel">The integrated model to edit.</param>
+        private void AddCatchmentsAndLateralToModel(HydroModel integratedModel)
+        {
+            WaterFlowFMModel fmModel = GetFMModel(integratedModel);
+            RainfallRunoffModel rrModel = GetRRModel(integratedModel);
+
+            IChannel channel = fmModel.Network.Channels.First();
+            
+            var lateralSource = LateralSource.CreateDefault(channel);
+            lateralSource.Chainage = 10;
+            channel.BranchFeatures.Add(lateralSource);
+            
             // Create two catchments and a runoff boundary. 
             IDrainageBasin basin = rrModel.Basin;
 
@@ -1079,20 +1152,69 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Link 1 catchment two runoff boundary and link 1 to lateral source
             pavedCatchment.LinkTo(lateralSource);
             unpavedCatchment.LinkTo(boundary);
-
-            // Set PrecipitationMeteoData
-            MeteoData precipitation = rrModel.Precipitation;
-            var timeseriesGenerator = new TimeSeriesGenerator();
-            var hourTimestep = new TimeSpan(1, 0, 0);
-            timeseriesGenerator.GenerateTimeSeries(precipitation.Data, integratedModel.StartTime, integratedModel.StopTime, hourTimestep);
-
-            // Set Evaporation
-            MeteoData evap = rrModel.Evaporation;
-            var dayTimestep = new TimeSpan(1, 0, 0, 0);
-            timeseriesGenerator.GenerateTimeSeries(evap.Data, integratedModel.StartTime, integratedModel.StopTime, dayTimestep);
-            return integratedModel;
         }
-        
+
+        /// <summary>
+        /// Adds the following to the given integrated model:
+        /// <list type="bullet">
+        /// <item><description>A lateral source.</description></item>
+        /// <item><description>A RR boundary.</description></item>
+        /// <item><description>A waste water treatment plant linked to the lateral source.</description></item>
+        /// <item><description>A paved catchment linked to the waste water treatment plant and the RR boundary.</description></item>
+        /// </list>
+        /// </summary>
+        /// <note>The additional (paved) catchment is required because the WWTP requires an inbound link.
+        /// The (RR) boundary is then required, because the catchment needs a link to a boundary.</note>
+        /// <param name="integratedModel">The integrated model to edit.</param>
+        private void AddWWTPLinkedLateralToModel(HydroModel integratedModel)
+        {
+            WaterFlowFMModel fmModel = GetFMModel(integratedModel);
+            RainfallRunoffModel rrModel = GetRRModel(integratedModel);
+
+            IChannel channel = fmModel.Network.Channels.First();
+            
+            var lateralSource = LateralSource.CreateDefault(channel);
+            lateralSource.Chainage = 10;
+            channel.BranchFeatures.Add(lateralSource);
+
+            var wwtp = new WasteWaterTreatmentPlant();
+            rrModel.Basin.WasteWaterTreatmentPlants.Add(wwtp);
+
+            wwtp.LinkTo(lateralSource);
+            
+            var pavedCatchment = new Catchment
+            {
+                Name = "PavedCatchment",
+                CatchmentType = CatchmentType.Paved
+            };
+            var pavedData = new PavedData(pavedCatchment)
+            {
+                DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.BoundaryNode,
+                MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.BoundaryNode,
+            };
+            
+            var boundary = new RunoffBoundary()
+            {
+                Geometry = new Point(1, 2)
+            };
+            rrModel.Basin.Boundaries.Add(boundary);
+
+            rrModel.Basin.Catchments.Add(pavedCatchment);
+            rrModel.ModelData[0] = pavedData;
+            pavedCatchment.LinkTo(wwtp);
+            pavedCatchment.LinkTo(boundary);
+        }
+
+        private static WaterFlowFMModel GetFMModel(HydroModel integratedModel)
+        {
+            return integratedModel.Models.OfType<WaterFlowFMModel>().First();
+        }
+
+        private RainfallRunoffModel GetRRModel(HydroModel integratedModel)
+        {
+            return integratedModel.Models.OfType<RainfallRunoffModel>().First();
+        }
+
         private static IApplication GetConfiguredApplication()
         {
             IApplication app = CreateApplication();

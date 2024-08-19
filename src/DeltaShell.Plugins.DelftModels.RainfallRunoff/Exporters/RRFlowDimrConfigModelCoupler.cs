@@ -24,9 +24,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             // create mapping for rr => flow
             if (source is IRainfallRunoffModel sourceRainfallRunoffModel)
             {
-                if (!(target is IDimrModel targetDimr)) return;
+                if (!(target is IDimrModel targetDimr))
+                {
+                    return;
+                }
 
-                var links = sourceRainfallRunoffModel.Basin.Catchments.SelectMany(c => c.Links);
+                IEnumerable<HydroLink> links = sourceRainfallRunoffModel.Basin.Catchments.SelectMany(c => c.Links)
+                                                                        .Concat(sourceRainfallRunoffModel.Basin.WasteWaterTreatmentPlants.SelectMany(wwtp => wwtp.Links));
                 SetCouplingInformation(sourceRainfallRunoffModel, targetDimr, links, FunctionAttributes.StandardNames.WaterDischarge);
             }
 
@@ -91,13 +95,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             Target = targetModel.Name;
             SourceIsMasterTimeStep = sourceModel.IsMasterTimeStep;
 
-            foreach (var link in links)
+            foreach (HydroLink link in links)
             {
-                var sourceObject = invertLinkDirection ? link.Target : link.Source;
-                var targetObject = invertLinkDirection ? link.Source : link.Target;
+                IHydroObject sourceObject = invertLinkDirection ? link.Target : link.Source;
+                IHydroObject targetObject = invertLinkDirection ? link.Source : link.Target;
 
-                var sourceCategory = GetItemCategory(sourceObject);
-                var targetCategory = GetItemCategory(targetObject);
+                string sourceCategory = GetItemCategory(sourceObject);
+                string targetCategory = GetItemCategory(targetObject);
+
+                if (sourceCategory == targetCategory)
+                {
+                    continue;
+                }
 
                 string sourceObjectName = sourceObject.Name;
                 string targetObjectName = targetObject.Name;
@@ -132,11 +141,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         {
             switch (hydroObject)
             {
-                case Catchment catchment:
+                case Catchment _:
+                case WasteWaterTreatmentPlant _:
                     return "catchments";
-                case ILateralSource lateral:
+                case ILateralSource _:
                     return "laterals";
-                case IHydroNode hydroNode:
+                case IHydroNode _:
                     return "boundaries";
                 default:
                     return null;

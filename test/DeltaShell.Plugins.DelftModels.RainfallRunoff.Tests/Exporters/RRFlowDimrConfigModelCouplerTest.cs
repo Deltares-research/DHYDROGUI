@@ -7,7 +7,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.Export;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using NSubstitute;
@@ -103,16 +102,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             
             var catchmentsList = new List<Catchment>{catchment1};
             var catchments = mocks.Stub<IEventedList<Catchment>>();
+            var wwtps = mocks.Stub<IEventedList<WasteWaterTreatmentPlant>>();
+            var wwtpList = new List<WasteWaterTreatmentPlant>();
 
             catchments.Stub(x => x.GetEnumerator())
-                // create new enumerator instance for each call
-                .WhenCalled(call => call.ReturnValue = catchmentsList.GetEnumerator())
-                .Return(null) // is ignored, but needed for Rhinos validation
-                .Repeat.Any();
+                      // create new enumerator instance for each call
+                      .WhenCalled(call => call.ReturnValue = catchmentsList.GetEnumerator())
+                      .Return(null) // is ignored, but needed for Rhinos validation
+                      .Repeat.Any();
+
+            wwtps.Stub(x => x.GetEnumerator())
+                 .WhenCalled(call => call.ReturnValue = wwtpList.GetEnumerator())
+                 .Return(null)
+                 .Repeat.Any();
 
             var basin = mocks.StrictMock<IDrainageBasin>();
             source.Expect(m => m.Basin).Return(basin).Repeat.Any();
             basin.Expect(b => b.Catchments).Return(catchments).Repeat.Any();
+            basin.Expect(b => b.WasteWaterTreatmentPlants).Return(wwtps).Repeat.Any();
             ((IHydroModel)source).Expect(m => m.Region).Return(basin).Repeat.Any();
             ((IDimrModel)source).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
             ((IDimrModel)source).Expect(dm => dm.IsMasterTimeStep).Return(false).Repeat.Any();
@@ -181,6 +188,102 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 Assert.That(modelCoupler.CoupleInfos.Count(), Is.EqualTo(0));
             }
             mocks.VerifyAll();
+        }
+
+
+        [Test]
+        public void CatchmentLinkedToWWTP_DoesNotCreateCouplerInfo()
+        {
+            // Setup
+            IRainfallRunoffModel rrModel = GetRRModelWithCatchmentLinkedToWWTP();
+            IDimrModel fmModel = GetFMModel();
+            
+            // Call
+            var coupler = new RRFlowDimrConfigModelCoupler(rrModel, fmModel, null, null);
+
+            // Assert
+            IEnumerable<DimrCoupleInfo> couplerInfos = coupler.CoupleInfos;
+            Assert.That(couplerInfos, Is.Empty);
+        } 
+
+        
+        [Test]
+        public void WWTPLinkedToLateralSource_ReturnsExpectedCouplerInfo()
+        {
+            // Setup
+            IRainfallRunoffModel rrModel = GetRRModelWithSingleWWTPLinkedToLateralSource();
+            IDimrModel fmModel = GetFMModel();
+
+            // Call
+            var coupler = new RRFlowDimrConfigModelCoupler(rrModel, fmModel, null, null);
+
+            // Assert
+            IEnumerable<DimrCoupleInfo> couplerInfos = coupler.CoupleInfos;
+            var expectedCouplerInfo = new DimrCoupleInfo
+            {
+                Source = "catchments/source/water_discharge",
+                Target = "laterals/source/water_discharge"
+            };
+            Assert.That(couplerInfos, Has.Exactly(1).EqualTo(expectedCouplerInfo));
+        }
+
+        private static IRainfallRunoffModel GetRRModelWithCatchmentLinkedToWWTP()
+        {
+            IRainfallRunoffModel rrModel = GetRRModel();
+            
+            var basin = Substitute.For<IDrainageBasin>();
+            rrModel.Basin.Returns(basin);
+
+            var catchment = new Catchment();
+            var catchments = new EventedList<Catchment>() { catchment };
+            basin.Catchments.Returns(catchments);
+            
+            var wwtp = new WasteWaterTreatmentPlant();
+            var link = new HydroLink(catchment, wwtp);
+            wwtp.Links.Add(link);
+            catchment.Links.Add(link);
+            
+            var wwtps = new EventedList<WasteWaterTreatmentPlant> { wwtp };
+            basin.WasteWaterTreatmentPlants.Returns(wwtps);
+
+            return rrModel;
+        }
+        
+        private static IRainfallRunoffModel GetRRModelWithSingleWWTPLinkedToLateralSource()
+        {
+            IRainfallRunoffModel rrModel = GetRRModel();
+
+            var basin = Substitute.For<IDrainageBasin>();
+            rrModel.Basin.Returns(basin);
+            
+            var catchments = Substitute.For<IEventedList<Catchment>>();
+            basin.Catchments.Returns(catchments);
+            
+            var wwtp = new WasteWaterTreatmentPlant();
+            var lateral = new LateralSource();
+            var link = new HydroLink(wwtp, lateral);
+            wwtp.Links.Add(link);
+            
+            var wwtps = new EventedList<WasteWaterTreatmentPlant> { wwtp };
+            basin.WasteWaterTreatmentPlants.Returns(wwtps);
+
+            return rrModel;
+        }
+
+        private static IRainfallRunoffModel GetRRModel()
+        {
+            var rrModel = Substitute.For<IRainfallRunoffModel>();
+            rrModel.ShortName.Returns("rr");
+            rrModel.Name.Returns("rainfallrunoff");
+            return rrModel;
+        }
+
+        private static IDimrModel GetFMModel()
+        {
+            var fmModel = Substitute.For<IDimrModel>();
+            fmModel.ShortName.Returns("fm");
+            fmModel.Name.Returns("flowfm");
+            return fmModel;
         }
     }
 }
