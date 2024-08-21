@@ -46,6 +46,20 @@ namespace DeltaShell.Plugins.NetworkEditor
             Application.ProjectService.ProjectCreated += ApplicationOnProjectOpened;
         }
 
+        public override void Deactivate()
+        {
+            if (!IsActive)
+            {
+                return;
+            }
+
+            Application.ProjectService.ProjectClosing -= ApplicationOnProjectClosing;
+            Application.ProjectService.ProjectOpened -= ApplicationOnProjectOpened;
+            Application.ProjectService.ProjectCreated -= ApplicationOnProjectOpened;
+
+            base.Deactivate();
+        }
+
         private void ApplicationOnProjectClosing(object sender, EventArgs<Project> e)
         {
             Project project = e.Value;
