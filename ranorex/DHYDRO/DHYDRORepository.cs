@@ -9182,6 +9182,7 @@ namespace DHYDRO
         public partial class DialogSelectFileAppFolder : RepoGenBaseFolder
         {
             RepoItemInfo _fieldfilepathInfo;
+            RepoItemInfo _filetypeInfo;
             RepoItemInfo _buttonopenInfo;
 
             /// <summary>
@@ -9191,6 +9192,7 @@ namespace DHYDRO
                     base("DialogSelectFile", "/form[@title='Select file']", parentFolder, 30000, null, false, "e915953d-3053-4068-9051-18e96ef83565", "")
             {
                 _fieldfilepathInfo = new RepoItemInfo(this, "FieldFilePath", "combobox[@accessiblename='File name:']/text", "", 30000, null, "c5fa64a2-95d4-4032-b2ca-354cfeb4382a");
+                _filetypeInfo = new RepoItemInfo(this, "FileType", "combobox[@accessiblename='Files of type:']", "", 30000, null, "b690da41-f3a3-44e1-be10-16911f1e83f4");
                 _buttonopenInfo = new RepoItemInfo(this, "ButtonOpen", "button[@text<'Open']", "", 30000, null, "ccf393d4-1b90-4599-9e70-f300b2b48c21");
             }
 
@@ -9239,6 +9241,30 @@ namespace DHYDRO
                 get
                 {
                     return _fieldfilepathInfo;
+                }
+            }
+
+            /// <summary>
+            /// The FileType item.
+            /// </summary>
+            [RepositoryItem("b690da41-f3a3-44e1-be10-16911f1e83f4")]
+            public virtual Ranorex.ComboBox FileType
+            {
+                get
+                {
+                    return _filetypeInfo.CreateAdapter<Ranorex.ComboBox>(true);
+                }
+            }
+
+            /// <summary>
+            /// The FileType item info.
+            /// </summary>
+            [RepositoryItemInfo("b690da41-f3a3-44e1-be10-16911f1e83f4")]
+            public virtual RepoItemInfo FileTypeInfo
+            {
+                get
+                {
+                    return _filetypeInfo;
                 }
             }
 

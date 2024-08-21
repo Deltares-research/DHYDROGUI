@@ -2738,6 +2738,16 @@ BrAXEVGHBQAl7Vl4pTSEOYXVpbjFFMUZhIV5geIg/2LRyMAAAJotA8Ny7VLRAAAAAElFTkSuQmCC
 				/form[@title='Select file']/combobox[@accessiblename='File name:']/text
 			</item>
 			<item
+			addcaps="text,nativewindow"
+			capname="combobox"
+			id="b690da41-f3a3-44e1-be10-16911f1e83f4"
+			name="FileType"
+			refimgid="036dac7a-3e88-4850-b226-e67f37c770dc"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Select file']/combobox[@accessiblename='Files of type:']
+			</item>
+			<item
 			addcaps="button,nativewindow"
 			capname="button"
 			id="ccf393d4-1b90-4599-9e70-f300b2b48c21"

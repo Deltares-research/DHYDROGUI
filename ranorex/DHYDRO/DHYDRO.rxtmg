@@ -69,6 +69,15 @@ rxversion="11.0">
 			type="Recording">
 			</testmodule>
 			<testmodule
+			id="0c3bd33c-35e3-41fa-9950-13fe1eb96ec2"
+			name="SelectFileIfAsked"
+			ref="24d66b71-245c-436a-951c-e31afb5a4b67"
+			type="Recording">
+				<description>
+					<![CDATA[Select *.def file path if asked]]>
+				</description>
+			</testmodule>
+			<testmodule
 			id="0fa5ff7b-f722-438a-bea9-48a96a4eabfc"
 			name="SelectContextMenuItem"
 			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
@@ -88,6 +97,15 @@ rxversion="11.0">
 			name="ContextMenuModel"
 			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
 			type="Recording">
+			</testmodule>
+			<testmodule
+			id="12a9d6d5-2265-4bdf-95a1-f37e8ae9c46a"
+			name="SelectFileIfAsked"
+			ref="24d66b71-245c-436a-951c-e31afb5a4b67"
+			type="Recording">
+				<description>
+					<![CDATA[Select *.hyd file path if asked]]>
+				</description>
 			</testmodule>
 			<testmodule
 			id="133fbe3c-c84d-483e-8f08-9f0a510158e5"
@@ -202,6 +220,12 @@ rxversion="11.0">
 			type="Recording">
 			</testmodule>
 			<testmodule
+			id="26e391cb-333a-4fa4-b194-e347978e99ed"
+			name="AcceptMigrateProjectIfAsked"
+			ref="2de21aa9-73b9-4c1c-b6a5-5d1852c21b6f"
+			type="Recording">
+			</testmodule>
+			<testmodule
 			id="2804476e-9653-43ca-8add-b7a4e4c10bf0"
 			name="ShowContextMenuCurrentSelection"
 			ref="90e50a86-496d-452f-96e2-6722c018e5fa"
@@ -290,6 +314,12 @@ rxversion="11.0">
 			type="Recording">
 			</testmodule>
 			<testmodule
+			id="39613942-0794-4bae-9f0b-c0eb2aa53c05"
+			name="SetInputFileNameAndProceed"
+			ref="ba263c4c-3957-4c8a-b837-86d2bcf6e994"
+			type="Recording">
+			</testmodule>
+			<testmodule
 			id="3f46229d-4de5-4f41-ba15-f00b55c8e060"
 			name="SelectBoundaryConditionQuantity"
 			ref="4cb70866-10ba-4e04-ac99-bd07283b4da8"
@@ -324,6 +354,39 @@ rxversion="11.0">
 						moduleref="ef666649-5ec9-4eda-9477-2e9aa8126eb6"
 						name="FilePath"
 						variableref="badbcc3f-d50d-4e11-9cfe-3b802abe7811">
+						</modulevariable>
+					</groupvariable>
+				</groupvariables>
+			</modulegroupdef>
+			<modulegroupdef
+			id="4a8d16cd-4217-498a-acd3-a0e32d9e617e"
+			name="OpenWaqProject">
+				<groupvariables>
+					<groupvariable
+					id="a8aa0a98-4ad8-41d7-a747-ec69b740002a"
+					name="OpenProjectFilePath">
+						<modulevariable
+						moduleref="39613942-0794-4bae-9f0b-c0eb2aa53c05"
+						name="FilePath"
+						variableref="1598fb32-9d9f-4474-8ba0-c62ae8eaee7f">
+						</modulevariable>
+					</groupvariable>
+					<groupvariable
+					id="9639721d-6d1a-4576-8de4-4641f357b78b"
+					name="SelectHydFilePath">
+						<modulevariable
+						moduleref="12a9d6d5-2265-4bdf-95a1-f37e8ae9c46a"
+						name="FilePath"
+						variableref="a873ce83-ac09-47e5-aaf3-812e0656dfdb">
+						</modulevariable>
+					</groupvariable>
+					<groupvariable
+					id="809ff355-9a02-4645-8b61-92b481a986bf"
+					name="SelectProcDefFilePath">
+						<modulevariable
+						moduleref="0c3bd33c-35e3-41fa-9950-13fe1eb96ec2"
+						name="FilePath"
+						variableref="a873ce83-ac09-47e5-aaf3-812e0656dfdb">
 						</modulevariable>
 					</groupvariable>
 				</groupvariables>
@@ -401,6 +464,12 @@ rxversion="11.0">
 			id="5d718aa8-c692-4ac0-a839-08ebc652d285"
 			name="DelayXMiliseconds"
 			ref="64309eeb-f439-41a7-98a7-fc1d63e0015d"
+			type="Recording">
+			</testmodule>
+			<testmodule
+			id="5eecdbdd-2ba3-4c27-94db-f95f1ba1cdff"
+			name="ValidateModelExists"
+			ref="8e85d648-0fad-42bd-93b7-4bd398863173"
 			type="Recording">
 			</testmodule>
 			<testmodule
@@ -617,6 +686,12 @@ rxversion="11.0">
 			id="9762b18e-645b-4168-bd7c-06c7fcc9dbf0"
 			name="ContextMenuModel"
 			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
+			type="Recording">
+			</testmodule>
+			<testmodule
+			id="9a4ddbfa-7044-4096-8ba3-f4a667f484ac"
+			name="StartOpenProject"
+			ref="15c765b5-6700-469a-83ab-ca20f25f963b"
 			type="Recording">
 			</testmodule>
 			<testmodule
@@ -983,6 +1058,12 @@ rxversion="11.0">
 			ref="aa59d88e-f833-4794-8403-e75ddc532777"
 			type="Recording">
 			</testmodule>
+			<testmodule
+			id="f51358d1-dcea-45d6-8976-4378a904ebe4"
+			name="WaitForOpenProject"
+			ref="d2d35bb1-f562-4e75-8615-e94ac0c5ae40"
+			type="Recording">
+			</testmodule>
 			<modulegroupdef
 			id="f5c24afc-db79-4825-bf40-5ca45964d6e5"
 			name="ExportDFlowFMModel">
@@ -1125,6 +1206,38 @@ rxversion="11.0">
 					</testmodule>
 					<testmodule
 					id="a86db3a3-a5bc-4f59-b0fa-5271d5bb020c"
+					name="ValidateModelExists">
+					</testmodule>
+				</modulegroupdef>
+				<modulegroupdef
+				id="4a8d16cd-4217-498a-acd3-a0e32d9e617e"
+				name="OpenWaqProject">
+					<testmodule
+					id="9a4ddbfa-7044-4096-8ba3-f4a667f484ac"
+					name="StartOpenProject">
+					</testmodule>
+					<testmodule
+					id="39613942-0794-4bae-9f0b-c0eb2aa53c05"
+					name="SetInputFileNameAndProceed">
+					</testmodule>
+					<testmodule
+					id="12a9d6d5-2265-4bdf-95a1-f37e8ae9c46a"
+					name="SelectFileIfAsked">
+					</testmodule>
+					<testmodule
+					id="0c3bd33c-35e3-41fa-9950-13fe1eb96ec2"
+					name="SelectFileIfAsked">
+					</testmodule>
+					<testmodule
+					id="26e391cb-333a-4fa4-b194-e347978e99ed"
+					name="AcceptMigrateProjectIfAsked">
+					</testmodule>
+					<testmodule
+					id="f51358d1-dcea-45d6-8976-4378a904ebe4"
+					name="WaitForOpenProject">
+					</testmodule>
+					<testmodule
+					id="5eecdbdd-2ba3-4c27-94db-f95f1ba1cdff"
 					name="ValidateModelExists">
 					</testmodule>
 				</modulegroupdef>

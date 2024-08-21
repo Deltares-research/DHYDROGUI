@@ -607,6 +607,18 @@
       <UserCode>true</UserCode>
       <id>f2515a65-0501-4457-94d9-4c3098f91de6</id>
     </Compile>
+    <Compile Include="Modules\Dialogs\SelectFileIfAsked.cs">
+      <BoundTo>4066a1f2-2a8f-4316-8e75-b17a88665266</BoundTo>
+      <DependentUpon>SelectFileIfAsked.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>d24b9f2d-e223-4a3d-874f-7b026f601779</id>
+    </Compile>
+    <Compile Include="Modules\Dialogs\SelectFileIfAsked.UserCode.cs">
+      <BoundTo>4066a1f2-2a8f-4316-8e75-b17a88665266</BoundTo>
+      <DependentUpon>SelectFileIfAsked.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>8d8bb61d-d28e-487c-9126-940654b9d766</id>
+    </Compile>
     <Compile Include="Modules\Dialogs\SelectTypeInDialog.cs">
       <DependentUpon>SelectTypeInDialog.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
@@ -759,18 +771,6 @@
       <UserCode>true</UserCode>
       <id>93cf6c4a-820d-498f-a5e7-2f1db2ed3216</id>
       <BoundTo>29455de8-95ea-407a-b37d-191458a2b6e7</BoundTo>
-    </Compile>
-    <Compile Include="Modules\IO\OpenProjectFile.cs">
-      <BoundTo>26e9701f-d4f9-4985-b6ba-95933f25e582</BoundTo>
-      <DependentUpon>OpenProjectFile.rxrec</DependentUpon>
-      <RecorderCode>true</RecorderCode>
-      <id>79ec817d-f8b7-436f-af2a-f0d2cc1de11b</id>
-    </Compile>
-    <Compile Include="Modules\IO\OpenProjectFile.UserCode.cs">
-      <BoundTo>26e9701f-d4f9-4985-b6ba-95933f25e582</BoundTo>
-      <DependentUpon>OpenProjectFile.rxrec</DependentUpon>
-      <UserCode>true</UserCode>
-      <id>288ebbb6-9320-4b66-8b18-5458fcd551b0</id>
     </Compile>
     <Compile Include="Modules\IO\ConfirmSelectionInDialog.cs">
       <BoundTo>93e7f6e8-6c33-4a3d-9c72-e4b2c3893b7a</BoundTo>
@@ -1972,6 +1972,11 @@
       <id>82fae2b6-0601-4429-9fe8-4be12f80422f</id>
       <recordtableid>c0e50c3f-984e-4093-b08a-7b0af7da95e7</recordtableid>
     </None>
+    <None Include="Modules\Dialogs\SelectFileIfAsked.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>4066a1f2-2a8f-4316-8e75-b17a88665266</id>
+      <recordtableid>24d66b71-245c-436a-951c-e31afb5a4b67</recordtableid>
+    </None>
     <None Include="Modules\Dialogs\SelectTypeInDialog.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>4e05924a-b21d-43f5-bfae-ce8823a97833</id>
@@ -2031,11 +2036,6 @@
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>29455de8-95ea-407a-b37d-191458a2b6e7</id>
       <recordtableid>12aa1e77-0b1d-4af5-802d-07531c4fd8fe</recordtableid>
-    </None>
-    <None Include="Modules\IO\OpenProjectFile.rxrec">
-      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
-      <id>26e9701f-d4f9-4985-b6ba-95933f25e582</id>
-      <recordtableid>8e554110-2e5e-4cf1-87a0-891bf9420fd0</recordtableid>
     </None>
     <None Include="Modules\IO\ConfirmSelectionInDialog.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>

@@ -55,7 +55,7 @@
 					</var>
 					<var
 					dataname="ExecutablePath"
-					datasourceid="1c2b9d12-8e9e-4bc3-b694-750e2a84f66d"
+					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
 					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
 					variablename="ModuleGroupExecutablePath">
 					</var>
@@ -81,16 +81,16 @@
 			ref="3055953a-97af-4c51-b3e5-ff538bbfd642">
 				<databinding>
 					<var
-					dataname="ExecutablePath"
-					datasourceid="8b0de1f9-1a95-4aed-8c48-6868305bff0a"
-					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
-					variablename="ModuleGroupExecutablePath">
-					</var>
-					<var
 					dataname="AppProcessID"
 					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
 					variableid="c2568f59-4792-4dc0-825d-965e7f83cdf1"
 					variablename="ModuleGroupAppProcessID">
+					</var>
+					<var
+					dataname="ExecutablePath"
+					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
+					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
+					variablename="ModuleGroupExecutablePath">
 					</var>
 				</databinding>
 				<missingdatabinding>
@@ -427,13 +427,6 @@
 			<testcase
 			id="1c2b9d12-8e9e-4bc3-b694-750e2a84f66d"
 			name="Exercise5_ColumnBloom">
-				<parameters>
-					<param
-					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
-					</param>
-				</parameters>
 			</testcase>
 			<smartfoldernode
 			id="1c6d207c-7d49-4083-84bc-58736d7c2084"
@@ -483,7 +476,7 @@
 					</var>
 					<var
 					dataname="ExecutablePath"
-					datasourceid="af70b98c-2e89-4fd3-ad15-321817ad5039"
+					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
 					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
 					variablename="ModuleGroupExecutablePath">
 					</var>
@@ -577,7 +570,7 @@
 					</var>
 					<var
 					dataname="ExecutablePath"
-					datasourceid="6716cc10-9d23-4a76-9966-6540372c5fa1"
+					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
 					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
 					variablename="ModuleGroupExecutablePath">
 					</var>
@@ -649,18 +642,6 @@
 			<testcase
 			id="24af704f-98e1-4e50-813f-d6b8e2e57d73"
 			name="Exercise3_BODOxygenModel">
-				<parameters>
-					<param
-					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
-					</param>
-					<param
-					mask="False"
-					name="RelativePathToProcessDefinitionFile"
-					value="..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\share\delft3d\proc_def.def">
-					</param>
-				</parameters>
 			</testcase>
 			<testmodule
 			id="26210574-c4f3-41ed-bcf4-84474b94ca32"
@@ -891,23 +872,6 @@
 			<testcase
 			id="371e1371-79e8-45ef-a24a-201db9690522"
 			name="Exercise4_TracersMassBalancesOutput">
-				<parameters>
-					<param
-					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
-					</param>
-					<param
-					mask="False"
-					name="TreeItem"
-					value="Water Quality">
-					</param>
-					<param
-					mask="False"
-					name="ContextMenuOption"
-					value="Properties">
-					</param>
-				</parameters>
 			</testcase>
 			<testmodule
 			id="37cee5d2-3910-4a3d-b68c-a1f7626e2b7b"
@@ -1085,6 +1049,18 @@
 			<smartfoldernode
 			id="3edd7531-ac98-4a78-968d-76fb841c86cd"
 			name="AddMassBalances">
+				<parameters>
+					<param
+					mask="False"
+					name="TreeItem"
+					value="Water Quality">
+					</param>
+					<param
+					mask="False"
+					name="ContextMenuItem"
+					value="Properties">
+					</param>
+				</parameters>
 			</smartfoldernode>
 			<testmodule
 			id="4101f4a6-74a2-4805-885c-cd8ac99d3161"
@@ -1237,7 +1213,7 @@
 					</var>
 					<var
 					dataname="ExecutablePath"
-					datasourceid="24af704f-98e1-4e50-813f-d6b8e2e57d73"
+					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
 					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
 					variablename="ModuleGroupExecutablePath">
 					</var>
@@ -1395,28 +1371,6 @@
 					</var>
 				</databinding>
 			</testmodule>
-			<modulegroup
-			enabled="False"
-			id="5554e403-1aa5-43c8-97c0-bc7628143f80"
-			name="OpenProject"
-			ref="30fbf14f-ff38-47b7-89ca-0a08490abb83">
-				<databinding>
-					<var
-					dataname="PathFile"
-					datasourceid="f02d54c1-1547-435c-8b0f-1fa4f0e06f92"
-					variableid="a8aa0a98-4ad8-41d7-a747-ec69b740002a"
-					variablename="OpenProjectFilePath">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="ProjectFilePath"
-					datasourceid="1cd110ea-9f4a-4765-ae56-ad59cdc8063c"
-					variableid="a8aa0a98-4ad8-41d7-a747-ec69b740002a"
-					variablename="OpenProjectFilePath">
-					</var>
-				</missingdatabinding>
-			</modulegroup>
 			<testmodule
 			id="5740f6f3-7302-4ba7-9c12-630ad8bf1329"
 			name="AddWaqModelImportingHyd"
@@ -1580,13 +1534,6 @@
 			<testcase
 			id="6716cc10-9d23-4a76-9966-6540372c5fa1"
 			name="Exercise7_EnvironmentalImpactAssesment">
-				<parameters>
-					<param
-					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
-					</param>
-				</parameters>
 			</testcase>
 			<testmodule
 			id="671879ee-94a0-4479-ae4a-d8d2010768e5"
@@ -1599,38 +1546,6 @@
 					datasourceid="5905486c-021f-4871-a937-6ceff3a3ae3d"
 					variableid="1598fb32-9d9f-4474-8ba0-c62ae8eaee7f"
 					variablename="FilePath">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
-			id="67d0b023-91aa-49db-88a6-04dc0f807fe5"
-			name="OpenProjectFile"
-			ref="8e554110-2e5e-4cf1-87a0-891bf9420fd0"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="PathFile"
-					datasourceid="ac199bac-1c0a-49ee-8041-6362f00371b9"
-					variableid="20ac38ab-898b-4a8d-96ff-6df1e4be9c8e"
-					variablename="FilePath">
-					</var>
-					<var
-					dataname="modelFileIsWAQ"
-					datasourceid="ac199bac-1c0a-49ee-8041-6362f00371b9"
-					variableid="8996fb3b-ecab-42e4-8781-ea9cb37dd012"
-					variablename="IsModelToOpenWAQ">
-					</var>
-					<var
-					dataname="RelativePathToProcessDefinitionFile"
-					datasourceid="8b0de1f9-1a95-4aed-8c48-6868305bff0a"
-					variableid="21474ee7-a7cf-43dd-be46-7126d8f04beb"
-					variablename="relativePathToProcessFile">
-					</var>
-					<var
-					dataname="absolutePathToProcessFile"
-					datasourceid="ac199bac-1c0a-49ee-8041-6362f00371b9"
-					variableid="bb9052a0-caf4-4d9e-9db1-40ca4f6dd663"
-					variablename="AbsolutePathToProcessDefinitionFile">
 					</var>
 				</databinding>
 			</testmodule>
@@ -1818,16 +1733,16 @@
 			type="Recording">
 				<databinding>
 					<var
-					dataname="ContextMenuOption"
-					datasourceid="371e1371-79e8-45ef-a24a-201db9690522"
+					dataname="ContextMenuItem"
+					datasourceid="3edd7531-ac98-4a78-968d-76fb841c86cd"
 					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
 					variablename="SubstringInOptionName">
 					</var>
 				</databinding>
 				<missingdatabinding>
 					<var
-					dataname="ContextMenuItem"
-					datasourceid="78a98b82-1a75-46bf-88cd-cbfa9836cef1"
+					dataname="ContextMenuOption"
+					datasourceid="371e1371-79e8-45ef-a24a-201db9690522"
 					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
 					variablename="SubstringInOptionName">
 					</var>
@@ -1871,6 +1786,51 @@
 					</var>
 				</databinding>
 			</testmodule>
+			<modulegroup
+			id="75f28bea-ba33-46f7-b692-f6e6644f4daf"
+			name="OpenWaqProject"
+			ref="4a8d16cd-4217-498a-acd3-a0e32d9e617e">
+				<databinding>
+					<var
+					dataname="ProjectFilePath"
+					datasourceid="f02d54c1-1547-435c-8b0f-1fa4f0e06f92"
+					variableid="a8aa0a98-4ad8-41d7-a747-ec69b740002a"
+					variablename="OpenProjectFilePath">
+					</var>
+					<var
+					dataname="HydFilePath"
+					datasourceid="f02d54c1-1547-435c-8b0f-1fa4f0e06f92"
+					variableid="9639721d-6d1a-4576-8de4-4641f357b78b"
+					variablename="SelectHydFilePath">
+					</var>
+					<var
+					dataname="ProcessDefinitionFilePath"
+					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
+					variableid="809ff355-9a02-4645-8b61-92b481a986bf"
+					variablename="SelectProcDefFilePath">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="ProjectFilePath"
+					datasourceid="ac199bac-1c0a-49ee-8041-6362f00371b9"
+					variableid="a8aa0a98-4ad8-41d7-a747-ec69b740002a"
+					variablename="OpenProjectFilePath">
+					</var>
+					<var
+					dataname="HydFilePath"
+					datasourceid="ac199bac-1c0a-49ee-8041-6362f00371b9"
+					variableid="9639721d-6d1a-4576-8de4-4641f357b78b"
+					variablename="SelectHydFilePath">
+					</var>
+					<var
+					dataname="ProcessDefinitionFilePath"
+					datasourceid="24af704f-98e1-4e50-813f-d6b8e2e57d73"
+					variableid="809ff355-9a02-4645-8b61-92b481a986bf"
+					variablename="SelectProcDefFilePath">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
 			<smartfoldernode
 			id="760c0de4-9d3b-4915-b2d7-89e4f7ba5355"
 			name="AnimateResults">
@@ -2083,6 +2043,11 @@
 					name="ExecutablePath"
 					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
+					<param
+					mask="False"
+					name="ProcessDefinitionFilePath"
+					value="..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\share\delft3d\proc_def.def">
+					</param>
 				</parameters>
 			</testcase>
 			<testmodule
@@ -2192,18 +2157,6 @@
 			<testcase
 			id="8b0de1f9-1a95-4aed-8c48-6868305bff0a"
 			name="Exercise2_BacterialPollution">
-				<parameters>
-					<param
-					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
-					</param>
-					<param
-					mask="False"
-					name="RelativePathToProcessDefinitionFile"
-					value="..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\share\delft3d\proc_def.def">
-					</param>
-				</parameters>
 			</testcase>
 			<testmodule
 			id="8c3b57bb-b252-4296-8608-98d3a9808bca"
@@ -2242,64 +2195,6 @@
 			id="90227384-1580-481f-ad2a-c425cd4fcd44"
 			name="AddObservationPoints">
 			</smartfoldernode>
-			<testmodule
-			id="904549e5-aeb5-4fa8-ae31-e4f7c6c8c0b3"
-			name="OpenProjectFile"
-			ref="8e554110-2e5e-4cf1-87a0-891bf9420fd0"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="PathFile"
-					datasourceid="f02d54c1-1547-435c-8b0f-1fa4f0e06f92"
-					variableid="20ac38ab-898b-4a8d-96ff-6df1e4be9c8e"
-					variablename="FilePath">
-					</var>
-					<var
-					dataname="absolutePathToProcessFile"
-					datasourceid="f02d54c1-1547-435c-8b0f-1fa4f0e06f92"
-					variableid="bb9052a0-caf4-4d9e-9db1-40ca4f6dd663"
-					variablename="AbsolutePathToProcessDefinitionFile">
-					</var>
-					<var
-					dataname="RelativePathToProcessDefinitionFile"
-					datasourceid="24af704f-98e1-4e50-813f-d6b8e2e57d73"
-					variableid="21474ee7-a7cf-43dd-be46-7126d8f04beb"
-					variablename="relativePathToProcessFile">
-					</var>
-					<var
-					dataname="modelFileIsWAQ"
-					datasourceid="f02d54c1-1547-435c-8b0f-1fa4f0e06f92"
-					variableid="8996fb3b-ecab-42e4-8781-ea9cb37dd012"
-					variablename="IsModelToOpenWAQ">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="PathFile"
-					datasourceid="ac199bac-1c0a-49ee-8041-6362f00371b9"
-					variableid="20ac38ab-898b-4a8d-96ff-6df1e4be9c8e"
-					variablename="FilePath">
-					</var>
-					<var
-					dataname="modelFileIsWAQ"
-					datasourceid="ac199bac-1c0a-49ee-8041-6362f00371b9"
-					variableid="8996fb3b-ecab-42e4-8781-ea9cb37dd012"
-					variablename="IsModelToOpenWAQ">
-					</var>
-					<var
-					dataname="RelativePathToProcessDefinitionFile"
-					datasourceid="8b0de1f9-1a95-4aed-8c48-6868305bff0a"
-					variableid="21474ee7-a7cf-43dd-be46-7126d8f04beb"
-					variablename="relativePathToProcessFile">
-					</var>
-					<var
-					dataname="absolutePathToProcessFile"
-					datasourceid="ac199bac-1c0a-49ee-8041-6362f00371b9"
-					variableid="bb9052a0-caf4-4d9e-9db1-40ca4f6dd663"
-					variablename="AbsolutePathToProcessDefinitionFile">
-					</var>
-				</missingdatabinding>
-			</testmodule>
 			<testmodule
 			id="914405ba-b897-4330-892c-70751c098405"
 			name="DoubleClickGenericItem"
@@ -2641,6 +2536,39 @@
 			ref="9cde4c1a-031f-4166-961e-c6d425b673b7"
 			type="Recording">
 			</testmodule>
+			<modulegroup
+			id="aa9291a0-862e-4faf-86b2-49b585ead1a4"
+			name="OpenWaqProject"
+			ref="4a8d16cd-4217-498a-acd3-a0e32d9e617e">
+				<databinding>
+					<var
+					dataname="ProjectFilePath"
+					datasourceid="ac199bac-1c0a-49ee-8041-6362f00371b9"
+					variableid="a8aa0a98-4ad8-41d7-a747-ec69b740002a"
+					variablename="OpenProjectFilePath">
+					</var>
+					<var
+					dataname="HydFilePath"
+					datasourceid="ac199bac-1c0a-49ee-8041-6362f00371b9"
+					variableid="9639721d-6d1a-4576-8de4-4641f357b78b"
+					variablename="SelectHydFilePath">
+					</var>
+					<var
+					dataname="ProcessDefinitionFilePath"
+					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
+					variableid="809ff355-9a02-4645-8b61-92b481a986bf"
+					variablename="SelectProcDefFilePath">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="ProcessDefinitionFilePath"
+					datasourceid="8b0de1f9-1a95-4aed-8c48-6868305bff0a"
+					variableid="809ff355-9a02-4645-8b61-92b481a986bf"
+					variablename="SelectProcDefFilePath">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
 			<testmodule
 			id="aae40fef-934d-4a53-a159-4acbe536b229"
 			name="CloseDocumentView"
@@ -2743,18 +2671,13 @@
 				<parameters>
 					<param
 					mask="False"
-					name="PathFile"
+					name="ProjectFilePath"
 					value="fraction-model\westernscheldt01.dsproj">
 					</param>
 					<param
 					mask="False"
-					name="modelFileIsWAQ"
-					value="true">
-					</param>
-					<param
-					mask="False"
-					name="absolutePathToProcessFile"
-					value="">
+					name="HydFilePath"
+					value="..\..\test-data\input\courses\Environmental_modelling\flow-model\westernscheldt01.hyd">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -2792,7 +2715,7 @@
 					</var>
 					<var
 					dataname="ExecutablePath"
-					datasourceid="371e1371-79e8-45ef-a24a-201db9690522"
+					datasourceid="7f66a272-8437-49d9-b8dc-00411b5ff03b"
 					variableid="8b05f6d0-4168-493f-8763-865625bfa3e1"
 					variablename="ModuleGroupExecutablePath">
 					</var>
@@ -2809,13 +2732,6 @@
 			<testcase
 			id="af70b98c-2e89-4fd3-ad15-321817ad5039"
 			name="Exercise6_AnalysingResults">
-				<parameters>
-					<param
-					mask="False"
-					name="ExecutablePath"
-					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
-					</param>
-				</parameters>
 			</testcase>
 			<testmodule
 			id="afbe1854-78b4-414a-82e5-6e2e31b09493"
@@ -3674,18 +3590,13 @@
 				<parameters>
 					<param
 					mask="False"
-					name="PathFile"
+					name="ProjectFilePath"
 					value="fraction-model\westernscheldt01.dsproj">
 					</param>
 					<param
 					mask="False"
-					name="absolutePathToProcessFile"
-					value="">
-					</param>
-					<param
-					mask="False"
-					name="modelFileIsWAQ"
-					value="true">
+					name="HydFilePath"
+					value="..\..\test-data\input\courses\Environmental_modelling\flow-model\westernscheldt01.hyd">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -3926,7 +3837,7 @@
 				<databinding>
 					<var
 					dataname="TreeItem"
-					datasourceid="371e1371-79e8-45ef-a24a-201db9690522"
+					datasourceid="3edd7531-ac98-4a78-968d-76fb841c86cd"
 					variableid="28ac1b3a-9df9-4417-895a-56e7b8f06310"
 					variablename="NameTreeItemNode">
 					</var>
@@ -3934,7 +3845,7 @@
 				<missingdatabinding>
 					<var
 					dataname="TreeItem"
-					datasourceid="78a98b82-1a75-46bf-88cd-cbfa9836cef1"
+					datasourceid="371e1371-79e8-45ef-a24a-201db9690522"
 					variableid="28ac1b3a-9df9-4417-895a-56e7b8f06310"
 					variablename="NameTreeItemNode">
 					</var>
@@ -4086,10 +3997,10 @@
 						<smartfoldernode
 						id="ac199bac-1c0a-49ee-8041-6362f00371b9"
 						name="OpenTemplateProject">
-							<testmodule
-							id="67d0b023-91aa-49db-88a6-04dc0f807fe5"
-							name="OpenProjectFile">
-							</testmodule>
+							<modulegroup
+							id="aa9291a0-862e-4faf-86b2-49b585ead1a4"
+							name="OpenWaqProject">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
 						id="0c92167c-135b-4e95-b939-0e4270766eaa"
@@ -4247,13 +4158,9 @@
 						id="f02d54c1-1547-435c-8b0f-1fa4f0e06f92"
 						name="ImportTemplateProject">
 							<modulegroup
-							id="5554e403-1aa5-43c8-97c0-bc7628143f80"
-							name="OpenProject">
+							id="75f28bea-ba33-46f7-b692-f6e6644f4daf"
+							name="OpenWaqProject">
 							</modulegroup>
-							<testmodule
-							id="904549e5-aeb5-4fa8-ae31-e4f7c6c8c0b3"
-							name="OpenProjectFile">
-							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
 						id="ab9c541b-aa2a-49dc-ad64-b69ba0865e40"
