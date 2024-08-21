@@ -190,4 +190,10 @@
   <data name="DefaultBridgeInitializer_InitializeBridgeCrossSectionDefinition_Only_sobek2_bridge_geometric_profiles_of_type_tabular__0__supported_and_implemented_" xml:space="preserve">
     <value>Only sobek2 bridge geometric profiles of type tabular {0} supported and implemented.</value>
   </data>
+  <data name="SobekRRPavedDryWeatherFlowReader_ReadPavedDryWeatherFlow_Storage_table__0__has_not_been_found_" xml:space="preserve">
+    <value>Storage table {0} has not been found.</value>
+  </data>
+  <data name="SobekRRPavedDryWeatherFlowReader_SetDryWeatherFlowOptions_DWF_option__use_table__not_supported___0____Has_been_set_to_ConstantDWAPerHour_" xml:space="preserve">
+    <value>DWF option 'use table' not supported ({0}). Has been set to ConstantDWAPerHour.</value>
+  </data>
 </root>

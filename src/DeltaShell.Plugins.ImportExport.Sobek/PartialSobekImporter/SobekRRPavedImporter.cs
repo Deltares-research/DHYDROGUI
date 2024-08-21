@@ -5,6 +5,7 @@ using System.Linq;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.ImportExport.Sobek.Properties;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
@@ -44,7 +45,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var pathSto = filePath.Replace(".3B", ".STO");
             var pathTbl = filePath.Replace(".3B", ".TBL"); // for now: no data for Tholen so we don't create it yet
 
-            var dicDwa = new SobekRRDryWeatherFlowReader().Read(pathDwa).ToDictionaryWithErrorDetails(pathDwa, item => item.Id, item => item);
+            var dryWeatherFlowsById = new SobekRRDryWeatherFlowReader().Read(pathDwa).ToDictionaryWithErrorDetails(pathDwa, item => item.Id, item => item);
             var dicSto = new SobekRRStorageReader().Read(pathSto).ToDictionaryWithErrorDetails(pathSto, item => item.Id, item => item);
             var dicTbl = new SobekRRTableReader("QC_T", formatPumpCapacityTable).Read(pathTbl).ToDictionaryWithErrorDetails(pathTbl,
                 item => item.TableName, item => item);
@@ -79,7 +80,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                     else
                     {
-                        log.ErrorFormat("Storage table {0} has not been found.", sobekPaved.StorageId);
+                        log.ErrorFormat(Resources.Storage_table__0__has_not_been_found, sobekPaved.StorageId);
                     }
 
                     pavedData.SewerType = (PavedEnums.SewerType)sobekPaved.SewerSystem;
@@ -109,40 +110,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     pavedData.AreaAdjustmentFactor = sobekPaved.AreaAjustmentFactor;
 
                     pavedData.NumberOfInhabitants = sobekPaved.NumberOfPeople;
-
+                    
                     // Dry weather flow
-                    if (dicDwa.ContainsKey(sobekPaved.DryWeatherFlowId))
-                    {
-                        var dwa = dicDwa[sobekPaved.DryWeatherFlowId];
-                        pavedData.DryWeatherFlowOptions = ((PavedEnums.DryWeatherFlowOptions)dwa.ComputationOption - 1);
-                        if (dwa.ComputationOption == DWAComputationOption.UseTable)
-                        {
-                            log.WarnFormat(
-                                "DWF option 'use table' not supported ({0}). Has been set to ConstantDWAPerHour.",
-                                sobekPaved.Id);
-                            pavedData.DryWeatherFlowOptions = PavedEnums.DryWeatherFlowOptions.ConstantDWF;
-                        }
-
-                        if (pavedData.DryWeatherFlowOptions == PavedEnums.DryWeatherFlowOptions.ConstantDWF
-                            || pavedData.DryWeatherFlowOptions == PavedEnums.DryWeatherFlowOptions.NumberOfInhabitantsTimesConstantDWF)
-                        {
-                            pavedData.WaterUse = dwa.WaterUsePerHourForConstant * 24.0;
-                        }
-                        else
-                        {
-                            pavedData.WaterUse = dwa.WaterUsePerDayForVariable;
-                        }
-
-                        int i = 0;
-                        foreach (var p in dwa.WaterCapacityPerHour)
-                        {
-                            pavedData.VariableWaterUseFunction[i++] = p;
-                        }
-                    }
-                    else
-                    {
-                        log.ErrorFormat("Storage table {0} has not been found.", sobekPaved.StorageId);
-                    }
+                    SobekRRPavedDryWeatherFlowUpdater.UpdatePavedDryWeatherFlow(log, dryWeatherFlowsById, sobekPaved, pavedData);
 
                     pavedData.RunoffCoefficient = sobekPaved.SpillingRunoffCoefficient;
                     pavedData.SpillingDefinition = ConvertSobekSpilling(sobekPaved.SpillingOption, sobekPaved.Id);
@@ -211,6 +181,82 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 default:
                     throw new ArgumentOutOfRangeException(nameof(dischargeType), dischargeType, null);
             }
+        }
+    }
+    
+    /// <summary>
+    /// Class to update the read paved Dry Weather Flow data into the model paved Dry Weather Flow data.
+    /// </summary>
+    internal static class SobekRRPavedDryWeatherFlowUpdater
+    {
+        /// <summary>
+        /// Updates the information from the read paved Dry Weather Flow data into the model paved Dry Weather Flow data.
+        /// </summary>
+        /// <param name="logger">The logger used within this class.</param>
+        /// <param name="dryWeatherFlowsById">Dictionary containing the read dry weather flow data by ID.</param>
+        /// <param name="sobekPaved">Paved data read from file.</param>
+        /// <param name="pavedData">Paved data to be updated.</param>
+        internal static void UpdatePavedDryWeatherFlow(ILog logger, Dictionary<string, SobekRRDryWeatherFlow> dryWeatherFlowsById, SobekRRPaved sobekPaved, PavedData pavedData)
+        {
+            if (dryWeatherFlowsById.TryGetValue(sobekPaved.DryWeatherFlowId, out SobekRRDryWeatherFlow dryWeatherFlow)
+                && IsValidDryWeatherFlowComputationOption(dryWeatherFlow.ComputationOption))
+            {
+                SetDryWeatherFlowOptions(logger, sobekPaved, pavedData, dryWeatherFlow);
+                SetWaterUse(pavedData, dryWeatherFlow);
+                SetVariableWaterUseFunction(pavedData, dryWeatherFlow);
+            }
+            else
+            {
+                logger.ErrorFormat(Resources.Storage_table__0__has_not_been_found, sobekPaved.StorageId);
+            }
+        }
+        
+        private static void SetDryWeatherFlowOptions(ILog logger, SobekRRPaved sobekPaved, PavedData pavedData, SobekRRDryWeatherFlow dryWeatherFlow)
+        {
+            if (dryWeatherFlow.ComputationOption == DWAComputationOption.UseTable)
+            {
+                logger.WarnFormat(
+                    Resources.SobekRRPavedDryWeatherFlowReader_SetDryWeatherFlowOptions_DWF_option__use_table__not_supported___0____Has_been_set_to_ConstantDWAPerHour_,
+                    sobekPaved.Id);
+                pavedData.DryWeatherFlowOptions = PavedEnums.DryWeatherFlowOptions.ConstantDWF;
+            }
+            else
+            {
+                pavedData.DryWeatherFlowOptions = ConvertFromComputationOptionToFlowOptions(dryWeatherFlow.ComputationOption);
+            }
+        }
+
+        private static PavedEnums.DryWeatherFlowOptions ConvertFromComputationOptionToFlowOptions(DWAComputationOption computationOption)
+        {
+            const int enumOffset = 1;
+            return (PavedEnums.DryWeatherFlowOptions)computationOption - enumOffset;
+        }
+
+        private static void SetWaterUse(PavedData pavedData, SobekRRDryWeatherFlow dryWeatherFlow)
+        {
+            if (pavedData.DryWeatherFlowOptions == PavedEnums.DryWeatherFlowOptions.ConstantDWF
+                || pavedData.DryWeatherFlowOptions == PavedEnums.DryWeatherFlowOptions.NumberOfInhabitantsTimesConstantDWF)
+            {
+                pavedData.WaterUse = dryWeatherFlow.WaterUsePerHourForConstant * 24.0;
+            }
+            else
+            {
+                pavedData.WaterUse = dryWeatherFlow.WaterUsePerDayForVariable;
+            }
+        }
+        
+        private static void SetVariableWaterUseFunction(PavedData pavedData, SobekRRDryWeatherFlow dryWeatherFlow)
+        {
+            int i = 0;
+            foreach (var p in dryWeatherFlow.WaterCapacityPerHour)
+            {
+                pavedData.VariableWaterUseFunction[i++] = p;
+            }
+        }
+        
+        private static bool IsValidDryWeatherFlowComputationOption(DWAComputationOption dwaComputationOption)
+        {
+            return Enum.IsDefined(typeof(PavedEnums.DryWeatherFlowOptions), (PavedEnums.DryWeatherFlowOptions)dwaComputationOption - 1) || dwaComputationOption == DWAComputationOption.UseTable;
         }
     }
 }
