@@ -36,19 +36,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return report;
         }
 
-        private static Dictionary<string, HydroLink> CreateLinksTargetLookup(IEnumerable<HydroLink> hydroRegionLinks)
+        private static Dictionary<string, List<HydroLink>> CreateLinksTargetLookup(IEnumerable<HydroLink> hydroRegionLinks)
         {
-            var linksTargetLookup = new Dictionary<string, HydroLink>(StringComparer.InvariantCultureIgnoreCase);
+            var linksTargetLookup = new Dictionary<string, List<HydroLink>>(StringComparer.InvariantCultureIgnoreCase);
 
             foreach (HydroLink hydroLink in hydroRegionLinks)
             {
                 string targetName = hydroLink.Target.Name;
                 if (linksTargetLookup.ContainsKey(targetName))
                 {
+                    linksTargetLookup[targetName].Add(hydroLink);
                     continue;
                 }
 
-                linksTargetLookup.Add(targetName, hydroLink);
+                var hydroLinks = new List<HydroLink> { hydroLink };
+                linksTargetLookup.Add(targetName, hydroLinks);
             }
 
             return linksTargetLookup;
@@ -66,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             IEnumerable<Model1DLateralSourceData> lateralSourceDatas,
             IEnumerable<HydroLink> links)
         {
-            Dictionary<string, HydroLink> linksTargetLookup = CreateLinksTargetLookup(links);
+            Dictionary<string, List<HydroLink>> linksTargetLookup = CreateLinksTargetLookup(links);
 
             foreach (Model1DLateralSourceData lateralSourceData in lateralSourceDatas)
             {
@@ -77,11 +79,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                 LateralSource lateralSource = lateralSourceData.Feature;
 
-                if (linksTargetLookup.TryGetValue(lateralSource.Name, out HydroLink hydroLink) && hydroLink.Source is Catchment)
+                if (linksTargetLookup.TryGetValue(lateralSource.Name, out List<HydroLink> hydroLinks) &&
+                    hydroLinks.Exists(hydroLink => hydroLink.Source is Catchment))
                 {
                     continue;
                 }
-
+                        
                 yield return new ValidationIssue(lateralSource,
                                                  ValidationSeverity.Error,
                                                  Resources.WaterFlowFMHydroLinksValidator_Realtime_lateral_must_have_link_between_catchment_and_lateral,
