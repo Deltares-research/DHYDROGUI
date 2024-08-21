@@ -92,20 +92,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Project project = projectService.CreateProject();
 
                 string tempDirectory = FileUtils.CreateTempDirectory();
-                projectService.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+                projectService.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj.dsproj"));
 
                 project.RootFolder.Items.Add(waqModel);
 
                 string originalOutputDirectory = waqModel.ModelSettings.OutputDirectory;
                 string originalDataDirectory = waqModel.ModelDataDirectory;
-                Assert.That(Path.Combine(tempDirectory, "WAQ_proj_data\\WAQ1\\output"), Is.EqualTo(originalOutputDirectory));
-                Assert.That(Path.Combine(tempDirectory, "WAQ_proj_data\\WAQ1"), Is.EqualTo(originalDataDirectory));
+                Assert.That(Path.Combine(tempDirectory, "WAQ_proj.dsproj_data\\WAQ1\\output"), Is.EqualTo(originalOutputDirectory));
+                Assert.That(Path.Combine(tempDirectory, "WAQ_proj.dsproj_data\\WAQ1"), Is.EqualTo(originalDataDirectory));
 
                 waqModel.Name = "WAQ2";
                 string newOutputDirectory = waqModel.ModelSettings.OutputDirectory;
                 string newDataDirectory = waqModel.ModelDataDirectory;
-                Assert.That(Path.Combine(tempDirectory, "WAQ_proj_data\\WAQ2\\output"), Is.EqualTo(newOutputDirectory));
-                Assert.That(Path.Combine(tempDirectory, "WAQ_proj_data\\WAQ2"), Is.EqualTo(newDataDirectory));
+                Assert.That(Path.Combine(tempDirectory, "WAQ_proj.dsproj_data\\WAQ2\\output"), Is.EqualTo(newOutputDirectory));
+                Assert.That(Path.Combine(tempDirectory, "WAQ_proj.dsproj_data\\WAQ2"), Is.EqualTo(newDataDirectory));
             }
         }
 
@@ -261,7 +261,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Project project = projectService.CreateProject();
                 project.RootFolder.Add(model);
 
-                string savePath = Path.Combine(tempDirectory.Path, "test");
+                string savePath = Path.Combine(tempDirectory.Path, "test.dsproj");
 
                 // Create project files
                 projectService.SaveProjectAs(savePath);
@@ -317,7 +317,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Project project = projectService.CreateProject();
                 project.RootFolder.Add(model);
 
-                string savePath = Path.Combine(tempDirectory.Path, "test");
+                string savePath = Path.Combine(tempDirectory.Path, "test.dsproj");
 
                 projectService.SaveProjectAs(savePath);
 
@@ -348,7 +348,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Project project = projectService.CreateProject();
                 project.RootFolder.Add(model);
 
-                string savePath = Path.Combine(tempDirectory.Path, "test");
+                string savePath = Path.Combine(tempDirectory.Path, "test.dsproj");
 
                 projectService.SaveProjectAs(savePath);
 
@@ -402,33 +402,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var app = new DeltaShellApplicationBuilder().Build();
             app.UserSettings =  ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             plugin.Application = app;
-        }
-
-        private static WaterQualityModel GetWesternscheldtModelInApplication(string tempDirectory, IApplication application)
-        {
-            var waqModel = new WaterQualityModel();
-
-            Project project = application.ProjectService.CreateProject();
-            project.RootFolder.Add(waqModel);
-            waqModel.SetWorkingDirectoryInModelSettings(() => application.WorkDirectory);
-
-            string originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");
-            FileUtils.CopyAll(new DirectoryInfo(originalDir), new DirectoryInfo(tempDirectory), string.Empty);
-
-            string hydFilePath = Path.Combine(tempDirectory, "flow-model", "westernscheldt01.hyd");
-            Assert.True(File.Exists(hydFilePath));
-
-            string subFilePath = Path.Combine(tempDirectory, "waq", "sub-files", "bacteria.sub");
-            Assert.True(File.Exists(subFilePath));
-
-            string boundaryConditionsFilePath = Path.Combine(tempDirectory, "waq", "boundary-conditions", "bacteria.csv");
-            Assert.True(File.Exists(boundaryConditionsFilePath));
-
-            new HydFileImporter().ImportItem(hydFilePath, waqModel);
-            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subFilePath);
-            new DataTableImporter().ImportItem(boundaryConditionsFilePath, waqModel.BoundaryDataManager);
-
-            return waqModel;
         }
 
         private IApplication GetConfiguredApplication()

@@ -1619,7 +1619,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 // Initialize Project by saving it.
                 string tempDirectory = FileUtils.CreateTempDirectory();
-                projectService.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+                projectService.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj.dsproj"));
 
                 //Initialize WAQ Model and add it to the project.
                 var model = new WaterQualityModel();

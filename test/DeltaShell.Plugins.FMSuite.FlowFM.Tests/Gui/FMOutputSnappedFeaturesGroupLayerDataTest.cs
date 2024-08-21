@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void RerunModelGeneratesNewSnappedFeatures(bool saving)
         {
             string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
-            string newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
 
             string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void OpenProjectThenRunItThenCheckSnappedFeaturesWereGenerated(bool saving)
         {
             string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
-            string newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
 
             string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");

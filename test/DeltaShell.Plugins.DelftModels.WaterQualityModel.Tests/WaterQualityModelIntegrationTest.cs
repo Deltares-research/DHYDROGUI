@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 app.Run();
                 IProjectService projectService = app.ProjectService;
                 projectService.CreateProject();
-                projectService.SaveProjectAs(Path.Combine(tempDirectory.Path, "WAQ_proj"));
+                projectService.SaveProjectAs(Path.Combine(tempDirectory.Path, "WAQ_proj.dsproj"));
                 
                 //First run
                 ActivityRunner.RunActivity(model);

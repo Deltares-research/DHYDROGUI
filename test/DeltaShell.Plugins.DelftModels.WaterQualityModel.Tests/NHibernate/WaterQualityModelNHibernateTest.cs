@@ -458,7 +458,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 importedWaq.ObservationAreas.SetValuesAsLabels(Enumerable.Repeat("Model wide", importedWaq.Grid.Cells.Count));
 
                 // call
-                string savePath = Path.GetRandomFileName();
+                string savePath = Path.GetRandomFileName() + ".dsproj";
                 projectService.SaveProjectAs(savePath);
 
                 projectService.CloseProject();

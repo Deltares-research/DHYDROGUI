@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 model.ImportFromMdu(mduPath);
                 project.RootFolder.Add(model);
 
-                string projectPath = Path.Combine(saveDir.Path, "har.proj");
+                string projectPath = Path.Combine(saveDir.Path, "har.dsproj");
 
                 projectService.SaveProjectAs(projectPath);
                 projectService.CloseProject();
@@ -117,10 +117,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 projectService.CloseProject();
                 
                 Assert.That(validationResult.ErrorCount, Is.Zero, "Model validation failed after loading the saved Harlingen model.");
-                Assert.That(loadedMduFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\har.mdu")));
-                Assert.That(loadedNetFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\fm_003_net.nc")));
-                Assert.That(loadedExtFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\001.ext")));
-                Assert.That(loadedBndExtFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\001_bnd.ext")));
+                Assert.That(loadedMduFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.dsproj_data\har\input\computations\test\har.mdu")));
+                Assert.That(loadedNetFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.dsproj_data\har\input\computations\test\fm_003_net.nc")));
+                Assert.That(loadedExtFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.dsproj_data\har\input\boundary_conditions\test\001.ext")));
+                Assert.That(loadedBndExtFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.dsproj_data\har\input\boundary_conditions\test\001_bnd.ext")));
             }
         }
 
@@ -1048,10 +1048,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ModelDefinition.UseMorphologySediment = true;
             project.RootFolder.Add(model);
 
-            projectService.SaveProjectAs(mduPath);
+            string projectPath = mduPath + ".dsproj";
+            projectService.SaveProjectAs(projectPath);
             projectService.CloseProject();
 
-            project = projectService.OpenProject(mduPath);
+            project = projectService.OpenProject(projectPath);
 
             WaterFlowFMModel loadedModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
 
