@@ -358,11 +358,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             var modelCatchmentData = new EventedList<CatchmentModelData>();
             rainfallRunoffModel.BoundaryData.Returns(modelBoundaryData);
             rainfallRunoffModel.ModelData.Returns(modelCatchmentData);
-
+            
+            const string lateralName = "lateral";
+            var lateral = new LateralSource() { Name = lateralName };
+            
             const string wwtpName = "wwtp";
             var wwtp = new WasteWaterTreatmentPlant() { Name = wwtpName };
             var wwtps = new EventedList<WasteWaterTreatmentPlant>() { wwtp };
             rainfallRunoffModel.Basin.WasteWaterTreatmentPlants.Returns(wwtps);
+
+            var link = new HydroLink(wwtp, lateral);
+            wwtp.Links.Add(link);
 
             // Call
             const string filePath = "boundaryConditions.bc";
@@ -372,7 +378,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             var expectedSections = new List<BcIniSection>
             {
                 CreateExpectedGeneralSection(),
-                CreateExpectedConstantBcSection("wwtp_boundary", 0),
+                CreateExpectedConstantBcSection(lateralName, 0)
             };
 
             // Assert

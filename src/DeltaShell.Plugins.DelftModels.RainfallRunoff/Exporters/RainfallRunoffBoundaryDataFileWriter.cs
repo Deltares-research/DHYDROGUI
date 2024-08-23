@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.IO;
 using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.Extensions;
 using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
@@ -106,8 +108,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         {
             foreach (WasteWaterTreatmentPlant wasteWaterTreatmentPlant in wasteWaterTreatmentPlants)
             {
-                yield return CreateDefaultBcSection($"{wasteWaterTreatmentPlant.Name}{RainfallRunoffModel.BoundarySuffix}");
+                HydroLink link = GetOutgoingLink(wasteWaterTreatmentPlant);
+                if (link is null || BoundaryHasAlreadyBeenHandled(link.Target.Name))
+                {
+                    continue;
+                }
+                yield return CreateDefaultBcSection($"{link.Target.Name}");
             }
+        }
+
+        private static HydroLink GetOutgoingLink(WasteWaterTreatmentPlant wasteWaterTreatmentPlant)
+        {
+            return wasteWaterTreatmentPlant.Links.FirstOrDefault(l => !l.Target.Equals(wasteWaterTreatmentPlant));
         }
 
         private IEnumerable<BcIniSection> CreateCatchmentBoundarySections(IRainfallRunoffModel rainfallRunoffModel)

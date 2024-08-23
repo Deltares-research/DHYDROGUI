@@ -295,12 +295,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void WhenExportingRRModelWithWWTP_WritesImplicitWWTPBoundaryToBoundaryConditionsFile()
+        public void WhenExportingRRModelWithWWTPLinkedToBoundary_WritesBoundaryCorrectlyToBoundaryConditionsFile()
         {
             // Setup
-            const string wwtpName = "wwtp";
+            const string boundaryName = "boundary";
 
-            using (RainfallRunoffModel rrModel = CreateRRModelWithPavedCatchmentLinkedToWWTP(wwtpName))
+            using (RainfallRunoffModel rrModel = CreateRRModelWithWWTPLinkedToBoundary(boundaryName))
             using (var tempDir = new TemporaryDirectory())
             {
                 var exporter = new RainfallRunoffModelExporter();
@@ -310,35 +310,34 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 
                 // Assert
                 string boundaryFilepath = Path.Combine(tempDir.Path, "BoundaryConditions.bc");
-                AssertThatBoundaryFileContainsWWTPBoundary(boundaryFilepath, wwtpName);
+                AssertThatBoundaryFileContainsWWTPBoundary(boundaryFilepath, boundaryName);
             }
         }
 
-        private static RainfallRunoffModel CreateRRModelWithPavedCatchmentLinkedToWWTP(string wwtpName)
+        private static RainfallRunoffModel CreateRRModelWithWWTPLinkedToBoundary(string boundaryName)
         {
             var rrModel = new RainfallRunoffModel();
 
-            var wwtp = new WasteWaterTreatmentPlant() { Name = wwtpName };
-
-            var catchment = new Catchment();
-            var pavedCatchment = new PavedData(catchment);
-
+            var wwtp = new WasteWaterTreatmentPlant { Name = "wwtp" };
             rrModel.Basin.WasteWaterTreatmentPlants.Add(wwtp);
-            rrModel.Basin.Catchments.Add(catchment);
-            rrModel.ModelData.Add(pavedCatchment);
 
-            catchment.LinkTo(wwtp);
+            var boundary = new RunoffBoundary { Name = boundaryName };
+            rrModel.Basin.Boundaries.Add(boundary);
+
+            wwtp.LinkTo(boundary);
+
             return rrModel;
         }
 
-        private static void AssertThatBoundaryFileContainsWWTPBoundary(string boundaryFilepath, string wwtpName)
+        private static void AssertThatBoundaryFileContainsWWTPBoundary(string boundaryFilepath, string boundaryName)
         {
-            IEnumerable<BcIniSection> iniSections = new BcReader(new FileSystem()).ReadBcFile(boundaryFilepath);
+            List<BcIniSection> iniSections = new BcReader(new FileSystem()).ReadBcFile(boundaryFilepath).ToList();
+            
+            Assert.That(iniSections.Count, Is.EqualTo(2)); // 1 general section and 1 boundary section
 
-            var expectedBoundaryName = $"{wwtpName}_boundary";
             bool containsWWTPBoundary = iniSections
                 .Any(bcSection => bcSection.Section.Properties.Any(
-                         p => p.Key.EqualsCaseInsensitive("name") && p.Value.EqualsCaseInsensitive(expectedBoundaryName)));
+                         p => p.Key.EqualsCaseInsensitive("name") && p.Value.EqualsCaseInsensitive(boundaryName)));
 
             Assert.That(containsWWTPBoundary, Is.True);
         }
