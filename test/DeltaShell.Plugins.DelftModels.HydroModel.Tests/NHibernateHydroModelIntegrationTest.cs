@@ -1,22 +1,13 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.IntegrationTestUtils.NHibernate;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff;
-using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.ImportExport.Sobek;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -86,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Setup
             using (var temp = new TemporaryDirectory())
-            using (var app = GetConfiguredApplication())
+            using (var app = new DHYDROApplicationBuilder().WithRainfallRunoff().WithFlowFM().WithHydroModel().Build())
             {
                 app.Run();
                 
@@ -108,37 +99,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static IApplication GetConfiguredApplication()
-        {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                // DeltaShell plugins
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-
-                // D-HYDRO plugins
-                new HydroModelApplicationPlugin(),
-                new RainfallRunoffApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new SobekImportApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-
-            };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
-        }
-        
         protected override NHibernateProjectRepository CreateProjectRepository()
         {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new NetworkEditorApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new RainfallRunoffApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new FlowFMApplicationPlugin()
-            };
-            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
+            return new DHYDRONHibernateProjectRepositoryBuilder().WithRainfallRunoff().WithRealTimeControl().WithFlowFM().Build();
         }
     }
 }

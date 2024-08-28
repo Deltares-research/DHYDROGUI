@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -10,16 +9,10 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -48,16 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [SetUp]
         public void SetUp()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new CommonToolsGuiPlugin(),
-            };
-            gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            gui = new DHYDROGuiBuilder().Build();
             
             gui.Run();
             

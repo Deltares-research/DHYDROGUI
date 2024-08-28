@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-  <subclass name="DelftTools.Hydro.Structures.CompositeBranchStructure, DelftTools.Hydro" discriminator-value="branch_composite_structure"  extends="DelftTools.Hydro.Structures.ICompositeBranchStructure, DelftTools.Hydro">
-
-  </subclass>
-</hibernate-mapping>

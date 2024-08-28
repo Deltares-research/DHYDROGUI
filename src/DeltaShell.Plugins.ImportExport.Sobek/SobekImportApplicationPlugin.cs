@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Aop;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
@@ -103,11 +101,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             yield return new SobekNetworkImporter();
             yield return new SobekNetworkToNetworkImporter();
             yield return new SobekModelToRainfallRunoffModelImporter();
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return GetType().Assembly;
         }
     }
 }

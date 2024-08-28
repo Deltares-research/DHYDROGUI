@@ -105,6 +105,38 @@ ProjectSection(SolutionItems) = preProject
 	Build\targets\DeltaShell.Plugins.targets = Build\targets\DeltaShell.Plugins.targets
 EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{B697E5BF-868A-491D-BBEA-CEC63E3843BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DHYDRO.Persistence", "src\Persistence\DeltaShell.Plugins.DHYDRO.Persistence\DeltaShell.Plugins.DHYDRO.Persistence.csproj", "{109320F7-C784-412F-BDD3-26AD864B7578}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DelftModels.RealTimeControl.Persistence", "src\Persistence\DeltaShell.Plugins.DelftModels.RealTimeControl.Persistence\DeltaShell.Plugins.DelftModels.RealTimeControl.Persistence.csproj", "{0E9CF7AC-1C6C-43D6-A899-4BFD22A96098}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Persistence", "src\Persistence\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Persistence\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Persistence.csproj", "{CE35F562-4ADE-47EE-80F4-A4B6EB9A337E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DelftModels.HydroModel.Persistence", "src\Persistence\DeltaShell.Plugins.DelftModels.HydroModel.Persistence\DeltaShell.Plugins.DelftModels.HydroModel.Persistence.csproj", "{3C4F8F88-DE80-41DE-B384-1D1C3181EC3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DelftModels.RainfallRunoff.Persistence", "src\Persistence\DeltaShell.Plugins.DelftModels.RainfallRunoff.Persistence\DeltaShell.Plugins.DelftModels.RainfallRunoff.Persistence.csproj", "{7071509C-5C9A-4D45-8D0A-B5692E972F56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.FMSuite.FlowFM.Persistence", "src\Persistence\DeltaShell.Plugins.FMSuite.FlowFM.Persistence\DeltaShell.Plugins.FMSuite.FlowFM.Persistence.csproj", "{D82E4026-2BF3-4CD7-B45A-F3C380C02B7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.NetworkEditor.Persistence", "src\Persistence\DeltaShell.Plugins.NetworkEditor.Persistence\DeltaShell.Plugins.NetworkEditor.Persistence.csproj", "{9CA43BED-175E-4863-B19C-855B2853CDBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{466CECF9-C384-40A8-ACC0-55D348EF4E9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DHYDRO.Persistence.Tests", "test\Persistence\DeltaShell.Plugins.DHYDRO.Persistence.Tests\DeltaShell.Plugins.DHYDRO.Persistence.Tests.csproj", "{49C2E3BA-78D0-4992-BDE5-F03AB761B517}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.FMSuite.FlowFM.Persistence.Tests", "test\Persistence\DeltaShell.Plugins.FMSuite.FlowFM.Persistence.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Persistence.Tests.csproj", "{EB032C0B-DBE5-487D-80DF-3D01A52001BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DelftModels.HydroModel.Persistence.Tests", "test\Persistence\DeltaShell.Plugins.DelftModels.HydroModel.Persistence.Tests\DeltaShell.Plugins.DelftModels.HydroModel.Persistence.Tests.csproj", "{D888E301-7833-491A-A036-D5596A988157}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.NetworkEditor.Persistence.Tests", "test\Persistence\DeltaShell.Plugins.NetworkEditor.Persistence.Tests\DeltaShell.Plugins.NetworkEditor.Persistence.Tests.csproj", "{83E2C814-3296-4960-974D-ED204687E346}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DelftModels.RainfallRunoff.Persistence.Tests", "test\Persistence\DeltaShell.Plugins.DelftModels.RainfallRunoff.Persistence.Tests\DeltaShell.Plugins.DelftModels.RainfallRunoff.Persistence.Tests.csproj", "{76566853-9F54-41B9-86F6-740888F1AB12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Persistence.Tests", "test\Persistence\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Persistence.Tests\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Persistence.Tests.csproj", "{FFEE8EFF-1290-4A1F-A9D3-60E7CE86FD21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DelftModels.RealTimeControl.Persistence.Tests", "test\Persistence\DeltaShell.Plugins.DelftModels.RealTimeControl.Persistence.Tests\DeltaShell.Plugins.DelftModels.RealTimeControl.Persistence.Tests.csproj", "{353460D7-5D02-41E3-907D-3B0F21AE7E75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -291,6 +323,62 @@ Global
 		{8BA40318-60B7-4C40-88A1-F30EEFCA3264}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BA40318-60B7-4C40-88A1-F30EEFCA3264}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BA40318-60B7-4C40-88A1-F30EEFCA3264}.Release|Any CPU.Build.0 = Release|Any CPU
+		{109320F7-C784-412F-BDD3-26AD864B7578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{109320F7-C784-412F-BDD3-26AD864B7578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{109320F7-C784-412F-BDD3-26AD864B7578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{109320F7-C784-412F-BDD3-26AD864B7578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E9CF7AC-1C6C-43D6-A899-4BFD22A96098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E9CF7AC-1C6C-43D6-A899-4BFD22A96098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E9CF7AC-1C6C-43D6-A899-4BFD22A96098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E9CF7AC-1C6C-43D6-A899-4BFD22A96098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE35F562-4ADE-47EE-80F4-A4B6EB9A337E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE35F562-4ADE-47EE-80F4-A4B6EB9A337E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE35F562-4ADE-47EE-80F4-A4B6EB9A337E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE35F562-4ADE-47EE-80F4-A4B6EB9A337E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C4F8F88-DE80-41DE-B384-1D1C3181EC3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C4F8F88-DE80-41DE-B384-1D1C3181EC3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C4F8F88-DE80-41DE-B384-1D1C3181EC3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C4F8F88-DE80-41DE-B384-1D1C3181EC3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7071509C-5C9A-4D45-8D0A-B5692E972F56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7071509C-5C9A-4D45-8D0A-B5692E972F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7071509C-5C9A-4D45-8D0A-B5692E972F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7071509C-5C9A-4D45-8D0A-B5692E972F56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D82E4026-2BF3-4CD7-B45A-F3C380C02B7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D82E4026-2BF3-4CD7-B45A-F3C380C02B7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D82E4026-2BF3-4CD7-B45A-F3C380C02B7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D82E4026-2BF3-4CD7-B45A-F3C380C02B7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CA43BED-175E-4863-B19C-855B2853CDBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CA43BED-175E-4863-B19C-855B2853CDBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CA43BED-175E-4863-B19C-855B2853CDBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CA43BED-175E-4863-B19C-855B2853CDBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49C2E3BA-78D0-4992-BDE5-F03AB761B517}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49C2E3BA-78D0-4992-BDE5-F03AB761B517}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49C2E3BA-78D0-4992-BDE5-F03AB761B517}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49C2E3BA-78D0-4992-BDE5-F03AB761B517}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB032C0B-DBE5-487D-80DF-3D01A52001BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB032C0B-DBE5-487D-80DF-3D01A52001BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB032C0B-DBE5-487D-80DF-3D01A52001BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB032C0B-DBE5-487D-80DF-3D01A52001BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D888E301-7833-491A-A036-D5596A988157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D888E301-7833-491A-A036-D5596A988157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D888E301-7833-491A-A036-D5596A988157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D888E301-7833-491A-A036-D5596A988157}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83E2C814-3296-4960-974D-ED204687E346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83E2C814-3296-4960-974D-ED204687E346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83E2C814-3296-4960-974D-ED204687E346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83E2C814-3296-4960-974D-ED204687E346}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76566853-9F54-41B9-86F6-740888F1AB12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76566853-9F54-41B9-86F6-740888F1AB12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76566853-9F54-41B9-86F6-740888F1AB12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76566853-9F54-41B9-86F6-740888F1AB12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFEE8EFF-1290-4A1F-A9D3-60E7CE86FD21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFEE8EFF-1290-4A1F-A9D3-60E7CE86FD21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFEE8EFF-1290-4A1F-A9D3-60E7CE86FD21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFEE8EFF-1290-4A1F-A9D3-60E7CE86FD21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{353460D7-5D02-41E3-907D-3B0F21AE7E75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{353460D7-5D02-41E3-907D-3B0F21AE7E75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{353460D7-5D02-41E3-907D-3B0F21AE7E75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{353460D7-5D02-41E3-907D-3B0F21AE7E75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -341,6 +429,22 @@ Global
 		{4A0F7700-AA64-463F-A602-8C15E3886EC5} = {09A651A9-1AA6-4534-860E-35C1302737FA}
 		{0AE5102C-0560-4A9C-8197-A6D8CA99B5DE} = {CE217C53-5027-48E1-BE6E-2978691F6BCE}
 		{8BA40318-60B7-4C40-88A1-F30EEFCA3264} = {09A651A9-1AA6-4534-860E-35C1302737FA}
+		{B697E5BF-868A-491D-BBEA-CEC63E3843BE} = {CE217C53-5027-48E1-BE6E-2978691F6BCE}
+		{109320F7-C784-412F-BDD3-26AD864B7578} = {B697E5BF-868A-491D-BBEA-CEC63E3843BE}
+		{0E9CF7AC-1C6C-43D6-A899-4BFD22A96098} = {B697E5BF-868A-491D-BBEA-CEC63E3843BE}
+		{CE35F562-4ADE-47EE-80F4-A4B6EB9A337E} = {B697E5BF-868A-491D-BBEA-CEC63E3843BE}
+		{3C4F8F88-DE80-41DE-B384-1D1C3181EC3A} = {B697E5BF-868A-491D-BBEA-CEC63E3843BE}
+		{7071509C-5C9A-4D45-8D0A-B5692E972F56} = {B697E5BF-868A-491D-BBEA-CEC63E3843BE}
+		{D82E4026-2BF3-4CD7-B45A-F3C380C02B7A} = {B697E5BF-868A-491D-BBEA-CEC63E3843BE}
+		{9CA43BED-175E-4863-B19C-855B2853CDBF} = {B697E5BF-868A-491D-BBEA-CEC63E3843BE}
+		{466CECF9-C384-40A8-ACC0-55D348EF4E9F} = {09A651A9-1AA6-4534-860E-35C1302737FA}
+		{49C2E3BA-78D0-4992-BDE5-F03AB761B517} = {466CECF9-C384-40A8-ACC0-55D348EF4E9F}
+		{EB032C0B-DBE5-487D-80DF-3D01A52001BA} = {466CECF9-C384-40A8-ACC0-55D348EF4E9F}
+		{D888E301-7833-491A-A036-D5596A988157} = {466CECF9-C384-40A8-ACC0-55D348EF4E9F}
+		{83E2C814-3296-4960-974D-ED204687E346} = {466CECF9-C384-40A8-ACC0-55D348EF4E9F}
+		{76566853-9F54-41B9-86F6-740888F1AB12} = {466CECF9-C384-40A8-ACC0-55D348EF4E9F}
+		{FFEE8EFF-1290-4A1F-A9D3-60E7CE86FD21} = {466CECF9-C384-40A8-ACC0-55D348EF4E9F}
+		{353460D7-5D02-41E3-907D-3B0F21AE7E75} = {466CECF9-C384-40A8-ACC0-55D348EF4E9F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08DB0000-7081-4B90-A760-F1705EB6D46A}

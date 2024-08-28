@@ -15,18 +15,13 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
@@ -43,18 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
     {
         private static IGui CreateGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new CommonToolsGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROGuiBuilder().WithFlowFM().Build();
         }
         
         [Test]
@@ -301,9 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             var model = new WaterFlowFMModel();
 
-            var fmGuiPlugin = new FlowFMGuiPlugin();
-            var plugins = new List<IPlugin>() { fmGuiPlugin };
-            using (var gui = CreateGui(plugins))
+            using (IGui gui = CreateGui())
             {
                 gui.Run();
 
@@ -328,16 +310,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             var model = new WaterFlowFMModel();
 
-            var networkEditorGuiPlugin = new NetworkEditorGuiPlugin();
-            var plugins = new List<IPlugin>()
-            {
-                new FlowFMGuiPlugin(), 
-                networkEditorGuiPlugin
-            };
-            using (var gui = CreateGui(plugins))
+            using (IGui gui = CreateGui())
             {
                 gui.Run();
-
+                NetworkEditorGuiPlugin networkEditorGuiPlugin = gui.Plugins.OfType<NetworkEditorGuiPlugin>().Single();
                 Project project = gui.Application.ProjectService.CreateProject();
                 project.RootFolder.Add(model);
 
@@ -358,12 +334,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             var model = new WaterFlowFMModel();
 
-            var fmGuiPlugin = new FlowFMGuiPlugin();
-            var plugins = new List<IPlugin>() { fmGuiPlugin };
-            using (var gui = CreateGui(plugins))
+            using (IGui gui = CreateGui())
             {
                 gui.Run();
-
+                FlowFMGuiPlugin fmGuiPlugin = gui.Plugins.OfType<FlowFMGuiPlugin>().Single();
                 Project project = gui.Application.ProjectService.CreateProject();
                 project.RootFolder.Add(model);
 
@@ -385,19 +359,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
 
                 Assert.That(areaChildren.ToList(), Has.Count.EqualTo(1));
             }
-        }
-        
-        private static IGui CreateGui(IEnumerable<IPlugin> plugins)
-        {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-            };
-            pluginsToAdd.AddRange(plugins);
-            
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
         }
 
         private static IEnumerable<object> GenerateChildrenRecursively(IMapLayerProvider provider, object baseElement)

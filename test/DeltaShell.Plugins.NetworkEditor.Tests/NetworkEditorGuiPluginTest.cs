@@ -19,9 +19,7 @@ using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
@@ -29,8 +27,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Geometries;
@@ -73,15 +69,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             {
                 clipboardMock.GetText_Returns_SetText();
                 
-                var pluginsToAdd = new List<IPlugin>()
-                {
-                    new NetworkEditorApplicationPlugin(),
-                    new SharpMapGisApplicationPlugin(),
-                    new ProjectExplorerGuiPlugin(),
-                    new SharpMapGisGuiPlugin(),
-                    new NetworkEditorGuiPlugin(),
-                };
-                using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+                using (var gui = new DHYDROGuiBuilder().Build())
                 {
                     gui.Run();
 
@@ -124,18 +112,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void RenamingNetworkCoverageNodesWrappedWithDataItems()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new CommonToolsGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().Build())
             {
                 var app = gui.Application;
                 
@@ -171,15 +148,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void SelectingSubElementOfNetworkWithNoNetworkViewOpenDoesNotCauseException()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),                
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().Build())
             {
                 var app = gui.Application;
                 
@@ -258,15 +227,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void SelectingAnotherCrossSectionInNetworkTreeCleansViewCorrectly_Tools7425()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().Build())
             {
                 var app = gui.Application;
                 
@@ -343,15 +304,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void ShowPipeViewWithSharedCrossSection()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().Build())
             {
                 var app = gui.Application;
 

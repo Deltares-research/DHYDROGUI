@@ -12,14 +12,13 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.Graph;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Gui;
-using DeltaShell.IntegrationTestUtils;
-using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
@@ -465,7 +464,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void LayoutOfShapesIsRestoredOnViewOpen()
         {
-            using (var gui = new DeltaShellGuiBuilder().Build())
+            using (IGui gui = new DHYDROGuiBuilder().Build())
             {
                 gui.Run();
 

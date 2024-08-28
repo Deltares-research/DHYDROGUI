@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -9,16 +8,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
 using Control = System.Windows.Controls.Control;
@@ -75,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            using (var gui = CreateGuiMinimal())
+            using (var gui = CreateGui())
             {
                 gui.Run();
 
@@ -102,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            using (var gui = CreateGuiMinimal())
+            using (var gui = CreateGui())
             {
                 gui.Run();
 
@@ -137,20 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"harlingen\har.mdu"));
             
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new CommonToolsGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = CreateGui())
             {
                 gui.Run();
 
@@ -172,39 +149,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
-        
-        private static IGui CreateGuiMinimal()
-        {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
-        }
-        
+
         private static IGui CreateGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                //apps : FM+Wave
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                
-                //guis : FM+Wave
-                new CommonToolsGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROGuiBuilder().WithFlowFM().Build();
         }
     }
 }

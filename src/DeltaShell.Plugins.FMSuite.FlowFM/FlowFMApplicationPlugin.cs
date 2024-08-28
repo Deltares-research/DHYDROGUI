@@ -565,11 +565,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public override IEnumerable<System.Reflection.Assembly> GetPersistentAssemblies()
-        {
-            yield return typeof (WaterFlowFMModel).Assembly;
-        }
-
         private WaterFlowFMModel GetModelForArea(HydroArea hydroArea)
         {
             return FlowModels.FirstOrDefault(m => Equals(m.Area, hydroArea));

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
@@ -82,11 +81,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     && !((ICompositeActivity) owner).Activities.OfType<RealTimeControlModel>().Any(), // Don't allow multiple realtime control models in one composite activity
                 CreateModel = owner => new RealTimeControlModel("Real_Time_Control")
             };
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return GetType().Assembly;
         }
 
         public override IEnumerable<IFileExporter> GetFileExporters()

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
@@ -8,16 +7,10 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -37,11 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             {
                 var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\ahn_breach.asc");
                 var mduFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM.mdu");
-                var pluginsToAdd = new List<IPlugin>()
-                {
-                    new FlowFMApplicationPlugin()
-                };
-                using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+
+                using (var app = new DHYDROApplicationBuilder().WithFlowFM().Build())
                 {
                     app.Run();
                     IProjectService projectService = app.ProjectService;
@@ -289,18 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         private static IGui CreateGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROGuiBuilder().WithFlowFM().Build();
         }
         [Test]
         [Category(TestCategory.WindowsForms)]

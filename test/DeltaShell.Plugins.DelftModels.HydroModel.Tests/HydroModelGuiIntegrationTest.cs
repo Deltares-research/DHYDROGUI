@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using DelftTools.Shell.Core;
@@ -7,26 +6,10 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Gui.Forms.MainWindow;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
-using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.ImportExport.Sobek;
-using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -52,32 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private void InitializeGui()
         {
-            //new RunningActivityLogAppender();
-            //HACK: inside this constructor singleton magic happens, this should not be required
-
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new RainfallRunoffApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new SobekImportApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new CommonToolsGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new HydroModelGuiPlugin(),
-                new RealTimeControlGuiPlugin(),
-                new RainfallRunoffGuiPlugin(),
-                new FlowFMGuiPlugin(),
-
-            };
-            gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            gui = new DHYDROGuiBuilder().WithRealTimeControl().WithFlowFM().WithRainfallRunoff().Build();
             gui.Run();
             project = gui.Application.ProjectService.CreateProject();
         }

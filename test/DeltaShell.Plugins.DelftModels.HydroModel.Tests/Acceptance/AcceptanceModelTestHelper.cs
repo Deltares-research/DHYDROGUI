@@ -6,30 +6,9 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Dimr.Gui;
 using DeltaShell.Gui;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
-using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
-using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.ImportExport.Sobek;
-using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.Scripting;
-using DeltaShell.Plugins.Scripting.Gui;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
-using DeltaShell.Plugins.Toolbox;
-using DeltaShell.Plugins.Toolbox.Gui;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 {
@@ -55,35 +34,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         /// <returns>The created <see cref="DeltaShellGui"/> instance.</returns>
         public static IGui CreateRunningDeltaShellGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new DimrGuiPlugin(),
-                new CommonToolsGuiPlugin(),
-                new FlowFMGuiPlugin(),
-                new HydroModelGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new RainfallRunoffGuiPlugin(),
-                new RealTimeControlGuiPlugin(),
-                new ScriptingGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new SobekImportGuiPlugin(),
-                new ToolboxGuiPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new RainfallRunoffApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new SobekImportApplicationPlugin(),
-                new ScriptingApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new ToolboxApplicationPlugin(),
-            };
-            var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
-            
+            var gui = new DHYDROGuiBuilder().WithDimr()
+                                            .WithFlowFM()
+                                            .WithRainfallRunoff()
+                                            .WithRealTimeControl()
+                                            .WithHydroModel()
+                                            .WithSobekImport()
+                                            .Build();
+
             var app = gui.Application;
 
             gui.Run();

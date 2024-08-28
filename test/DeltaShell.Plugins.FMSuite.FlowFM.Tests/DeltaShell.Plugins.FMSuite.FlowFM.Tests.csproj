@@ -36,6 +36,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\Persistence\DeltaShell.Plugins.DHYDRO.Persistence\DeltaShell.Plugins.DHYDRO.Persistence.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
@@ -66,6 +67,10 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Shell.Persistence">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Persistence.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
@@ -88,10 +93,6 @@
     </Reference>
     <Reference Include="DeltaShell.Gui">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DeltaShell.Gui.exe</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DeltaShell.IntegrationTestUtils">
-      <HintPath>$(PkgDeltaShell_TestProject)\lib\net48\DeltaShell.IntegrationTestUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools">

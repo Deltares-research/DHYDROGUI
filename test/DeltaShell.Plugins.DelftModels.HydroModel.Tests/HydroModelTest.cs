@@ -14,6 +14,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
@@ -23,33 +24,23 @@ using DeltaShell.Core.Services;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.Dimr.Export;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.CommonTools;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.CommonTools.Functions;
-using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.ImportExport.Sobek;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NSubstitute;
@@ -138,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Slow)]
         public void AddingRegionsCreatesChildDataItems()
         {
             var hydroModel = new HydroModel();
@@ -155,7 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Slow)]
         public void RemovingModelBreaksLinks()
         {
             var childModel = new SimpleHydroModel();
@@ -423,22 +414,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.WindowsForms), Apartment(ApartmentState.STA)]
         public void CreateNewModelWithRuralAndUrbanNetworkConnectedCheckAfterSaveLoadTheyAreStillConnectedAndYouCanOpenPipeViewInTheGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new CommonToolsGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-                new HydroModelGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (IGui gui = new DHYDROGuiBuilder().WithFlowFM().WithHydroModel().Build())
             {
                 IProjectService projectService = gui.Application.ProjectService;
 
@@ -1217,28 +1193,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static IApplication GetConfiguredApplication()
         {
-            IApplication app = CreateApplication();
+            IApplication app = new DHYDROApplicationBuilder().WithFlowFM().WithRainfallRunoff().WithHydroModel().Build();
             app.Run();
             app.ProjectService.CreateProject();
             return app;
-        }
-
-        private static IApplication CreateApplication()
-        {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                // DeltaShell plugins
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new RainfallRunoffApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new SobekImportApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-
-            };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
 
         private static void SetRequiredSettingsForDimrImport()

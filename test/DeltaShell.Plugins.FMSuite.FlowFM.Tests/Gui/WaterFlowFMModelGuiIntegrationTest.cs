@@ -13,18 +13,10 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -46,16 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
 
@@ -93,16 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
 
@@ -151,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var model = new WaterFlowFMModel();
 
-            using (var gui = CreateGuiMinimal())
+            using (var gui = CreateGui())
             {
                 gui.Run();
 
@@ -189,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             var model = new WaterFlowFMModel(mduPath) {ShowModelRunConsole = true};
 
-            using (var gui = CreateGuiMinimal())
+            using (var gui = CreateGui())
             {
                 gui.Run();
 
@@ -223,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             var model = new WaterFlowFMModel(mduPath) { ShowModelRunConsole = true };
 
-            using (var gui = CreateGuiMinimal())
+            using (var gui = CreateGui())
             {
                 gui.Run();
 
@@ -255,18 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void ImportingOfDryPointsWithProjectItemMapViewOpenShouldBeFast()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new CommonToolsApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = CreateGui())
             {
                 gui.Run();
                 gui.Application.ProjectService.CreateProject();
@@ -327,19 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void DrawingPipeCorrectlyAddsCompartmentsToCompartmentLayer()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new CommonToolsGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
 
@@ -376,25 +327,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, formVisibleChangedAction);
             }
         }
-        private static IGui CreateGuiMinimal()
+        private static IGui CreateGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROGuiBuilder().WithFlowFM().Build();
         }
         
         [Test]
         [Category(TestCategory.Wpf)]
         public void MapRibbonGroupsShouldBeSorted()
         {
-            using (var gui = CreateGuiMinimal())
+            using (var gui = CreateGui())
             {
                 gui.Run();
 

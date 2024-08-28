@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -10,8 +9,8 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DeltaShell.IntegrationTestUtils.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
-using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
@@ -119,15 +118,10 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 Assert.AreEqual(1, retrievedNetwork.BranchFeatures.Count());
             }
         }
-        
-        protected NHibernateProjectRepository CreateProjectRepository()
+
+        private NHibernateProjectRepository CreateProjectRepository()
         {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new NetworkEditorApplicationPlugin()
-            };
-            NHibernateProjectRepository projectRepository = new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
-            return projectRepository;
+            return new DHYDRONHibernateProjectRepositoryBuilder().Build();
         }
     }
 }

@@ -8,14 +8,8 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
@@ -36,17 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             try
             {
-                var pluginsToAdd = new List<IPlugin>()
-                {
-                    new SharpMapGisApplicationPlugin(),
-                    new NetworkEditorApplicationPlugin(),
-                    new FlowFMApplicationPlugin(),
-                    new ProjectExplorerGuiPlugin(),
-                    new SharpMapGisGuiPlugin(),
-                    new FlowFMGuiPlugin(),
-                    new NetworkEditorGuiPlugin(),
-                };
-                using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+                using (var gui = new DHYDROGuiBuilder().WithFlowFM().Build())
                 {
                     var app = gui.Application;
                     gui.Run();

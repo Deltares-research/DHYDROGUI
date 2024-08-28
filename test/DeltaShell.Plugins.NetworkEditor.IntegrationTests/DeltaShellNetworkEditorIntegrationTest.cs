@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -9,11 +8,8 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
@@ -35,14 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Category(TestCategory.Performance)]
         public void PerformanceOfTableCellsSelectionShouldBeFast()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),                
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().Build())
             {
                 gui.Run();
                 IProjectService projectService = gui.Application.ProjectService;

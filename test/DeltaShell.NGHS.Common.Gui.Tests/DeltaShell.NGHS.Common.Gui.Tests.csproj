@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\Persistence\DeltaShell.Plugins.DHYDRO.Persistence\DeltaShell.Plugins.DHYDRO.Persistence.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
   </ItemGroup>
 
@@ -35,6 +36,10 @@
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Persistence">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Persistence.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">

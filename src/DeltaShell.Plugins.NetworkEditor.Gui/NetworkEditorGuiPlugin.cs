@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
@@ -683,12 +682,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new FeatureProjectTreeViewNodePresenter<Gully>(HydroArea.GullyName, Properties.Resources.Gully) { GuiPlugin = this };
             yield return new RoughnessSectionNodePresenter { GuiPlugin = this };
 
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return typeof(WmtsGroupLayer).Assembly;
-            yield return GetType().Assembly;
         }
 
         public void InitializeHydroRegionTreeView()

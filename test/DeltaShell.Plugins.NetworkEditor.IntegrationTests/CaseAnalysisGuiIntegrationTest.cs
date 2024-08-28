@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.NetCDF;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis;
-using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
@@ -43,14 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Category(TestCategory.Slow)]
         public void PerformOperationOnCopiedItemWorksOk()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().Build())
             {
                 gui.Run();
 

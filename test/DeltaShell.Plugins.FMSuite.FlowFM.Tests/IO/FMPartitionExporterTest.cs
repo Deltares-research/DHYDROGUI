@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -20,11 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     {
         private static IApplication CreateApplication()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new FlowFMApplicationPlugin()
-            };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROApplicationBuilder().WithFlowFM().Build();
         }
         [Test]
         public void PartitionStandAloneGrid3Domains()

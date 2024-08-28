@@ -24,6 +24,8 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\Persistence\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Persistence\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Persistence.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\Persistence\DeltaShell.Plugins.DelftModels.RealTimeControl.Persistence\DeltaShell.Plugins.DelftModels.RealTimeControl.Persistence.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.Tests.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
@@ -54,6 +56,10 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Shell.Persistence">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Persistence.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
@@ -78,12 +84,12 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.Plugins.CommonTools.Gui">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="DeltaShell.Plugins.Data.NHibernate">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.Persistence">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Persistence\DeltaShell.Plugins.Persistence.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.ProjectExplorer">

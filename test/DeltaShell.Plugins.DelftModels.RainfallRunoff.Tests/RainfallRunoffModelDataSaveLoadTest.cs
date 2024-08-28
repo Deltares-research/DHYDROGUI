@@ -10,19 +10,12 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Unpaved;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
-using DeltaShell.Plugins.ImportExport.Sobek;
-using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -838,18 +831,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
         private static IApplication CreateRunningApplication()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new CommonToolsApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new RainfallRunoffApplicationPlugin(),
-                new SobekImportApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-            };
-            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            var app = new DHYDROApplicationBuilder().WithRainfallRunoff().Build();
             app.Run();
             app.ProjectService.CreateProject();
             return app;

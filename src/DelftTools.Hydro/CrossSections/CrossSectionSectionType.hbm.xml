@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DelftTools.Hydro.CrossSections" assembly="DelftTools.Hydro">
-  <class name="CrossSectionSectionType" table="crosssection_sectiontype">
-    <id name="Id" column="id" type="Int64" unsaved-value="0" access="property" >
-      <generator class="increment" />
-    </id>
-    <property name="Name" column="name" />
-  </class>
-</hibernate-mapping>

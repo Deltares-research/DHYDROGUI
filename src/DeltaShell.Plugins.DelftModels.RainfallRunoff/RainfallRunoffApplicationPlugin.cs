@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
@@ -213,11 +212,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             yield return new MeteoDataExporter(evaporationExporter); 
             yield return new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer(), evaporationExporter); 
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return GetType().Assembly;
         }
 
         private static IEnumerable<RainfallRunoffModel> GetModels(Project project)

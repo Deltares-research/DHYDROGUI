@@ -11,19 +11,9 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -405,16 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 projectService.SaveProjectAs(dsprojName);
             }
 
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-            };
-            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var app = new DHYDROApplicationBuilder().WithFlowFM().WithRealTimeControl().Build())
             {
                 app.Run();
 
@@ -495,60 +476,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         
         private static IApplication CreateApplication()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-            };
-
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROApplicationBuilder().WithFlowFM().Build();
         }
         
         private static IGui CreateGuiWithRTC()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                //apps : FM+Wave
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),                
-                new NetworkEditorApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-
-                //guis : FM+Wave
-                new CommonToolsGuiPlugin(),
-                new SharpMapGisGuiPlugin(),                
-                new NetworkEditorGuiPlugin(),
-                new FlowFMGuiPlugin(),
-                
-                // RTC
-                new RealTimeControlApplicationPlugin(),
-                new RealTimeControlGuiPlugin(),
-            };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROGuiBuilder().WithFlowFM().WithRealTimeControl().Build();
         }
         
         private static IGui CreateGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                //apps : FM+Wave
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                
-                //guis : FM+Wave
-                new CommonToolsGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROGuiBuilder().WithFlowFM().Build();
         }
     }
 }

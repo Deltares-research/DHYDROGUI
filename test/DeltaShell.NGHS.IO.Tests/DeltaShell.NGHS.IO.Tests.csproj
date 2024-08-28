@@ -48,10 +48,6 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DeltaShell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.Plugins.SharpMapGis">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="GeoAPI">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>

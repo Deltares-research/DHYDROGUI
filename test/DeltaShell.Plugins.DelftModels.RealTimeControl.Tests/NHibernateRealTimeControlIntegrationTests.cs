@@ -4,17 +4,15 @@ using System.Drawing;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
-using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using SharpTestsEx;
@@ -393,13 +391,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         protected override NHibernateProjectRepository CreateProjectRepository()
         {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new RealTimeControlGuiPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new RealTimeControlApplicationPlugin()
-            };
-            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
+            return new DHYDRONHibernateProjectRepositoryBuilder().WithRealTimeControl().Build();
         }
     }
 }

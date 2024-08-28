@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Windows.Forms.Integration;
 using DelftTools.Hydro;
@@ -8,13 +7,10 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
-using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -31,14 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Category(TestCategory.Slow)]
         public void ShowFMWeirShouldDisplayFMWeirView()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new CommonToolsApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().Build())
             {
                 gui.Run();
 
@@ -90,14 +79,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Category(TestCategory.Slow)]
         public void ShowFMPumpShouldDisplaySreaStructureViewWithPumpView()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new CommonToolsApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().Build())
             {
                 gui.Run();
 

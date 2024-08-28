@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
 using NUnit.Framework;
@@ -28,11 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
         [Category(TestCategory.Slow)]
         public void ShowComputationalGridDialog()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NetworkEditorApplicationPlugin()
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().Build())
             {
                 var app = gui.Application;
                 app.UserSettings["autosaveWindowLayout"] = false;

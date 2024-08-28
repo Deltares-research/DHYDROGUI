@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using BruTile.Wmts;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Reflection;
 using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.NGHS.Common.Gui.MapLayers;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using NSubstitute;
 using NUnit.Framework;
@@ -67,9 +67,7 @@ namespace DeltaShell.NGHS.Common.Gui.Tests
         
         protected override NHibernateProjectRepository CreateProjectRepository()
         {
-            var projectRepository = base.CreateProjectRepository();
-            projectRepository.AddMappingStreams(AssemblyUtils.GetAssemblyResourceStreams(typeof(WmtsGroupLayer).Assembly, s => s.EndsWith(".hbm.xml")));
-            return projectRepository;
+            return new DHYDRONHibernateProjectRepositoryBuilder().Build();
         }
     }
 }

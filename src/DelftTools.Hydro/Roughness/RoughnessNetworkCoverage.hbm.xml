@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DelftTools.Hydro.Roughness" assembly="DelftTools.Hydro">
-  <subclass name="RoughnessNetworkCoverage" discriminator-value="RoughnessNetworkCoverage" extends="NetTopologySuite.Extensions.Coverages.NetworkCoverage" lazy="false" >
-
-    <meta attribute="oldClassName">DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessNetworkCoverage, DeltaShell.Plugins.DelftModels.WaterFlowModel</meta>
-
-  </subclass>
-
-</hibernate-mapping>

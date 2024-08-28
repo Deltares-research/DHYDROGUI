@@ -17,13 +17,10 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.IntegrationTestUtils.NHibernate;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -1076,15 +1073,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
         private static IGui CreateRunningGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-            };
-            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DHYDROGuiBuilder().Build();
 
             gui.Run();
 
@@ -1093,11 +1082,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         
         private static NHibernateProjectRepository CreateProjectRepository()
         {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new NetworkEditorApplicationPlugin(),
-            };
-            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
+            return new DHYDRONHibernateProjectRepositoryBuilder().Build();
         }
 
         private static IProjectService GetProjectServiceWithProject(IGui gui)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
@@ -8,13 +7,12 @@ using DelftTools.Shell.Core.Plugins;
 using DelftTools.Shell.Core.Settings;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.Data.NHibernate.ProjectPersistence;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
-using DeltaShell.Plugins.NetworkEditor;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -143,12 +141,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         
         private static NHibernateProjectRepository CreateProjectRepository()
         {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new RainfallRunoffApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-            };
-            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
+            return new DHYDRONHibernateProjectRepositoryBuilder().WithRainfallRunoff().Build();
         }
     }
 }
