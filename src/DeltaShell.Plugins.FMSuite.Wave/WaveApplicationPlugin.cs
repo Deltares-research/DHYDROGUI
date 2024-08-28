@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
@@ -100,16 +99,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             yield return new Delft3DGridFileExporter();
         }
 
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return typeof(WaveModel).Assembly;
-        }
-
         private void Application_ProjectOpening(object sender, EventArgs<string> e)
         {
             string projectFilePath = e.Value;
-            Version projectVersion = Application.ProjectService.GetProjectFileInfo(projectFilePath).PluginFileFormatVersions[Name];
-            WavesMigrator.Migrate(projectFilePath, projectVersion, System.Version.Parse(FileFormatVersion));
+
+            Version persistedPluginVersion = GetPersistedPluginVersion(projectFilePath);
+            WavesMigrator.Migrate(projectFilePath, persistedPluginVersion, System.Version.Parse(FileFormatVersion));
+        }
+
+        // TODO this is not a nice solution.
+        private Version GetPersistedPluginVersion(string projectFilePath)
+        {
+            IDictionary<string, Version> pluginFileFormatVersions = Application.ProjectService.GetProjectFileInfo(projectFilePath).PluginFileFormatVersions;
+            return pluginFileFormatVersions.TryGetValue(Name, out Version version)
+                       ? version
+                       : pluginFileFormatVersions["D-Waves domain persistence plugin"];
         }
 
         private void Application_ProjectOpened(object sender, EventArgs<Project> e)

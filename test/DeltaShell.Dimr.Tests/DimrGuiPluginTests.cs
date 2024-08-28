@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Shell.Core;
+﻿using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Dimr.Gui.Properties;
-using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.NGHS.TestUtils.Builders;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -18,14 +16,10 @@ namespace DeltaShell.Dimr.Tests
         [Test]
         public void TestDimrGuiPlugin()
         {
-            var dimrGuiPlugin = new DimrGuiPlugin();
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                dimrGuiPlugin
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().WithDimr().Build())
             {
                 gui.Run();
+                var dimrGuiPlugin = gui.Plugins.OfType<DimrGuiPlugin>().Single();
                 Assert.AreEqual(dimrGuiPlugin, DimrGuiPlugin.Instance);
                 Assert.AreEqual("Dimr (UI)", DimrGuiPlugin.Instance.Name);
                 Assert.AreEqual(Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
@@ -77,16 +71,6 @@ namespace DeltaShell.Dimr.Tests
             }
 
             mocks.VerifyAll();
-        }
-
-        [Test]
-        public void TestGetPersistentAssemblies()
-        {
-            using (var dimrGuiPlugin = new DimrGuiPlugin())
-            {
-                Assert.True(dimrGuiPlugin.GetPersistentAssemblies().Contains(typeof(DimrGuiPlugin).Assembly));
-                Assert.AreEqual(1, dimrGuiPlugin.GetPersistentAssemblies().Count());
-            }
         }
     }
 }

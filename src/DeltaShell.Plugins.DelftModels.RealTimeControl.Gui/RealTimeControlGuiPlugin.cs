@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using DelftTools.Controls;
@@ -28,7 +27,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using DeltaShell.Plugins.DelftModels.RTCShapes.IO;
-using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
@@ -226,12 +224,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return new ControlGroupNodePresenter(this);
             yield return new RestartFileNodePresenter<RealTimeControlRestartFile>(this);
             yield return new OutputTreeFolderNodePresenter();
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return GetType().Assembly;
-            yield return typeof(ShapeBase).Assembly;
         }
 
         private void ApplicationProjectOpened(object sender, EventArgs<Project> e)

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -17,32 +16,18 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.Gui.Forms.MainWindow;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
-using DeltaShell.Plugins.FMSuite.Wave.Gui;
-using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
@@ -249,28 +234,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             new RunningActivityLogAppender();
             //HACK: inside this constructor singleton magic happens, this should not be required
 
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new WaterQualityModelApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new WaveApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new CommonToolsGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new HydroModelGuiPlugin(),
-                new RealTimeControlGuiPlugin(),
-                new FlowFMGuiPlugin(),
-                new WaveGuiPlugin(),
-            };
-            
-            gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            gui = new DHYDROGuiBuilder().WithHydroModel().WithRealTimeControl().WithWaterQuality().WithFlowFM().WithWaves().Build();
             app = gui.Application;
             gui.Run();
             project = gui.Application.ProjectService.CreateProject();

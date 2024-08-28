@@ -11,14 +11,13 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui.Forms.ViewManager;
-using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -167,18 +166,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         private static IGui CreateDeltaShellGuiWithMonitoringOutputView()
         {
-            var waterQualityModel1DGuiPlugin = new WaterQualityModelGuiPlugin();
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new WaterQualityModelApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new SharpMapGisGuiPlugin(),
-                waterQualityModel1DGuiPlugin
-            };
-            
-            var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            var gui = new DHYDROGuiBuilder().WithWaterQuality().Build();
 
             gui.Run();
+            WaterQualityModelGuiPlugin waterQualityModel1DGuiPlugin = gui.Plugins.OfType<WaterQualityModelGuiPlugin>().Single();
             IProjectService projectService = gui.Application.ProjectService;
             Project project = projectService.CreateProject();
             

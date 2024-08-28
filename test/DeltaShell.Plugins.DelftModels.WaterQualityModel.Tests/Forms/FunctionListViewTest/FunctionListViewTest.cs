@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionListView;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
@@ -59,12 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
         [Category(TestCategory.Slow)]
         public void TestShowFunctionListViewWithDataAndFunctionCreators()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new CommonToolsApplicationPlugin(),
-                new CommonToolsGuiPlugin()
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().Build())
             {
                 gui.Run();
 

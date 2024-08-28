@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
@@ -356,8 +356,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
         protected override NHibernateProjectRepository CreateProjectRepository()
         {
-            var additionalPlugins = new List<IPlugin> { new WaterQualityModelApplicationPlugin() };
-            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
+            return new DHYDRONHibernateProjectRepositoryBuilder().WithWaterQuality().Build();
         }
     }
 }

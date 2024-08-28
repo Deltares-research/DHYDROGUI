@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
 using NUnit.Framework;
@@ -18,12 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenHydroModel_WhenAddingWaveModelAsOnlyActivity_ThenWaveCommunicationsFilePathIsEmpty()
         {
             // Arrange
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new HydroModelApplicationPlugin(),
-                new WaveApplicationPlugin(),
-            };
-            using (IApplication app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+            using (IApplication app = new DHYDROApplicationBuilder().WithHydroModel().WithWaves().Build())
             {
                 app.Run();
 
@@ -126,14 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         
         private static IApplication CreateApplication()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new HydroModelApplicationPlugin(),
-                new WaveApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-
-            };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROApplicationBuilder().WithHydroModel().WithWaves().WithFlowFM().Build();
         }
     }
 }

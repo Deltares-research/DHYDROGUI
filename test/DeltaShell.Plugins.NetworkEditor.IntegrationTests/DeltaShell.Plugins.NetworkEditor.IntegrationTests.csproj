@@ -40,40 +40,12 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.Plugins.Data.NHibernate">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="DeltaShell.Plugins.NetCDF">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.Plugins.ProjectExplorer">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DeltaShell.Plugins.SharpMapGis">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="GeoAPI.Extensions">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NetTopologySuite">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
@@ -90,20 +62,13 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SharpMap.Api">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.Api.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SharpMap.UI">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoFixture" />

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain"
+                   assembly="DeltaShell.Plugins.DelftModels.RealTimeControl">
+
+  <subclass name="Input" lazy="false" extends="IInput" discriminator-value="rtc_inputs">
+    <meta attribute="anyType">IValueConverter.OriginalValue</meta>
+
+    <!--Because IInput does not inherit from RtcBaseObject in the hbm files Name and Longname must be separately saved.-->
+    <property name="Name" column="name" />
+    <property name="LongName" column="LongName" />
+
+    <!--Because the ConnectionPoint table has been removed for IInput and mathematical Expression. these values have to be stored using the code below.
+    This is duplicated in the Output.hbm file. -->
+    <property name="Value" />
+    <property name="ParameterName" />
+    <property name="UnitName" />
+    <many-to-one access="property"
+                 name="Feature"
+                 cascade="save-update"
+                 class="GeoAPI.Extensions.Feature.IFeature, GeoAPI.Extensions"
+                 column="feature_id" />
+
+  </subclass>
+</hibernate-mapping>

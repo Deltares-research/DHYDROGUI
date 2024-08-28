@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -100,11 +98,6 @@ namespace DeltaShell.Dimr.Gui
 
             base.Dispose(disposing);
             disposed = true;
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return GetType().Assembly;
         }
     }
 }

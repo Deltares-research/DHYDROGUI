@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -11,7 +9,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.FunctionStores;
 using GeoAPI.Extensions.Feature;
 using Mono.Addins;
 
@@ -29,13 +26,6 @@ namespace DeltaShell.Plugins.NetworkEditor
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         public override string FileFormatVersion => "3.5.2.0";
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return typeof(HydroRegion).Assembly;
-            yield return typeof(ReadOnlyMapHisFileFunctionStore).Assembly;
-            yield return GetType().Assembly;
-        }
 
         public override void Activate()
         {

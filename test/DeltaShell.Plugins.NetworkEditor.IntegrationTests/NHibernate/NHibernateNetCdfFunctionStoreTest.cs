@@ -10,12 +10,9 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.IntegrationTestUtils.NHibernate;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -290,15 +287,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
         private static IGui CreateRunningGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-            };
-            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DHYDROGuiBuilder().Build();
 
             gui.Run();
 

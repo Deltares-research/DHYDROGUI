@@ -14,21 +14,12 @@ using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
-using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
@@ -38,16 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     {
         private static IGui CreateRunningGui()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DHYDROGuiBuilder().WithFlowFM().Build();
 
             gui.Run();
 
@@ -259,23 +241,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void GivenARunningGui_WhenSavingClosingAndOpeningTheSameProject_ShouldReturnAProjectTreeWithOutputReferencedToTheLastInstanceOfTheModel()
         {
-            
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new CommonToolsGuiPlugin(),
-                new FlowFMGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new SharpMapGisGuiPlugin(),                
-                new CommonToolsApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-            };
             using (var tempDirectory = new TemporaryDirectory())
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = new DHYDROGuiBuilder().WithFlowFM().Build())
             {
                 gui.Run();
                 

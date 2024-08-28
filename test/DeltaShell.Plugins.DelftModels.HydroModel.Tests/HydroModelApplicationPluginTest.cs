@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
@@ -7,8 +8,8 @@ using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -54,9 +55,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_HydroModel()
         {
-            var appPlugin = new HydroModelApplicationPlugin();
-            using (var app = CreateAndStartApplication(appPlugin))
+            using (var app = CreateRunningApplication())
             {
+                var appPlugin = app.Plugins.OfType<HydroModelApplicationPlugin>().Single();
                 Project project = app.ProjectService.CreateProject();
                 
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
@@ -72,9 +73,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_RealTimeControl()
         {
-            var appPlugin = new RealTimeControlApplicationPlugin();
-            using (IApplication app = CreateAndStartApplication(appPlugin))
+            using (IApplication app = CreateRunningApplication(b => b.WithRealTimeControl()))
             {
+                var appPlugin = app.Plugins.OfType<RealTimeControlApplicationPlugin>().Single();
                 Project project = app.ProjectService.CreateProject();
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
@@ -89,9 +90,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_WaterQuality()
         {
-            var appPlugin = new HydroModelApplicationPlugin();
-            using (IApplication app = CreateAndStartApplication(appPlugin))
+            using (IApplication app = CreateRunningApplication())
             {
+                var appPlugin = app.Plugins.OfType<HydroModelApplicationPlugin>().Single();
                 Project project = app.ProjectService.CreateProject();
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
@@ -107,11 +108,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Slow)]
         public void AdditionalOwnerCheckTest_FlowFM()
         {
-            var appPlugin = new FlowFMApplicationPlugin();
-            var pluginsToAdd = new List<IPlugin>() { appPlugin };
-            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var app = CreateRunningApplication(b => b.WithFlowFM()))
             {
-                app.Run();
+                var appPlugin = app.Plugins.OfType<FlowFMApplicationPlugin>().Single();
                 Project project = app.ProjectService.CreateProject();
 
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
@@ -128,7 +127,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void AdditionalOwnerCheckTest_Wave()
         {
             var appPlugin = new WaveApplicationPlugin();
-            using (IApplication app = CreateAndStartApplication(appPlugin))
+            using (IApplication app = CreateRunningApplication(b => b.WithWaves()))
             {
                 Project project = app.ProjectService.CreateProject();
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
@@ -145,31 +144,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Integration)]
         public void GetParentProjectItem_WhenSelectionIsCompositeActivity_ThenHelperMethodReturnsCompositeActivityAndThisWillBeUsed()
         {
-            var hydroModelApplicationPlugin = new HydroModelApplicationPlugin();
-            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(hydroModelApplicationPlugin);
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull<HydroModelApplicationPlugin>(
+                b => b.WithHydroModel());
         }
 
         [Test]
         [Category(TestCategory.Integration)]
         public void GetParentProjectItem_WhenSelectionIsNull_ThenHelperMethodReturnsNullAndRootFolderWillBeUsed()
         {
-            var hydroModelApplicationPlugin = new HydroModelApplicationPlugin();
-            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(hydroModelApplicationPlugin);
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull<HydroModelApplicationPlugin>(
+                b => b.WithHydroModel());
         }
         
         [Test]
         public void GivenAnApplicationWithHydroModelPluginLoaded_WhenAHydroModelIsAdded_ThenTheRegisteredFileExportersShouldBeSet()
         {
             // Setup
-            var hydroModelAppPlugin = new HydroModelApplicationPlugin();
-            var plugins = new List<IPlugin> { hydroModelAppPlugin };
-            
-            using (var application = new DeltaShellApplicationBuilder().WithPlugins(plugins).Build())
+            using (var application = CreateRunningApplication())
             {
                 // Given
                 var model = new HydroModel();
 
-                application.Run();
                 Project project = application.ProjectService.CreateProject();
 
                 // Call
@@ -185,15 +180,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnApplicationWithHydroModelAndFlowFmPluginLoaded_WhenGettingFileImporters_ThenADimrImporterShouldBeReturnedThatCanImportOnWaterFlowFMModel()
         {
             // Given
-            var hydroModelAppPlugin = new HydroModelApplicationPlugin();
-            var pluginsToAdd = new List<IPlugin>()
+            using (var application = CreateRunningApplication(b => b.WithHydroModel().WithFlowFM()))
             {
-                hydroModelAppPlugin,
-                new FlowFMApplicationPlugin(),
-            };
-            using (var application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                application.Run();
+                var hydroModelAppPlugin = application.Plugins.OfType<HydroModelApplicationPlugin>().Single();
 
                 // When 
                 IEnumerable<IFileImporter> applicationFileImporters = hydroModelAppPlugin.GetFileImporters().ToArray();
@@ -241,7 +230,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProject_WhenAModelIsAdded_ThenModelNameShouldBeTrimmed()
         {
             // Setup
-            using (var app = CreateApplication())
+            using (var app = CreateRunningApplication())
             {
                 Project project = app.ProjectService.CreateProject();
                 
@@ -261,7 +250,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProjectWithAModel_WhenRenamingTheModel_TheModelNameShouldBeTrimmed()
         {
             // Setup
-            using (var app = CreateApplication())
+            using (var app = CreateRunningApplication())
             {
                 Project project = app.ProjectService.CreateProject();
                 
@@ -283,7 +272,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProject_WhenAddingAModelWithAChildModel_ThenModelNamesAreTrimmed()
         {
             // Setup
-            using (var app = CreateApplication())
+            using (var app = CreateRunningApplication())
             {
                 Project project = app.ProjectService.CreateProject();
                 
@@ -380,16 +369,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             // Assert
             Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
-        }
-
-        private IApplication CreateAndStartApplication(IPlugin applicationPlugin)
-        {
-            var pluginsToAdd = new List<IPlugin> { applicationPlugin };
-            IApplication app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
-            
-            app.Run();
-            
-            return app;
         }
 
         [TestCase("Unique", "Unique (1)")]
@@ -492,7 +471,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static IApplication CreateApplicationWithModel(string modelName)
         {
-            IApplication application = CreateApplication();
+            IApplication application = CreateRunningApplication();
 
             var model = Substitute.For<IModel>();
             model.Name = modelName;
@@ -503,16 +482,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             return application;
         }
 
-        private static IApplication CreateApplication()
+        private static IApplication CreateRunningApplication()
         {
-            var pluginsToAdd = new List<IPlugin> { new HydroModelApplicationPlugin() };
-            IApplication application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            return CreateRunningApplication(b => b.WithHydroModel());
+        }
 
+        private static IApplication CreateRunningApplication(Func<DHYDROApplicationBuilder, DHYDROApplicationBuilder> function)
+        {
+            var builder = new DHYDROApplicationBuilder();
+            IApplication application = function(builder).Build();
             application.Run();
-            
             return application;
         }
-        
+
         private static void AddToProject(object obj, IProjectService projectService)
         {
             var project = new Project();

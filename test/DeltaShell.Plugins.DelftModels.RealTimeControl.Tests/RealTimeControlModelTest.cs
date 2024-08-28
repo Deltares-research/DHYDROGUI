@@ -17,21 +17,17 @@ using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
-using DeltaShell.Plugins.ProjectExplorer;
 using GeoAPI.Extensions.Feature;
 using NSubstitute;
 using NUnit.Framework;
@@ -2539,15 +2535,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         
         private static IGui CreateGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new CommonToolsApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new CommonToolsGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new RealTimeControlGuiPlugin(),
-            };
-            var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            var gui = new DHYDROGuiBuilder().WithRealTimeControl().Build();
             
             gui.Run();
             return gui;

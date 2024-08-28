@@ -8,21 +8,13 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
@@ -43,20 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             const int expectedNumberOfLayers = 13;
 
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new CommonToolsGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var gui = CreateGui())
             {
                 gui.Run();
 
@@ -388,20 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         private static IGui CreateGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new CommonToolsGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROGuiBuilder().WithFlowFM().Build();
         }
 
         private static IEventedList<ILayer> SnappedLayers(IGui gui, string netFile)

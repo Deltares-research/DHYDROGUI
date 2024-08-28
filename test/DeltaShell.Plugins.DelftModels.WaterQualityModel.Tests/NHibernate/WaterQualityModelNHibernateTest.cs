@@ -9,21 +9,15 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.IntegrationTestUtils.NHibernate;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
-using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
-using DeltaShell.Plugins.Toolbox;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -683,26 +677,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         
         private static IApplication CreateApplication()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new CommonToolsApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new ToolboxApplicationPlugin(),
-                new WaterQualityModelApplicationPlugin(),
-            };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROApplicationBuilder().WithWaterQuality().Build();
         }
 
         protected override NHibernateProjectRepository CreateProjectRepository()
         {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new WaterQualityModelApplicationPlugin()
-            };
-            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
+            return new DHYDRONHibernateProjectRepositoryBuilder().WithWaterQuality().Build();
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
@@ -10,18 +9,11 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using Deltares.Infrastructure.API.DependencyInjection;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate;
-using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.Scripting;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.Toolbox;
 using NSubstitute;
 using NUnit.Framework;
 using LifeCycle = Deltares.Infrastructure.API.DependencyInjection.LifeCycle;
@@ -71,18 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Integration)]
         public void GivenAModel_WhenModelIsRenamed_DataDirectoryPathIsChanged()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                plugin,
-                new CommonToolsApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new ScriptingApplicationPlugin(),
-                new ToolboxApplicationPlugin(),
-            };
-            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+            using (var app = GetConfiguredApplication())
             {
                 var waqModel = new WaterQualityModel {Name = "WAQ1"};
                
@@ -186,14 +167,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Integration)]
         public void GetParentProjectItem_WhenSelectionIsCompositeActivity_ThenHelperMethodReturnsCompositeActivityAndThisWillBeUsed()
         {
-            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(plugin);
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull<WaterQualityModelApplicationPlugin>(
+                b => b.WithWaterQuality());
         }
 
         [Test]
         [Category(TestCategory.Integration)]
         public void GetParentProjectItem_WhenSelectionIsNull_ThenHelperMethodReturnsNullAndRootFolderWillBeUsed()
         {
-            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(plugin);
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull<WaterQualityModelApplicationPlugin>(
+                b => b.WithWaterQuality());
         }
 
         [Test]
@@ -368,20 +351,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void GetPersistentAssemblies_ThenCorrectAssembliesAreReturned()
-        {
-            // Call
-            Assembly[] assemblies = plugin.GetPersistentAssemblies().ToArray();
-
-            // Assert
-            Assert.That(assemblies.Length, Is.EqualTo(2));
-            Assert.That(assemblies.Contains(typeof(FileBasedFolder).Assembly));
-            Assert.That(assemblies.Contains(typeof(WaterQualityModelApplicationPlugin).Assembly));
-        }
-
-        [Test]
         public void AddRegistrations_RegistersServicesCorrectly()
         {
+            var plugin = new WaterQualityModelApplicationPlugin();
             var container = Substitute.For<IDependencyInjectionContainer>();
 
             plugin.AddRegistrations(container);
@@ -399,22 +371,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         private void SetupWaterQualityApplicationPlugin(
             string workingDirectoryPath)
         {
-            var app = new DeltaShellApplicationBuilder().Build();
+            var app = new DHYDROApplicationBuilder().Build();
             app.UserSettings =  ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             plugin.Application = app;
         }
 
-        private IApplication GetConfiguredApplication()
+        private static IApplication GetConfiguredApplication()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                plugin,
-
-            };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROApplicationBuilder().WithWaterQuality().Build();
         }
     }
 }

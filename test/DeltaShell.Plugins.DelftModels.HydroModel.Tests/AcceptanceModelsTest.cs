@@ -9,35 +9,14 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
 using Deltares.Infrastructure.Extensions;
-using DeltaShell.Dimr.Gui;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
-using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
-using DeltaShell.Plugins.FMSuite.Wave.Gui;
-using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.Scripting;
-using DeltaShell.Plugins.Scripting.Gui;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
-using DeltaShell.Plugins.Toolbox;
-using DeltaShell.Plugins.Toolbox.Gui;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -201,34 +180,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static IGui CreateGui()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new DimrGuiPlugin(),
-                new CommonToolsGuiPlugin(),
-                new FlowFMGuiPlugin(),
-                new WaveGuiPlugin(),
-                new HydroModelGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new RealTimeControlGuiPlugin(),
-                new ScriptingGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new ToolboxGuiPlugin(),
-                new WaterQualityModelGuiPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new WaveApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new ScriptingApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new ToolboxApplicationPlugin(),
-                new WaterQualityModelApplicationPlugin(),
-            };
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROGuiBuilder().WithDimr()
+                                         .WithFlowFM()
+                                         .WithWaves()
+                                         .WithHydroModel()
+                                         .WithRealTimeControl()
+                                         .WithWaterQuality()
+                                         .Build();
         }
 
         private static void CheckIfOutputHasBeenCreated(DimrXmlConfig dimrXmlConfig, IApplication app, string rootModelOriginalDimrXmlName)

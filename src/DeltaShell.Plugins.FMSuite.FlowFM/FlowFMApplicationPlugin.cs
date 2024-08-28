@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
@@ -543,11 +542,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 windItemExporter.ReferenceDateGetter = w => GetModelForWindField(w).ReferenceTime;
                 yield return windItemExporter;
             }
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return typeof(WaterFlowFMModel).Assembly;
         }
 
         private IEnumerable<WaterFlowFMModel> FlowModels =>

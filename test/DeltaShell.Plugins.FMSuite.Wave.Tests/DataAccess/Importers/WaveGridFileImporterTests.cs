@@ -6,13 +6,10 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
-using DeltaShell.Plugins.SharpMapGis;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
@@ -311,13 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
 
         private static IApplication CreateApplication()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-            };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROApplicationBuilder().Build();
         }
 
         private static CurvilinearGrid CreateCurvilinearGrid(int length, int width)

@@ -5,13 +5,7 @@ using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.Wave;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
+using DeltaShell.NGHS.TestUtils.Builders;
 using log4net.Core;
 using NSubstitute;
 using NUnit.Framework;
@@ -76,18 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
         private static IApplication CreateApplication()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new WaveApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-
-            };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROApplicationBuilder().WithFlowFM().WithWaves().WithHydroModel().Build();
         }
 
         private static void AssertExpectedFolderStructure(DirectoryInfo modelWaveFolder, DirectoryInfo expectedWaveFolder)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
@@ -102,11 +101,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     }
                 };
             }
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return GetType().Assembly;
         }
 
         public override void Activate()

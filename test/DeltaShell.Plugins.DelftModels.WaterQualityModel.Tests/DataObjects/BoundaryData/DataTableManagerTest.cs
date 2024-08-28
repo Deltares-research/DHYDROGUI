@@ -9,17 +9,10 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
-using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.Scripting;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.Toolbox;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -582,18 +575,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
 
         private static IApplication CreateApplication()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new WaterQualityModelApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new ScriptingApplicationPlugin(),
-                new ToolboxApplicationPlugin(),
-            };
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROApplicationBuilder().WithWaterQuality().Build();
         }
     }
 }

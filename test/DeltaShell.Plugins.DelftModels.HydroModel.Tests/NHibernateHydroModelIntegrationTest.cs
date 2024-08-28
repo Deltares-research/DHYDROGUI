@@ -5,13 +5,10 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.IntegrationTestUtils.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.Wave;
-using DeltaShell.Plugins.NetworkEditor;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -138,16 +135,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         
         protected override NHibernateProjectRepository CreateProjectRepository()
         {
-            var additionalPlugins = new List<IPlugin>
-            {
-                new NetworkEditorApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new WaterQualityModelApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new WaveApplicationPlugin()
-            };
-            return new NHibernateProjectRepositoryBuilder().AddPlugins(additionalPlugins).Build();
+            return new DHYDRONHibernateProjectRepositoryBuilder().WithRealTimeControl()
+                                                                 .WithWaterQuality()
+                                                                 .WithFlowFM()
+                                                                 .WithWaves()
+                                                                 .Build();
         }
     }
 }

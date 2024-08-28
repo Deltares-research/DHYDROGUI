@@ -8,12 +8,9 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
-using DeltaShell.Plugins.SharpMapGis;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
@@ -287,13 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
 
         private static IApplication GetRunningApplication()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-            };
-            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            var app = new DHYDROApplicationBuilder().Build();
             
             app.Run();
             return app;

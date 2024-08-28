@@ -46,10 +46,6 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.IntegrationTestUtils">
-      <HintPath>$(PkgDeltaShell_TestProject)\lib\net48\DeltaShell.IntegrationTestUtils.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -59,6 +55,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoFixture" />

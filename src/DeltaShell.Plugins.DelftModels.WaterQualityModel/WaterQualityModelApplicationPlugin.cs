@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
@@ -17,7 +16,6 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -145,12 +143,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
             yield return new InputFileExporter();
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return GetType().Assembly;
-            yield return typeof(FileBasedFolder).Assembly;
         }
 
         private void Application_ProjectSaveFinished(object sender, EventArgs<Project> e)

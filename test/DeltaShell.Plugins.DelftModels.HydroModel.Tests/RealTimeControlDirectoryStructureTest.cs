@@ -1,13 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
+using DeltaShell.NGHS.TestUtils.Builders;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -49,17 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static IApplication GetApplication()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-            };
-            
-            var app= new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication app = new DHYDROApplicationBuilder().WithRealTimeControl().WithHydroModel().Build();
             app.Run();
 
             return app;

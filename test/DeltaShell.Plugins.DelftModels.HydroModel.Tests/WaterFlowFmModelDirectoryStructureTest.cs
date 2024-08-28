@@ -20,21 +20,16 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Core.Services;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
@@ -1738,16 +1733,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             applicationSettingsMock.Replay();
 
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-            };
-            
-            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication app = new DHYDROApplicationBuilder().WithFlowFM().Build();
             app.UserSettings = applicationSettingsMock;
             
             app.Run();
@@ -1762,17 +1748,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             applicationSettingsMock.Replay();
 
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-            };
-            
-            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication app = new DHYDROApplicationBuilder().WithFlowFM().WithHydroModel().Build();
             app.UserSettings = applicationSettingsMock;
 
             app.Run();

@@ -9,14 +9,9 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
@@ -142,16 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         private static IGui CreateGui()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new WaterQualityModelApplicationPlugin(),
-                new WaterQualityModelGuiPlugin(),
-            };
-
-            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROGuiBuilder().WithWaterQuality().Build();
         }
 
         [TestCase(@"C:\DeltaShell.Plugins.WaterQualityModel\waq_kernel\Data\Default\proc_def")]
@@ -312,16 +298,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         private static IApplication CreateApplication()
         {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new WaterQualityModelApplicationPlugin(),
-            };
-
-            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            return new DHYDROApplicationBuilder().WithWaterQuality().Build();
         }
 
         #endregion

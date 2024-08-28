@@ -10,17 +10,13 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -489,16 +485,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static IApplication CreateRunningApplication()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-            };
-
-            IApplication application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication application = new DHYDROApplicationBuilder().WithFlowFM().Build();
 
             application.Run();
 

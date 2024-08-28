@@ -10,16 +10,11 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using Deltares.Infrastructure.Extensions;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -213,18 +208,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static IApplication GetApplication()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new RealTimeControlApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new HydroModelApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-            };
-            
-            var app= new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            var app = new DHYDROApplicationBuilder()
+                      .WithFlowFM()
+                      .WithHydroModel()
+                      .WithRealTimeControl()
+                      .Build();
             app.Run();
 
             return app;

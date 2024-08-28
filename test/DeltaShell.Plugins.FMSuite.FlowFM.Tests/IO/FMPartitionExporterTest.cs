@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using Deltares.Infrastructure.IO.Ini;
-using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
@@ -482,12 +481,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static IApplication CreateRunningApplication()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new FlowFMApplicationPlugin(),
-            };
-
-            IApplication application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication application = new DHYDROApplicationBuilder().WithFlowFM().Build();
 
             application.Run();
 

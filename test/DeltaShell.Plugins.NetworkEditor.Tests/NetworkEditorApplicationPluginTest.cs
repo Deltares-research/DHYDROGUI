@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Properties;
@@ -27,9 +24,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.That(applicationPlugin.Version,
                         Is.EqualTo(AssemblyUtils.GetAssemblyInfo(applicationPlugin.GetType().Assembly).Version));
             Assert.IsTrue(new Regex(@"\d.\d.\d.\d").IsMatch(applicationPlugin.FileFormatVersion));
-            IEnumerable<Assembly> persistentAssemblies = applicationPlugin.GetPersistentAssemblies();
-            List<Assembly> assemblies = persistentAssemblies.ToList();
-            Assert.That(assemblies.Count, Is.EqualTo(3));
         }
 
         [Test]

@@ -16,11 +16,8 @@ using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
-using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -33,11 +30,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Geometries;
@@ -852,23 +844,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         private static IGui CreateRunningGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                // Load app plugins
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                // Load gui plugins
-                new CommonToolsGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-                
-            };
-            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DHYDROGuiBuilder().WithFlowFM().Build();
             
             gui.Run();
 

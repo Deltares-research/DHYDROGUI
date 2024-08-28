@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.NGHS.TestUtils.Builders;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -10,13 +10,14 @@ namespace DeltaShell.NGHS.TestUtils
 {
     public static class ApplicationPluginTestHelper
     {
-        public static void TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(ApplicationPlugin applicationPlugin)
+        public static void TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull<TApplicationPlugin>(
+            Func<DHYDROApplicationBuilder, DHYDROApplicationBuilder> buildApplication) where TApplicationPlugin : ApplicationPlugin
         {
             //Given
-            var pluginsToAdd = new List<IPlugin> { applicationPlugin };
-            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build() )
+            using (IApplication app = buildApplication(new DHYDROApplicationBuilder()).Build())
             {
                 app.Run();
+                TApplicationPlugin applicationPlugin = app.Plugins.OfType<TApplicationPlugin>().Single();
                 app.ProjectService.CreateProject();
 
                 var compositeActivity = MockRepository.GenerateStub<ICompositeActivity>();
@@ -30,13 +31,14 @@ namespace DeltaShell.NGHS.TestUtils
             }
         }
 
-        public static void TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(ApplicationPlugin applicationPlugin)
+        public static void TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull<TApplicationPlugin>(
+            Func<DHYDROApplicationBuilder, DHYDROApplicationBuilder> buildApplication) where TApplicationPlugin : ApplicationPlugin
         {
             // Given
-            var pluginsToAdd = new List<IPlugin> { applicationPlugin };
-            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+            using (IApplication app = buildApplication(new DHYDROApplicationBuilder()).Build())
             {
                 app.Run();
+                TApplicationPlugin applicationPlugin = app.Plugins.OfType<TApplicationPlugin>().Single();
                 Project project = app.ProjectService.CreateProject();
                 
                 // When

@@ -9,17 +9,13 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 
@@ -31,15 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
     {
         private static IApplication CreateRunningApplication()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new WaterQualityModelApplicationPlugin(),
-            };
-            IApplication application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication application = new DHYDROApplicationBuilder().WithWaterQuality().Build();
             application.Run();
 
             return application;
@@ -288,20 +276,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             try
             {
                 var notFoundWasFired = false;
-                var waqPlugin = new WaterQualityModelApplicationPlugin { HydFileNotFoundGuiHandler = delegate { notFoundWasFired = true; } };
 
-                var pluginsToAdd = new List<IPlugin>
-                {
-                    new NHibernateDaoApplicationPlugin(),
-                    new CommonToolsApplicationPlugin(),
-                    new NetworkEditorApplicationPlugin(),
-                    new SharpMapGisApplicationPlugin(),
-                    waqPlugin
-                };
                 // start deltashell
-                using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+                using (var app = CreateRunningApplication())
                 {
-                    app.Run();
+                    var waqPlugin = app.Plugins.OfType<WaterQualityModelApplicationPlugin>().Single();
+                    waqPlugin.HydFileNotFoundGuiHandler = delegate { notFoundWasFired = true; };
                     IProjectService projectService = app.ProjectService;
                     Project project = projectService.CreateProject();
 
@@ -710,18 +690,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             string savePath = Path.Combine(Environment.CurrentDirectory, "OutOfSync", "project1.dsproj");
             try
             {
-                var pluginsToAdd = new List<IPlugin>
-                {
-                    new NHibernateDaoApplicationPlugin(),
-                    new CommonToolsApplicationPlugin(),
-                    new SharpMapGisApplicationPlugin(),
-                    new WaterQualityModelApplicationPlugin(),
-                };
-                
                 // start deltashell
-                using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+                using (var app = CreateRunningApplication())
                 {
-                    app.Run();
                     IProjectService projectService = app.ProjectService;
                     Project project = projectService.CreateProject();
 

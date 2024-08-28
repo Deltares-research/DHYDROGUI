@@ -6,12 +6,8 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DeltaShell.IntegrationTestUtils.Builders;
-using DeltaShell.Plugins.CommonTools;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.CommonTools.TextData;
-using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -443,16 +439,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         private static IApplication CreateRunningApplication()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new WaveApplicationPlugin(),
-            };
-            
-            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            IApplication app = new DHYDROApplicationBuilder().WithWaves().Build();
             app.Run();
 
             return app;

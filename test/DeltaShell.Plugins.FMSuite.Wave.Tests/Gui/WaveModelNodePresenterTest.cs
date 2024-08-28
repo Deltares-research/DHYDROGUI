@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
-using DeltaShell.Plugins.FMSuite.Wave.Gui;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.ProjectExplorer;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
@@ -23,17 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
     {
         private static IGui CreateRunningGui()
         {
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new WaveGuiPlugin(),
-                new WaveApplicationPlugin()
-            };
-            IGui gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            IGui gui = new DHYDROGuiBuilder().WithWaves().Build();
 
             gui.Run();
 
