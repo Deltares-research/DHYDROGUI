@@ -6,6 +6,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public class WaterFlowFMModelTimersValidator : ModelTimersValidator
@@ -65,19 +66,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var issues = new List<ValidationIssue>();
             if (waterFlowFmModel.WriteHisFile)
             {
-                ValidationIssue issue = CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.HisOutputDeltaT, "His output");
+                ValidationIssue issue = CreateMultipleOfUserTimeStepIssue(waterFlowFmModel, GuiProperties.HisOutputDeltaT, "His output");
                 issues.Add(issue);
             }
 
             if (waterFlowFmModel.WriteMapFile)
             {
-                ValidationIssue issue = CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.MapOutputDeltaT, "Map output");
+                ValidationIssue issue = CreateMultipleOfUserTimeStepIssue(waterFlowFmModel, GuiProperties.MapOutputDeltaT, "Map output");
+                issues.Add(issue);
+            }
+            
+            if (waterFlowFmModel.WriteClassMapFile)
+            {
+                ValidationIssue issue = CreateMultipleOfUserTimeStepIssue(waterFlowFmModel, GuiProperties.ClassMapOutputDeltaT, "Class map output");
+                issues.Add(issue);
+            }
+            
+            if (waterFlowFmModel.WriteRstFile)
+            {
+                ValidationIssue issue = CreateMultipleOfUserTimeStepIssue(waterFlowFmModel, GuiProperties.RstOutputDeltaT, "Restart output");
                 issues.Add(issue);
             }
 
             if (waterFlowFmModel.SpecifyWaqOutputInterval)
             {
-                ValidationIssue issue = CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.WaqOutputDeltaT, "Waq output");
+                ValidationIssue issue = CreateMultipleOfUserTimeStepIssue(waterFlowFmModel, GuiProperties.WaqOutputDeltaT, "Waq output");
                 issues.Add(issue);
             }
 
@@ -90,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
         }
 
-        private static ValidationIssue CreateMultipleOfModelTimeStepIssue(
+        private static ValidationIssue CreateMultipleOfUserTimeStepIssue(
             WaterFlowFMModel waterFlowFmModel, string guiTimeSpanParameter, string outputName)
         {
             WaterFlowFMProperty waterFlowFmProperty =
@@ -104,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
 
             string category = waterFlowFmProperty.PropertyDefinition.Category;
-            string errorMessage = string.Format(Resources.WaterFlowFMModelTimersValidator_Interval_must_be_a_multiple_of_the_output_timestep, outputName);
+            string errorMessage = string.Format(Resources.Interval_must_be_a_multiple_of_the_user_timestep, outputName);
 
             return new ValidationIssue(category, ValidationSeverity.Error, errorMessage, waterFlowFmModel);
         }

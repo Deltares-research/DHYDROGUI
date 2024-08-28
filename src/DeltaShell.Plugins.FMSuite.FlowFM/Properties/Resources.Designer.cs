@@ -641,6 +641,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} interval must be a multiple of the user timestep..
+        /// </summary>
+        public static string Interval_must_be_a_multiple_of_the_user_timestep {
+            get {
+                return ResourceManager.GetString("Interval_must_be_a_multiple_of_the_user_timestep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Variables detected in imported SourceAndSink Function: {0}.
         /// </summary>
         public static string Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_ {
@@ -1957,16 +1966,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_" +
                         "defined__all_channels_will_be_using_the_default_values_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} interval must be a multiple of the output timestep..
-        /// </summary>
-        public static string WaterFlowFMModelTimersValidator_Interval_must_be_a_multiple_of_the_output_timestep {
-            get {
-                return ResourceManager.GetString("WaterFlowFMModelTimersValidator_Interval_must_be_a_multiple_of_the_output_timeste" +
-                        "p", resourceCulture);
             }
         }
         
