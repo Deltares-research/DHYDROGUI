@@ -30,6 +30,7 @@ using DeltaShell.NGHS.TestUtils.Builders;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
+using DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
@@ -1009,6 +1010,57 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void SavingDimrModelWithWWTPLinkedToLateralSource_WritesExchangesToRegionExchangesJson()
+        {
+            // Setup
+            SetRequiredSettingsForDimrImport();
+            
+            using (var tempDir = new TemporaryDirectory())
+            using (IApplication app = GetConfiguredApplication())
+            using (HydroModel integratedModel = CreateIntegratedModel())
+            {
+                AddWWTPLinkedLateralToModel(integratedModel);
+                
+                IProjectService projectService = app.ProjectService;
+                projectService.Project.RootFolder.Add(integratedModel);
+
+                const string projectName = "randomName.dsproj";
+                string dsprojPath = Path.Combine(tempDir.Path, projectName);
+                projectService.SaveProjectAs(dsprojPath);
+                projectService.CloseProject();
+
+                // Call
+                Project project = projectService.OpenProject(dsprojPath);
+                HydroModel loadedIntegratedModel = project.GetAllItemsRecursive().OfType<HydroModel>().FirstOrDefault();
+                
+                // Assert
+                Assert.That(loadedIntegratedModel, Is.Not.Null);
+
+                string modelExchangeJsonFile = Path.Combine(tempDir.Path,
+                                                        $"{projectName}_data",
+                                                        "Integrated Model",
+                                                        $"{integratedModel.Name}RegionExchanges.json");
+                FileAssert.Exists(modelExchangeJsonFile);
+
+                AssertThatFileContainsExpectedExchange(modelExchangeJsonFile);
+            }
+        }
+
+        private static void AssertThatFileContainsExpectedExchange(string modelExchangeJsonFile)
+        {
+            IList<ModelExchangeInfo> modelExchangeInfos = new List<ModelExchangeInfo>();
+            modelExchangeInfos.ReadFromJson(modelExchangeJsonFile);
+                
+            Assert.That(modelExchangeInfos.Count, Is.EqualTo(1));
+            Assert.That(modelExchangeInfos[0].Exchanges.Count, Is.EqualTo(1));
+
+            ModelExchange modelExchange = modelExchangeInfos[0].Exchanges[0];
+            Assert.That(modelExchange.SourceName, Is.EqualTo("WWTP"));
+            Assert.That(modelExchange.TargetName, Is.EqualTo("LateralSource_1D_1"));
+        }
+
         /// <summary>
         /// Creates a valid integrated model with FM and RR with:
         /// <list type="bullet">
@@ -1153,7 +1205,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             lateralSource.Chainage = 10;
             channel.BranchFeatures.Add(lateralSource);
 
-            var wwtp = new WasteWaterTreatmentPlant();
+            var wwtp = new WasteWaterTreatmentPlant { Geometry = new Point(0, 0)};
             rrModel.Basin.WasteWaterTreatmentPlants.Add(wwtp);
 
             wwtp.LinkTo(lateralSource);

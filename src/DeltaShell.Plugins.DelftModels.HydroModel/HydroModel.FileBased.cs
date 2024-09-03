@@ -6,7 +6,6 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Extensions;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
@@ -317,7 +316,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 Region.BeginEdit("Removing hydro links");
 
-                var sourceRegionsLinksGrouping = Region.Links.Where(l => l.Source is Catchment).GroupBy(l => l.Source.Region);
+                var sourceRegionsLinksGrouping = Region.Links.Where(l => l.Source is Catchment || l.Source is WasteWaterTreatmentPlant).GroupBy(l => l.Source.Region);
                 foreach (var sourceRegionGroup in sourceRegionsLinksGrouping)
                 {
                     var sourceRegion = sourceRegionGroup.Key;

@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.Serialization;
 using DelftTools.Hydro;
 using DelftTools.Utils.Reflection;
@@ -10,13 +11,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges
     {
         public RegionExchange(HydroLink link)
         {
-            var hydroSourceObject = link.Source == null ? null : TypeUtils.Unproxy(link.Source);
+            IHydroObject hydroSourceObject = link.Source == null ? null : TypeUtils.Unproxy(link.Source);
             SourceName = GetExchangeIdentifier(hydroSourceObject);
-            var sourceType = hydroSourceObject?.GetType();
+            Type sourceType = hydroSourceObject?.GetType();
             SourceType = sourceType?.FullName + ", " + sourceType?.Assembly.GetName().Name;
-            var hydroTargetObject = link.Target== null ? null : TypeUtils.Unproxy(link.Target);
+            IHydroObject hydroTargetObject = link.Target== null ? null : TypeUtils.Unproxy(link.Target);
             TargetName = GetExchangeIdentifier(hydroTargetObject);
-            var targetType = hydroTargetObject?.GetType();
+            Type targetType = hydroTargetObject?.GetType();
             TargetType = targetType?.FullName + ", " + targetType?.Assembly.GetName().Name;
             LinkName = link.Name;
             LinkGeometryWkt = new WKTWriter().Write(link.Geometry);
