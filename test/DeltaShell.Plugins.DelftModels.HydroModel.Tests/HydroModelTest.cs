@@ -21,7 +21,6 @@ using DelftTools.Utils.Collections.Generic;
 using Deltares.Infrastructure.API.Logging;
 using Deltares.Infrastructure.Extensions;
 using DeltaShell.Core.Services;
-using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.Dimr.Export;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -56,50 +55,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [TestFixture]
     public class HydroModelTest
     {
-        [Test]
-        public void Constructor_InitializesImportContext()
-        {
-            using (var model = new HydroModel())
-            {
-                Assert.That(model.FileContext, Is.Not.Null);
-                Assert.That(model.FileContext.IsInitialized, Is.False);
-            }
-        }
-        
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void RemoveDimrModelFromHydroModelActivities_ModelIsRemovedFromFileContext()
-        {
-            using (var hydroModel = new HydroModel())
-            {
-                IDimrModel dimrModel1 = CreateDimrModel("directoryName_dimrModel1");
-                IDimrModel dimrModel2 = CreateDimrModel("directoryName_dimrModel2");
-
-                hydroModel.Activities.Add(dimrModel1);
-                hydroModel.Activities.Add(dimrModel2);
-
-                hydroModel.FileContext.DimrFilePath = @"C:\dir\dimr.xml";
-                hydroModel.FileContext.AddRelativeModelDirectory(dimrModel1, "storedModelDir_dimrModel1");
-                hydroModel.FileContext.AddRelativeModelDirectory(dimrModel2, "storedModelDir_dimrModel2");
-
-                hydroModel.Activities.Remove(dimrModel1);
-
-                string dimrModelDir1 = hydroModel.FileContext.GetRelativeModelDirectory(dimrModel1);
-                string dimrModelDir2 = hydroModel.FileContext.GetRelativeModelDirectory(dimrModel2);
-
-                Assert.That(dimrModelDir1, Is.EqualTo("directoryName_dimrModel1"));
-                Assert.That(dimrModelDir2, Is.EqualTo("storedModelDir_dimrModel2"));
-            }
-        }
-        
-        private static IDimrModel CreateDimrModel(string directoryName = null)
-        {
-            var model = Substitute.For<IDimrModel>();
-            model.DirectoryName.Returns(directoryName);
-
-            return model;
-        }
-        
         [Test]
         public void HydroModelValidatesCurrentWorkflow()
         {

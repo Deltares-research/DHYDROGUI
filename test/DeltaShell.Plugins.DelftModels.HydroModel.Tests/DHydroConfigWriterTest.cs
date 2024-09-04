@@ -9,7 +9,6 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -23,7 +22,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -36,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void CreateConfigDocument_ArgumentNull_ThrowsArgumentNullException()
         {
             var writer = new DHydroConfigWriter();
-            void Call() => writer.CreateConfigDocument(null, new HydroModelFileContext(Substitute.For<IFileHierarchyResolver>()));
+            void Call() => writer.CreateConfigDocument(null);
             Assert.That(Call, Throws.ArgumentNullException);
         }
 
@@ -49,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var exportFailed = true;
             try
             {
-                configWriter.CreateConfigDocument(model, null);
+                configWriter.CreateConfigDocument(model);
                 exportFailed = false;
             }
             catch
@@ -65,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.Activities.Add(new WaterFlowFMModel());
             hydroModel.Activities.Add(new RealTimeControlModel());
             hydroModel.CurrentWorkflow = hydroModel.Workflows.First();
-            XDocument xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel, null);
+            XDocument xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
             var stringWriter = new StringWriter(new StringBuilder());
             xmlDocument.Save(stringWriter);
             var resultString = stringWriter.ToString();
@@ -77,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void WriteDocumentWithCouplings()
         {
             HydroModel hydroModel = BuildCoupledDemoModel();
-            XDocument xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel, null);
+            XDocument xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
             var stringWriter = new StringWriter(new StringBuilder());
             xmlDocument.Save(stringWriter);
             var resultString = stringWriter.ToString();
@@ -135,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
             var writer = new DHydroConfigWriter();
-            var xmlDocument = writer.CreateConfigDocument(hydroModel.CurrentWorkflow, null);
+            var xmlDocument = writer.CreateConfigDocument(hydroModel.CurrentWorkflow);
             
             List<XElement> couplers = xmlDocument.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
 
@@ -215,7 +213,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void CheckCouplerXml(HydroModel hydroModel)
         {
-            XDocument xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel, null);
+            XDocument xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
             List<XElement> couplers = xml.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
 
             Assert.IsTrue(couplers.Any());
