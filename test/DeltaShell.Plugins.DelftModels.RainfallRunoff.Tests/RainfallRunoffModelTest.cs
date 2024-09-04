@@ -9,9 +9,9 @@ using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
-using Deltares.Infrastructure.Extensions;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
@@ -307,7 +307,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 // Call
                 exporter.Export(rrModel, tempDir.Path);
-                
+
                 // Assert
                 string boundaryFilepath = Path.Combine(tempDir.Path, "BoundaryConditions.bc");
                 AssertThatBoundaryFileContainsWWTPBoundary(boundaryFilepath, boundaryName);
@@ -340,6 +340,43 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                          p => p.Key.EqualsCaseInsensitive("name") && p.Value.EqualsCaseInsensitive(boundaryName)));
 
             Assert.That(containsWWTPBoundary, Is.True);
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WhenExportingRRModelWithWWTP_NoImplicitOutgoingBoundaryForTheWWTPIsCreated()
+        {
+            // Setup
+            const string wwtpName = "wwtp";
+
+            using (RainfallRunoffModel rrModel = CreateRRModelWithOnlyWWTP(wwtpName))
+            using (var tempDir = new TemporaryDirectory())
+            {
+                var exporter = new RainfallRunoffModelExporter();
+
+                // Call
+                exporter.Export(rrModel, tempDir.Path);
+
+                // Assert
+                string boundaryFilepath = Path.Combine(tempDir.Path, "3B_NOD.TP");
+                AssertThatNodesFileDoesNotContainBoundaryForWWTP(boundaryFilepath, wwtpName);
+            }
+        }
+
+        private static RainfallRunoffModel CreateRRModelWithOnlyWWTP(string wwtpName)
+        {
+            var rrModel = new RainfallRunoffModel();
+            var wwtp = new WasteWaterTreatmentPlant() { Name = wwtpName };
+            rrModel.Basin.WasteWaterTreatmentPlants.Add(wwtp);
+
+            return rrModel;
+        }
+
+        private static void AssertThatNodesFileDoesNotContainBoundaryForWWTP(string nodesFilePath, string wwtpName)
+        {
+            IEnumerable<string> content = File.ReadLines(nodesFilePath);
+            var expectedLine = $"NODE id '{wwtpName}' nm '{wwtpName}'";
+            Assert.That(content.Single(), Does.StartWith(expectedLine));
         }
     }
 

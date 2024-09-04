@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
                 if (wwtp.Links.Count(l => Equals(wwtp, l.Source)) == 0)
                 {
                     issues.Add(new ValidationIssue(wwtp,
-                                                   ValidationSeverity.Warning,
+                                                   ValidationSeverity.Error,
                                                    Resources.RainfallRunoffBasinValidator_WWTP_has_no_outgoing_runoff_links,
                                                    new ValidatedFeatures(target, wwtp)));
                 }

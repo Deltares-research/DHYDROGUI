@@ -119,11 +119,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
 
             report = RainfallRunoffModelValidator.Validate(model);
             Assert.AreEqual(ValidationSeverity.Error,report.Severity());
-            Assert.AreEqual(1,report.AllErrors.Count());
+            Assert.AreEqual(2,report.AllErrors.Count());
         }
 
         [Test]
-        public void Validate_WWTPWithImplicitBoundary_AddsWarningToReport()
+        public void Validate_WWTPWithoutExplicitBoundary_AddsErrorToReport()
         {
             // Setup
             var wwtp = new WasteWaterTreatmentPlant();
@@ -139,8 +139,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
                 Assert.That(report, Is.Not.Null);
                 ValidationReport basinReport = report.SubReports.First(r => r.Category.Equals("Basin"));
 
-                const string expectedInfoMessage = "Wastewater treatment plant has no outgoing runoff links; an implicit boundary will be created.";
-                Assert.That(basinReport.Issues.Any(i => i.Message.Equals(expectedInfoMessage) && i.Severity == ValidationSeverity.Warning));
+                const string expectedInfoMessage = "Wastewater treatment plant has no outgoing runoff links.";
+                Assert.That(basinReport.Issues.Any(i => i.Message.Equals(expectedInfoMessage) && i.Severity == ValidationSeverity.Error));
             }
         }
 

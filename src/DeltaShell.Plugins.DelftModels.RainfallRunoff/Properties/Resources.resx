@@ -235,7 +235,7 @@
     <value>Wastewater treatment plant has no incoming runoff links</value>
   </data>
   <data name="RainfallRunoffBasinValidator_WWTP_has_no_outgoing_runoff_links" xml:space="preserve">
-    <value>Wastewater treatment plant has no outgoing runoff links; an implicit boundary will be created.</value>
+    <value>Wastewater treatment plant has no outgoing runoff links.</value>
   </data>
   <data name="RainfallRunoffBasinValidator_WWTP_has_more_than_one_outoging_runoff_links" xml:space="preserve">
     <value>Wastewater treatment plant has more than one outgoing runoff link</value>

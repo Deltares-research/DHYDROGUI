@@ -230,9 +230,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             foreach (var wwtp in model.Basin.WasteWaterTreatmentPlants)
             {
                 Writer.AddWasteWaterTreatmentPlant(wwtp.Name, wwtp.Geometry?.Coordinate.X ?? 0.0, wwtp.Geometry?.Coordinate.Y ?? 0.0);
-                links.Add(CreateModelLink(wwtp));
+                if (HasOutgoingLink(wwtp))
+                {
+                    links.Add(CreateModelLink(wwtp));
+                }
                 allRRNodes.Add(wwtp);
             }
+        }
+
+        private static bool HasOutgoingLink(WasteWaterTreatmentPlant wwtp)
+        {
+            return wwtp.Links.Any(l => l.Source.Equals(wwtp));
         }
 
         private void SendBoundariesToModel()
@@ -503,13 +511,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
         public static ModelLink CreateModelLink(IHydroObject hydroObject, HydroLink explicitWwtpLink = null)
         {
-            var link = explicitWwtpLink ?? hydroObject.Links.FirstOrDefault(l => !(l.Target is WasteWaterTreatmentPlant));
+            HydroLink link = explicitWwtpLink ?? hydroObject.Links.FirstOrDefault(l => !(l.Target is WasteWaterTreatmentPlant));
             
             //link inside rr domain (wwtp or runoff boundary)
             if (link != null && (link.Target is WasteWaterTreatmentPlant || link.Target is RunoffBoundary || link.Target is ILateralSource))
             {
                 return new ModelLink(link.Name, hydroObject, link, link.Target);
             }
+
             return CreateModelLinkOutsideRR(hydroObject, link);
         }
 
