@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var exportFailed = true;
             try
             {
-                configWriter.CreateConfigDocument(model, null);
+                configWriter.CreateConfigDocument(model);
                 exportFailed = false;
             }
             catch
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.Activities.Add(new WaveModel());
             hydroModel.Activities.Add(new RealTimeControlModel());
             hydroModel.CurrentWorkflow = hydroModel.Workflows.First();
-            XDocument xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel, null);
+            XDocument xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
             var stringWriter = new StringWriter(new StringBuilder());
             xmlDocument.Save(stringWriter);
             var resultString = stringWriter.ToString();
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void WriteDocumentWithCouplings()
         {
             HydroModel hydroModel = BuildCoupledDemoModel();
-            XDocument xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel, null);
+            XDocument xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
             var stringWriter = new StringWriter(new StringBuilder());
             xmlDocument.Save(stringWriter);
             var resultString = stringWriter.ToString();
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             HydroModel hydroModel = BuildCoupledDemoModel();
             
             // Call
-            XDocument xmlDocument = writer.CreateConfigDocument(hydroModel, null);
+            XDocument xmlDocument = writer.CreateConfigDocument(hydroModel);
             
             // Assert
             XElement timeElement = GetXElement(xmlDocument, "control", "parallel", "startGroup", "time");
@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void CheckCouplerXml(HydroModel hydroModel)
         {
-            XDocument xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel, null);
+            XDocument xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
             List<XElement> couplers = xml.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
 
             Assert.IsTrue(couplers.Any());

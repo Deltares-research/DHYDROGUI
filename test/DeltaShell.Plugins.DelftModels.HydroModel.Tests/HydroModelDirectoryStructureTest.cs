@@ -43,16 +43,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 exporter.Export(hydroModel, null);
 
+                AssertPathExists(exportModelDirectory, "dimr.xml");
                 AssertPathExists(exportModelDirectory, "computation");
-                AssertPathExists(exportModelDirectory, "computation/dimr.xml");
                 AssertPathExists(exportModelDirectory, "computation/RMM-simple.mdu");
                 AssertPathExists(exportModelDirectory, "geometry");
                 AssertPathExists(exportModelDirectory, "initial_conditions");
                 AssertPathExists(exportModelDirectory, "rtc");
 
-                dimrXML dimrXml = GetDimrXML(Path.Combine(exportModelDirectory, "computation/dimr.xml"));
-                AssertCorrectComponent(dimrXml, "real-time control", "../rtc", ".");
-                AssertCorrectComponent(dimrXml, "RMM-simple", ".", "RMM-simple.mdu");
+                dimrXML dimrXml = GetDimrXML(Path.Combine(exportModelDirectory, "dimr.xml"));
+                AssertCorrectComponent(dimrXml, "real-time control", "rtc", ".");
+                AssertCorrectComponent(dimrXml, "RMM-simple", "computation", "RMM-simple.mdu");
             }
         }
 

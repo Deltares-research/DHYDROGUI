@@ -45,10 +45,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         /// Create the DIMR configuration file from the provided integrated model workflow.
         /// </summary>
         /// <param name="workFlow"> The integrated model workflow. </param>
-        /// <param name="fileContext">
-        /// The context in which the <see cref="HydroModel"/> was imported.
-        /// Can be <c>null</c> if a DIMR model is exported stand-alone.
-        /// </param>
         /// <returns>The created <see cref="XDocument"/> for the DIMR configuration file. </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="workFlow"/> is <c>null</c>.
@@ -56,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="workFlow"/> does not contain any activities to be serialized to the DIMR file.
         /// </exception>
-        public XDocument CreateConfigDocument(ICompositeActivity workFlow, HydroModelFileContext fileContext)
+        public XDocument CreateConfigDocument(ICompositeActivity workFlow)
         {
             Ensure.NotNull(workFlow, nameof(workFlow));
 
@@ -76,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             foreach (IDimrModel dHydroActivity in allDHydroActivities)
             {
                 CoreCountDictionary.TryGetValue(dHydroActivity, out int nodeCount);
-                rootNode.Add(CreateComponentNode(dHydroActivity, nodeCount, fileContext));
+                rootNode.Add(CreateComponentNode(dHydroActivity, nodeCount));
             }
 
             foreach (IDimrConfigModelCoupler modelCoupler in modelCouplers)
@@ -102,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             return root;
         }
 
-        private XElement CreateComponentNode(IDimrModel dimrModel, int numCores, HydroModelFileContext fileContext)
+        private static XElement CreateComponentNode(IDimrModel dimrModel, int numCores)
         {
             var component = new XElement(DHyd + "component");
             component.Add(new XAttribute("name", dimrModel.Name));
@@ -114,16 +110,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                                                        Enumerable.Range(0, numCores).Select(i => i.ToString(CultureInfo.InvariantCulture)))));
             }
 
-            component.Add(new XElement(DHyd + "workingDir", GetModelWorkingDir(dimrModel, fileContext)));
+            component.Add(new XElement(DHyd + "workingDir", dimrModel.DirectoryName));
             component.Add(new XElement(DHyd + "inputFile", dimrModel.InputFile));
             return component;
-        }
-
-        private static string GetModelWorkingDir(IDimrModel dimrModel, HydroModelFileContext fileContext)
-        {
-            return fileContext == null
-                       ? dimrModel.DirectoryName
-                       : fileContext.GetRelativeModelDirectory(dimrModel);
         }
 
         private XElement CreateControlNode(ICompositeActivity hydroModel)

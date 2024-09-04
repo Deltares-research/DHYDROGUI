@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
-using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -44,11 +43,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     {
         private const string HydroRegionTag = "RootHydroRegion";
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModel));
-
-        /// <summary>
-        /// The file context during import and export of this <see cref="HydroModel"/>. 
-        /// </summary>
-        public virtual HydroModelFileContext FileContext { get; } = new HydroModelFileContext(new FileHierarchyResolver(new FileSystem()));
 
         #region Fields and properties
 
@@ -459,7 +453,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         {
                             model.DisconnectExternalDataItems();
                             model.Owner = null;
-                            RemoveDimrModelFromFileContext(model);
                         }
 
                         break;
@@ -469,14 +462,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                 RefreshDefaultModelWorkflows();
                 CurrentWorkflow = Workflows.FirstOrDefault();
-            }
-        }
-
-        private void RemoveDimrModelFromFileContext(IModel model)
-        {
-            if (model is IDimrModel dimrModel)
-            {
-                FileContext.RemoveModel(dimrModel);
             }
         }
 

@@ -112,14 +112,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         public bool Export(object item, string path)
         {
             ICompositeActivity workflow = GetWorkflow(item);
-            HydroModelFileContext fileContext = (item as HydroModel)?.FileContext;
-
-            string exportPath = GetExportDimrFilePath(fileContext, path);
-
-            if (exportPath == null)
+            
+            if (string.IsNullOrEmpty(path) && string.IsNullOrEmpty(ExportDirectoryPath))
             {
                 Log.ErrorFormat("Invalid export file path");
                 return false;
+            }
+            
+            string exportPath = ExportDirectoryPath ?? path;
+            if (Directory.Exists(exportPath))
+            {
+                exportPath = Path.Combine(exportPath, "dimr.xml");
             }
 
             string exportDirectory = Path.GetDirectoryName(Path.GetFullPath(exportPath));
@@ -147,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
                 foreach (IDimrModel dimrModel in dimrModels)
                 {
-                    string exportSubDirectory = Path.Combine(exportDirectory, GetRelativeModelDir(item, dimrModel));
+                    string exportSubDirectory = Path.Combine(exportDirectory, dimrModel.DirectoryName);
                     FileUtils.CreateDirectoryIfNotExists(exportSubDirectory);
 
                     var dimrModelExporter = GetDimrModelFileExporter(dimrModel);
@@ -165,7 +168,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 }
 
                 var writer = new DHydroConfigWriter {CoreCountDictionary = new Dictionary<IDimrModel, int>()};
-                configDocument = writer.CreateConfigDocument(workflow, fileContext);
+                configDocument = writer.CreateConfigDocument(workflow);
             }
             catch (Exception e)
             {
@@ -190,36 +193,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         
         private IDimrModelFileExporter GetDimrModelFileExporter(IDimrModel dimrModel) 
             => FileExportService.GetFileExportersFor(dimrModel).OfType<IDimrModelFileExporter>().FirstOrDefault();
-
-        private static string GetRelativeModelDir(object item, IDimrModel dimrModel)
-        {
-            if (item is HydroModel hydroModel)
-            {
-                return hydroModel.FileContext.GetRelativeModelDirectory(dimrModel);
-            }
-
-            return dimrModel.DirectoryName;
-        }
-
-        private string GetExportDimrFilePath(HydroModelFileContext fileContext, string path)
-        {
-            if (string.IsNullOrEmpty(ExportDirectoryPath))
-            {
-                return path;
-            }
-
-            return Path.Combine(ExportDirectoryPath, GetRelativeExportDimrFilePath(fileContext));
-        }
-
-        private static string GetRelativeExportDimrFilePath(HydroModelFileContext fileContext)
-        {
-            if (fileContext != null && fileContext.IsInitialized)
-            {
-                return fileContext.GetRelativeDimrFilePath();
-            }
-
-            return "dimr.xml";
-        }
 
         public IEnumerable<Type> SourceTypes()
         {

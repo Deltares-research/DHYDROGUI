@@ -201,6 +201,5 @@
     <PackageReference Include="RhinoMocks" />
     <PackageReference Include="SharpTestsEx" />
     <PackageReference Include="System.Threading.Tasks.Extensions" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
   </ItemGroup>
 </Project>
