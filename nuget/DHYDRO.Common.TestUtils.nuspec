@@ -6,7 +6,7 @@
     <description>A shared D-HYDRO Suite test utils library.</description>
     <version>1.2.0</version>
     <authors>Deltares</authors>
-    <copyright>Deltares 2023</copyright>
+    <copyright>Deltares 2024</copyright>
     <dependencies>
       <group targetFramework=".NETFramework4.8" />
     </dependencies>
