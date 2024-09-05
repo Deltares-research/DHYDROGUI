@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             var validationReport = model.Validate();
 
-            Assert.AreEqual(4, validationReport.ErrorCount);
+            Assert.AreEqual(2, validationReport.ErrorCount);
         }
 
         [Test]

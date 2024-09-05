@@ -518,6 +518,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} interval must be a multiple of the user timestep..
+        /// </summary>
+        public static string Interval_must_be_a_multiple_of_the_user_timestep_ {
+            get {
+                return ResourceManager.GetString("Interval_must_be_a_multiple_of_the_user_timestep_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Variables detected in imported SourceAndSink Function: {0}.
         /// </summary>
         public static string Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_ {
