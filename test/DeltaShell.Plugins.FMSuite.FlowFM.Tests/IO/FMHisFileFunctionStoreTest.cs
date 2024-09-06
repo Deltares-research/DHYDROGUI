@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -269,19 +272,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // cross_section, weirgens, orifice, culvert, pumps, compoundStructures, bridge, source_sink, lateral, stations
                 // friendly named :
                 // Observation cross sections, Weirs + general structures, Orifices, Culverts, Pumps, Compound structures, Bridges, Source and sinks, Laterals, Observation points
-
-
-
+                
                 Assert.AreEqual(119, store.Functions.Count);
 
                 List<IGrouping<string, IFunction>> groupings = store.GetFunctionGrouping().ToList();
                 Assert.AreEqual(10, groupings.Count);
-                string defaultFriendlyCategoryName = TypeUtils.GetStaticField<string>(typeof(FMHisFileFunctionStore), "DefaultFriendlyCategoryName");
-                ReadOnlyDictionary<string, string> userFriendlyCategoryNames = TypeUtils.GetStaticField<ReadOnlyDictionary<string, string>>(typeof(FMHisFileFunctionStore), "UserFriendlyCategoryNames");
-                List<string> userFriendlyCategoryNamesList = userFriendlyCategoryNames.Values.Plus(defaultFriendlyCategoryName).OrderBy(n => n).ToList();
                 List<string> groupingsNames = groupings.Select(g => g.Key).OrderBy(n => n).ToList();
                 
-                Assert.That(groupingsNames, Is.EquivalentTo(userFriendlyCategoryNamesList));
+                Assert.That(groupingsNames, Does.Contain(UserFriendlyNames.Pumps));
+                Assert.That(groupingsNames, Does.Contain(UserFriendlyNames.ObservationCrossSections));
+                Assert.That(groupingsNames, Does.Contain(UserFriendlyNames.WeirsAndGeneralStructures));
+                Assert.That(groupingsNames, Does.Contain(UserFriendlyNames.Orifices));
+                Assert.That(groupingsNames, Does.Contain(UserFriendlyNames.Culverts));
+                Assert.That(groupingsNames, Does.Contain(UserFriendlyNames.CompoundStructures));
+                Assert.That(groupingsNames, Does.Contain(UserFriendlyNames.Bridges));
+                Assert.That(groupingsNames, Does.Contain(UserFriendlyNames.SourcesAndSinks));
+                Assert.That(groupingsNames, Does.Contain(UserFriendlyNames.Laterals));
+                Assert.That(groupingsNames, Does.Contain(UserFriendlyNames.Default));
 
                 int numberOfSingleGroupings = groupings.Count(g => g.Count() == 1);
                 Assert.AreEqual(0, numberOfSingleGroupings);
@@ -289,6 +296,155 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 int numberOfMultipleGroupings = groupings.Count(g => g.Count() > 1);
                 Assert.AreEqual(10, numberOfMultipleGroupings);
             });
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase("dimr_2_26_25_his.nc")]
+        [TestCase("dimr_2_27_13_his.nc")]
+        public void OpeningHisFilesOfDifferentDimrVersionsKeepTheSameHisOutputGroupsForBackwardsCompatability(string hisFileName) // Issue #: FM1D2D-2950
+        {
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_hisfiles");
+            const int expectedAmountOfHisOutputGroups = 5;
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Arrange
+                string hisFilePath = Path.Combine(tempDir, hisFileName); 
+                FileUtils.CopyFile(Path.Combine(testDataFilePath, hisFileName), hisFilePath);
+
+                // Act
+                var store = new FMHisFileFunctionStore(hisFilePath);
+                List<string> groupingsNames = GetStructureOutputGroupingsNames(store);
+                
+                // Assert
+                Assert.That(groupingsNames.Count, Is.EqualTo(expectedAmountOfHisOutputGroups));
+                Assert.That(groupingsNames.Contains(UserFriendlyNames.Pumps));
+                Assert.That(groupingsNames.Contains(UserFriendlyNames.CompoundStructures));
+                Assert.That(groupingsNames.Contains(UserFriendlyNames.Laterals));
+                Assert.That(groupingsNames.Contains(UserFriendlyNames.Orifices));
+                Assert.That(groupingsNames.Contains(UserFriendlyNames.WeirsAndGeneralStructures));
+            });
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenBasicFmModelWithStructures_AfterRunning_ExpectedThatStructuresAreAvailableInOutputStore()
+        {
+            const int expectedAmountOfHisOutputGroups = 5;
+            
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                // Arrange
+                Channel channel = CreateBranchInNetwork(fmModel.Network);
+                AddCrossSectionToBranch(channel);
+                GenerateGridPoints(fmModel, channel);
+                AddStructuresToBranch(channel);
+
+                ValidationReport validationReport = fmModel.Validate();
+                Assert.That(validationReport.AllErrors.Count(), Is.EqualTo(0), "Validation report contains errors, none were expected.");
+                
+                // Act
+                ActivityRunner.RunActivity(fmModel);
+                List<string> groupingsNames = GetStructureOutputGroupingsNames(fmModel.OutputHisFileStore);
+
+                // Assert
+                Assert.That(groupingsNames.Count, Is.EqualTo(expectedAmountOfHisOutputGroups));
+                Assert.That(groupingsNames.Contains(UserFriendlyNames.Pumps));
+                Assert.That(groupingsNames.Contains(UserFriendlyNames.CompoundStructures));
+                Assert.That(groupingsNames.Contains(UserFriendlyNames.Laterals));
+                Assert.That(groupingsNames.Contains(UserFriendlyNames.Orifices));
+                Assert.That(groupingsNames.Contains(UserFriendlyNames.WeirsAndGeneralStructures));
+            }
+        }
+
+        private static List<string> GetStructureOutputGroupingsNames(FMHisFileFunctionStore store)
+        {
+            return store.GetFunctionGrouping()
+                        .Select(g => g.Key)
+                        .OrderBy(name => name).ToList();
+        }
+
+        /// <summary>
+        /// The structures created will be:
+        /// <list type="bullet">
+        /// <item><description>2 pumps in a composite structure</description></item>
+        /// <item><description>1 Weir</description></item>
+        /// <item><description>1 Orifice</description></item>
+        /// <item><description>1 Lateral</description></item>
+        /// </list>
+        /// </summary>
+        /// <param name="channel">Channel the structures will be added to.</param>
+        private static void AddStructuresToBranch(Channel channel)
+        {
+            CompositeBranchStructure compoundStructure = new CompositeBranchStructure() { Chainage = 10 };
+            var pump = new Pump()
+            {
+                Name = "pump1",
+                ParentStructure = compoundStructure
+            };
+            var pump2 = new Pump()
+            {
+                Name = "pump2",
+                ParentStructure = compoundStructure
+            };
+            compoundStructure.Structures.Add(pump);
+            compoundStructure.Structures.Add(pump2);
+                
+            var weir = new Weir()
+            {
+                Chainage = 40
+            };
+            var orifice = new Orifice()
+            {
+                Chainage = 70
+            };
+            var lateral = new LateralSource();
+                
+            channel.BranchFeatures.Add(pump);
+            channel.BranchFeatures.Add(pump2);
+            channel.BranchFeatures.Add(compoundStructure);
+            channel.BranchFeatures.Add(weir);
+            channel.BranchFeatures.Add(orifice);
+            channel.BranchFeatures.Add(lateral);
+        }
+
+        private static void GenerateGridPoints(WaterFlowFMModel fmModel, Channel channel)
+        {
+            var offsets = new double[] { 0, 30, 60, 100 };
+            HydroNetworkHelper.GenerateDiscretization(fmModel.NetworkDiscretization, channel, offsets);
+        }
+
+        private static void AddCrossSectionToBranch(Channel channel)
+        {
+            var crossSection = CrossSection.CreateDefault();
+            crossSection.Name = "Marlon";
+            channel.BranchFeatures.Add(crossSection);
+        }
+
+        private static Channel CreateBranchInNetwork(IHydroNetwork network)
+        {
+            var node1 = new HydroNode
+            {
+                Name = "Node1",
+                Network = network,
+                Geometry = new Point(0.0, 0.0)
+            };
+            var node2 = new HydroNode
+            {
+                Name = "Node2",
+                Network = network,
+                Geometry = new Point(100.0, 0.0)
+            };
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            var channel = new Channel("branch1", node1, node2)
+            {
+                Geometry = new LineString(new[] { node1.Geometry.Coordinate, node2.Geometry.Coordinate }),
+            };
+            network.Branches.Add(channel);
+            return channel;
         }
     }
 }

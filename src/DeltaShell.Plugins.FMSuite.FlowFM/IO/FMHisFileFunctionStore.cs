@@ -24,6 +24,24 @@ using SharpMap.Extensions.CoordinateSystems;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     /// <summary>
+    /// Static class with user-friendly names defined.
+    /// Names are used for visualization in the GUI.
+    /// </summary>
+    internal static class UserFriendlyNames
+    {
+        public const string Default = "Observation points";
+        public const string Pumps = "Pumps";
+        public const string ObservationCrossSections = "Observation cross sections";
+        public const string WeirsAndGeneralStructures = "Weirs + general structures";
+        public const string Orifices = "Orifices";
+        public const string Culverts = "Culverts";
+        public const string CompoundStructures = "Compound structures";
+        public const string Bridges = "Bridges";
+        public const string SourcesAndSinks = "Sources and sinks";
+        public const string Laterals = "Laterals";
+    }
+    
+    /// <summary>
     /// Reads an Unstruc HIS file and acts as the backing store. The his files contains timeseries on stations and cross sections.
     /// These correspond to observation points and obs. cross sections in the model. These features can either be generated from 
     /// the netcdf file (in case you import the HIS file standalone), or be inserted from the model, to ensure the instances are
@@ -43,25 +61,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         protected const string UnitAttribute = "units";
         protected const string CoordinatesAttribute = "coordinates";
         
-        
         private const string CF_ROLE = "cf_role";
         private const string TIMESERIES_ID = "timeseries_id";
         private const string PROJECTION_X_COORDINATE = "projection_x_coordinate";
         private const string PROJECTION_Y_COORDINATE = "projection_y_coordinate";
         
-        private const string DefaultFriendlyCategoryName = "Observation points";
 
         private static ReadOnlyDictionary<string, string> UserFriendlyCategoryNames = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>
         {
-            { "cross_section", "Observation cross sections" },
-            { "weirgens", "Weirs + general structures" },
-            { "orifice", "Orifices" },
-            { "culvert", "Culverts" },
-            { "pumps", "Pumps" },
-            { "compoundStructures", "Compound structures" },
-            { "bridge", "Bridges" },
-            { "source_sink", "Source and sinks" },
-            { "lateral", "Laterals" },
+            { "cross_section", UserFriendlyNames.ObservationCrossSections },
+            { "weirgens", UserFriendlyNames.WeirsAndGeneralStructures },
+            { "weirgen", UserFriendlyNames.WeirsAndGeneralStructures },
+            { "orifice", UserFriendlyNames.Orifices },
+            { "culvert", UserFriendlyNames.Culverts },
+            { "pumps", UserFriendlyNames.Pumps },
+            { "pump", UserFriendlyNames.Pumps },
+            { "compoundStructures", UserFriendlyNames.CompoundStructures },
+            { "cmpstru", UserFriendlyNames.CompoundStructures },
+            { "bridge", UserFriendlyNames.Bridges },
+            { "source_sink", UserFriendlyNames.SourcesAndSinks },
+            { "lateral", UserFriendlyNames.Laterals },
         });
 
         // nhib
@@ -166,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     featureVariable.Attributes[NcNameAttribute] = secondDimensionName;
                     if (!UserFriendlyCategoryNames.TryGetValue(secondDimensionName, out string userFriendlyCategoryName))
                     {
-                        userFriendlyCategoryName = DefaultFriendlyCategoryName;
+                        userFriendlyCategoryName = UserFriendlyNames.Default;
                     }
 
                     featureVariable.Attributes[UserFriendlyCategoryNameAttribute] = userFriendlyCategoryName;
