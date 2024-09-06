@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.IsRegionData(null, new List<GroupableFeature2DPoint>());
+                creationContext.IsRegionData(null, new List<ObservationPoint2D>());
             }
 
             // Assert
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             region.ObservationPoints.AddRange(new ObservationPoint2D[3]);
 
             // Act
-            bool result = creationContext.IsRegionData(region, new List<GroupableFeature2DPoint>());
+            bool result = creationContext.IsRegionData(region, new List<ObservationPoint2D>());
 
             // Assert
             Assert.That(result, Is.False);
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<GroupableFeature2DPoint>());
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<ObservationPoint2D>());
             }
 
             // Assert
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(new GroupableFeature2DPoint(), null);
+                creationContext.CreateFeatureRowObject(new ObservationPoint2D(), null);
             }
 
             // Assert
@@ -123,10 +123,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
         {
             // Arrange
             var creationContext = new ObservationPointTableViewCreationContext();
-            var feature = new GroupableFeature2DPoint();
+            var feature = new ObservationPoint2D();
 
             // Act
-            GroupableFeature2DPointRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<GroupableFeature2DPoint>());
+            GroupableFeature2DPointRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<ObservationPoint2D>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

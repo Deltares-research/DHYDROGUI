@@ -10,8 +10,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     /// Provides the creation context for a <see cref="TableViewInfoCreator"/> that should create the table view info for
     /// <see cref="IObservationPoint"/> data.
     /// </summary>
-    /// <seealso cref="GroupableFeatureTableViewCreationContext{GroupableFeature2DPoint,GroupableFeature2DPointRow}"/>
-    public class ObservationPointTableViewCreationContext : GroupableFeatureTableViewCreationContext<GroupableFeature2DPoint, GroupableFeature2DPointRow>
+    /// <seealso cref="GroupableFeatureTableViewCreationContext{ObservationPoint2D,GroupableFeature2DPointRow}"/>
+    public class ObservationPointTableViewCreationContext : GroupableFeatureTableViewCreationContext<ObservationPoint2D, GroupableFeature2DPointRow>
     {
         /// <inheritdoc/>
         public override string GetDescription()
@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
         }
 
         /// <inheritdoc/>
-        public override bool IsRegionData(HydroArea region, IEnumerable<GroupableFeature2DPoint> data)
+        public override bool IsRegionData(HydroArea region, IEnumerable<ObservationPoint2D> data)
         {
             Ensure.NotNull(region, nameof(region));
             Ensure.NotNull(data, nameof(data));
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
             return ReferenceEquals(region.ObservationPoints, data);
         }
 
-        public override GroupableFeature2DPointRow CreateFeatureRowObject(GroupableFeature2DPoint feature, IEnumerable<GroupableFeature2DPoint> allFeatures)
+        public override GroupableFeature2DPointRow CreateFeatureRowObject(ObservationPoint2D feature, IEnumerable<ObservationPoint2D> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
             Ensure.NotNull(allFeatures, nameof(allFeatures));

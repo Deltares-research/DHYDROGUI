@@ -1,15 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DeltaShell.NGHS.TestUtils.Builders;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.ProjectExplorer;
+using DeltaShell.Plugins.SharpMapGis;
+using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using Control = System.Windows.Controls.Control;
 
@@ -148,6 +157,83 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
+        }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void OpenAttributeTableViewForArea2DFeatureListShouldNotThrowException()
+        {
+            using (var gui = CreateGui())
+            {
+                IApplication app = gui.Application;
+                app.UserSettings["ShowStartUpScreen"] = false;
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        Project project = app.ProjectService.CreateProject();
+                        project.RootFolder.Add(model);
+
+                        gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
+
+                        HydroArea area = model.Area;
+                        var featuresToVerify = new List<IEnumerable<IFeature>>
+                        {
+                            area.Pumps,
+                            area.Weirs,
+                            area.Gates,
+                            area.LeveeBreaches,
+                            area.DryPoints,
+                            area.RoofAreas,
+                            area.Gullies,
+                            area.ThinDams,
+                            area.FixedWeirs,
+                            area.LandBoundaries,
+                            area.DryAreas,
+                            area.ObservationPoints,
+                            area.ObservationCrossSections,
+                            area.Embankments,
+                            area.Enclosures,
+                            area.BridgePillars
+                        };
+                        Assert.Multiple(() =>
+                        {
+                            foreach (IEnumerable<IFeature> features2D in featuresToVerify)
+                            {
+                                void OpenViewCall() => gui.CommandHandler.OpenView(features2D);
+                                string typeNameOfEnumerable = GetTypeNameOfEnumerable(features2D);
+                                Assert.That(OpenViewCall, Throws.Nothing, $"Something went wrong when opening the layer of the feature list of type {typeNameOfEnumerable} in an Attribute Table view (MDE) in the FM Model Area of the Map file explorer" );
+                            }
+                        });
+                    }
+                };
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the type name of the elements in a generic IEnumerable.
+        /// </summary>
+        /// <param name="enumerable">An IEnumerable of objects, typically casted from the original generic IEnumerable&lt;T&gt;.</param>
+        /// <returns>The name of the element type T in the IEnumerable&lt;T&gt;.</returns>
+        /// <remarks>
+        /// This method uses reflection to determine the element type of the given IEnumerable, even if it is empty.
+        /// It is important to note that the provided IEnumerable must be a generic type (IEnumerable&lt;T&gt;).
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// IEnumerable&lt;Pump2D&gt; emptyEnumerableOfPumps = Enumerable.Empty&lt;Pump2D&gt;();
+        /// string typeName = GetTypeNameOfEnumerable(emptyEnumerableOfPumps.Cast&lt;object&gt;());
+        /// Console.WriteLine(typeName); // Output: "Pump2D"
+        /// </code>
+        /// </example>
+        private static string GetTypeNameOfEnumerable(IEnumerable<object> enumerable)
+        {
+            Type elementType = enumerable.GetType().GetGenericArguments()[0];
+            return elementType.Name;
         }
 
         private static IGui CreateGui()
