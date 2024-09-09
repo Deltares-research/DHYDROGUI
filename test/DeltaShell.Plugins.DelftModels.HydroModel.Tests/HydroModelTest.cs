@@ -55,6 +55,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [TestFixture]
     public class HydroModelTest
     {
+        [SetUp]
+        public void SetUp()
+        {
+            Sobek2ModelImporters.RegisterSobek2Importer(() => new SobekModelToRainfallRunoffModelImporter());
+            Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Sobek2ModelImporters.ClearRegisteredImporters();
+            Map.CoordinateSystemFactory = null;
+        }
+        
         [Test]
         public void HydroModelValidatesCurrentWorkflow()
         {
@@ -533,9 +547,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Setup
             HydroModel hydroModel = CreateIntegratedModel();
-            AddCatchmentsAndLateralToModel(hydroModel);
             RainfallRunoffModel rrModel = hydroModel.GetActivitiesOfType<RainfallRunoffModel>().First();
             
+            AddCatchmentsAndLateralToModel(hydroModel);
+
             // Call
             ActivityRunner.RunActivity(rrModel);
 
@@ -786,7 +801,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Setup
             string originalDimrPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"HydroModel\RRBoundaryAndLateralSourceHaveDifferentNames\RRBoundaryAndLateralSourceHaveDifferentNames.xml");
-            SetRequiredSettingsForDimrImport();
 
             using (var tempDir = new TemporaryDirectory())
             {
@@ -820,12 +834,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void IntegratedModelWithLinksFromCatchmentsToFmLateralsAndRRBoundaries_ShouldImportLinksCorrectly()
         {
             // Setup
-            SetRequiredSettingsForDimrImport();
-
             using (var tempDir = new TemporaryDirectory())
             using (HydroModel integratedModel = CreateIntegratedModel())
             {
                 AddCatchmentsAndLateralToModel(integratedModel);
+                
                 string dimrPath = Path.Combine(tempDir.Path, "dimr.xml");
 
                 // Call
@@ -930,22 +943,88 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.That(rrModel.Basin.Boundaries.Count, Is.EqualTo(1));
             }
         }
-
+        
         [Test]
         [Category(TestCategory.Integration)]
-        public void ExportingDimrModelWithWWTPLinkedToLateralSource_WritesExchangesToDimrFile()
+        public void LoadingDimrModelWithWWTPLinkedToLateralSource_KeepsModelLinkBetweenWWTPAndLateral()
         {
             // Setup
-            SetRequiredSettingsForDimrImport();
-            
+            using (var tempDir = new TemporaryDirectory())
+            using (IApplication app = GetConfiguredApplication())
+            using (HydroModel integratedModel = CreateIntegratedModel())
+            {
+                AddWWTPLinkedLateralToModel(integratedModel);
+                
+                IProjectService projectService = app.ProjectService;
+                projectService.Project.RootFolder.Add(integratedModel);
+                
+                string dsprojPath = Path.Combine(tempDir.Path, "randomName.dsproj");
+                projectService.SaveProjectAs(dsprojPath);
+                projectService.CloseProject();
+
+                // Call
+                Project project = projectService.OpenProject(dsprojPath);
+                HydroModel loadedModel = project.GetAllItemsRecursive().OfType<HydroModel>().FirstOrDefault();
+                
+                // Assert
+                Assert.That(loadedModel, Is.Not.Null);
+                
+                RainfallRunoffModel rrModel = loadedModel.Models.OfType<RainfallRunoffModel>().First();
+
+                Assert.That(loadedModel.Region.Links.Count, Is.EqualTo(1)); // From WWTP to lateral source
+                HydroLink hydroLink = loadedModel.Region.Links.First();
+                Assert.That(hydroLink.Source, Is.TypeOf<WasteWaterTreatmentPlant>());
+                Assert.That(hydroLink.Target, Is.TypeOf<LateralSource>());
+
+                Assert.That(rrModel.Basin.Links.Count, Is.EqualTo(2));      // From catchment to WWTP and to RR boundary
+                Assert.That(rrModel.Basin.Boundaries.Count, Is.EqualTo(1)); // The RR boundary linked from the catchment
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void ImportingDimrModelWithWWTPLinkedToLateralSource_KeepsModelLinkBetweenWWTPAndLateral()
+        {
+            // Setup
             using (var tempDir = new TemporaryDirectory())
             using (HydroModel integratedModel = CreateIntegratedModel())
             {
                 AddWWTPLinkedLateralToModel(integratedModel);
                 
                 string dimrPath = Path.Combine(tempDir.Path, "dimr.xml");
+                ExportToDimrXml(integratedModel, dimrPath);
                 
+                // Call
+                object importedModel = ImportFromDimrXml(dimrPath);
                 
+                // Assert
+                Assert.That(importedModel, Is.TypeOf<HydroModel>());
+
+                var hydroModel = (HydroModel)importedModel;
+                RainfallRunoffModel rrModel = hydroModel.Models.OfType<RainfallRunoffModel>().First();
+
+                Assert.That(hydroModel.Region.Links.Count, Is.EqualTo(1)); // From WWTP to lateral source
+                HydroLink hydroLink = hydroModel.Region.Links.First();
+                Assert.That(hydroLink.Source, Is.TypeOf<WasteWaterTreatmentPlant>());
+                Assert.That(hydroLink.Target, Is.TypeOf<LateralSource>());
+
+                Assert.That(rrModel.Basin.Links.Count, Is.EqualTo(2)); // From catchment to WWTP and to RR boundary
+                Assert.That(rrModel.Basin.Boundaries.Count, Is.EqualTo(1)); // The RR boundary linked from the catchment
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void ExportingDimrModelWithWWTPLinkedToLateralSource_WritesExchangesToDimrFile()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            using (HydroModel integratedModel = CreateIntegratedModel())
+            {
+                AddWWTPLinkedLateralToModel(integratedModel);
+                
+                string dimrPath = Path.Combine(tempDir.Path, "dimr.xml");
+
                 // Call
                 ExportToDimrXml(integratedModel, dimrPath);
 
@@ -970,8 +1049,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void SavingDimrModelWithWWTPLinkedToLateralSource_WritesExchangesToRegionExchangesJson()
         {
             // Setup
-            SetRequiredSettingsForDimrImport();
-            
             using (var tempDir = new TemporaryDirectory())
             using (IApplication app = GetConfiguredApplication())
             using (HydroModel integratedModel = CreateIntegratedModel())
@@ -1204,12 +1281,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.Run();
             app.ProjectService.CreateProject();
             return app;
-        }
-
-        private static void SetRequiredSettingsForDimrImport()
-        {
-            Sobek2ModelImporters.RegisterSobek2Importer(() => new SobekModelToRainfallRunoffModelImporter());
-            Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
         }
         
         private static object ImportFromDimrXml(string dimrPath)

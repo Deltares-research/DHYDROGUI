@@ -13,10 +13,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
     {
         [Test]
         [TestCaseSource(nameof(ArgNullCases))]
-        public void GivenNull_WhenConstructing_ThrowsArgumentNullException(IDrainageBasin basin, Dictionary<string, SobekRRLink[]> lateralToCatchmentLookup)
+        public void GivenNull_WhenConstructing_ThrowsArgumentNullException(IDrainageBasin basin, Dictionary<string, SobekRRLink[]> lateralToLinkableObjects)
         {
             // Call
-            void Call() => new RainfallRunoffHydroCoupling(basin, lateralToCatchmentLookup);
+            void Call() => _ = new RainfallRunoffHydroCoupling(basin, lateralToLinkableObjects);
 
             // Assert
             Assert.That(Call, Throws.Exception.TypeOf<ArgumentNullException>());
@@ -27,10 +27,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         {
             //Arrange
             var basin = Substitute.For<IDrainageBasin>();
-            var lateralToCatchmentLookup = new Dictionary<string, SobekRRLink[]>();
+            var lateralToLinkableObjects = new Dictionary<string, SobekRRLink[]>();
             
             //Act
-            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToCatchmentLookup);
+            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToLinkableObjects);
             
             //Assert
             Assert.That(coupling.HasEnded, Is.False);
@@ -41,8 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         {
             //Arrange
             var basin = Substitute.For<IDrainageBasin>();
-            var lateralToCatchmentLookup = new Dictionary<string, SobekRRLink[]>();
-            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToCatchmentLookup);
+            var lateralToLinkableObjects = new Dictionary<string, SobekRRLink[]>();
+            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToLinkableObjects);
             
             //Act
             coupling.End();
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         {
             //Arrange
             var basin = Substitute.For<IDrainageBasin>();
-            var lateralToCatchmentLookup = new Dictionary<string, SobekRRLink[]>();
+            var lateralToLinkableObjects = new Dictionary<string, SobekRRLink[]>();
             
             var target = Substitute.For<IHydroObject>();
             target.Name.Returns("target");
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             var hydroLink = new HydroLink(source, target);
             source.LinkTo(target).Returns(hydroLink);
 
-            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToCatchmentLookup);
+            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToLinkableObjects);
 
             //Act
             IHydroLink receivedHydroLink = coupling.CreateLink(source, target);
@@ -95,15 +95,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             var hydroLink = new HydroLink(source, target);
             source.LinkTo(target).Returns(hydroLink);
             
-            var lateralToCatchmentLookup = new Dictionary<string, SobekRRLink[]>();
+            var lateralToLinkableObjects = new Dictionary<string, SobekRRLink[]>();
             const string lateralName = "Lateral";
             SobekRRLink[] sobekRRLink =
             {
                 new SobekRRLink()
             };
-            lateralToCatchmentLookup.Add(lateralName, sobekRRLink);
+            lateralToLinkableObjects.Add(lateralName, sobekRRLink);
 
-            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToCatchmentLookup);
+            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToLinkableObjects);
 
             //Act
             coupling.Prepare();
@@ -134,13 +134,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             
             var basin = Substitute.For<IDrainageBasin>();
             
-            var lateralToCatchmentLookup = new Dictionary<string, SobekRRLink[]>();
+            var lateralToLinkableObjects = new Dictionary<string, SobekRRLink[]>();
             
             SobekRRLink[] sobekRRLink =
             {
                 new SobekRRLink()
             };
-            lateralToCatchmentLookup.Add(targetName, sobekRRLink);
+            lateralToLinkableObjects.Add(targetName, sobekRRLink);
 
             var runoffBoundary = new RunoffBoundary { Name = targetName };
             var catchment1 = new Catchment
@@ -150,9 +150,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             };
 
             basin.AllCatchments.Returns(new List<Catchment> { catchment1 });
-            basin.Boundaries.Returns(new EventedList<RunoffBoundary>() { runoffBoundary });
+            basin.Boundaries.Returns(new EventedList<RunoffBoundary> { runoffBoundary });
 
-            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToCatchmentLookup);
+            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToLinkableObjects);
 
             //Act
             coupling.Prepare();
@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         {
             //Arrange
             var basin = Substitute.For<IDrainageBasin>();
-            var lateralToCatchmentLookup = new Dictionary<string, SobekRRLink[]>();
+            var lateralToLinkableObjects = new Dictionary<string, SobekRRLink[]>();
             
             var target = Substitute.For<IHydroObject>();
             target.Name.Returns("target");
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             var hydroLink = new HydroLink(source, target);
             source.LinkTo(target).Returns(hydroLink);
 
-            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToCatchmentLookup);
+            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToLinkableObjects);
 
             //Act
             IHydroLink receivedHydroLink = coupling.CreateLink(source, target);
@@ -199,8 +199,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         {
             //Arrange
             var basin = Substitute.For<IDrainageBasin>();
-            var lateralToCatchmentLookup = new Dictionary<string, SobekRRLink[]>();
-            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToCatchmentLookup);
+            var lateralToLinkableObjects = new Dictionary<string, SobekRRLink[]>();
+            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToLinkableObjects);
             
             // Call
             
@@ -215,8 +215,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         {
             //Arrange
             var basin = Substitute.For<IDrainageBasin>();
-            var lateralToCatchmentLookup = new Dictionary<string, SobekRRLink[]>();
-            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToCatchmentLookup);
+            var lateralToLinkableObjects = new Dictionary<string, SobekRRLink[]>();
+            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToLinkableObjects);
             IHydroObject catchment = new Catchment();
             
             // Call
@@ -231,8 +231,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         {
             //Arrange
             var basin = Substitute.For<IDrainageBasin>();
-            var lateralToCatchmentLookup = new Dictionary<string, SobekRRLink[]>();
-            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToCatchmentLookup);
+            var lateralToLinkableObjects = new Dictionary<string, SobekRRLink[]>();
+            var coupling = new RainfallRunoffHydroCoupling(basin, lateralToLinkableObjects);
             var catchment = Substitute.For<IHydroObject>();
             
             // Call

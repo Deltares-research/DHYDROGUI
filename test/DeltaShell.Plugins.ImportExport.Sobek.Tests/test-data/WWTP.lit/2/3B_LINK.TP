@@ -1,0 +1,8 @@
+BBB2.2
+BRCH id '6' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'paved' en 'dkfjsdfefsdfdf'  brch
+BRCH id '7' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'paved' en 'wwtp'  brch
+BRCH id '8' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'wwtp' en 'dkfjsdfefsdfdf'  brch
+BRCH id '9' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'paved2' en 'dkfjsdfefsdfdf'  brch
+BRCH id '10' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'paved2' en 'wwtp_test'  brch
+BRCH id '11' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'wwtp_test' en 'dkfjsdfefsdfdf'  brch
+BRCH id '12' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'unpaved' en 'dkfjsdfefsdfdf'  brch

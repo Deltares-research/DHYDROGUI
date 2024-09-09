@@ -1,0 +1,20 @@
+** INFO   : Deltares, RainfallRunoff Version 3.216.56.74250M (Win64), Feb 04 2022, 09:06:52
+** WARNING: MeteoNetCdfInputFile not found, will read meteo data from ASCII rainfall file
+** INFO   : Following dimensions have been set:
+  Number of nodes       =           5
+  Boundary nodes        =           1
+  Paved areas           =           2
+  WWTP or RWZI nodes    =           2
+** INFO   : Read WWTP.3B file
+** INFO   : Read WWTP.Tbl file
+  RRConnection nodes    =           1
+  RRBifurcation nodes    =           1
+** WARNING: Warning: Only one weatherstation in rainfall/runoff/temperature file. No check of meteostation names performed; all nodes use this one and only meteostation.
+** WARNING: Warning: Only one weatherstation in rainfall/runoff/temperature file. No check of meteostation names performed; all nodes use this one and only meteostation.
+** INFO   : Read Meteo files
+** WARNING: RROpenWater_IndexEvap and IndexPrecip put to 1, not available since no open water
+  RROpenWater_IndexEvap=           1
+  RROpenWater_IndexPrecip=           1
+  Start event            1
+** WARNING: LGSICacheFile not found, will be written
+** INFO   :  Succesfull logout of Sobek_RR

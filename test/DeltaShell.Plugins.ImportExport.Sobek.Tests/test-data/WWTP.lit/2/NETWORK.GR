@@ -1,0 +1,9 @@
+GR_1.2
+GRID id '1' ci '1' re 0 dc 0 gr gr 
+'GridPoint Table' PDIN 0 0 '' pdin CLTT 'Location' '1/R' cltt CLID '' '' clid
+TBLE
+0 0 '' 'dkfj' '1' -72244.0387112328 520872.278556263 '' 'dkfj' '' <
+31248.6346638451 0 '1' 'dkfjsdfef' '2' -41253.1868825636 524877.808644521 '' 'dkfjsdfef' '' <
+78742.1021857645 0 '4' 'dkfjsdfefsdf' '3' 5848.48749889244 530965.643047566 '' 'dkfjsdfefsdf' '' <
+124857.771371159 0 '5' 'dkfjsdf' '' 51583.7295687819 536876.867728238 '' 'dkfjsdf' '' <
+tble grid

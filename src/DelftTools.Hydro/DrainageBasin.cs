@@ -13,7 +13,8 @@ using NetTopologySuite.Extensions.Features;
 namespace DelftTools.Hydro
 {
     /// <summary>
-    /// Drainage basin is defined as a set of catchments (sub-basins) covering some drainage area, including a set of related hydgraphic features such as waste-water treatment plants.
+    /// Drainage basin is defined as a set of catchments (sub-basins) covering some drainage area,
+    /// including a set of related hydrographic features such as waste-water treatment plants.
     /// </summary>
     [Entity]
     [DisplayName("Drainage Basin")]

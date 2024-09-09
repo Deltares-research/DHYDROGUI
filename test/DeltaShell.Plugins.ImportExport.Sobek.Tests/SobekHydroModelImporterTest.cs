@@ -249,7 +249,55 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.That(rainFallRunoffModel.StopTime, Is.EqualTo(new DateTime(2021, 1, 2)));
             Assert.That(rainFallRunoffModel.TimeStep, Is.EqualTo(TimeSpan.FromHours(1)));
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void GivenAHydroModel_WhenImportingModelWithWWTPLinkedToLateralSource_ThenLinksAreCorrectlyRestored()
+        {
+            // Setup
+            string testDir = TestHelper.GetTestDataDirectory() + @"\WWTP.lit";
+            
+            HydroModel hydroModel = CreateHydroModel();
+            RainfallRunoffModel rrModel = hydroModel.Models.OfType<RainfallRunoffModel>().First();
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string directory = temp.CopyDirectoryToTempDirectory(testDir);
+                string filePath = Path.Combine(directory, "2", "NETWORK.TP");
+
+                IPartialSobekImporter partialImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(filePath, hydroModel);
+                var importer = new SobekHydroModelImporter(false)
+                {
+                    TargetObject = hydroModel,
+                    PartialSobekImporter = partialImporter,
+                    PathSobek = filePath
+                };
+
+                // Call
+                importer.ImportItem(filePath, hydroModel);
+            }
+
+            // Assert
+            Assert.That(hydroModel.Region.Links.Count, Is.EqualTo(5));
+            Assert.That(rrModel.Basin.Links.Count, Is.EqualTo(2));
+
+            AssertLink<WasteWaterTreatmentPlant, LateralSource>(hydroModel.Region.Links[0], "wwtp_test", "dkfjsdfefsdfdf");
+            AssertLink<WasteWaterTreatmentPlant, LateralSource>(hydroModel.Region.Links[1], "wwtp", "dkfjsdfefsdfdf");
+            AssertLink<Catchment, LateralSource>(hydroModel.Region.Links[2], "unpaved", "dkfjsdfefsdfdf");
+            AssertLink<Catchment, LateralSource>(hydroModel.Region.Links[3], "paved2", "dkfjsdfefsdfdf");
+            AssertLink<Catchment, LateralSource>(hydroModel.Region.Links[4], "paved", "dkfjsdfefsdfdf");
+            AssertLink<Catchment, WasteWaterTreatmentPlant>(rrModel.Basin.Links[0], "paved2", "wwtp_test");
+            AssertLink<Catchment, WasteWaterTreatmentPlant>(rrModel.Basin.Links[1], "paved", "wwtp");
+        }
         
+        private static void AssertLink<TSource, TTarget>(HydroLink link, string sourceName, string targetName)
+        {
+            Assert.That(link.Source.Name, Is.EqualTo(sourceName));
+            Assert.That(link.Target.Name, Is.EqualTo(targetName));
+            Assert.That(link.Source, Is.InstanceOf<TSource>());
+            Assert.That(link.Target, Is.TypeOf<TTarget>());
+        }
 
         private static HydroModel CreateHydroModel()
         {
