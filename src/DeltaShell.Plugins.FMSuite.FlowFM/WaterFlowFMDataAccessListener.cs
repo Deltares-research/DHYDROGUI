@@ -69,8 +69,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 // Update bathymetry coverage based on specified value in .mdu file
                 var bedLevelTypeProperty = model.ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
-                if(bedLevelTypeProperty != null)
-                    model.UpdateBathymetryCoverage((UGridFileHelper.BedLevelLocation) bedLevelTypeProperty.Value);
+                if (bedLevelTypeProperty != null)
+                {
+                    model.UpdateBathymetryCoverage((BedLevelLocation) bedLevelTypeProperty.Value);
+                }
             }
         }
 

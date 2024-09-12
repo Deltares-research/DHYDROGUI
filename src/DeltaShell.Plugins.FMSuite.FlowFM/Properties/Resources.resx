@@ -706,6 +706,12 @@ File import of structures file '{1}' has failed.</value>
   <data name="ExtForceFile_StoreUnknownQuantities_Spatial_varying_quantity__0__detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_" xml:space="preserve">
     <value>Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.</value>
   </data>
+  <data name="ConstructFunctions_Reading_file_output_into_our_FM_model" xml:space="preserve">
+    <value>Reading {0} file {1} (as output) into our model.</value>
+  </data>
+  <data name="LoadStateFromMdu_Reading_Z_coordinate_NoDataValue_from__0_" xml:space="preserve">
+    <value>Reading Z-coordinate NoDataValue from {0}</value>
+  </data>
   <data name="Interval_must_be_a_multiple_of_the_user_timestep_" xml:space="preserve">
     <value>{0} interval must be a multiple of the user timestep.</value>
   </data>

@@ -184,7 +184,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
 
                 var newGrid = new UnstructuredGrid();
-                UGridFileHelper.SetUnstructuredGrid(NetFilePath, newGrid); //may throw...
+                using (var ugridFile = new UGridFile(NetFilePath))
+                {
+                    ugridFile.SetUnstructuredGrid(newGrid); //may throw...
+                }
+
                 if (loadBathymetry)
                 {
                     var originalBathymetry = GetOriginalCoverage(Bathymetry);
@@ -201,7 +205,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                 }
 
-                bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(NetFilePath, BedLevelLocation);
+                using (var ugridFile = new UGridFile(NetFilePath))
+                {
+                    bathymetryNoDataValue = ugridFile.GetZCoordinateNoDataValue(BedLevelLocation);
+                }
+                
 
                 if (Grid != null)
                 {
@@ -255,7 +263,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public UGridFileHelper.BedLevelLocation BedLevelLocation
+        public BedLevelLocation BedLevelLocation
         {
             get
             {
@@ -265,11 +273,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 if (bedLevelTypeProperty == null)
                 {
-                    Log.WarnFormat("Cannot determine Bed level location, z-values will be exported as {0}", default(UGridFileHelper.BedLevelLocation));
-                    return default(UGridFileHelper.BedLevelLocation);
+                    Log.WarnFormat("Cannot determine Bed level location, z-values will be exported as {0}", default(BedLevelLocation));
+                    return default(BedLevelLocation);
                 }
 
-                return (UGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+                return (BedLevelLocation)bedLevelTypeProperty.Value;
 
             }
         }
@@ -279,22 +287,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private static void WriteNetFile(string path, UnstructuredGrid grid, IHydroNetwork network, IDiscretization networkDiscretization
-            , IEnumerable<ILink1D2D> links, string name, UGridFileHelper.BedLevelLocation location, double[] zValues)
+            , IEnumerable<ILink1D2D> links, string name, BedLevelLocation location, double[] zValues)
         {
-            if (path == null) return;
-            UGridFileHelper.WriteGridToFile(path, grid, network, networkDiscretization, links, name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, location, zValues);
-            // if needed, adjust coordinate system in netfile
-            if (File.Exists(path) && grid?.CoordinateSystem != null && !grid.CoordinateSystem.IsNetfileCoordinateSystemUpToDate(path))
-                UGridFileHelper.WriteCoordinateSystem(path, grid.CoordinateSystem);
+            if (path == null)
+            {
+                return;
+            }
 
+            using (var ugridFile = new UGridFile(path))
+            {
+                ugridFile.InitializeMetaData(name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
+                ugridFile.WriteGridToFile(grid, network, networkDiscretization, links, location, zValues);
+                
+                // if needed, adjust coordinate system in netfile
+                if (File.Exists(path) && grid?.CoordinateSystem != null && !grid.CoordinateSystem.IsNetfileCoordinateSystemUpToDate(path))
+                {
+                    ugridFile.WriteCoordinateSystem(grid.CoordinateSystem);
+                }
+            }
         }
 
         private void InitializeUnstructuredGridCoverages()
         {
-            var bedLevelLocationsForUnstructuredGridCellCoverage = new List<UGridFileHelper.BedLevelLocation>
+            var bedLevelLocationsForUnstructuredGridCellCoverage = new List<BedLevelLocation>
             {
-                UGridFileHelper.BedLevelLocation.Faces,
-                UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes
+                BedLevelLocation.Faces,
+                BedLevelLocation.FacesMeanLevFromNodes
             };
 
             // Update bathymetry coverage based on specified value in .mdu file
@@ -302,7 +320,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
             if (bedLevelTypeProperty != null)
             {
-                var bedLevelType = (UGridFileHelper.BedLevelLocation) bedLevelTypeProperty.Value;
+                var bedLevelType = (BedLevelLocation) bedLevelTypeProperty.Value;
                 var zValues = GetZValuesFromNetFile(bedLevelType);
                 if (bedLevelLocationsForUnstructuredGridCellCoverage.Contains(bedLevelType))
                 {
@@ -346,29 +364,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             InitialFractions.CollectionChanged += SpatialDataFractionsChanged;
         }
 
-        internal void UpdateBathymetryCoverage(UGridFileHelper.BedLevelLocation bedLevelType)
+        internal void UpdateBathymetryCoverage(BedLevelLocation bedLevelType)
         {
             if (Bathymetry == null) return;
 
             double[] zValues = null;
             switch (bedLevelType)
             {
-                case UGridFileHelper.BedLevelLocation.Faces:
-                case UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
+                case BedLevelLocation.Faces:
+                case BedLevelLocation.FacesMeanLevFromNodes:
                     if (Bathymetry is UnstructuredGridCellCoverage && Bathymetry.GetValues().Count == Grid.Cells.Count) return;
                     zValues = GetZValuesFromNetFile(bedLevelType);
                     Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
-                case UGridFileHelper.BedLevelLocation.CellEdges:
+                case BedLevelLocation.CellEdges:
                     Log.WarnFormat(Resources.WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_not_currently_supported);
                     // Not supported yet, so create a VertexCoverage for now
                     if (Bathymetry is UnstructuredGridVertexCoverage && Bathymetry.GetValues().Count == Grid.Vertices.Count) return;
                     zValues = GetZValuesFromNetFile(bedLevelType);
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
-                case UGridFileHelper.BedLevelLocation.NodesMeanLev:
-                case UGridFileHelper.BedLevelLocation.NodesMinLev:
-                case UGridFileHelper.BedLevelLocation.NodesMaxLev:
+                case BedLevelLocation.NodesMeanLev:
+                case BedLevelLocation.NodesMinLev:
+                case BedLevelLocation.NodesMaxLev:
                     if (Bathymetry is UnstructuredGridVertexCoverage && Bathymetry.GetValues().Count == Grid.Vertices.Count) return;
                     zValues = GetZValuesFromNetFile(bedLevelType);
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
@@ -396,11 +414,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private double[] GetZValuesFromNetFile(UGridFileHelper.BedLevelLocation bedLevelType)
+        private double[] GetZValuesFromNetFile(BedLevelLocation bedLevelType)
         {
             if(string.IsNullOrEmpty(NetFilePath) || !File.Exists(NetFilePath)) return null;
-            var zValuesFromNetFile = UGridFileHelper.ReadZValues(NetFilePath, bedLevelType);
-            return zValuesFromNetFile.Length > 0 ? zValuesFromNetFile : null;
+            using (var uGridFile = new UGridFile(NetFilePath))
+            {
+                var zValuesFromNetFile = uGridFile.ReadZValues(bedLevelType);
+                return zValuesFromNetFile.Length > 0 ? zValuesFromNetFile : null;
+            }
         }
 
         private static UnstructuredGridVertexCoverage CreateUnstructuredGridVertexCoverage(string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)

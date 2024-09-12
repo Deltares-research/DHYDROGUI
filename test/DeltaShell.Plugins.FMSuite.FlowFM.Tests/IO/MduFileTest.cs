@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
@@ -497,7 +496,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var fileProjectedName = TypeUtils.CallPrivateStaticMethod(typeof(ICoordinateSystemExtensions), "GetProjectedCoordinateSystemNameFromNetFile", workingNetFilePath) as string;
             Assert.That(fileProjectedName, Is.EqualTo("Unknown projected"));
 
-            UGridFileHelper.WriteCoordinateSystem(workingNetFilePath, coordinateSystem);
+            using (var ugridFile = new UGridFile(workingNetFilePath))
+                ugridFile.WriteCoordinateSystem(coordinateSystem);
 
             var editedFileProjectedName = TypeUtils.CallPrivateStaticMethod(typeof(ICoordinateSystemExtensions), "GetProjectedCoordinateSystemNameFromNetFile", workingNetFilePath) as string;
             Assert.IsTrue(editedFileProjectedName.Equals(expectedCoordinateSystemName));

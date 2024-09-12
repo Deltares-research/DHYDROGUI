@@ -286,7 +286,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return false;
             }
 
-            UGridFileHelper.SetUnstructuredGrid(gridFilePath, grid, recreateCells : true);
+            using (var ugridFile = new UGridFile(gridFilePath))
+            {
+                ugridFile.SetUnstructuredGrid(grid, recreateCells : true);
+            }
             grid.GenerateFlowLinks();
             return true;
         }

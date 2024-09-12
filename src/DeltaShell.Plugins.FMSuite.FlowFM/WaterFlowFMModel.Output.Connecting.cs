@@ -12,6 +12,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using GeoAPI.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -87,7 +88,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (mapFilePath != null)
             {
                 ReportProgressText("Reading map file");
-                var cs = UGridFileHelper.ReadCoordinateSystem(mapFilePath);
+
+                ICoordinateSystem cs;
+                using (var ugridFile = new UGridFile(mapFilePath))
+                {
+                    cs = ugridFile.ReadCoordinateSystem();
+                }
 
                 // update map file coordinate system:
                 if (!Grid.IsEmpty)

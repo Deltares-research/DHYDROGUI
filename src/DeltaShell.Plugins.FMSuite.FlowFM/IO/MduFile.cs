@@ -290,9 +290,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            var location = (UGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+            var location = (BedLevelLocation)bedLevelTypeProperty.Value;
             var values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
-            UGridFileHelper.WriteZValues(path, location, values);
+            using (var ugridFile = new UGridFile(path))
+            {
+                ugridFile.WriteZValues(location, values);
+            }
         }
 
         private static string VerifyTargetDirectory(string targetMduFilePath)
@@ -338,7 +341,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // if needed, adjust coordinate system in netfile
             if (modelDefinition.CoordinateSystem != null && File.Exists(targetPath) && !modelDefinition.CoordinateSystem.IsNetfileCoordinateSystemUpToDate(targetPath))
             {
-                UGridFileHelper.WriteCoordinateSystem(targetPath, modelDefinition.CoordinateSystem);
+                using (var ugridFile = new UGridFile(targetPath))
+                {
+                    ugridFile.WriteCoordinateSystem(modelDefinition.CoordinateSystem);
+                }
             }
         }
 
@@ -1016,7 +1022,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 IEnumerable<BranchProperties> branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
                 convertedFileObjectsForFMModel.CompartmentProperties = compartmentData;
                 convertedFileObjectsForFMModel.BranchProperties = branchData;
-                UGridFileHelper.ReadNetFileDataIntoModel(netFilePath, convertedFileObjectsForFMModel, reportProgress: (progressText) =>  reportProgress?.Invoke(Resources.MduFile_Read_Reading_netFile + Environment.NewLine + progressText));
+
+                var logHandler = new LogHandler($"Reading netfile {netFilePath} into our model.", Log);
+                using (var ugridFile = new UGridFile(netFilePath))
+                {
+                    Action<string> progress = (progressText) =>  reportProgress?.Invoke(Resources.MduFile_Read_Reading_netFile + Environment.NewLine + progressText);
+
+                    ugridFile.ReadNetFileDataIntoModel(convertedFileObjectsForFMModel, logHandler: logHandler, reportProgress: progress);
+                }
+
+                logHandler.LogReport();
             }
         }
 

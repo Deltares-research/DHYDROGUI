@@ -1179,9 +1179,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(
             new[]
             {
-                UGridFileHelper.BedLevelLocation.Faces,
-                UGridFileHelper.BedLevelLocation.NodesMeanLev,
-                UGridFileHelper.BedLevelLocation.Faces
+                BedLevelLocation.Faces,
+                BedLevelLocation.NodesMeanLev,
+                BedLevelLocation.Faces
             }, 
             new[]
             {
@@ -1193,9 +1193,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(
             new[]
             {
-                UGridFileHelper.BedLevelLocation.NodesMaxLev,
-                UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes,
-                UGridFileHelper.BedLevelLocation.NodesMinLev
+                BedLevelLocation.NodesMaxLev,
+                BedLevelLocation.FacesMeanLevFromNodes,
+                BedLevelLocation.NodesMinLev
             }, 
             new[]
             {
@@ -1207,7 +1207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(
             new[]
             {
-                UGridFileHelper.BedLevelLocation.CellEdges
+                BedLevelLocation.CellEdges
             }, 
             new[]
             {
@@ -1217,7 +1217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         )]
 
-        public void TestUpdateBathymetryCoverage(UGridFileHelper.BedLevelLocation[] bedLevelLocations, Type[] coverageTypes)
+        public void TestUpdateBathymetryCoverage(BedLevelLocation[] bedLevelLocations, Type[] coverageTypes)
         {
             // if this is false, the test cases are not correct
             Assert.That(coverageTypes.Length, Is.EqualTo(bedLevelLocations.Length));

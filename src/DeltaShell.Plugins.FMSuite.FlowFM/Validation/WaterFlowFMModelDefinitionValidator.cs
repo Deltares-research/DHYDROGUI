@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         var useMorSed = modelDefinition.UseMorphologySediment;
                         if (useMorSed
                             && int.TryParse(waterFlowFmProperty.GetValueAsString(), out bedLevelTypeNumber) &&
-                            !bedLevelTypeNumber.Equals((int) UGridFileHelper.BedLevelLocation.Faces))
+                            !bedLevelTypeNumber.Equals((int) BedLevelLocation.Faces))
                             issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
                                 "Bed level locations should be set to 'cells' when morphology is active."));
                     }

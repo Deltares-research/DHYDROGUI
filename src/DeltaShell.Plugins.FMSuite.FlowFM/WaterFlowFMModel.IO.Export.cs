@@ -83,8 +83,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 string workNetFile = MduFileHelper.GetSubfilePath(mduPath, ModelDefinition.GetModelProperty(KnownProperties.NetFile));
                 WriteNetFile(workNetFile, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation, BedLevelZValues);
                 var newGrid = new UnstructuredGrid();
-                UGridFileHelper.SetUnstructuredGrid(workNetFile, newGrid); //may throw...
-                bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(workNetFile, BedLevelLocation);
+                using (var ugridFile = new UGridFile(workNetFile))
+                {
+                    ugridFile.SetUnstructuredGrid(newGrid); //may throw...
+                    bathymetryNoDataValue = ugridFile.GetZCoordinateNoDataValue(BedLevelLocation);
+                }
 
                 MduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering, UseMorSed ? this : null, false);
             }

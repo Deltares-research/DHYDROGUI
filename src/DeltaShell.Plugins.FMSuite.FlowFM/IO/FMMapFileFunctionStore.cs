@@ -10,7 +10,7 @@ using DelftTools.Hydro.Link1d2d;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.NGHS.IO.FileWriters.Network;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -21,8 +21,6 @@ using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Extensions.Networks;
-using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -104,18 +102,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 Links1D2D = Links
             };
             boundaryCellValues.Clear();
-            UGridFileHelper.ReadNetFileDataIntoModel(netCdfFile.Path, convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths:true);
-            
-            var isUGrid = UGridFileHelper.IsUGridFile(netCdfFile.Path);
-            
-            var functions = GetFunctions(dataVariables, isUGrid);
-
-            if (!isUGrid)
+            using (var ugridFile = new UGridFile(netCdfFile.Path))
             {
-                LogWarningsForExcludedTimeDependentVariables(dataVariables);
-            }
+                var logHandler = new LogHandler($"Reading fm 2D map file {netCdfFile.Path} (as output) into our model.", log);
+                ugridFile.ReadNetFileDataIntoModel(convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths: true, logHandler: logHandler, reportProgress: null);
+                logHandler.LogReport();
 
-            return functions;
+                var isUGrid = ugridFile.IsUGridFile();
+                
+                var functions = GetFunctions(dataVariables, isUGrid);
+
+                if (!isUGrid)
+                {
+                    LogWarningsForExcludedTimeDependentVariables(dataVariables);
+                }
+
+                return functions;
+            }
         }
 
         protected override int GetVariableValuesCount(IVariable function, IVariableFilter[] filters)
@@ -586,23 +589,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             string coverageLongName = longName != null
                 ? string.Format("{0} ({1})", longName, netCdfVariableName)
                 : netCdfVariableName;
-
-            string location = UGridFileHelper.IsUGridFile(netCdfFile.Path)
-                ? netCdfFile.GetAttributeValue(netcdfVariable, UGridConstants.Naming.LocationAttributeName)
-                : secondDimensionName; // backwards compatibility
-
-            string unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
-
-            return new CoverageCreationData
+            using (var ugridFile = new UGridFile(netCdfFile.Path))
             {
-                VariableName = netCdfVariableName,
-                SecondDimensionName = secondDimensionName,
-                Dimensions = dimensions,
-                VariableInfo = timeDependentVariable,
-                CoverageLongName = coverageLongName,
-                Location = location,
-                UnitSymbol = unitSymbol
-            };
+                string location = ugridFile.IsUGridFile()
+                                      ? netCdfFile.GetAttributeValue(netcdfVariable, UGridConstants.Naming.LocationAttributeName)
+                                      : secondDimensionName; // backwards compatibility
+                
+                string unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
+
+                return new CoverageCreationData
+                {
+                    VariableName = netCdfVariableName,
+                    SecondDimensionName = secondDimensionName,
+                    Dimensions = dimensions,
+                    VariableInfo = timeDependentVariable,
+                    CoverageLongName = coverageLongName,
+                    Location = location,
+                    UnitSymbol = unitSymbol
+                };
+            }
         }
 
         private IEnumerable<ICoverage> Process2dMeshVariable(NetCdfVariableInfo timeDependentVariable)

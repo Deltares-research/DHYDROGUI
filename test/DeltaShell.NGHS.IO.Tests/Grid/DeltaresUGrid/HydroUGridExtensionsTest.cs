@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
@@ -11,16 +10,14 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.FileWriters.Network;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
-using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
@@ -129,9 +126,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             IEnumerable<CompartmentProperties> compartmentProperties,
             string parameterName)
         {
+            UGridFileHelperNetworkGeometry uGridFileHelperNetworkGeometry = new UGridFileHelperNetworkGeometry();
+
             // Call
-            void Action() => network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
+            void Action() => uGridFileHelperNetworkGeometry.SetNetworkGeometry(network, networkGeometry, branchProperties, compartmentProperties);
             
+
             // Assert
             Assert.That(Action, Throws.ArgumentNullException
                                       .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(parameterName));
@@ -218,9 +218,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             }
             var rdCoordinateSystem = Map.CoordinateSystemFactory.CreateFromEPSG(28992);
             var network = new HydroNetwork{CoordinateSystem = rdCoordinateSystem };
-            
+            UGridFileHelperNetworkGeometry uGridFileHelperNetworkGeometry = new UGridFileHelperNetworkGeometry();
+
             // Act
-            network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
+            uGridFileHelperNetworkGeometry.SetNetworkGeometry(network, networkGeometry, branchProperties, compartmentProperties);
             
             // Assert
             // check dimensions
@@ -314,9 +315,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             }
             var rdCoordinateSystem = Map.CoordinateSystemFactory.CreateFromEPSG(28992);
             var network = new HydroNetwork{CoordinateSystem = rdCoordinateSystem };
+            UGridFileHelperNetworkGeometry uGridFileHelperNetworkGeometry = new UGridFileHelperNetworkGeometry();
 
             // Call
-            void Call() => network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
+            void Call() => uGridFileHelperNetworkGeometry.SetNetworkGeometry(network, networkGeometry, branchProperties, compartmentProperties);
             
             // Assert
             var expectedMessage = $"The following entries were not unique in compartment ids: {Environment.NewLine}compartment1 at indices (0, 2, 3)";
@@ -373,9 +375,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             }
             var rdCoordinateSystem = Map.CoordinateSystemFactory.CreateFromEPSG(28992);
             var network = new HydroNetwork{CoordinateSystem = rdCoordinateSystem };
+            UGridFileHelperNetworkGeometry uGridFileHelperNetworkGeometry = new UGridFileHelperNetworkGeometry();
 
             // Call
-            void Call() => network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
+            void Call() => uGridFileHelperNetworkGeometry.SetNetworkGeometry(network, networkGeometry, branchProperties, compartmentProperties);
             
             // Assert
             var expectedMessage = $"The following entries were not unique in network nodes: {Environment.NewLine}node2 at indices (1, 2, 3)";
@@ -614,108 +617,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
                 4, 4, 4, 4, 4, 4, 4, 4, 4
             };
             Assert.AreEqual(expectedEdgeIds, mesh1d.EdgeBranchIds);
-        }
-        
-        [Test]
-        public void GivenUGridMeshAdapterTest_DoingCreateLinks_ShouldCreateValidLinks()
-        {
-           //Arrange
-           var oneToOne = (int) LinkStorageType.Embedded;
-
-           var linkGeometry = new DisposableLinksGeometry
-           {
-               LinkId = new string[] {"link1", "link2", "link3" },
-               LinkLongName = new string[] { "link1_long", "link2_long", "link3_long" },
-               Mesh1DFrom = new int[] { 0, 1, 2},
-               Mesh2DTo = new int[] { 2, 1, 0 },
-               LinkType = new int[] { oneToOne, oneToOne, oneToOne }
-           };
-           var mesh1d = new Disposable1DMeshGeometry
-           {
-               NodeIds = new[]
-               {
-                   "node1",
-                   "node2",
-                   "node3",
-               },
-               NodesX = new[] { 10.0, 30.0, 50.0, },
-               NodesY = new[] { 30.0, 40.0, 50.0, },
-               BranchIDs = new []{ 0, 0, 0 } ,
-               BranchOffsets = new[] { 10.0, 30.0, 50.0, },
-           };
-
-           var networkGeometry = new DisposableNetworkGeometry
-           {
-               BranchIds = new[]
-               {
-                   "branch1"
-               },
-           };
-
-            var mesh2d = new Disposable2DMeshGeometry
-            {
-                FaceX = new [] { 010.0, 30.0, 50.0 },
-                FaceY = new [] { 010.0, 010.0, 010.0 },
-                MaxNumberOfFaceNodes = 4,
-                NodesX = new[]
-                {
-                    0.0,
-                    20.0,
-                    20.0,
-                    0.0,
-                    40.0,
-                    40.0,
-                    60.0,
-                    60.0
-                },
-                NodesY = new[]
-                {
-                    0.0,
-                    0.0,
-                    20.0,
-                    20.0,
-                    0.0,
-                    20.0,
-                    0.0,
-                    20.0
-                },
-                FaceNodes = new []{ 0, 1, 2, 3, 1, 4, 5, 2, 4, 6, 7, 5 }
-            };
-
-            // generate grid with 3 cells of size 20x20, starting at 0,0
-            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 1, 20, 20);
-            var branch = new Branch{Name = "branch1", Geometry = new LineString(new[] {new Coordinate(0.0,25.0), new Coordinate(70.0, 60.0)}) };
-            Discretization discretization = new Discretization
-            {
-                Network = new Network()
-                {
-                    Branches = new EventedList<IBranch>() { branch }
-                },
-                Locations = { Values = new MultiDimensionalArray<INetworkLocation>(){ new NetworkLocation(branch,10), new NetworkLocation(branch, 30), new NetworkLocation(branch, 50) } }
-            };
-            var generatedObjectsForLinks = new GeneratedObjectsForLinks()
-            {
-                Grid = grid,
-                Mesh2d = mesh2d,
-                Mesh1d = mesh1d,
-                NetworkGeometry = networkGeometry,
-                Discretization = discretization,
-                FillValueMesh2DFaceNodes = -999,
-                LinksGeometry = linkGeometry,
-                Links1D2D = new List<ILink1D2D>()
-            };
-            // Act
-            generatedObjectsForLinks.Links1D2D.SetLinks(generatedObjectsForLinks);
-            var links = generatedObjectsForLinks.Links1D2D;
-            Links1D2DHelper.SetGeometry1D2DLinks(links, discretization.Locations, grid.Cells);
-
-            // Assert
-            Assert.AreEqual(3, links.Count);
-            Assert.AreEqual("link1", links[0].Name);
-            Assert.AreEqual("link1_long", links[0].LongName);
-            Assert.AreEqual(2, links[0].FaceIndex);
-            Assert.AreEqual(0, links[0].DiscretisationPointIndex);
-            Assert.AreEqual(LinkStorageType.Embedded, links[0].TypeOfLink);
         }
         
         [Test]

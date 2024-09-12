@@ -59,7 +59,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Structure
                 HydroNetwork = network
             };
 
-            UGridFileHelper.ReadNetFileDataIntoModel(networkFilePath, convertedUGridFileObjects);
+            using (var ugridFile = new UGridFile(networkFilePath))
+            {
+                ugridFile.ReadNetFileDataIntoModel(convertedUGridFileObjects);
+            }
                                                          
             var definitions = CrossSectionFileReader.ReadFile(crossSectionLocationFilePath, crossSectionDefinitionFilePath, network, null);
 

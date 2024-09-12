@@ -8,14 +8,14 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Units;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.NGHS.IO.FileWriters.Network;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.Utils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 {
@@ -52,8 +52,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 HydroNetwork = hydroNetwork,
                 Links1D2D = links
             };
-            UGridFileHelper.ReadNetFileDataIntoModel(path, convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths: true);
-            
+            var logHandler = new LogHandler(string.Format(Resources.ConstructFunctions_Reading_file_output_into_our_FM_model, "fm fou file", path));
+            using (var ugridFile = new UGridFile(path))
+            {
+                ugridFile.ReadNetFileDataIntoModel(convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths: true, logHandler: logHandler);
+            }
+            logHandler.LogReport();
+
             string[] variables1D = GetMeshDependentVariables(path, MeshType.Mesh1d);
             string[] variables2D = GetMeshDependentVariables(path, MeshType.Mesh2d);
 

@@ -279,13 +279,13 @@
   <data name="UGrid_WriteZValuesAtNodesForMeshId_Error_writing_z_values_at_mesh_nodes" xml:space="preserve">
     <value>Error writing z values at mesh nodes</value>
   </data>
-  <data name="UGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported" xml:space="preserve">
+  <data name="WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported" xml:space="preserve">
     <value>Unable to write z-values at this location, CellEdges are not currently supported</value>
   </data>
-  <data name="UGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported" xml:space="preserve">
+  <data name="ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported" xml:space="preserve">
     <value>Unable to read z-values at this location, CellEdges are not currently supported</value>
   </data>
-  <data name="UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention" xml:space="preserve">
+  <data name="ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention" xml:space="preserve">
     <value>Unable to read z-values from file: {0}, file is not UGrid convention</value>
   </data>
   <data name="WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_not_currently_supported" xml:space="preserve">
@@ -519,13 +519,13 @@
   <data name="UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_4_of_4" xml:space="preserve">
     <value>Reading grid step 4 of 4</value>
   </data>
-  <data name="UGridFileHelper_ApplyNetworkGeometry_Reading_grid_step_1_of_4" xml:space="preserve">
+  <data name="ApplyNetworkGeometry_Reading_grid_step_1_of_4" xml:space="preserve">
     <value>Reading grid step 1 of 4</value>
   </data>
-  <data name="UGridFileHelper_ApplyMesh1D_Reading_grid_step_2_of_4" xml:space="preserve">
+  <data name="ApplyMesh1D_Reading_grid_step_2_of_4" xml:space="preserve">
     <value>Reading grid step 2 of 4</value>
   </data>
-  <data name="UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_3_of_4" xml:space="preserve">
+  <data name="Apply1D2DLinks_Reading_grid_step_3_of_4" xml:space="preserve">
     <value>Reading grid step 3 of 4</value>
   </data>
   <data name="GeneratedObjectsForLinks_Read1D2DLinks_Could_not_load_links_from__0___This_is_not_a_UGrid_file_" xml:space="preserve">
@@ -594,5 +594,59 @@
   </data>
   <data name="BranchFile_WriteIniFile_Writing_branches_to__0__" xml:space="preserve">
     <value>Writing branches to {0}.</value>
+  </data>
+  <data name="UGridFile_GetVariableName_This_location_is_not_available_in_enum____0_" xml:space="preserve">
+    <value>This location is not available in enum : {0}</value>
+  </data>
+  <data name="UGridFile_GetLocationType_Unsupported_bed_level_location___0_" xml:space="preserve">
+    <value>Unsupported bed level location: {0}</value>
+  </data>
+  <data name="ApplyNetworkGeometry_Could_not_load_network_from__0_" xml:space="preserve">
+    <value>Could not load network from {0}</value>
+  </data>
+  <data name="ReadNetwork_No_network_geometries_in_file_detected" xml:space="preserve">
+    <value>No network geometries in file detected</value>
+  </data>
+  <data name="ReadNetwork_No_network_geometry_retrieved_from_file__arg_null_exception" xml:space="preserve">
+    <value>No network geometry retrieved from file, arg null exception: {0} error : {1}</value>
+  </data>
+  <data name="UGridFile_ApplyMesh1D_Could_not_load_computational_grid_from__0_" xml:space="preserve">
+    <value>Could not load computational grid from {0}</value>
+  </data>
+  <data name="UGridFile_ApplyMesh2D_Could_not_find_grid_file_at___0____this_is_because_you_maybe_just_created_this_model__If_this_is_not_the_case_please_check_if_the_file_with" xml:space="preserve">
+    <value>Could not find grid file at "{0}", this is because you maybe just created this model. If this is not the case please check if the file with</value>
+  </data>
+  <data name="ApplyMesh2D_Could_not_find_grid_file_at___0____this_is_because_you_maybe_just_created_this_model__If_this_is_not_the_case_please_check_if_the_file_with_the_grid_in_it_exists_" xml:space="preserve">
+    <value>Could not find grid file at "{0}", this is because you maybe just created this model. If this is not the case please check if the file with the grid in it exists.</value>
+  </data>
+  <data name="UGridFile_ApplyMesh2D_Could_not_create_mesh2d_from_file__0__because_it_is_not_a_ugrid_type_file__Trying_plain_netcdf_2d_grid_file_reading" xml:space="preserve">
+    <value>Could not create mesh2d from file {0} because it is not a ugrid type file. Trying plain netcdf 2d grid file reading</value>
+  </data>
+  <data name="UGridFile_Read1D2DLinks_Cannot_clear__0___list_has_no_Clear_support__error___1_" xml:space="preserve">
+    <value>Cannot clear {0}, list has no Clear support, error: {1}</value>
+  </data>
+  <data name="ReadZValues_No_2D_mesh_found_in_file__0" xml:space="preserve">
+    <value>No 2D mesh found in file {0}</value>
+  </data>
+  <data name="ReadZValues_The_expected_location_type__0__is_not_found_in_file__1" xml:space="preserve">
+    <value>The expected location type {0} is not found in file {1}</value>
+  </data>
+  <data name="IoNetCdfNativeError_Api_open_error___0______1___in_method__2__" xml:space="preserve">
+    <value>Api open error ({0}) : {1}, in method {2}.</value>
+  </data>
+  <data name="WriteZValuesWithApi_Unable_to_write_z_values_to_file____0____no_2d_mesh_found" xml:space="preserve">
+    <value>Unable to write z-values to file: "{0}", no 2d mesh found</value>
+  </data>
+  <data name="IoNetCdfNativeError_Api_call_error___0______1___in_method__2" xml:space="preserve">
+    <value>Api call error ({0}) : {1}, in method {2}.</value>
+  </data>
+  <data name="ReportProgressWithException_Could_not_report_progress_because" xml:space="preserve">
+    <value>Could not report progress because : {0}</value>
+  </data>
+  <data name="Null_reference_exception_log" xml:space="preserve">
+    <value>Null reference exception (in {0}), data read from api failed because it is not available, error message : {1}.</value>
+  </data>
+  <data name="GridFile_GetNumberOfNetworkDiscretizations_Key__0__not_found_in_dictionary_numberOfMeshByType" xml:space="preserve">
+    <value>Key {0} not found in dictionary numberOfMeshByType, error message : {1}.</value>
   </data>
 </root>

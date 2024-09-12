@@ -10,11 +10,13 @@ using DelftTools.Hydro.Link1d2d;
 using DelftTools.Units;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
@@ -124,7 +126,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 CompartmentProperties = compartmentProperties,
                 BranchProperties = branchProperties
             };
-            UGridFileHelper.ReadNetFileDataIntoModel(netCdfFile.Path, convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths:true);
+
+            var logHandler = new LogHandler(string.Format(Resources.ConstructFunctions_Reading_file_output_into_our_FM_model, "fm class map", netCdfFile.Path), Log);
+            using (var ugridFile = new UGridFile(netCdfFile.Path))
+            {
+                ugridFile.ReadNetFileDataIntoModel(convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths: true, logHandler: logHandler, reportProgress: null);
+            }
+            logHandler.LogReport();
 
             foreach (var hydroObject in network.AllHydroObjects)
             {

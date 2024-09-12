@@ -7,10 +7,10 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Units;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
@@ -21,7 +21,6 @@ using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -79,7 +78,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 BranchProperties = branchData,
                 CompartmentProperties = compartmentData
             };
-            UGridFileHelper.ReadNetFileDataIntoModel(netFilePath, convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths:true);
+            var logHandler = new LogHandler($"Reading fm 1d map file {netFilePath} (as output) into our model.", log);
+            using (var ugridFile = new UGridFile(netFilePath))
+                ugridFile.ReadNetFileDataIntoModel(convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths: true, logHandler: logHandler, reportProgress: null);
+            logHandler.LogReport();
 
             outputNetwork.AllHydroObjects.ForEach(o => o.Name += "_output");
             outputDiscretization.Locations.AllValues.ForEach(l => l.Name += "_output");
@@ -398,15 +400,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            if (CoordinateSystem == null) CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(Path);
+            if (CoordinateSystem == null)
+            {
+                using(var ugridFile = new UGridFile(Path))
+                    CoordinateSystem = ugridFile.ReadCoordinateSystem();
+            }
             // clear caches for argument variables and networkLocations
             Functions.Clear();
             if (File.Exists(Path))
             {
                 using (ReconnectToMapFile())
                 {
-                    if (! UGridFileHelper.IsUGridFile(netCdfFile.Path)) return;
-                    Functions.AddRange(ConstructFunctions(GetVariableInfos()));
+                    using (var ugridFile = new UGridFile(netCdfFile.Path))
+                    {
+                        if (!ugridFile.IsUGridFile()) return;
+                        Functions.AddRange(ConstructFunctions(GetVariableInfos()));
+                    }
                 }
             }
         }

@@ -34,8 +34,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         {
             var netFilePath = TestHelper.GetTestFilePath(@"harlingen\FilesUsingOldFormat\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
-
-            Assert.IsFalse(UGridFileHelper.IsUGridFile(netFilePath));
+            using (var ugridFile = new UGridFile(netFilePath))
+                Assert.IsFalse(ugridFile.IsUGridFile());
             var grid = NetFileImporter.ImportGrid(netFilePath);
 
             var currentZValues = grid.Vertices.Select(v => v.Z);
@@ -53,30 +53,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         {
             var netFilePath = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
-
-            Assert.IsTrue(UGridFileHelper.IsUGridFile(netFilePath));
-
+            
             // get original grid
             var grid = new UnstructuredGrid();
-            UGridFileHelper.SetUnstructuredGrid(netFilePath, grid);
-            Assert.IsFalse(grid.IsEmpty);
-            
+            using (var ugridFile = new UGridFile(netFilePath))
+            {
+                Assert.IsTrue(ugridFile.IsUGridFile());
 
-            // generate new z values
-            var currentZValues = UGridFileHelper.ReadZValues(netFilePath, UGridFileHelper.BedLevelLocation.NodesMeanLev);
-            var newZValues = currentZValues.Select(z => { z = 123.456; return z; }).ToArray();
+                ugridFile.SetUnstructuredGrid(grid);
+                Assert.IsFalse(grid.IsEmpty);
 
-            // write new coordinates to netfile
-            UGridFileHelper.WriteZValues(netFilePath, UGridFileHelper.BedLevelLocation.NodesMaxLev, newZValues);
 
-            // read new grid
-            var adjustedGrid = new UnstructuredGrid();
-            UGridFileHelper.SetUnstructuredGrid(netFilePath, adjustedGrid);
-            Assert.IsFalse(adjustedGrid.IsEmpty);
+                // generate new z values
+                double[] currentZValues;
+                using (var uGridFile = new UGridFile(netFilePath))
+                {
+                    currentZValues = uGridFile.ReadZValues(BedLevelLocation.NodesMeanLev);
+                }
 
-            // compare z values
-            var zValues = UGridFileHelper.ReadZValues(netFilePath, UGridFileHelper.BedLevelLocation.NodesMeanLev);
-            Assert.That(zValues.All(z => Math.Abs(z - 123.456) < 0.0001), Is.True);
+                var newZValues = currentZValues.Select(z =>
+                {
+                    z = 123.456;
+                    return z;
+                }).ToArray();
+
+                // write new coordinates to netfile
+                ugridFile.WriteZValues(BedLevelLocation.NodesMaxLev, newZValues);
+
+                // read new grid
+                var adjustedGrid = new UnstructuredGrid();
+                ugridFile.SetUnstructuredGrid(adjustedGrid);
+
+                Assert.IsFalse(adjustedGrid.IsEmpty);
+
+                // compare z values
+                var zValues = ugridFile.ReadZValues(BedLevelLocation.NodesMeanLev);
+                Assert.That(zValues.All(z => Math.Abs(z - 123.456) < 0.0001), Is.True);
+            }
         }
 
         [Test]
@@ -85,18 +98,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             var netFilePath = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
-            Assert.IsTrue(UGridFileHelper.IsUGridFile(netFilePath));
-
             // get original grid
             var grid = new UnstructuredGrid();
-            UGridFileHelper.SetUnstructuredGrid(netFilePath, grid);
-            Assert.IsFalse(grid.IsEmpty);
+            using (var ugridFile = new UGridFile(netFilePath))
+            {
+                Assert.IsTrue(ugridFile.IsUGridFile());
 
-            // generate new z values
-            var newZValues = Enumerable.Repeat(123.456, grid.Cells.Count).ToArray();
+                ugridFile.SetUnstructuredGrid(grid);
+                
+                Assert.IsFalse(grid.IsEmpty);
 
-            // write new coordinates to netfile
-            UGridFileHelper.WriteZValues(netFilePath, UGridFileHelper.BedLevelLocation.Faces, newZValues);
+                // generate new z values
+                var newZValues = Enumerable.Repeat(123.456, grid.Cells.Count).ToArray();
+
+                // write new coordinates to netfile
+                ugridFile.WriteZValues(BedLevelLocation.Faces, newZValues);
+            }
 
             using (var ncFile = new NetCdfFileWrapper(netFilePath))
             {

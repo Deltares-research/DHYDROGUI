@@ -253,21 +253,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 return null;
             }
 
-            int numberOfNetworks = UGridFileHelper.GetNumberOfNetworks(netFilePath);
-            if (numberOfNetworks != 1)
+            using (var ugridFile = new UGridFile(netFilePath))
             {
-                return null;
-            }
+                int numberOfNetworks = ugridFile.GetNumberOfNetworks();
+                if (numberOfNetworks != 1)
+                {
+                    return null;
+                }
 
-            int numberOfNetworkDiscretizations = UGridFileHelper.GetNumberOfNetworkDiscretizations(netFilePath);
-            if (numberOfNetworkDiscretizations != 1)
-            {
-                return null;
-            }
+                int numberOfNetworkDiscretizations = ugridFile.GetNumberOfNetworkDiscretizations();
+                if (numberOfNetworkDiscretizations != 1)
+                {
+                    return null;
+                }
 
-            if (!UGridFileHelper.IsUGridFile(netFilePath))
-            {
-                return null;
+                if (!ugridFile.IsUGridFile())
+                {
+                    return null;
+                }
             }
 
             var discretization = new Discretization();
@@ -278,7 +281,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 HydroNetwork = network
             };
 
-            UGridFileHelper.ReadNetFileDataIntoModel(netFilePath, convertedUGridFileObjects, forceCustomLengths:true);
+            using (var ugridFile = new UGridFile(netFilePath))
+                ugridFile.ReadNetFileDataIntoModel(convertedUGridFileObjects, forceCustomLengths: true, logHandler: null, reportProgress: null);
+            
             switch (fm1DObjectType)
             {
                 case OutputFM1DObjectType.Network:

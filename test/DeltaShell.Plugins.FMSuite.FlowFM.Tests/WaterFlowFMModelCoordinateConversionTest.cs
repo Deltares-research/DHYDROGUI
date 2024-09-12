@@ -15,8 +15,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var netFilePath = TestHelper.GetTestFilePath(@"harlingen\FilesUsingOldFormat\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
+            
+            using (var ugridFile = new UGridFile(netFilePath))
+                Assert.IsFalse(ugridFile.IsUGridFile());
 
-            Assert.IsFalse(UGridFileHelper.IsUGridFile(netFilePath));
             var grid = NetFileImporter.ImportGrid(netFilePath);
             
             grid.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
@@ -44,39 +46,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var netFilePath = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
-
-            Assert.IsTrue(UGridFileHelper.IsUGridFile(netFilePath));
-
+            
             // get original grid
             var grid = new UnstructuredGrid();
-            UGridFileHelper.SetUnstructuredGrid(netFilePath, grid);
-            Assert.IsFalse(grid.IsEmpty);
+            using (var ugridFile = new UGridFile(netFilePath))
+            {
+                Assert.IsTrue(ugridFile.IsUGridFile());
 
-            // get original value
-            grid.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
-            var originalX = grid.Vertices[0].X;
+                ugridFile.SetUnstructuredGrid(grid);
 
-            // convert coordinate system
-            var factory = new OgrCoordinateSystemFactory();
-            var mercator = factory.CreateFromEPSG(3857);
-            WaterFlowFMModelCoordinateConversion.ConvertGrid(grid, new OgrCoordinateSystemFactory().CreateTransformation(
-                grid.CoordinateSystem, mercator));
+                Assert.IsFalse(grid.IsEmpty);
 
-            // get new value
-            var newX = grid.Vertices[0].X;
-            Assert.AreNotEqual(originalX, newX);
+                // get original value
+                grid.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+                var originalX = grid.Vertices[0].X;
 
-            // write new coordinates to netfile
-            UGridFileHelper.RewriteGridCoordinates(netFilePath, grid);
+                // convert coordinate system
+                var factory = new OgrCoordinateSystemFactory();
+                var mercator = factory.CreateFromEPSG(3857);
+                WaterFlowFMModelCoordinateConversion.ConvertGrid(grid, new OgrCoordinateSystemFactory().CreateTransformation(
+                                                                     grid.CoordinateSystem, mercator));
 
-            // read new grid
-            var adjustedGrid = new UnstructuredGrid();
-            UGridFileHelper.SetUnstructuredGrid(netFilePath, adjustedGrid);
-            Assert.IsFalse(adjustedGrid.IsEmpty);
+                // get new value
+                var newX = grid.Vertices[0].X;
+                Assert.AreNotEqual(originalX, newX);
 
-            // compare to new value
-            var reloadedX = adjustedGrid.Vertices[0].X;
-            Assert.AreEqual(newX, reloadedX);
+                // write new coordinates to netfile
+                ugridFile.RewriteGridCoordinates(grid);
+
+                // read new grid
+                var adjustedGrid = new UnstructuredGrid();
+                ugridFile.SetUnstructuredGrid(adjustedGrid);
+
+
+                Assert.IsFalse(adjustedGrid.IsEmpty);
+
+                // compare to new value
+                var reloadedX = adjustedGrid.Vertices[0].X;
+                Assert.AreEqual(newX, reloadedX);
+            }
         }
     }
 }

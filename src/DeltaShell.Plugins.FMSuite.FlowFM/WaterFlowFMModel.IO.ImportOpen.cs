@@ -88,16 +88,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 SedimentFile.LoadSediments(SedFilePath, this);
             }
 
-            bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(NetFilePath, BedLevelLocation);
+            using (var ugridFile = new UGridFile(NetFilePath))
+            {
+                FireImportProgressChanged(string.Format(Resources.LoadStateFromMdu_Reading_Z_coordinate_NoDataValue_from__0_, Path.GetFileName(NetFilePath)));
+                bathymetryNoDataValue = ugridFile.GetZCoordinateNoDataValue(BedLevelLocation);
 
+                FireImportProgressChanged(string.Format(Resources.WaterFlowFMModel_LoadStateFromMdu_Reading_Coordinate_system_from__0_, Path.GetFileName(NetFilePath)));
+                CoordinateSystem = ugridFile.ReadCoordinateSystem();
+            }
             FireImportProgressChanged(Resources.WaterFlowFMModel_LoadStateFromMdu_Renaming_sub_files);
             RenameSubFilesIfApplicable();
 
             FireImportProgressChanged(Resources.WaterFlowFMModel_LoadStateFromMdu_Initialize_input_spatial_data);
             InitializeUnstructuredGridCoverages();
-
-            FireImportProgressChanged(string.Format(Resources.WaterFlowFMModel_LoadStateFromMdu_Reading_Coordinate_system_from__0_, Path.GetFileName(NetFilePath))); 
-            CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(NetFilePath);
 
             // read depth layer definition
             DepthLayerDefinition = ModelDefinition.Kmx == 0

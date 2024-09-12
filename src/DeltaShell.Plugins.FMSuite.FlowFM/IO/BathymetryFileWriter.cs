@@ -21,9 +21,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            var location = (UGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+            var location = (BedLevelLocation)bedLevelTypeProperty.Value;
             var values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
-            UGridFileHelper.WriteZValues(filePath, location, values);
+            using (var ugridFile = new UGridFile(filePath))
+            {
+                ugridFile.WriteZValues(location, values);
+            }
         }
     }
 }

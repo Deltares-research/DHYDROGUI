@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             modelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueFromString("true");
 
             // CellEdges
-            var facesValue = ((int)UGridFileHelper.BedLevelLocation.CellEdges).ToString();
+            var facesValue = ((int)BedLevelLocation.CellEdges).ToString();
             modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(facesValue);
             var issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(0, issues.InfoCount);
 
             // NodesMaxLev
-            var nodesMaxLevValue = ((int)UGridFileHelper.BedLevelLocation.NodesMaxLev).ToString();
+            var nodesMaxLevValue = ((int)BedLevelLocation.NodesMaxLev).ToString();
             modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(nodesMaxLevValue);
             issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(0, issues.InfoCount);
 
             // FacesMeanLevFromNodes
-            var nodesMaxLevAtFacesValue = ((int)UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes).ToString();
+            var nodesMaxLevAtFacesValue = ((int)BedLevelLocation.FacesMeanLevFromNodes).ToString();
             modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(nodesMaxLevAtFacesValue);
             issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(0, issues.InfoCount);
 
             // NodesMeanLev
-            var nodesMeanLevValue = ((int)UGridFileHelper.BedLevelLocation.NodesMeanLev).ToString();
+            var nodesMeanLevValue = ((int)BedLevelLocation.NodesMeanLev).ToString();
             modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(nodesMeanLevValue);
             issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(0, issues.InfoCount);
 
             // NodesMinLev
-            var nodesMinLevValue = ((int)UGridFileHelper.BedLevelLocation.NodesMinLev).ToString();
+            var nodesMinLevValue = ((int)BedLevelLocation.NodesMinLev).ToString();
             modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(nodesMinLevValue);
             issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = CreateValidModel();
             var modelDefinition = model.ModelDefinition;
-            var cellsValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
+            var cellsValue = ((int)BedLevelLocation.Faces).ToString();
             modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(cellsValue);
             modelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueFromString("true");
             var issues = WaterFlowFMModelDefinitionValidator.Validate(model);

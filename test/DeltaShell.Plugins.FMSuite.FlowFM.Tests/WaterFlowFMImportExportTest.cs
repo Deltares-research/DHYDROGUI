@@ -395,7 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     using (var model = new WaterFlowFMModel() {MduFilePath = tempDirPath})
                     {
                         model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-                        var cellsValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
+                        var cellsValue = ((int)BedLevelLocation.Faces).ToString();
                         model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(cellsValue);
 
                         model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                     using (var model = new WaterFlowFMModel(tempMduFilePath))
                     {
-                        TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", UGridFileHelper.BedLevelLocation.Faces);
+                        TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", BedLevelLocation.Faces);
 
                         IProjectService projectService = app.ProjectService;
                         projectService.Project.RootFolder.Add(model);

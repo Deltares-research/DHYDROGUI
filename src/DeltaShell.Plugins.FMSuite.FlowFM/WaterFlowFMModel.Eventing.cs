@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (IsParameter(KnownProperties.BedlevType))
             {
                 BeginEdit("Updating Bathymetry coverage");
-                UpdateBathymetryCoverage((UGridFileHelper.BedLevelLocation)prop.Value);
+                UpdateBathymetryCoverage((BedLevelLocation)prop.Value);
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.UseSalinity))

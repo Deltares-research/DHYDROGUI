@@ -238,7 +238,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 var branchIdValues = file.Read(branchIds)
                     .Cast<char[]>()
                     .SelectMany(s => s.Select((character, index) => new { character, index })
-                                     .GroupBy(y => y.index / UGridFileHelper.IdsSize)
+                                     .GroupBy(y => y.index / UGridFile.IDS_SIZE)
                                      .Select(y => new string(y.Select(z => z.character).ToArray()).Trim()))
                     .ToArray();
                 var branchTypeValues = file.Read(branchTypes).Cast<int>().ToArray();
