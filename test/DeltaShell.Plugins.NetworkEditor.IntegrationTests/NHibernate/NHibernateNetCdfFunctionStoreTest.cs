@@ -637,9 +637,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Project project = projectService.Project;
 
                 // create test network
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                // add network coverage
-                var networkCoverage = new NetworkCoverage { Network = network };
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
                 var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
                 project.RootFolder.Add(dataItem);
 
@@ -652,7 +650,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 INetworkCoverage networkCoverageReOpend = (INetworkCoverage)retrievedProject.RootFolder.DataItems.First(di => di.ValueType == typeof(NetworkCoverage)).Value;
 
                 // set values
-                var branch1 = network.Branches[0];
+                var branch1 = networkCoverage.Network.Branches[0];
                 networkCoverageReOpend[new NetworkLocation(branch1, 0.0)] = 0.1;
                 networkCoverageReOpend[new NetworkLocation(branch1, 100.0)] = 0.2;
                 networkCoverageReOpend[new NetworkLocation(branch1, 200.0)] = 0.3;
@@ -669,10 +667,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Project project = projectService.Project;
 
                 // add a coverage to the project.
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                var networkCoverage = new NetworkCoverage { Network = network };
-                var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
-                project.RootFolder.Add(dataItem);
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
+                AddProjectDataItem(project, networkCoverage);
 
                 //save the project to a local dir
                 var projectPath = TestHelper.GetCurrentMethodName() + ".dsproj";
@@ -685,7 +681,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 projectService.SaveProjectAs(projectPath);
 
                 //define some values in the coverage forcing a write
-                var branch1 = network.Branches[0];
+                var branch1 = networkCoverage.Network.Branches[0];
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
                 //assert a file has been written
@@ -714,13 +710,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 projectService.SaveProjectAs(projectPath);
                 
                 // add a coverage to the project.
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                var networkCoverage = new NetworkCoverage { Network = network };
-                var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
-                project.RootFolder.Add(dataItem);
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
+                AddProjectDataItem(project, networkCoverage);
 
                 // define some values in the coverage forcing a write
-                var branch1 = network.Branches[0];
+                var branch1 = networkCoverage.Network.Branches[0];
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
                 // assert a file has been written
@@ -749,13 +743,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 projectService.SaveProjectAs(projectPath);
 
                 // add a coverage to the project.
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                var networkCoverage = new NetworkCoverage { Network = network };
-                var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
-                project.RootFolder.Add(dataItem);
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
+                AddProjectDataItem(project, networkCoverage);
 
                 // define some values in the coverage forcing a write
-                var branch1 = network.Branches[0];
+                var branch1 = networkCoverage.Network.Branches[0];
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
                 // assert a file has been written
@@ -783,13 +775,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 string dataPath = projectPath + "_data";
                 
                 // add a coverage to the project.
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                var networkCoverage = new NetworkCoverage { Network = network };
-                var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
-                project.RootFolder.Add(dataItem);
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
+                DataItem dataItem = AddProjectDataItem(project, networkCoverage);
 
                 // define some values in the coverage forcing a write
-                var branch1 = network.Branches[0];
+                var branch1 = networkCoverage.Network.Branches[0];
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
                 // save project
@@ -823,13 +813,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 string dataPath = projectPath + "_data";
 
                 // add a coverage to the project.
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                var networkCoverage = new NetworkCoverage { Network = network };
-                var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
-                project.RootFolder.Add(dataItem);
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
+                DataItem dataItem = AddProjectDataItem(project, networkCoverage);
 
                 // define some values in the coverage forcing a write
-                var branch1 = network.Branches[0];
+                var branch1 = networkCoverage.Network.Branches[0];
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
                 // save project
@@ -863,13 +851,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 string dataPath = projectPath + "_data";
 
                 // add a coverage to the project.
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                var networkCoverage = new NetworkCoverage { Network = network };
-                var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
-                project.RootFolder.Add(dataItem);
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
+                DataItem dataItem = AddProjectDataItem(project, networkCoverage);
 
                 // define some values in the coverage forcing a write
-                var branch1 = network.Branches[0];
+                var branch1 = networkCoverage.Network.Branches[0];
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
                 // save project
@@ -915,13 +901,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 string dataPath = projectPath + "_data";
 
                 // add a coverage to the project.
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                var networkCoverage = new NetworkCoverage { Network = network };
-                var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
-                project.RootFolder.Add(dataItem);
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
+                DataItem dataItem = AddProjectDataItem(project, networkCoverage);
 
                 // define some values in the coverage forcing a write
-                var branch1 = network.Branches[0];
+                var branch1 = networkCoverage.Network.Branches[0];
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
                 
                 // save project
@@ -964,10 +948,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Project project = projectService.Project;
 
                 // add a coverage to the project.
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                var networkCoverage = new NetworkCoverage {Network = network};
-                var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
-                project.RootFolder.Add(dataItem);
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
+                AddProjectDataItem(project, networkCoverage);
 
                 //save the project to a local dir
                 var projectPath = "changesfiles.dsproj";
@@ -984,7 +966,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Assert.AreEqual(1, Directory.GetFiles(dataPath, "*.nc").Length);
 
                 //define some values in the coverage forcing a write
-                var branch1 = network.Branches[0];
+                var branch1 = networkCoverage.Network.Branches[0];
                 networkCoverage.Clear();
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
@@ -1011,10 +993,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Project project = projectService.Project;
 
                 // add a coverage to the project.
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                var networkCoverage = new NetworkCoverage { Network = network };
-                var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
-                project.RootFolder.Add(dataItem);
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
+                AddProjectDataItem(project, networkCoverage);
 
                 //save the project to a local dir
                 var folder = "saveAsThriceWithChanges";
@@ -1027,7 +1007,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 projectService.SaveProjectAs(projectPath1);
 
                 networkCoverage.Clear();
-                var branch1 = network.Branches[0];
+                var branch1 = networkCoverage.Network.Branches[0];
                 networkCoverage[new NetworkLocation(branch1, 0.0)] = 0.1;
 
                 projectService.SaveProjectAs(projectPath2);
@@ -1048,12 +1028,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 IProjectService projectService = GetProjectServiceWithProject(gui);
 
                 Project project = projectService.Project;
-
                 // add a coverage to the project.
-                var network = NHibernateTestsHelper.CreateDummyNetwork();
-                var networkCoverage = new NetworkCoverage { Network = network };
-                var dataItem = new DataItem(networkCoverage, DataItemRole.Output);
-                project.RootFolder.Add(dataItem);
+                NetworkCoverage networkCoverage = CreateNetworkCoverage(projectService);
+                AddProjectDataItem(project, networkCoverage);
 
                 //save the project to a local dir
                 var folder = "saveAsTwice";
@@ -1091,6 +1068,33 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             projectService.CreateProject();
 
             return projectService;
+        }
+
+        private static DataItem AddProjectDataItem(Project project, IFunction function)
+        {
+            var dataItem = new DataItem(function, DataItemRole.Output);
+            project.RootFolder.Add(dataItem);
+
+            return dataItem;
+        }
+
+        private static void AssignFunctionStore(IProjectService projectService, IFunction function)
+        {
+            string netCdfFilePath = Path.Combine(projectService.ProjectFilePath + "_data", "functions.nc");
+            var store = NetCdfFunctionStore.CreateNewNetCdfFunctionStore(netCdfFilePath);
+            
+            function.Store = store;
+            store.Functions.Add(function);
+        }
+
+        private static NetworkCoverage CreateNetworkCoverage(IProjectService projectService)
+        {
+            INetwork network = NHibernateTestsHelper.CreateDummyNetwork();
+            var coverage = new NetworkCoverage { Network = network };
+            
+            AssignFunctionStore(projectService, coverage);
+
+            return coverage;
         }
     }
 }
