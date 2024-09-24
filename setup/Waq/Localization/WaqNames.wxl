@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
-	<String Id="WaqFeatureName">D-Water Quality</String>
+        <String Id="WaqFeatureName">D-Water Quality</String>
   <String Id="WaqFeatureDescription">Allows to simulate water quality processes.</String>
-  
+
   <!-- Manuals -->
   <String Id="WaqFileManualName">D-Water Quality Input File Description</String>
   <String Id="WaqUserManualName">D-Water Quality User Manual</String>
@@ -10,7 +10,7 @@
   <String Id="WaqMassBalancesManualName">D-Water Quality Mass Balances User Manual</String>
   <String Id="WaqOpenProcLibManualName">D-Water Quality Open Proc Lib User Manual</String>
   <String Id="WaqSedimentWaterManualName">D-Water Quality Sediment Water User Manual</String>
-  
+
   <!-- PLCT Manuals -->
   <String Id="PLCTUserManualName">D-Water Quality PLCT User Manual</String>
   <String Id="PLCTTechnicalRefManualName">D-Water Quality Processes Technical Reference Manual</String>
@@ -18,4 +18,7 @@
 
   <!-- Dido Manuals -->
   <String Id="DidoUserManualName">D-Water Quality Dido User Manual</String>
+
+  <!-- Part Manuals -->
+  <String Id="dPartManualName">D-Particle Tracking User Manual</String>
 </WixLocalization>
