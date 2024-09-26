@@ -5,8 +5,8 @@
   <ItemGroup>
     <PackageVersion Include="AutoFixture.AutoNSubstitute" Version="4.18.0" />
     <PackageVersion Include="AutoFixture.NUnit3" Version="4.18.0" />
-    <PackageVersion Include="Deltares.NET.Infrastructure" Version="0.2.0.204" />
-    <PackageVersion Include="Deltares.NET.Infrastructure.API" Version="0.2.0.204" />
+    <PackageVersion Include="Deltares.NET.Infrastructure" Version="0.2.0.205" />
+    <PackageVersion Include="Deltares.NET.Infrastructure.API" Version="0.2.0.205" />
     <PackageVersion Include="Deltares.UGrid" Version="1.0.142792" />
     <PackageVersion Include="DeltaShell.Framework" Version="3.0.0.3935" />
     <PackageVersion Include="DeltaShell.TestProject" Version="3.0.0.3935" />
