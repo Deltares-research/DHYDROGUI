@@ -453,23 +453,23 @@ name="DHYDRO1D2DRepository">
 				</item>
 				<item
 				addcaps="text,wpfelement,wpfgroupelement"
-				capname="text"
+				capname="button"
 				id="12a9dd49-db64-4cce-aa49-cef1aac05c68"
 				name="SaveAsButton"
 				refimgid="42dff791-6678-40bb-9a6e-ad26633b7a5e"
 				robustPath=""
 				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/button[@automationid='ButtonMenuFileSaveProjectAs']/text
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/button[@automationid='ButtonMenuFileSaveProjectAs']
 				</item>
 				<item
 				addcaps="text,wpfelement,wpfgroupelement"
-				capname="text"
+				capname="button"
 				id="88452aae-be69-4e88-a8eb-d2fb3fda15eb"
 				name="CloseButton"
 				refimgid="f6627f6d-1966-4dae-a6a0-8e442d2342d9"
 				robustPath=""
 				searchtimeout="30000ms">
-					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/button[@text='Close']/text
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/button[@automationid='ButtonMenuFileCloseProject']
 				</item>
 				<item
 				addcaps="container,wpfelement,wpfgroupelement"

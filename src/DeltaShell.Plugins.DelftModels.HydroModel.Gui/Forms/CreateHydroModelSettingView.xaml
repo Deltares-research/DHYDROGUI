@@ -17,7 +17,7 @@
                 <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;component/DefaultControlTemplates.xaml" />
                 <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;component/Brushes.xaml" />
                 <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DrawingBrushesDictionary.xaml" />
-                <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionairy.xaml" />
+                <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="CheckBox">
                 <Setter Property="Template" Value="{StaticResource CheckBoxControlTemplate}" />

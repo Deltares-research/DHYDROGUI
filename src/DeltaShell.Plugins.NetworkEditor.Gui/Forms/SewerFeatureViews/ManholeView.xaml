@@ -26,7 +26,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="NetworkStructureBrushes.xaml" />
                 <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;component/DefaultControlTemplates.xaml" />
-                <ResourceDictionary Source="/DelftTools.Controls.Wpf;component/deltaresstyledictionairy.xaml" />
+                <ResourceDictionary Source="/DelftTools.Controls.Wpf;component/DeltaresStyleDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="{x:Type TextBlock}">

@@ -16,7 +16,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;component/DefaultControlTemplates.xaml" />
                 <ResourceDictionary Source="../GraphicsProviders/FMGuiGraphics.xaml" />
-                <ResourceDictionary Source="/DelftTools.Controls.Wpf;component/deltaresstyledictionairy.xaml" />
+                <ResourceDictionary Source="/DelftTools.Controls.Wpf;component/DeltaresStyleDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="TextBlock">
                 <Setter Property="Margin" Value="5" />

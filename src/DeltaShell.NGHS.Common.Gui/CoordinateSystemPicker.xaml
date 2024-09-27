@@ -14,7 +14,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="DefaultControlTemplates.xaml" />
                 <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DrawingBrushesDictionary.xaml" />
-                <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionairy.xaml" />
+                <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <DrawingBrush x:Key="ProjectedMapBrush">

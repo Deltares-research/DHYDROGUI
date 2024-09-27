@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionairy.xaml" />
+        <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionary.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Color x:Key="TextColor">Black</Color>

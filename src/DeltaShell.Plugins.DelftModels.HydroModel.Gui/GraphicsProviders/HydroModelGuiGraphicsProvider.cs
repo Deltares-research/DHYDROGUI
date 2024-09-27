@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
                 },
                 new ResourceDictionary
                 {
-                    Source = new Uri("pack://application:,,,/DelftTools.Controls.Wpf;component/DeltaresStyleDictionairy.xaml")
+                    Source = new Uri("pack://application:,,,/DelftTools.Controls.Wpf;component/DeltaresStyleDictionary.xaml")
                 }
             }
         };

@@ -2530,8 +2530,8 @@ namespace DHYDRO
             {
                 _backstagecontentcontrol = new DHYDRO1D2DRepositoryFolders.BackstageContentControlFolder(this);
                 _filetabInfo = new RepoItemInfo(this, "FileTab", "text[@caption='File']", "", 30000, null, "b812c711-09de-41de-9a9e-ba40c1c6f7c8");
-                _saveasbuttonInfo = new RepoItemInfo(this, "SaveAsButton", "button[@automationid='ButtonMenuFileSaveProjectAs']/text", "", 30000, null, "12a9dd49-db64-4cce-aa49-cef1aac05c68");
-                _closebuttonInfo = new RepoItemInfo(this, "CloseButton", "button[@text='Close']/text", "", 30000, null, "88452aae-be69-4e88-a8eb-d2fb3fda15eb");
+                _saveasbuttonInfo = new RepoItemInfo(this, "SaveAsButton", "button[@automationid='ButtonMenuFileSaveProjectAs']", "", 30000, null, "12a9dd49-db64-4cce-aa49-cef1aac05c68");
+                _closebuttonInfo = new RepoItemInfo(this, "CloseButton", "button[@automationid='ButtonMenuFileCloseProject']", "", 30000, null, "88452aae-be69-4e88-a8eb-d2fb3fda15eb");
                 _openbuttonInfo = new RepoItemInfo(this, "OpenButton", "container[@caption='Open']", "", 30000, null, "dc98ff1c-2a46-470e-a0e1-e039f6cb2fbb");
             }
 
@@ -2587,11 +2587,11 @@ namespace DHYDRO
             /// The SaveAsButton item.
             /// </summary>
             [RepositoryItem("12a9dd49-db64-4cce-aa49-cef1aac05c68")]
-            public virtual Ranorex.Text SaveAsButton
+            public virtual Ranorex.Button SaveAsButton
             {
                 get
                 {
-                    return _saveasbuttonInfo.CreateAdapter<Ranorex.Text>(true);
+                    return _saveasbuttonInfo.CreateAdapter<Ranorex.Button>(true);
                 }
             }
 
@@ -2611,11 +2611,11 @@ namespace DHYDRO
             /// The CloseButton item.
             /// </summary>
             [RepositoryItem("88452aae-be69-4e88-a8eb-d2fb3fda15eb")]
-            public virtual Ranorex.Text CloseButton
+            public virtual Ranorex.Button CloseButton
             {
                 get
                 {
-                    return _closebuttonInfo.CreateAdapter<Ranorex.Text>(true);
+                    return _closebuttonInfo.CreateAdapter<Ranorex.Button>(true);
                 }
             }
 
