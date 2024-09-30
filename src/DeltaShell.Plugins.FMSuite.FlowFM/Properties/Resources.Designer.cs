@@ -1029,6 +1029,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A lateral of type realtime must have a hydrolink between a catchment or a waste water treatment plant and the lateral..
+        /// </summary>
+        public static string Realtime_lateral_must_have_link_between_catchment_or_a_WWTP_and_lateral {
+            get {
+                return ResourceManager.GetString("Realtime_lateral_must_have_link_between_catchment_or_a_WWTP_and_lateral", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to roughness-Channels.ini.
         /// </summary>
         public static string Roughness_Main_Channels_Filename {
@@ -1400,16 +1409,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMHydroLinksValidator_Hydrolink_between_catchment_and_lateral_must_be_re" +
                         "altime", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A lateral of type realtime must have a hydrolink between a catchment and the lateral..
-        /// </summary>
-        public static string WaterFlowFMHydroLinksValidator_Realtime_lateral_must_have_link_between_catchment_and_lateral {
-            get {
-                return ResourceManager.GetString("WaterFlowFMHydroLinksValidator_Realtime_lateral_must_have_link_between_catchment_" +
-                        "and_lateral", resourceCulture);
             }
         }
         

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.DataObjects;
@@ -20,177 +18,156 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             // Setup
             var fmModel = new WaterFlowFMModel();
-            
+
             // Precondition
             Assert.That(fmModel.Network.Parent, Is.Null);
 
             // Call
-            ValidationReport report = fmModel.Validate();
-            
+            ValidationReport report = WaterFlowFMHydroLinksValidator.Validate(fmModel);
+
             // Assert
-            ValidationReport hydroLinksReport = report.SubReports.FirstOrDefault(sr => sr.Category.Equals("HydroLinks"));
-            Assert.That(hydroLinksReport, Is.Not.Null);
-            Assert.That(hydroLinksReport.Issues, Is.Empty);
+            Assert.That(report, Is.Not.Null);
+            Assert.That(report.Issues, Is.Empty);
         }
 
         [Test]
-        public void Validate_RealtimeLateralWithoutLinkBetweenCatchmentAndLateral_AddsValidationIssueToReport()
+        public void Validate_RealtimeLateralSourceWithoutLinks_IsInvalid()
         {
             // Setup
-            var fmModel = new WaterFlowFMModel();
-            LinkWithHydroModelActivities(fmModel);
+            HydroModel hydroModel = CreateHydroModelWithCatchmentAndWasteWaterTreatmentPlant();
+            var fmModel = GetHydroModelChildOfType<WaterFlowFMModel>(hydroModel);
 
-            var lateralSourceData = new Model1DLateralSourceData()
-            {
-                Feature = new LateralSource(),
-                DataType = Model1DLateralDataType.FlowRealTime
-            };
-            
-            fmModel.LateralSourcesData.Add(lateralSourceData);
-            
             // Call
-            ValidationReport report = fmModel.Validate();
-            
+            ValidationReport report = WaterFlowFMHydroLinksValidator.Validate(fmModel);
+
             // Assert
-            ValidationReport hydroLinksReport = report.SubReports.FirstOrDefault(sr => sr.Category.Equals("HydroLinks"));
-            Assert.That(hydroLinksReport, Is.Not.Null);
+            Assert.That(report, Is.Not.Null);
+            Assert.That(report.Issues, Has.Count.EqualTo(1));
 
-            IEnumerable<ValidationIssue> issues = hydroLinksReport.Issues;
-            Assert.That(issues, Has.Count.EqualTo(1));
-
-            ValidationIssue issue = issues.First();
-            const string expectedErrorMessage = "A lateral of type realtime must have a hydrolink between a catchment and the lateral.";
-            Assert.That(issue.Message, Is.EqualTo(expectedErrorMessage));
-            Assert.That(issue.Severity, Is.EqualTo(ValidationSeverity.Error));
+            const string expectedMessage = "A lateral of type realtime must have a hydrolink between a catchment or a waste water treatment plant and the lateral.";
+            Assert.That(report.AllErrors, Has.One.Matches<ValidationIssue>(issue => issue.Message == expectedMessage));
         }
 
         [Test]
         [TestCase(Model1DLateralDataType.FlowConstant)]
         [TestCase(Model1DLateralDataType.FlowTimeSeries)]
         [TestCase(Model1DLateralDataType.FlowWaterLevelTable)]
-        public void Validate_HydroLinkBetweenCatchmentAndLateral_WhenNotRealTime_AddsValidationIssueToReport(Model1DLateralDataType lateralDataType)
+        public void Validate_CatchmentLinkedToNonRealtimeLateralSource_IsInvalid(Model1DLateralDataType dataType)
         {
             // Setup
-            var fmModel = new WaterFlowFMModel();
-            var rrModel = new RainfallRunoffModel();
-            LinkWithHydroModelActivities(fmModel, rrModel);
-            
-            Branch branch = CreateBranchInNetwork(fmModel);
-            LateralSource lateralSource1 = CreateLateralSourcesOnBranch(branch, fmModel);
-            
-            var catchment = new Catchment();
-            rrModel.Basin.Catchments.Add(catchment);
-            
-            catchment.LinkTo(lateralSource1);
-            
-            foreach (Model1DLateralSourceData lateralSourcesData in fmModel.LateralSourcesData)
-            {
-                lateralSourcesData.DataType = lateralDataType;
-            }
+            HydroModel hydroModel = CreateHydroModelWithCatchmentAndWasteWaterTreatmentPlant();
+            var fmModel = GetHydroModelChildOfType<WaterFlowFMModel>(hydroModel);
+            var rrModel = GetHydroModelChildOfType<RainfallRunoffModel>(hydroModel);
+
+            LinkCatchmentToLateralSource(fmModel, rrModel);
+            SetLateralSourceDataType(fmModel, dataType);
 
             // Call
             ValidationReport report = WaterFlowFMHydroLinksValidator.Validate(fmModel);
-            
+
             // Assert
+            Assert.That(report, Is.Not.Null);
+            Assert.That(report.Issues, Has.Count.EqualTo(1));
+
             const string expectedMessage = "A hydrolink between a catchment and a lateral must be of type realtime.";
-            Assert.That(report.AllErrors.Any(error => error.Message.Equals(expectedMessage)), Is.True);
-        }
-        
-        [Test]
-        public void RealTimeLateralSourceWithIncomingLinkFromCatchmentAndWasteWaterTreatmentPlant_IsValidForLinkWasteWaterTreatmentPlantFirst()
-        {
-            // Setup
-            var fmModel = new WaterFlowFMModel();
-            var rrModel = new RainfallRunoffModel();
-            LinkWithHydroModelActivities(fmModel, rrModel);
-            
-            Branch branch = CreateBranchInNetwork(fmModel);
-            LateralSource lateralSource1 = CreateLateralSourcesOnBranch(branch, fmModel);
-
-            var catchment = new Catchment();
-            rrModel.Basin.Catchments.Add(catchment);
-
-            var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
-            rrModel.Basin.WasteWaterTreatmentPlants.Add(wasteWaterTreatmentPlant);
-            
-            // Call
-            LinkWasteWaterTreatmentPlantFirst(wasteWaterTreatmentPlant, lateralSource1, catchment);
-            ValidationReport report = WaterFlowFMHydroLinksValidator.Validate(fmModel);
-            
-            // Assert
-            Assert.That(report.AllErrors.Any(), Is.False);
-        }
-        
-        [Test]
-        public void RealTimeLateralSourceWithIncomingLinkFromCatchmentAndWasteWaterTreatmentPlant_IsValidForLinkCatchmentFirst()
-        {
-            // Setup
-            var fmModel = new WaterFlowFMModel();
-            var rrModel = new RainfallRunoffModel();
-            LinkWithHydroModelActivities(fmModel, rrModel);
-            
-            Branch branch = CreateBranchInNetwork(fmModel);
-            LateralSource lateralSource1 = CreateLateralSourcesOnBranch(branch, fmModel);
-
-            var catchment = new Catchment();
-            rrModel.Basin.Catchments.Add(catchment);
-
-            var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
-            rrModel.Basin.WasteWaterTreatmentPlants.Add(wasteWaterTreatmentPlant);
-            
-            // Call
-            LinkCatchmentFirst(wasteWaterTreatmentPlant, lateralSource1, catchment);
-            ValidationReport report = WaterFlowFMHydroLinksValidator.Validate(fmModel);
-            
-            // Assert
-            Assert.That(report.AllErrors.Any(), Is.False);
+            Assert.That(report.AllErrors, Has.One.Matches<ValidationIssue>(issue => issue.Message == expectedMessage));
         }
 
         [Test]
-        public void RealTimeLateralSourceWithIncomingLinkFromOnlyWasteWaterTreatmentPlant_IsInvalidAndGivesError()
+        public void Validate_WasteWaterTreatmentPlantAndCatchmentLinkedToLateralSource_IsValid()
         {
             // Setup
-            var fmModel = new WaterFlowFMModel();
-            var rrModel = new RainfallRunoffModel();
-            LinkWithHydroModelActivities(fmModel, rrModel);
+            HydroModel hydroModel = CreateHydroModelWithCatchmentAndWasteWaterTreatmentPlant();
 
-            Branch branch = CreateBranchInNetwork(fmModel);
-            LateralSource lateralSource1 = CreateLateralSourcesOnBranch(branch, fmModel);
-            
-            var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
-            rrModel.Basin.WasteWaterTreatmentPlants.Add(wasteWaterTreatmentPlant);
-            wasteWaterTreatmentPlant.LinkTo(lateralSource1);
-            
+            var fmModel = GetHydroModelChildOfType<WaterFlowFMModel>(hydroModel);
+            var rrModel = GetHydroModelChildOfType<RainfallRunoffModel>(hydroModel);
+
+            LinkWasteWaterTreatmentPlantToLateralSource(fmModel, rrModel);
+            LinkCatchmentToLateralSource(fmModel, rrModel);
+
             // Call
             ValidationReport report = WaterFlowFMHydroLinksValidator.Validate(fmModel);
-            
+
             // Assert
-            const string expectedMessage = "A lateral of type realtime must have a hydrolink between a catchment and the lateral.";
-            Assert.That(report.AllErrors.Any(error => error.Message.Equals(expectedMessage)), Is.True);
+            Assert.That(report, Is.Not.Null);
+            Assert.That(report.Issues, Is.Empty);
         }
 
-        private static void LinkWithHydroModelActivities(WaterFlowFMModel fmModel, RainfallRunoffModel rrModel = null)
+        [Test]
+        public void Validate_CatchmentAndWasteWaterTreatmentPlantLinkedToLateralSource_IsValid()
         {
+            // Setup
+            HydroModel hydroModel = CreateHydroModelWithCatchmentAndWasteWaterTreatmentPlant();
+            var fmModel = GetHydroModelChildOfType<WaterFlowFMModel>(hydroModel);
+            var rrModel = GetHydroModelChildOfType<RainfallRunoffModel>(hydroModel);
+
+            LinkCatchmentToLateralSource(fmModel, rrModel);
+            LinkWasteWaterTreatmentPlantToLateralSource(fmModel, rrModel);
+
+            // Call
+            ValidationReport report = WaterFlowFMHydroLinksValidator.Validate(fmModel);
+
+            // Assert
+            Assert.That(report, Is.Not.Null);
+            Assert.That(report.Issues, Is.Empty);
+        }
+
+        [Test]
+        public void Validate_CatchmentLinkedToLateralSource_IsValid()
+        {
+            // Setup
+            HydroModel hydroModel = CreateHydroModelWithCatchmentAndWasteWaterTreatmentPlant();
+
+            var fmModel = GetHydroModelChildOfType<WaterFlowFMModel>(hydroModel);
+            var rrModel = GetHydroModelChildOfType<RainfallRunoffModel>(hydroModel);
+
+            LinkCatchmentToLateralSource(fmModel, rrModel);
+
+            // Call
+            ValidationReport report = WaterFlowFMHydroLinksValidator.Validate(fmModel);
+
+            // Assert
+            Assert.That(report, Is.Not.Null);
+            Assert.That(report.Issues, Is.Empty);
+        }
+
+        [Test]
+        public void Validate_WasteWaterTreatmentPlantLinkedToLateralSource_IsValid()
+        {
+            // Setup
+            HydroModel hydroModel = CreateHydroModelWithCatchmentAndWasteWaterTreatmentPlant();
+            var fmModel = GetHydroModelChildOfType<WaterFlowFMModel>(hydroModel);
+            var rrModel = GetHydroModelChildOfType<RainfallRunoffModel>(hydroModel);
+
+            LinkWasteWaterTreatmentPlantToLateralSource(fmModel, rrModel);
+
+            // Call
+            ValidationReport report = WaterFlowFMHydroLinksValidator.Validate(fmModel);
+
+            // Assert
+            Assert.That(report, Is.Not.Null);
+            Assert.That(report.Issues, Is.Empty);
+        }
+
+        private static HydroModel CreateHydroModelWithCatchmentAndWasteWaterTreatmentPlant()
+        {
+            var fmModel = new WaterFlowFMModel();
+            var rrModel = new RainfallRunoffModel();
             var hydroModel = new HydroModel();
+
             hydroModel.Activities.Add(fmModel);
-            if (rrModel != null)
-            {
-                hydroModel.Activities.Add(rrModel);
-            }
-        }
+            hydroModel.Activities.Add(rrModel);
 
-        private static LateralSource CreateLateralSourcesOnBranch(Branch branch, WaterFlowFMModel fmModel)
-        {
-            const string nonUniqueName = "nonUniqueName";
-            var lateralSource1 = new LateralSource { Name = nonUniqueName, Branch = branch, Network = fmModel.Network }; // linked to catchment
-            var lateralSource2 = new LateralSource { Name = nonUniqueName, Branch = branch, Network = fmModel.Network }; // not linked
+            Branch branch = CreateBranchInNetwork(fmModel);
+            CreateLateralSourceOnBranch(branch, fmModel);
 
-            var lateralSourceData1 = new Model1DLateralSourceData() { Feature = lateralSource1, DataType = Model1DLateralDataType.FlowRealTime};
-            var lateralSourceData2 = new Model1DLateralSourceData() { Feature = lateralSource2, DataType = Model1DLateralDataType.FlowRealTime};
-            
-            fmModel.LateralSourcesData.Add(lateralSourceData1);
-            fmModel.LateralSourcesData.Add(lateralSourceData2);
-            return lateralSource1;
+            var catchment = new Catchment();
+            rrModel.Basin.Catchments.Add(catchment);
+
+            var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
+            rrModel.Basin.WasteWaterTreatmentPlants.Add(wasteWaterTreatmentPlant);
+
+            return hydroModel;
         }
 
         private static Branch CreateBranchInNetwork(WaterFlowFMModel fmModel)
@@ -204,19 +181,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             network.Nodes.Add(node1);
             network.Nodes.Add(node1);
             network.Branches.Add(branch);
+
             return branch;
         }
-        
-        private static void LinkCatchmentFirst(IHydroObject wasteWaterTreatmentPlant, IHydroObject lateralSource, IHydroObject catchment)
+
+        private static void CreateLateralSourceOnBranch(Branch branch, WaterFlowFMModel fmModel)
         {
-            catchment.LinkTo(lateralSource);
-            wasteWaterTreatmentPlant.LinkTo(lateralSource);
+            var lateralSource = new LateralSource
+            {
+                Name = "nonUniqueName",
+                Branch = branch,
+                Network = fmModel.Network
+            };
+
+            var lateralSourceData = new Model1DLateralSourceData
+            {
+                Feature = lateralSource,
+                DataType = Model1DLateralDataType.FlowRealTime
+            };
+
+            fmModel.LateralSourcesData.Add(lateralSourceData);
         }
 
-        private static void LinkWasteWaterTreatmentPlantFirst(IHydroObject wasteWaterTreatmentPlant, IHydroObject lateralSource, IHydroObject catchment)
+        private static void LinkCatchmentToLateralSource(WaterFlowFMModel fmModel, RainfallRunoffModel rrModel)
         {
-            wasteWaterTreatmentPlant.LinkTo(lateralSource);
-            catchment.LinkTo(lateralSource);
+            LinkHydroObjectToLateralSource(fmModel, rrModel.Basin.Catchments.First());
+        }
+
+        private static void LinkWasteWaterTreatmentPlantToLateralSource(WaterFlowFMModel fmModel, RainfallRunoffModel rrModel)
+        {
+            LinkHydroObjectToLateralSource(fmModel, rrModel.Basin.WasteWaterTreatmentPlants.First());
+        }
+
+        private static void LinkHydroObjectToLateralSource(WaterFlowFMModel fmModel, IHydroObject hydroObject)
+        {
+            LateralSource lateralSource = fmModel.LateralSourcesData.First().Feature;
+            hydroObject.LinkTo(lateralSource);
+        }
+
+        private static void SetLateralSourceDataType(WaterFlowFMModel fmModel, Model1DLateralDataType dataType)
+        {
+            Model1DLateralSourceData lateralSourcesData = fmModel.LateralSourcesData.First();
+            lateralSourcesData.DataType = dataType;
+        }
+
+        private static T GetHydroModelChildOfType<T>(HydroModel hydroModel)
+        {
+            return hydroModel.Activities.OfType<T>().First();
         }
     }
 }

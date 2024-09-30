@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         }
 
         /// <summary>
-        /// Validates that laterals of type realtime have a hydrolink from a catchment to a lateral.
+        /// Validates that laterals of type realtime have a hydrolink from a catchment or a WWTP to a lateral.
         /// </summary>
         /// <param name="region">The region for which to validate the laterals.</param>
         /// <param name="lateralSourceDatas">The laterals to validate.</param>
@@ -79,17 +79,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                 LateralSource lateralSource = lateralSourceData.Feature;
 
-                if (linksTargetLookup.TryGetValue(lateralSource.Name, out List<HydroLink> hydroLinks) &&
-                    hydroLinks.Exists(hydroLink => hydroLink.Source is Catchment))
+                if (linksTargetLookup.TryGetValue(lateralSource.Name, out List<HydroLink> hydroLinks) && hydroLinks.TrueForAll(IsValidHydroLinkForRealtimeLateral))
                 {
                     continue;
                 }
                         
                 yield return new ValidationIssue(lateralSource,
                                                  ValidationSeverity.Error,
-                                                 Resources.WaterFlowFMHydroLinksValidator_Realtime_lateral_must_have_link_between_catchment_and_lateral,
+                                                 Resources.Realtime_lateral_must_have_link_between_catchment_or_a_WWTP_and_lateral,
                                                  new ValidatedFeatures(region, lateralSource));
             }
+        }
+
+        private static bool IsValidHydroLinkForRealtimeLateral(HydroLink hydroLink)
+        {
+            return hydroLink.Source is Catchment ||
+                   hydroLink.Source is WasteWaterTreatmentPlant;
         }
 
         /// <summary>
@@ -116,9 +121,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             foreach (HydroLink hydroLink in region.Links)
             {
-                if (!(hydroLink.Source is Catchment)
-                    || !(hydroLink.Target is LateralSource lateralSource)
-                    || !lateralSourceDataLookup.TryGetValue(lateralSource.Name, out Model1DLateralSourceData lateralSourceData))
+                if (!(hydroLink.Source is Catchment) || 
+                    !(hydroLink.Target is LateralSource lateralSource) || 
+                    !lateralSourceDataLookup.TryGetValue(lateralSource.Name, out Model1DLateralSourceData lateralSourceData))
                 {
                     continue;
                 }

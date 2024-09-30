@@ -496,8 +496,8 @@ File import of structures file '{1}' has failed.</value>
   <data name="Key_0_in_1_is_deprecated_and_automatically_removed_from_model" xml:space="preserve">
     <value>Key {0} in {1} is deprecated and automatically removed from model.</value>
   </data>
-  <data name="WaterFlowFMHydroLinksValidator_Realtime_lateral_must_have_link_between_catchment_and_lateral" xml:space="preserve">
-    <value>A lateral of type realtime must have a hydrolink between a catchment and the lateral.</value>
+  <data name="Realtime_lateral_must_have_link_between_catchment_or_a_WWTP_and_lateral" xml:space="preserve">
+    <value>A lateral of type realtime must have a hydrolink between a catchment or a waste water treatment plant and the lateral.</value>
   </data>
   <data name="WaterFlowFMHydroLinksValidator_Hydrolink_between_catchment_and_lateral_must_be_realtime" xml:space="preserve">
     <value>A hydrolink between a catchment and a lateral must be of type realtime.</value>
