@@ -16,7 +16,7 @@ class HydroAssembly:
     def __add_reference(name, throwError):
         """Adds references to the specified assembly if it is not added."""
         for i in clr.References:
-            if i.ToString().Contains(name):
+            if i.GetName().Name.Equals(name):
                 return # already added
         clr.AddReference(name)
 
