@@ -870,7 +870,6 @@ namespace DeltaShell.NGHS.IO.Grid
                 int[] networkIds = Api.GetNetworkIds();
                 if (networkIds.Length == 0)
                 {
-                    logHandler.ReportError(Resources.ReadNetwork_No_network_geometries_in_file_detected);
                     return null;
                 }
 

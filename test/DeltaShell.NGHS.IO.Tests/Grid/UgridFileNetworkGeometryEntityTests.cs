@@ -188,7 +188,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        public void ApplyNetworkGeometry_UgridFile_ReadNetworkTest_NoNetworkIds_CallLogReportAndReturnNull()
+        public void ApplyNetworkGeometry_UgridFile_ReadNetworkTest_NoNetworkIds_ReturnNull()
         {
             // Arrange 
             using (var ugridFile = new UGridFile(string.Empty))
@@ -213,8 +213,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                 // Assert
                 Assert.That(disposableNetworkGeometry, Is.Null);
-                logHandler.Received(1).ReportError(Resources.ReadNetwork_No_network_geometries_in_file_detected);
-                logHandler.Received(1).LogReport();
+                uGridApi.Received(1).GetNetworkIds();
             }
         }
 
