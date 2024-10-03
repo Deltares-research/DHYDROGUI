@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.FouFile
 
             Assert.Throws<ArgumentNullException>(() => _ = new FouFileReader(null));
         }
-        
+
         [Test]
         [TestCase(null)]
         [TestCase("")]
@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.FouFile
 
             Assert.Throws<ArgumentException>(() => fouFileReader.CanReadFromDirectory(directory));
         }
-        
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void CanReadFromDirectory_NoFouFileExists_ReturnsFalse()
@@ -42,10 +42,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.FouFile
             var directory = Guid.NewGuid().ToString();
 
             bool canRead = fouFileReader.CanReadFromDirectory(directory);
-            
+
             Assert.IsFalse(canRead);
         }
-        
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void CanReadFromDirectory_FouFileExists_ReturnsTrue()
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.FouFile
             var modelDefinition = new WaterFlowFMModelDefinition();
             var fouFileReader = new FouFileReader(modelDefinition);
 
-            var fouFileName = "Maxima.fou";
+            const string fouFileName = "Maxima.fou";
 
             string directory = FileUtils.CreateTempDirectory();
             string fouFilePath = Path.Combine(directory, fouFileName);
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.FouFile
             try
             {
                 bool canRead = fouFileReader.CanReadFromDirectory(directory);
-            
+
                 Assert.IsTrue(canRead);
             }
             finally
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.FouFile
 
             Assert.Throws<ArgumentException>(() => fouFileReader.ReadFromDirectory(directory));
         }
-        
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadFromDirectory_FouFileDoesNotExists_ThrowsArgumentException()
@@ -114,31 +114,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.FouFile
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadFromDirectory_FouFileIsEmpty_ModelPropertyValuesAreSetToFalse()
+        public void ReadFromDirectory_FouFileIsEmpty_WriteFouVariablePropertiesSetToFalse()
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
             WriteAndReadFouFile(modelDefinition, string.Empty);
 
-            Assert.IsTrue(AreAllModelPropertyValuesEqualTo(modelDefinition, false));
+            AssertWriteFouVariablePropertiesAreEqualTo(modelDefinition, false);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadFromDirectory_FouFileContainsHeaderOnly_ModelPropertyValuesAreSetToFalse()
+        public void ReadFromDirectory_FouFileContainsHeaderOnly_WriteFouVariablePropertiesSetToFalse()
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var fouFileData = @"*var      tsrts     sstop     numcyc    knfac     v0plu     layno     elp";
+            const string fouFileData = @"*var      tsrts     sstop     numcyc    knfac     v0plu     layno     elp";
 
             WriteAndReadFouFile(modelDefinition, fouFileData);
 
-            Assert.IsTrue(AreAllModelPropertyValuesEqualTo(modelDefinition, false));
+            AssertWriteFouVariablePropertiesAreEqualTo(modelDefinition, false);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadFromDirectory_FouFileContainsUnknownVariables_ModelPropertyValuesAreSetToFalse()
+        public void ReadFromDirectory_FouFileContainsUnknownVariables_WriteFouVariablePropertiesSetToFalse()
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
@@ -161,16 +161,16 @@ vog5      0         86400     0         1         0                   min";
 
             WriteAndReadFouFile(modelDefinition, fouFileData);
 
-            Assert.IsTrue(AreAllModelPropertyValuesEqualTo(modelDefinition, false));
+            AssertWriteFouVariablePropertiesAreEqualTo(modelDefinition, false);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadFromDirectory_FouFileContainsVariablesWithInvalidTokens_ModelPropertyValuesAreSetToFalse()
+        public void ReadFromDirectory_FouFileContainsVariablesWithInvalidTokens_WriteFouVariablePropertiesSetToFalse()
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var fouFileData = @"*var      tsrts     sstop     numcyc    knfac     v0plu     layno     elp       
+            const string fouFileData = @"*var      tsrts     sstop     numcyc    knfac     v0plu     layno     elp       
 wl        abc         xyz     x0         x1         fff                   
 wl        abc         xyz     x0         x1         fff                   max
 wl        abc         xyz     x0         x1         fff                   min
@@ -189,16 +189,16 @@ vog       abc         xyz     x0         x1         fff                   min";
 
             WriteAndReadFouFile(modelDefinition, fouFileData);
 
-            Assert.IsTrue(AreAllModelPropertyValuesEqualTo(modelDefinition, false));
+            AssertWriteFouVariablePropertiesAreEqualTo(modelDefinition, false);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadFromDirectory_FouFileIsValid_ModelPropertyValuesAreSetToTrue()
+        public void ReadFromDirectory_FouFileIsValid_WriteFouVariablePropertiesSetToTrue()
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var fouFileData = @"*var      tsrts     sstop     numcyc    knfac     v0plu     layno     elp       
+            const string fouFileData = @"*var      tsrts     sstop     numcyc    knfac     v0plu     layno     elp       
 wl        0         86400     0         1         0                   
 wl        0         86400     0         1         0                   max
 wl        0         86400     0         1         0                   min
@@ -217,16 +217,16 @@ vog       0         86400     0         1         0                   min";
 
             WriteAndReadFouFile(modelDefinition, fouFileData);
 
-            Assert.IsTrue(AreAllModelPropertyValuesEqualTo(modelDefinition, true));
+            AssertWriteFouVariablePropertiesAreEqualTo(modelDefinition, true);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadFouFile_ContainsFouFilePropertiesUpperCase_ModelPropertyValuesAreSetToTrue()
+        public void ReadFouFile_ContainsFouFilePropertiesUpperCase_WriteFouVariablePropertiesSetToTrue()
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var fouFileData = @"*VAR      TSRTS     SSTOP     NUMCYC    KNFAC     V0PLU     LAYNO     ELP       
+            const string fouFileData = @"*VAR      TSRTS     SSTOP     NUMCYC    KNFAC     V0PLU     LAYNO     ELP       
 WL        0         86400     0         1         0                   
 WL        0         86400     0         1         0                   MAX
 WL        0         86400     0         1         0                   MIN
@@ -245,36 +245,67 @@ VOG       0         86400     0         1         0                   MIN";
 
             WriteAndReadFouFile(modelDefinition, fouFileData);
 
-            Assert.IsTrue(AreAllModelPropertyValuesEqualTo(modelDefinition, true));
+            AssertWriteFouVariablePropertiesAreEqualTo(modelDefinition, true);
         }
 
-        private bool AreAllModelPropertyValuesEqualTo(WaterFlowFMModelDefinition modelDefinition, bool expected)
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadFouFile_ContainsFouFileValuesInDoubleFormat_WriteFouVariablePropertiesSetToTrue()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            const string fouFileData = @"*var      tsrts     sstop     numcyc    knfac     v0plu     layno     elp       
+wl        0         86400     0.0       1.0       0.0                 
+wl        0         86400     0.0       1.0       0.0                 max
+wl        0         86400     0.0       1.0       0.0                 min
+uc        0         86400     0.0       1.0       0.0       1.0       
+uc        0         86400     0.0       1.0       0.0       1.0       max
+uc        0         86400     0.0       1.0       0.0       1.0       min
+fb        0         86400     0.0       1.0       0.0                 
+fb        0         86400     0.0       1.0       0.0                 max
+fb        0         86400     0.0       1.0       0.0                 min
+wdog      0         86400     0.0       1.0       0.0                 
+wdog      0         86400     0.0       1.0       0.0                 max
+wdog      0         86400     0.0       1.0       0.0                 min
+vog       0         86400     0.0       1.0       0.0                 
+vog       0         86400     0.0       1.0       0.0                 max
+vog       0         86400     0.0       1.0       0.0                 min";
+
+            WriteAndReadFouFile(modelDefinition, fouFileData);
+
+            AssertWriteFouVariablePropertiesAreEqualTo(modelDefinition, true);
+        }
+
+        private void AssertWriteFouVariablePropertiesAreEqualTo(WaterFlowFMModelDefinition modelDefinition, bool expected)
         {
             var fouFileDefinition = new FouFileDefinition();
-            
-            return fouFileDefinition.ModelPropertyNames.Select(propertyName => GetPropertyValue<bool>(modelDefinition, propertyName))
-                                    .All(propertyValue => propertyValue == expected);
+
+            bool allValuesEqual = fouFileDefinition.ModelPropertyNames
+                                                   .Select(propertyName => GetPropertyValue<bool>(modelDefinition, propertyName))
+                                                   .All(propertyValue => propertyValue == expected);
+
+            Assert.IsTrue(allValuesEqual, $"Expected write Fou variable properties set to {expected}.");
         }
 
-        private T GetPropertyValue<T>(WaterFlowFMModelDefinition modelDefinition, string propertyName)
+        private static T GetPropertyValue<T>(WaterFlowFMModelDefinition modelDefinition, string propertyName)
         {
             WaterFlowFMProperty modelProperty = modelDefinition.GetModelProperty(propertyName);
             return (T)modelProperty.Value;
         }
 
-        private void SetPropertyValue(WaterFlowFMModelDefinition modelDefinition, string propertyName, object value)
+        private static void SetPropertyValue(WaterFlowFMModelDefinition modelDefinition, string propertyName, object value)
         {
             WaterFlowFMProperty modelProperty = modelDefinition.GetModelProperty(propertyName);
             modelProperty.Value = value;
         }
-        
-        private void WriteAndReadFouFile(WaterFlowFMModelDefinition modelDefinition, string fouFileData)
+
+        private static void WriteAndReadFouFile(WaterFlowFMModelDefinition modelDefinition, string fouFileData)
         {
-            var fouFileName = "Maxima.fou";
+            const string fouFileName = "Maxima.fou";
 
             string directory = FileUtils.CreateTempDirectory();
             string fouFilePath = Path.Combine(directory, fouFileName);
-            
+
             var fouFileReader = new FouFileReader(modelDefinition);
 
             SetPropertyValue(modelDefinition, KnownProperties.FouFile, fouFileName);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Deltares.Infrastructure.API.Guards;
@@ -79,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
             UpdateModelDefinition(variables);
         }
 
-        private string ReadFromFile(string path)
+        private static string ReadFromFile(string path)
         {
             log.Info($"Reading statistical analysis input file from '{path}'.");
 
@@ -98,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
             return (string)fouFileProperty.Value;
         }
 
-        private IEnumerable<FouFileVariable> ParseVariables(string contents)
+        private static IEnumerable<FouFileVariable> ParseVariables(string contents)
         {
             var variables = new List<FouFileVariable>();
             var stringReader = new StringReader(contents);
@@ -118,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
             return variables;
         }
 
-        private bool TryParseVariable(string line, out FouFileVariable variable)
+        private static bool TryParseVariable(string line, out FouFileVariable variable)
         {
             string[] tokens = line.SplitOnEmptySpace();
 
@@ -133,27 +134,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
                 variable = new FouFileVariable
                 {
                     Name = tokens[0],
-                    StartTime = double.Parse(tokens[1]),
-                    StopTime = double.Parse(tokens[2]),
-                    NumberOfCycles = int.Parse(tokens[3]),
-                    AmplificationFactor = int.Parse(tokens[4]),
-                    AstronomicalArgument = int.Parse(tokens[5])
+                    StartTime = ConvertValueFromString<double>(tokens[1], nameof(FouFileVariable.StartTime)),
+                    StopTime = ConvertValueFromString<double>(tokens[2], nameof(FouFileVariable.StopTime)),
+                    NumberOfCycles = ConvertValueFromString<int>(tokens[3], nameof(FouFileVariable.NumberOfCycles)),
+                    AmplificationFactor = ConvertValueFromString<int>(tokens[4], nameof(FouFileVariable.AmplificationFactor)),
+                    AstronomicalArgument = ConvertValueFromString<int>(tokens[5], nameof(FouFileVariable.AstronomicalArgument)),
                 };
 
                 if (tokens.Length == 7)
                 {
-                    if (int.TryParse(tokens[6], out int layerNumber))
+                    try
                     {
-                        variable.LayerNumber = layerNumber;
+                        variable.LayerNumber = ConvertValueFromString<int>(tokens[6], nameof(FouFileVariable.LayerNumber));
                     }
-                    else
+                    catch
                     {
                         variable.EllipticParameters = tokens[6];
                     }
                 }
                 else if (tokens.Length == 8)
                 {
-                    variable.LayerNumber = int.Parse(tokens[6]);
+                    variable.LayerNumber = ConvertValueFromString<int>(tokens[6], nameof(FouFileVariable.LayerNumber));
                     variable.EllipticParameters = tokens[7];
                 }
 
@@ -165,6 +166,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
 
                 variable = null;
                 return false;
+            }
+        }
+
+        private static T ConvertValueFromString<T>(string token, string tokenName) where T : struct, IConvertible
+        {
+            try
+            {
+                double parsedValue = double.Parse(token, NumberFormatInfo.InvariantInfo);
+                return (T)Convert.ChangeType(parsedValue, typeof(T), NumberFormatInfo.InvariantInfo);
+            }
+            catch (Exception e) when (e is FormatException || e is InvalidCastException)
+            {
+                throw new FormatException(
+                    $"Token {tokenName} has formatted string value '{token}' which could not be parsed as {typeof(T)}", e);
             }
         }
 
