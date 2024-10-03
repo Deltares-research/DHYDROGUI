@@ -301,7 +301,7 @@
     </PropertyGroup>
 
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
@@ -315,7 +315,7 @@
     </PropertyGroup>
 
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
@@ -343,7 +343,7 @@
     </PropertyGroup>
     
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
@@ -570,27 +570,26 @@
                           KeyValue=$(_CheckDeltaShell_KernelsFolder)"
              ContinueOnError="WarnAndContinue"/>
 
-    <PropertyGroup>
+	<PropertyGroup>
       <_CheckEc_ModuleDllFile>ec_module.dll</_CheckEc_ModuleDllFile>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
              Properties=" Package=$(_Package);
                           File=$(_File);
-                          Key=DeltaShell kernel folder;
-                          KeyValue=$(_CheckDeltaShell_KernelsFolder)\$(_CheckEc_ModuleDllFile)"
+                          Key=Ec module in DeltaShell folder;
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckEc_ModuleDllFile)"
              ContinueOnError="WarnAndContinue"/>
 
-    <!-- Somehow the kernel team has removed the fileversion..
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
                           Key=$(_CheckEc_ModuleDllFile);
-                          KeyValue=$(_CheckDeltaShell_KernelsFolder)\$(_CheckEc_ModuleDllFile);
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckEc_ModuleDllFile);
                           FileVersion=$(_CheckEc_ModuleDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>-->
+             ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
       <_CheckGridGeomDllFile>gridgeom.dll</_CheckGridGeomDllFile>
@@ -599,22 +598,21 @@
              Targets="TeamcityTemplateOutputCheckWithExpectation"
              Properties=" Package=$(_Package);
                           File=$(_File);
-                          Key=DeltaShell kernel folder;
-                          KeyValue=$(_CheckDeltaShell_KernelsFolder)\$(_CheckGridGeomDllFile)"
+                          Key=gridgeom.dll in DeltaShell folder;
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckGridGeomDllFile)"
              ContinueOnError="WarnAndContinue"/>
 
-    <!-- Somehow the kernel team has removed the fileversion..
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
                           Key=$(_CheckGridGeomDllFile);
-                          KeyValue=$(_CheckDeltaShell_KernelsFolder)\$(_CheckGridGeomDllFile);
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckGridGeomDllFile);
                           FileVersion=$(_CheckGridGeomDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>-->
+             ContinueOnError="WarnAndContinue"/>
 
-    <PropertyGroup>
+        <PropertyGroup>
       <_CheckNetCDF4DllFile>netcdf4.dll</_CheckNetCDF4DllFile>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
@@ -1540,6 +1538,31 @@
               actual='$(_AssemblyFileVersion)']"
              Importance="high"
              Condition="Exists('$(KeyValue)') AND $(FileVersion) != $(_AssemblyFileVersion)"/>
+    <Error Text="$(Key) ($(KeyValue)) does not Exist" Condition="!Exists('$(KeyValue)')" ContinueOnError="ErrorAndContinue"/>
+    <Message Text="##teamcity[testFailed
+              name='$(Package).$(File).$(Key) $(TestTypeName)'
+              message='$(Key) ($(KeyValue)) does not exist, can not do version check']"
+             Importance="high"
+             Condition="!Exists('$(KeyValue)')"/>
+    <Message Text="##teamcity[testFinished name='$(Package).$(File).$(Key) $(TestTypeName)']" Importance="high" />
+  </Target>
+  
+  <Target Name="TeamcityTemplateOutputCheckWithComparisonVersionStartWith">
+    <GetFileVersion AssemblyPath="$(KeyValue)" Condition="Exists('$(KeyValue)')" ContinueOnError="WarnAndContinue">
+      <Output TaskParameter="Version" PropertyName="_AssemblyFileVersion" />
+    </GetFileVersion>
+    <Message Text="##teamcity[testStarted name='$(Package).$(File).$(Key) $(TestTypeName)']" Importance="high" />
+    <Message Importance="high" Text="$(Key) ($(KeyValue)) does not Exist" Condition="!Exists('$(KeyValue)')"/>
+    <Message Importance="high" Text="$(TestTypeName) is $(_AssemblyFileVersion)'" Condition="Exists('$(KeyValue)')"/>
+    <Error Text="$(TestTypeName) of $(Key) ($(KeyValue)) is not $(FileVersion) but is '$(_AssemblyFileVersion)' check file : $(File) or $(Key)" Condition="Exists('$(KeyValue)') AND !$(_AssemblyFileVersion.StartsWith($(FileVersion)))" ContinueOnError="ErrorAndContinue"/>
+    <Message Text="##teamcity[testFailed
+              type='comparisonFailure'
+              name='$(Package).$(File).$(Key) $(TestTypeName)'
+              message='$(Key) ($(KeyValue)) $(TestTypeName) is not $(FileVersion) but is $(_AssemblyFileVersion)'
+              expected='$(FileVersion)'
+              actual='$(_AssemblyFileVersion)']"
+             Importance="high"
+             Condition="Exists('$(KeyValue)') AND !$(_AssemblyFileVersion.StartsWith($(FileVersion)))"/>
     <Error Text="$(Key) ($(KeyValue)) does not Exist" Condition="!Exists('$(KeyValue)')" ContinueOnError="ErrorAndContinue"/>
     <Message Text="##teamcity[testFailed
               name='$(Package).$(File).$(Key) $(TestTypeName)'

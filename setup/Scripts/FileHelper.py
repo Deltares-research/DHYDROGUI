@@ -1,3 +1,4 @@
+import subprocess
 import os as _os
 import win32api as _win32
 import time as _time
@@ -107,11 +108,13 @@ def get_file_versions(directory : str) -> List[str]:
             if '/Revision' in doc_info:
                 file_versions.append(f"\t Revision: {doc_info['/Revision']}")
             continue
-
+        
+        
         if is_managed_dll(path):
             file_info = _get_version_attributes(entry)
             file_versions.append(f"\t File Version   : {file_info.file_version} ({file_info.bitness}) {file_info.date_modified}")
             file_versions.append(f"\t Product Version: {file_info.product_version}")
+
         else:
             print(f"processing : {path}")
             fileVersionsInfoUnmanagedDeltares = _get_native_deltares_dll_versions(path)
@@ -122,7 +125,44 @@ def get_file_versions(directory : str) -> List[str]:
             else:
                 file_versions += fileVersionsInfoUnmanagedDeltares
 
+        details = check_signature(path)
+        info = parse_details(details)
+        # Loop through the dictionary
+        for key, value in info.items():
+            file_versions.append(f"\t {key} : {value}")
+
     return file_versions
+
+def check_signature(dll_path):
+    """ Run sigcheck.exe on the given file (DLL or EXE) and parse the output for selected details. """
+    result = subprocess.run(['sigcheck.exe', '-nobanner', '-a', '-i', dll_path], capture_output=True, text=True)
+    output = result.stdout
+    return output.split('\n')
+
+def parse_details(details):
+    """ Parse the details to extract only the required fields for CSV output, replacing any semicolons in values with periods. """
+    info = {
+        'Verified': '',
+        'Signing date': '',
+        'Company': '',
+        'Description': '',
+        'Product': '',
+        'Prod version': '',
+        'File version': '',
+        'Machine type': '',
+        'Binary version': '',
+        'Copyright': '',
+        'Comments': ''
+    }
+    for line in details:
+        if ':' in line:
+            key, value = line.split(':', 1)
+            key = key.strip()
+            value = value.strip().replace(';', '.')
+            if key in info:
+                info[key] = value
+    return info
+
 
 def _get_version_attributes(entry: _os.DirEntry) -> _FileInfo:
     
