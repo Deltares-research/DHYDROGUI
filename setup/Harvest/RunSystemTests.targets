@@ -110,9 +110,6 @@
 						  Condition=$(_OpenCondition)"
              ContinueOnError="WarnAndContinue"/>
 
-
-
-
     <PropertyGroup>
       <_CheckGridGeomStatefulFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.GridEditor\Lib</_CheckGridGeomStatefulFolder>
     </PropertyGroup>
@@ -123,7 +120,7 @@
                           Key=GridGeomStateful folder;
                           KeyValue=$(_CheckGridGeomStatefulFolder)"
              ContinueOnError="WarnAndContinue"/>
-
+		
     <PropertyGroup>
       <_CheckRgfGridFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.FMSuite.Common.Gui\plugins-qt\x64\bin</_CheckRgfGridFolder>
 	    <_OpenCondition Condition="Exists('$(_CheckRgfGridFolder)')">true</_OpenCondition>
@@ -154,6 +151,7 @@
     <PropertyGroup>
       <_CheckNGHS_IO_NetCDFDllFile>io_netcdf.dll</_CheckNGHS_IO_NetCDFDllFile>
       <_CheckNGHS_Deltares_UgridDllFile>Deltares.UGrid.dll</_CheckNGHS_Deltares_UgridDllFile>
+      <_CheckNGHS_Deltares_MeshKernelNET>MeshKernelNET.dll</_CheckNGHS_Deltares_MeshKernelNET>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
@@ -173,11 +171,12 @@
                           KeyValue=$(_CheckNGHS_IOFolder)\$(_CheckNGHS_Deltares_UgridDllFile);
                           FileVersion=$(_CheckNGHS_Deltares_UgridDllFileVersion)"
              ContinueOnError="WarnAndContinue"/>
-
-    <PropertyGroup>
+	
+	<PropertyGroup>
       <_CheckMeshKernelApiFolder>$(_CheckNGHS_IOFolder)\win-x64\native</_CheckMeshKernelApiFolder>
       <_CheckMeshKernelApiExpFile>MeshKernelApi.exp</_CheckMeshKernelApiExpFile>
       <_CheckMeshKernelApiLibFile>MeshKernelApi.lib</_CheckMeshKernelApiLibFile>
+	  <_CheckMeshKernelApiDllFile>MeshKernelApi.dll</_CheckMeshKernelApiDllFile>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
@@ -200,28 +199,7 @@
                           File=$(_File);
                           Key=MeshKernelApi lib file;
                           KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiLibFile)"
-             ContinueOnError="WarnAndContinue"/>
-
-    <!-- because gridgeomStateful_dll.dll is redundant (?) and also using MeshKernelApi Check for these files too in the _CheckGridGeomStatefulFolder -->
-    <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithExpectation"
-             Properties=" Package=$(_Package);
-                          File=$(_File);
-                          Key=MeshKernelApi exp file;
-                          KeyValue=$(_CheckGridGeomStatefulFolder)\$(_CheckMeshKernelApiExpFile)"
-             ContinueOnError="WarnAndContinue"/>
-
-    <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithExpectation"
-             Properties=" Package=$(_Package);
-                          File=$(_File);
-                          Key=MeshKernelApi lib file;
-                          KeyValue=$(_CheckGridGeomStatefulFolder)\$(_CheckMeshKernelApiLibFile)"
-             ContinueOnError="WarnAndContinue"/>
-
-    <PropertyGroup>
-      <_CheckMeshKernelApiDllFile>MeshKernelApi.dll</_CheckMeshKernelApiDllFile>
-    </PropertyGroup>
+             ContinueOnError="WarnAndContinue"/>    
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
              Properties=" Package=$(_Package);
@@ -230,17 +208,72 @@
                           Key=$(_CheckMeshKernelApiDllFile);
                           KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiDllFile);
                           FileVersion=$(_CheckMeshKernelApiDllFileVersion)"
+             ContinueOnError="WarnAndContinue"/>    
+	<MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
+             Properties=" Package=$(_Package);
+                          File=$(_VersionsFile);
+                          TestTypeName=fileversion;
+                          Key=$(_CheckNGHS_Deltares_MeshKernelNET);
+                          KeyValue=$(_CheckNGHS_IOFolder)\$(_CheckNGHS_Deltares_MeshKernelNET);
+                          FileVersion=$(_CheckNGHS_Deltares_MeshKernelNETFileVersion)"
+             ContinueOnError="WarnAndContinue"/>
+    
+
+	
+	<PropertyGroup>
+      <_CheckGridEditorFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.GridEditor</_CheckGridEditorFolder>
+      <_CheckGridEditorMeshKernelApiFolder>$(_CheckGridEditorFolder)\win-x64\native</_CheckGridEditorMeshKernelApiFolder>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=GridEditor folder;
+                          KeyValue=$(_CheckGridEditorFolder)"
+             ContinueOnError="WarnAndContinue"/>
+			 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi folder in GridEditor;
+                          KeyValue=$(_CheckGridEditorMeshKernelApiFolder)"
+             ContinueOnError="WarnAndContinue"/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi exp file in GridEditor;
+                          KeyValue=$(_CheckGridEditorMeshKernelApiFolder)\$(_CheckMeshKernelApiExpFile)"
              ContinueOnError="WarnAndContinue"/>
 
-    <!-- because gridgeomStateful_dll.dll is redundant (?) and also using MeshKernelApi Check for this file too in the _CheckGridGeomStatefulFolder -->
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi lib file in GridEditor;
+                          KeyValue=$(_CheckGridEditorMeshKernelApiFolder)\$(_CheckMeshKernelApiLibFile)"
+             ContinueOnError="WarnAndContinue"/>   
+			 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithComparisonStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
                           Key=$(_CheckMeshKernelApiDllFile);
-                          KeyValue=$(_CheckGridGeomStatefulFolder)\$(_CheckMeshKernelApiDllFile);
-                          FileVersion=$(_CheckGridEditorMeshKernelApiDllFileVersion)"
+                          KeyValue=$(_CheckGridEditorMeshKernelApiFolder)\$(_CheckMeshKernelApiDllFile);
+                          FileVersion=$(_CheckMeshKernelApiDllFileVersion)"
+             ContinueOnError="WarnAndContinue"/>   
+			 
+	<MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
+             Properties=" Package=$(_Package);
+                          File=$(_VersionsFile);
+                          TestTypeName=fileversion;
+                          Key=$(_CheckNGHS_Deltares_MeshKernelNET);
+                          KeyValue=$(_CheckGridEditorFolder)\$(_CheckNGHS_Deltares_MeshKernelNET);
+                          FileVersion=$(_CheckNGHS_Deltares_MeshKernelNETFileVersion)"
              ContinueOnError="WarnAndContinue"/>
   </Target>
 
@@ -296,7 +329,7 @@
     </PropertyGroup>
 
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
@@ -310,7 +343,7 @@
     </PropertyGroup>
 
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
@@ -337,7 +370,7 @@
       <_CheckRrDllFile>rr_dll.dll</_CheckRrDllFile>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
@@ -357,7 +390,7 @@
                           KeyValue=$(_CheckGridGeomStatefulFolder)"
              ContinueOnError="WarnAndContinue"/>
 
-    <!-- Is redundant?
+	<!-- Is redundant?
     <PropertyGroup>
       <_CheckGridGeomStatefulDllFile>gridgeomStateful_dll.dll</_CheckGridGeomStatefulDllFile>
     </PropertyGroup>
@@ -409,6 +442,7 @@
     <PropertyGroup>
       <_CheckNGHS_IO_NetCDFDllFile>io_netcdf.dll</_CheckNGHS_IO_NetCDFDllFile>
       <_CheckNGHS_Deltares_UgridDllFile>Deltares.UGrid.dll</_CheckNGHS_Deltares_UgridDllFile>
+      <_CheckNGHS_Deltares_MeshKernelNET>MeshKernelNET.dll</_CheckNGHS_Deltares_MeshKernelNET>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
@@ -427,12 +461,21 @@
                           Key=$(_CheckNGHS_Deltares_UgridDllFile);
                           KeyValue=$(_CheckNGHS_IOFolder)\$(_CheckNGHS_Deltares_UgridDllFile);
                           FileVersion=$(_CheckNGHS_Deltares_UgridDllFileVersion)"
+             ContinueOnError="WarnAndContinue"/>	
+	<MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
+             Properties=" Package=$(_Package);
+                          File=$(_VersionsFile);
+                          TestTypeName=fileversion;
+                          Key=$(_CheckNGHS_Deltares_MeshKernelNET);
+                          KeyValue=$(_CheckNGHS_IOFolder)\$(_CheckNGHS_Deltares_MeshKernelNET);
+                          FileVersion=$(_CheckNGHS_Deltares_MeshKernelNETFileVersion)"
              ContinueOnError="WarnAndContinue"/>
-
     <PropertyGroup>
       <_CheckMeshKernelApiFolder>$(_CheckNGHS_IOFolder)\win-x64\native</_CheckMeshKernelApiFolder>
       <_CheckMeshKernelApiExpFile>MeshKernelApi.exp</_CheckMeshKernelApiExpFile>
       <_CheckMeshKernelApiLibFile>MeshKernelApi.lib</_CheckMeshKernelApiLibFile>
+	  <_CheckMeshKernelApiDllFile>MeshKernelApi.dll</_CheckMeshKernelApiDllFile>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
@@ -441,6 +484,7 @@
                           Key=MeshKernelApi folder;
                           KeyValue=$(_CheckMeshKernelApiFolder)"
              ContinueOnError="WarnAndContinue"/>
+			 
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
              Properties=" Package=$(_Package);
@@ -456,28 +500,8 @@
                           Key=MeshKernelApi lib file;
                           KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiLibFile)"
              ContinueOnError="WarnAndContinue"/>
-
-    <!-- because gridgeomStateful_dll.dll is redundant (?) and also using MeshKernelApi Check for these files too in the _CheckGridGeomStatefulFolder -->
-    <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithExpectation"
-             Properties=" Package=$(_Package);
-                          File=$(_File);
-                          Key=MeshKernelApi exp file;
-                          KeyValue=$(_CheckGridGeomStatefulFolder)\$(_CheckMeshKernelApiExpFile)"
-             ContinueOnError="WarnAndContinue"/>
-
-    <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithExpectation"
-             Properties=" Package=$(_Package);
-                          File=$(_File);
-                          Key=MeshKernelApi lib file;
-                          KeyValue=$(_CheckGridGeomStatefulFolder)\$(_CheckMeshKernelApiLibFile)"
-             ContinueOnError="WarnAndContinue"/>
-
-    <PropertyGroup>
-      <_CheckMeshKernelApiDllFile>MeshKernelApi.dll</_CheckMeshKernelApiDllFile>
-    </PropertyGroup>
-    <MsBuild Projects="$(MSBuildProjectFullPath)"
+			 
+	<MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
@@ -485,17 +509,61 @@
                           Key=$(_CheckMeshKernelApiDllFile);
                           KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiDllFile);
                           FileVersion=$(_CheckMeshKernelApiDllFileVersion)"
+             ContinueOnError="WarnAndContinue"/>				 
+	<PropertyGroup>
+      <_CheckGridEditorFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.GridEditor</_CheckGridEditorFolder>
+      <_CheckGridEditorMeshKernelApiFolder>$(_CheckGridEditorFolder)\win-x64\native</_CheckGridEditorMeshKernelApiFolder>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=GridEditor folder;
+                          KeyValue=$(_CheckGridEditorFolder)"
+             ContinueOnError="WarnAndContinue"/>
+			 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi folder in GridEditor;
+                          KeyValue=$(_CheckGridEditorMeshKernelApiFolder)"
+             ContinueOnError="WarnAndContinue"/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi exp file in GridEditor;
+                          KeyValue=$(_CheckGridEditorMeshKernelApiFolder)\$(_CheckMeshKernelApiExpFile)"
              ContinueOnError="WarnAndContinue"/>
 
-    <!-- because gridgeomStateful_dll.dll is redundant (?) and also using MeshKernelApi Check for this file too in the _CheckGridGeomStatefulFolder -->
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi lib file in GridEditor;
+                          KeyValue=$(_CheckGridEditorMeshKernelApiFolder)\$(_CheckMeshKernelApiLibFile)"
+             ContinueOnError="WarnAndContinue"/>   
+			 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithComparisonStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
                           Key=$(_CheckMeshKernelApiDllFile);
-                          KeyValue=$(_CheckGridGeomStatefulFolder)\$(_CheckMeshKernelApiDllFile);
+                          KeyValue=$(_CheckGridEditorMeshKernelApiFolder)\$(_CheckMeshKernelApiDllFile);
                           FileVersion=$(_CheckGridEditorMeshKernelApiDllFileVersion)"
+             ContinueOnError="WarnAndContinue"/>   		 
+			 
+	<!-- Also check the MeshKernelNET library in the GridEditor folder, can have different version as the one from NGHS.IO -->
+	<MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
+             Properties=" Package=$(_Package);
+                          File=$(_VersionsFile);
+                          TestTypeName=fileversion;
+                          Key=$(_CheckNGHS_Deltares_MeshKernelNET);
+                          KeyValue=$(_CheckGridEditorFolder)\$(_CheckNGHS_Deltares_MeshKernelNET);
+                          FileVersion=$(_CheckGridEditor_Deltares_MeshKernelNETFileVersion)"
              ContinueOnError="WarnAndContinue"/>
   </Target>
 
@@ -603,20 +671,19 @@
              Targets="TeamcityTemplateOutputCheckWithExpectation"
              Properties=" Package=$(_Package);
                           File=$(_File);
-                          Key=DeltaShell kernel folder;
-                          KeyValue=$(_CheckDeltaShell_KernelsFolder)\$(_CheckEc_ModuleDllFile)"
+                          Key=Ec module in DeltaShell folder;
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckEc_ModuleDllFile)"
              ContinueOnError="WarnAndContinue"/>
 
-    <!-- Somehow the kernel team has removed the fileversion..
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
                           Key=$(_CheckEc_ModuleDllFile);
-                          KeyValue=$(_CheckDeltaShell_KernelsFolder)\$(_CheckEc_ModuleDllFile);
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckEc_ModuleDllFile);
                           FileVersion=$(_CheckEc_ModuleDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>-->
+             ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
       <_CheckGridGeomDllFile>gridgeom.dll</_CheckGridGeomDllFile>
@@ -625,20 +692,19 @@
              Targets="TeamcityTemplateOutputCheckWithExpectation"
              Properties=" Package=$(_Package);
                           File=$(_File);
-                          Key=DeltaShell kernel folder;
-                          KeyValue=$(_CheckDeltaShell_KernelsFolder)\$(_CheckGridGeomDllFile)"
+                          Key=gridgeom.dll in DeltaShell folder;
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckGridGeomDllFile)"
              ContinueOnError="WarnAndContinue"/>
 
-    <!-- Somehow the kernel team has removed the fileversion..
     <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Targets="TeamcityTemplateOutputCheckWithComparisonVersionStartWith"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
                           Key=$(_CheckGridGeomDllFile);
-                          KeyValue=$(_CheckDeltaShell_KernelsFolder)\$(_CheckGridGeomDllFile);
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckGridGeomDllFile);
                           FileVersion=$(_CheckGridGeomDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>-->
+             ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
       <_CheckNetCDF4DllFile>netcdf4.dll</_CheckNetCDF4DllFile>
@@ -1468,6 +1534,30 @@
               actual='$(_AssemblyFileVersion)']"
              Importance="high"
              Condition="Exists('$(KeyValue)') AND $(FileVersion) != $(_AssemblyFileVersion)"/>
+    <Error Text="$(Key) ($(KeyValue)) does not Exist" Condition="!Exists('$(KeyValue)')" ContinueOnError="ErrorAndContinue"/>
+    <Message Text="##teamcity[testFailed
+              name='$(Package).$(File).$(Key) $(TestTypeName)'
+              message='$(Key) ($(KeyValue)) does not exist, can not do version check']"
+             Importance="high"
+             Condition="!Exists('$(KeyValue)')"/>
+    <Message Text="##teamcity[testFinished name='$(Package).$(File).$(Key) $(TestTypeName)']" Importance="high" />
+  </Target>
+  <Target Name="TeamcityTemplateOutputCheckWithComparisonVersionStartWith">
+    <GetFileVersion AssemblyPath="$(KeyValue)" Condition="Exists('$(KeyValue)')" ContinueOnError="WarnAndContinue">
+      <Output TaskParameter="Version" PropertyName="_AssemblyFileVersion" />
+    </GetFileVersion>
+    <Message Text="##teamcity[testStarted name='$(Package).$(File).$(Key) $(TestTypeName)']" Importance="high" />
+    <Message Importance="high" Text="$(Key) ($(KeyValue)) does not Exist" Condition="!Exists('$(KeyValue)')"/>
+    <Message Importance="high" Text="$(TestTypeName) is $(_AssemblyFileVersion)'" Condition="Exists('$(KeyValue)')"/>
+    <Error Text="$(TestTypeName) of $(Key) ($(KeyValue)) is not $(FileVersion) but is '$(_AssemblyFileVersion)' check file : $(File) or $(Key)" Condition="Exists('$(KeyValue)') AND !$(_AssemblyFileVersion.StartsWith($(FileVersion)))" ContinueOnError="ErrorAndContinue"/>
+    <Message Text="##teamcity[testFailed
+              type='comparisonFailure'
+              name='$(Package).$(File).$(Key) $(TestTypeName)'
+              message='$(Key) ($(KeyValue)) $(TestTypeName) is not $(FileVersion) but is $(_AssemblyFileVersion)'
+              expected='$(FileVersion)'
+              actual='$(_AssemblyFileVersion)']"
+             Importance="high"
+             Condition="Exists('$(KeyValue)') AND !$(_AssemblyFileVersion.StartsWith($(FileVersion)))"/>
     <Error Text="$(Key) ($(KeyValue)) does not Exist" Condition="!Exists('$(KeyValue)')" ContinueOnError="ErrorAndContinue"/>
     <Message Text="##teamcity[testFailed
               name='$(Package).$(File).$(Key) $(TestTypeName)'
