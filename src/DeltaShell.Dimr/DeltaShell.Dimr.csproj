@@ -43,7 +43,7 @@
     <Reference Include="BasicModelInterface" Private="False">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\BasicModelInterface.dll</HintPath>
     </Reference>
-    <Reference Include="DeltaShell.Core">
+    <Reference Include="DeltaShell.Core" Private="False">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DeltaShell.Core.dll</HintPath>
     </Reference>
     <Reference Include="DelftTools.Shell.Core" Private="False">
