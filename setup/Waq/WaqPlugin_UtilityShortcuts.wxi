@@ -6,7 +6,7 @@
   <Shortcut Id="plctLibraryTablesManualShortcut" Name="!(loc.PLCTLibraryTablesManualName)" Target="[BINDIR]D-Water_Quality_Processes_Library_Tables.pdf" WorkingDirectory="BINDIR"/>
 
 
-  <Shortcut Id="didoExeShortcut" Name="DIDO" Target="[INSTALLDIR]plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plugins-qt\x64\dido.cmd" WorkingDirectory="DidoLibDir">
+  <Shortcut Id="didoExeShortcut" Name="DIDO" Target="[INSTALLDIR]plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plugins-qt\x64\dido.cmd" WorkingDirectory="PersonalFolder">
     <Icon SourceFile="$(var.SolutionDir)bin\$(var.Configuration)\plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plugins-qt\x64\icons\dido_icon.ico" Id="dido_icon"/>
   </Shortcut>
   <Shortcut Id="didoManualShortcut" Name="!(loc.DidoUserManualName)" Target="[BINDIR]D-Water_Quality_DIDO_User_Manual.pdf" WorkingDirectory="BINDIR"/>
