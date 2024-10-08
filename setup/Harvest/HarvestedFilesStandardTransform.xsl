@@ -62,7 +62,22 @@
   <xsl:key name="pdb-file-search" match="wix:Component[contains(wix:File/@Source, '.pdb')]" use="@Id" />
   <xsl:key name="pspdb-file-search" match="wix:Component[contains(wix:File/@Source, '.pspdb')]" use="@Id" />
   <xsl:key name="pssym-file-search" match="wix:Component[contains(wix:File/@Source, '.pssym')]" use="@Id" />
-  
+
+  <!-- Exclude special PLCT files -->
+  <xsl:key name="coup203-exe-file-search" match="wix:Component[contains(wix:File/@Source, 'coup203.exe')]" use="@Id" />
+  <xsl:key name="coupsds-exe-file-search" match="wix:Component[contains(wix:File/@Source, 'coupsds.exe')]" use="@Id" />
+  <xsl:key name="install_open_proc_lib-tcl-file-search" match="wix:Component[contains(wix:File/@Source, 'install_open_proc_lib.tcl')]" use="@Id" />
+  <xsl:key name="nestwq1-exe-file-search" match="wix:Component[contains(wix:File/@Source, 'nestwq1.exe')]" use="@Id" />
+  <xsl:key name="nestwq2-exe-file-search" match="wix:Component[contains(wix:File/@Source, 'nestwq2.exe')]" use="@Id" />
+  <xsl:key name="plct-bin-netcdf-dll-file-search" match="wix:Component[contains(wix:File/@Source, 'plct\bin\netcdf.dll')]" use="@Id" />
+  <xsl:key name="restore_d3d_proc_lib-tcl-file-search" match="wix:Component[contains(wix:File/@Source, 'restore_d3d_proc_lib.tcl')]" use="@Id" />
+  <xsl:key name="SIMETF-file-search" match="wix:Component[contains(wix:File/@Source, 'SIMETF')]" use="@Id" />
+  <xsl:key name="SIMONA-ENV-file-search" match="wix:Component[contains(wix:File/@Source, 'SIMONA.ENV')]" use="@Id" />
+  <xsl:key name="start_compiler-tcl-file-search" match="wix:Component[contains(wix:File/@Source, 'start_compiler.tcl')]" use="@Id" />
+  <xsl:key name="ucrtbased-dll-file-search" match="wix:Component[contains(wix:File/@Source, 'ucrtbased.dll')]" use="@Id" />
+  <xsl:key name="waq-gui-exe-file-search" match="wix:Component[contains(wix:File/@Source, 'waq_gui.exe')]" use="@Id" />
+
+
   <!-- When adding text to wxs no indenting is done, this line will nicely indent the new lines-->
   <xsl:template match="text()[normalize-space() = '']"/>
   
@@ -124,6 +139,44 @@
 
   <xsl:template match="wix:Component[key('pssym-file-search', @Id)]" />
   <xsl:template match="wix:ComponentRef[key('pssym-file-search', @Id)]" />
+
+  <!-- Remove Components referencing to-be-excluded PLCT files. -->
+  <xsl:template match="wix:Component[key('coup203-exe-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('coup203-exe-file-search', @Id)]" />
+  
+  <xsl:template match="wix:Component[key('coupsds-exe-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('coupsds-exe-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('install_open_proc_lib-tcl-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('install_open_proc_lib-tcl-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('nestwq1-exe-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('nestwq1-exe-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('nestwq2-exe-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('nestwq2-exe-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('plct-bin-netcdf-dll-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('plct-bin-netcdf-dll-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('restore_d3d_proc_lib-tcl-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('restore_d3d_proc_lib-tcl-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('SIMETF-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('SIMETF-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('SIMONA-ENV-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('SIMONA-ENV-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('start_compiler-tcl-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('start_compiler-tcl-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('ucrtbased-dll-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('ucrtbased-dll-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('waq-gui-exe-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('waq-gui-exe-file-search', @Id)]" />
+
 
   <xsl:template match="@*|node()">
     <xsl:copy>
