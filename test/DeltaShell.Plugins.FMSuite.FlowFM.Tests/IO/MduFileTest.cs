@@ -953,9 +953,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(fouFilePath, Does.Exist);
 
                 string[][] data = ReadData(fouFilePath).ToArray();
-                AssertLine(data[0], "*var", "tsrts", "sstop", "numcyc", "knfac", "v0plu", "layno", "elp");
-                AssertLine(data[1], "wl", "0", nSecondsPerDay.ToString(), "0", "1", "0", "max");
-                AssertLine(data[2], "uc", "0", nSecondsPerDay.ToString(), "0", "1", "0", "1", "max");
+                AssertLine(data[0], Properties.Resources.DefaultFouFileHeader.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+                AssertLine(data[1], "uc", "0", nSecondsPerDay.ToString(), "0", "1", "0", "1", "max");
+                AssertLine(data[2], "wl", "0", nSecondsPerDay.ToString(), "0", "1", "0", "max");
             }
         }
 

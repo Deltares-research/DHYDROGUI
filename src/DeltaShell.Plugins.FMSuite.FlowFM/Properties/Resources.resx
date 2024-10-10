@@ -715,4 +715,22 @@ File import of structures file '{1}' has failed.</value>
   <data name="Interval_must_be_a_multiple_of_the_user_timestep_" xml:space="preserve">
     <value>{0} interval must be a multiple of the user timestep.</value>
   </data>
+  <data name="The_selected_fou_file_quantity___0___is_not_yet_available_or_validated_for_1D_" xml:space="preserve">
+    <value>The selected fou file quantity '{0}' is not yet available or validated for 1D.</value>
+  </data>
+  <data name="No_D_Flow_FM_property_defined_for_fou_file_quantity____0___with_analysis_type____1___" xml:space="preserve">
+    <value>No D-Flow FM property defined for fou file quantity '{0}' with analysis type '{1}'.</value>
+  </data>
+  <data name="Failed_parsing_fou_file_line____0___" xml:space="preserve">
+    <value>Failed parsing fou file line: '{0}'.</value>
+  </data>
+  <data name="Reading_statistical_analysis_input_file_from___0___" xml:space="preserve">
+    <value>Reading statistical analysis input file from '{0}'.</value>
+  </data>
+  <data name="Writing_statistical_analysis_input_file_to___0___" xml:space="preserve">
+    <value>Writing statistical analysis input file to '{0}'.</value>
+  </data>
+  <data name="DefaultFouFileHeader" xml:space="preserve">
+    <value>*quantity tstart    tstop     numcyc    knfac     v0plu     layno     param</value>
+  </data>
 </root>
