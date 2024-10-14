@@ -17,6 +17,6 @@
   <File Id="DWater_Quality_DIDO_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_DIDO_User_Manual.pdf"/>
 
   <!--PART-->
-  <File Id="DParticle_Tracking_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Particle Tracking_User_Manual.pdf"/>
+  <File Id="DParticle_Tracking_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Particle_Tracking_User_Manual.pdf"/>
 
 </Include>
