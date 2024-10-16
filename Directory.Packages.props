@@ -17,7 +17,7 @@
     <PackageVersion Include="DHYDRO.TestModels.Common" Version="4.0.0.8" />
     <PackageVersion Include="DHYDRO.TestModels.DFlowFM" Version="4.0.0.8" />
     <PackageVersion Include="DIDO" Version="7.0.0.74073" />
-    <PackageVersion Include="Dimr.Libs" Version="2.27.26" />
+    <PackageVersion Include="Dimr.Libs" Version="2.27.27" />
     <PackageVersion Include="Fare" Version="2.2.1" />
     <PackageVersion Include="FParsec" Version="1.1.1" />
     <PackageVersion Include="FParsec-Pipes" Version="1.1.1" />
@@ -30,7 +30,7 @@
     <PackageVersion Include="NUnit" Version="3.13.3" />
     <PackageVersion Include="NUnit.ConsoleRunner" Version="3.16.3" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
-    <PackageVersion Include="PLCT.Libs" Version="1.0.0.77823" />
+    <PackageVersion Include="PLCT.Libs" Version="1.0.0.79750" />
     <PackageVersion Include="Portable.System.DateTimeOnly" Version="7.0.0" />
     <PackageVersion Include="PostSharp" Version="2023.0.3" />
     <PackageVersion Include="PostSharp.Redist" Version="2023.0.3" />
