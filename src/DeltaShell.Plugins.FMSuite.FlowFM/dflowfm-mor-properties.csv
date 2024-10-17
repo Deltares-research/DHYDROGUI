@@ -10,7 +10,7 @@ sediment,,,,,,,,,,,,,,,
 MduGroup,MduName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MduOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description
 sediment,MorFile,,,,FileName,,,,TRUE,,,,,,Morphology file *mor.nc
 sediment,SedFile,,,,FileName,,,,TRUE,,,,,,Sediment descriptions file *sed.nc
-sediment,Sedimentmodelnr,,,,Integer,4,4,4,TRUE,,,,,,#for morpho
+sediment,Sedimentmodelnr,,,Sediment model number:No|Krone|SvR2007|E-H|MorphologyModule,0|1|2|3|4,0,0,4,TRUE,,,,,,"Sediment model nr, (0=no, 1=Krone, 2=SvR2007, 3=E-H, 4=MorphologyModule)"
 morphology,MorFac,morphology,General,Morphological scale factor,Double,1,1e-36,,FALSE,,,,,,Morphological scale factor
 morphology,MorStt,morphology,General,Spin-up before morphological changes,Double,720,0,,FALSE,,,,,,Spin-up interval from TStart till start of morphological changes
 morphology,Thresh,morphology,Sediment transport parameters,Threshold sediment thickness,Double,0.05,1e-36,10000,FALSE,,,,,,Threshold sediment thickness for transport and erosion reduction
