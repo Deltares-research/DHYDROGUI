@@ -12,5 +12,5 @@
   <Shortcut Id="didoManualShortcut" Name="!(loc.DidoUserManualName)" Target="[BINDIR]D-Water_Quality_DIDO_User_Manual.pdf" WorkingDirectory="BINDIR"/>
 
   <Shortcut Id="dPartShortcut" Name="D-Particle Tracking" Target="[INSTALLDIR]plugins\DeltaShell.Dimr\kernels\x64\bin\dshell_run_delpar.bat" WorkingDirectory="BINDIR"/>
-  <Shortcut Id="dPartManualShortcut" Name="!(loc.dPartManualName)" Target="[BINDIR]D-Particle Tracking_User_Manual.pdf" WorkingDirectory="BINDIR"/>
+  <Shortcut Id="dPartManualShortcut" Name="!(loc.dPartManualName)" Target="[BINDIR]D-Particle_Tracking_User_Manual.pdf" WorkingDirectory="BINDIR"/>
 </Include>
