@@ -623,11 +623,11 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__" xml:space="preserve">
     <value>Error while importing a {0} from {1}: {2}</value>
   </data>
-  <data name="FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_features" xml:space="preserve">
-    <value>Old his output found, please run the model again. (cannot map {0} to input or generated features)</value>
+  <data name="Variable_in_history_file_cannot_be_mapped_to_input_or_generated_feature_0_" xml:space="preserve">
+    <value>Variable in history file found that cannot be mapped to input or a generated feature: {0}</value>
   </data>
-  <data name="FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_feature_geometry_" xml:space="preserve">
-    <value>Old his output found, please run the model again. (cannot map {0} to input or generated feature geometry)</value>
+  <data name="Variable_in_history_file_cannot_be_mapped_to_input_or_generated_feature_geometry_0_" xml:space="preserve">
+    <value>Variable in history file found that cannot be mapped to input or a generated feature geometry: {0}</value>
   </data>
   <data name="BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Boundary_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_import___2_" xml:space="preserve">
     <value>Skipped DataPoint {0} for Boundary Condition {1} could not be added as the following exception was risen during import: {2}</value>

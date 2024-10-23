@@ -99,14 +99,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     //check if this variable can be mapped to an input or created feature
                     if (!CanBeMappedToFeatureName(dimensions, nodeCoordinatesVariableNames))
                     {
-                        log.Warn(string.Format(Resources.FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_features, secondDimensionName));
+                        log.Warn(string.Format(Resources.Variable_in_history_file_cannot_be_mapped_to_input_or_generated_feature_0_, secondDimensionName));
                         LoadHisFileVariableNamesByDimensionToMapUsingBackWardsCompatibility(secondDimensionName, netCdfVariable);
                     }
 
                     //check if this variable can be mapped to an input or created feature geometry
                     if (!CanBeMappedToFeatureGeometry(dimensions))
                     {
-                        log.Warn(string.Format(Resources.FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_feature_geometry_, secondDimensionName));
+                        log.Warn(string.Format(Resources.Variable_in_history_file_cannot_be_mapped_to_input_or_generated_feature_geometry_0_, secondDimensionName));
                         LoadHisFileVariableGeometriesByDimensionToMapUsingBackWardsCompatibility(secondDimensionName, netCdfVariable);
                     }
 

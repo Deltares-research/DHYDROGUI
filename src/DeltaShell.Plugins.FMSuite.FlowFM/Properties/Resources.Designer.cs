@@ -278,26 +278,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Old his output found, please run the model again. (cannot map {0} to input or generated feature geometry).
-        /// </summary>
-        public static string FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_feature_geometry_ {
-            get {
-                return ResourceManager.GetString("FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_" +
-                        "feature_geometry_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Old his output found, please run the model again. (cannot map {0} to input or generated features).
-        /// </summary>
-        public static string FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_features {
-            get {
-                return ResourceManager.GetString("FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_" +
-                        "features", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to D-Flow FM 2D/3D.
         /// </summary>
         public static string FMImporters_Category_D_Flow_FM_2D_3D {
@@ -1470,6 +1450,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_t" +
                         "emperature_but_no_meteo_data_was_specified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variable in history file found that cannot be mapped to input or a generated feature: {0}.
+        /// </summary>
+        public static string Variable_in_history_file_cannot_be_mapped_to_input_or_generated_feature_0_ {
+            get {
+                return ResourceManager.GetString("Variable_in_history_file_cannot_be_mapped_to_input_or_generated_feature_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variable in history file found that cannot be mapped to input or a generated feature geometry: {0}.
+        /// </summary>
+        public static string Variable_in_history_file_cannot_be_mapped_to_input_or_generated_feature_geometry_0_ {
+            get {
+                return ResourceManager.GetString("Variable_in_history_file_cannot_be_mapped_to_input_or_generated_feature_geometry_" +
+                        "0_", resourceCulture);
             }
         }
         
