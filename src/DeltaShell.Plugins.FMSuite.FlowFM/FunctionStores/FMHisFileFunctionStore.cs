@@ -42,6 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private const string standardNameAttribute = "standard_name";
         private const string longNameAttribute = "long_name";
         private const string unitAttribute = "units";
+        private const string coordinatesAttribute = "coordinates";
         private static readonly ILog log = LogManager.GetLogger(typeof(FMHisFileFunctionStore));
 
         public FMHisFileFunctionStore(string hisPath, ICoordinateSystem coordinateSystem = null, HydroArea area = null)
@@ -74,8 +75,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             LoadHisFileVariableGeometriesByDimension();
 
-            const string coordinatesAttribute = "coordinates";
-
             foreach (NetCdfVariableInfo timeVariable in dataVariablesArray.Where(v => v.IsTimeDependent))
             {
                 NetCdfVariable netCdfVariable = timeVariable.NetCdfDataVariable;
@@ -94,6 +93,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
                 if (timeVariable.NumDimensions == 2)
                 {
+                    if (!IsLocationDependentVariable(timeVariable))
+                    {
+                        continue;
+                    }
+
                     string secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
                     string nodeCoordinatesVariableNames = netCdfFile.GetAttributeValue(netCdfVariable, coordinatesAttribute);
                     //check if this variable can be mapped to an input or created feature
@@ -620,7 +624,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private static string GetFeatureNamesVariableForBackWardsCompatibilityName(NetCdfFile netCdfFile, NetCdfVariable netCdfVariable, IReadOnlyList<string> defaultNames)
         {
-            string featureNamesVariableNames = netCdfFile.GetAttributeValue(netCdfVariable, "coordinates");
+            string featureNamesVariableNames = netCdfFile.GetAttributeValue(netCdfVariable, coordinatesAttribute);
             if (featureNamesVariableNames == null)
             {
                 return GetDefaultName(netCdfFile, defaultNames, out string featureName)
@@ -678,7 +682,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private static (string, string) GetFeatureGeometryXAndYVariableForBackWardCompatibilityNames(NetCdfFile netCdfFile, NetCdfVariable netCdfVariable, string defaultXCoordinateName, string defaultYCoordinateName)
         {
-            string featureNamesVariableNames = netCdfFile.GetAttributeValue(netCdfVariable, "coordinates");
+            string featureNamesVariableNames = netCdfFile.GetAttributeValue(netCdfVariable, coordinatesAttribute);
             if (featureNamesVariableNames == null)
             {
                 return (defaultXCoordinateName, defaultYCoordinateName);
@@ -880,6 +884,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 Formula = formula,
                 Geometry = geometry
             };
+        }
+
+        private bool IsLocationDependentVariable(NetCdfVariableInfo variableInfo)
+        {
+            NetCdfAttribute coordinateAttribute = netCdfFile.GetAttribute(variableInfo.NetCdfDataVariable, coordinatesAttribute);
+            return coordinateAttribute != null;
         }
 
         #endregion
