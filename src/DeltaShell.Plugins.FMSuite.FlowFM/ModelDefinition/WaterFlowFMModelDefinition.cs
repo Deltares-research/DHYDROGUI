@@ -949,6 +949,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     }
                 }
             }
+
+            foreach (var operations in SpatialOperations.Values)
+            {
+                NamingHelper.MakeNamesUnique(operations);
+            }
         }
 
         public static bool SupportedByExtForceFile(ISpatialOperation operation)
@@ -979,25 +984,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public static ISpatialOperation ConvertSpatialOperation(ISpatialOperation operation)
         {
             var interpolateOperation = operation as InterpolateOperation;
-            if (interpolateOperation != null)
+            if (interpolateOperation == null)
             {
-                // only write interpolate operations that contain an importsamplesoperation as input samples
-                var importSamplesOperation =
-                    (ImportSamplesOperation)
-                        interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation;
-
-                operation = new ImportSamplesOperationImportData
-                {
-                    Name = importSamplesOperation.Name,
-                    FilePath = importSamplesOperation.FilePath,
-                    Enabled = importSamplesOperation.Enabled,
-                    InterpolationMethod = interpolateOperation.InterpolationMethod,
-                    AveragingMethod = interpolateOperation.GridCellAveragingMethod,
-                    RelativeSearchCellSize = interpolateOperation.RelativeSearchCellSize,
-                    MinSamplePoints = interpolateOperation.MinNumSamples,
-                    Operand = interpolateOperation.OperationType
-                };
+                return operation;
             }
+
+            // only write interpolate operations that contain an importsamplesoperation as input samples
+            var importSamplesOperation = (ImportSamplesOperation)interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation;
+
+            operation = new ImportSamplesOperationImportData
+            {
+                Name = importSamplesOperation.Name,
+                FilePath = importSamplesOperation.FilePath,
+                Enabled = importSamplesOperation.Enabled,
+                InterpolationMethod = interpolateOperation.InterpolationMethod,
+                AveragingMethod = interpolateOperation.GridCellAveragingMethod,
+                RelativeSearchCellSize = interpolateOperation.RelativeSearchCellSize,
+                MinSamplePoints = interpolateOperation.MinNumSamples,
+                Operand = interpolateOperation.OperationType
+            };
+
             return operation;
         }
 

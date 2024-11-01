@@ -740,6 +740,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        public void SelectSpatialOperationsSetsUniqueOperationNameTest()
+        {
+            var model = new WaterFlowFMModel();
+            
+            var importSamplesOperation = new ImportSamplesOperationImportData { Name = "some_name" };
+
+            var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
+                model.DataItems.First(x => x.Name == "Bed Level"));
+            valueConverter.SpatialOperationSet.Operations.Add(importSamplesOperation.CreateOperations().Second);
+            valueConverter.SpatialOperationSet.Operations.Add(importSamplesOperation.CreateOperations().Second);
+                
+            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+
+            var spatialOperations = model.ModelDefinition.GetSpatialOperations("Bed Level");
+
+            Assert.That(spatialOperations, Has.One.Matches<ISpatialOperation>(x => x.Name == "some_name"));
+            Assert.That(spatialOperations, Has.One.Matches<ISpatialOperation>(x => x.Name == "some_name_1"));
+        }
+
+        [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void SelectSpatialOperationsOnlySelectsCompletedOperationsTest()
