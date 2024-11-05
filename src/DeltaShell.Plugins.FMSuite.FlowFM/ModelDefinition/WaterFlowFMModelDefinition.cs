@@ -519,6 +519,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 AddSamplesOperation samplesOperation = CreateSamplesOperation(pointCloud, coverage.Name);
                 AddSpatialOperation(dataItemNameLookup[coverage], samplesOperation);
             }
+            
+            foreach (var operations in SpatialOperations.Values)
+            {
+                NamingHelper.MakeNamesUnique(operations);
+            }
         }
 
         private static List<ISpatialOperation> GetSpatialOperations(SpatialOperationSetValueConverter spatialOperationValueConverter)
