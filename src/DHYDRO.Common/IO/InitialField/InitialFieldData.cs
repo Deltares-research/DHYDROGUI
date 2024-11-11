@@ -6,7 +6,7 @@ namespace DHYDRO.Common.IO.InitialField
     public sealed class InitialFieldData
     {
         /// <summary>
-        /// The line number where the initial field is located. The default value is 0.
+        /// The line number where the initial field is located.
         /// </summary>
         public int LineNumber { get; set; }
 
