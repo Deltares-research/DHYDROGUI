@@ -649,4 +649,13 @@
   <data name="GridFile_GetNumberOfNetworkDiscretizations_Key__0__not_found_in_dictionary_numberOfMeshByType" xml:space="preserve">
     <value>Key {0} not found in dictionary numberOfMeshByType, error message : {1}.</value>
   </data>
+  <data name="Generate1D2DLinksHelper_Creates1d2dLinks_Creating_1D2D_links_from_MeshKernel" xml:space="preserve">
+    <value>Creating 1D2D links from MeshKernel</value>
+  </data>
+  <data name="Generate1D2DLinksHelper_Creates1d2dLinks_Could_not_find_matching_grid_cell_in_the_Unstructured_Grid_at_coordinate_used_in_2d_mesh_from_MeshKernel__0_" xml:space="preserve">
+    <value>Could not find matching grid cell in the Unstructured Grid at coordinate used in 2d mesh from MeshKernel {0}</value>
+  </data>
+  <data name="Generate1D2DLinksHelper_Generate1D2DLinks_Cannot_retrieve_the_MeshKernel_2d_grid" xml:space="preserve">
+    <value>Cannot retrieve the MeshKernel 2d grid used to calculate the contacts (1D2D links), impossible to generate links because the provided 2d mesh (grid) administration is different</value>
+  </data>
 </root>

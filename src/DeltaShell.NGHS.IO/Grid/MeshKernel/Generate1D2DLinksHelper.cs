@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
+using Deltares.Infrastructure.Logging;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
@@ -13,6 +15,7 @@ using log4net;
 using MeshKernelNET.Api;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.Index.Quadtree;
 
 namespace DeltaShell.NGHS.IO.Grid.MeshKernel
 {
@@ -64,13 +67,25 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
                         contacts = new DisposableContacts();
                     }
 
+                    DisposableMesh2D meshKernelGrid = null;
+                    if (linkType == LinkGeneratingType.EmbeddedOneToMany)
+                    {
+                        int errNr = api.Mesh2dGetData(id, out meshKernelGrid);
+                        if (errNr != 0)
+                        {
+                            log.Debug(Resources.Generate1D2DLinksHelper_Generate1D2DLinks_Cannot_retrieve_the_MeshKernel_2d_grid);
+                        }
+                    }
+
                     api.DeallocateState(id);
 
-                    return Creates1d2dLinks(contacts, grid, discretization, linkType);
+                    return linkType == LinkGeneratingType.EmbeddedOneToMany 
+                               ? Creates1d2dLinksOneToMany(contacts, grid, meshKernelGrid, discretization, linkType) 
+                               : Creates1d2dLinks(contacts, grid, discretization, linkType);
                 }
             }
         }
-
+        
         public static bool[] GetMesh1DFilter(IList<INetworkLocation> discretisationPoints, LinkGeneratingType linkType, IPolygon selectedArea = null, INode[] nodesToExclude = null, bool generatedByUser = false)
         {
             var filterList = new bool[discretisationPoints.Count];
@@ -203,6 +218,56 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
             return lstNewLinks;
         }
 
+        private static IEnumerable<Link1D2D> Creates1d2dLinksOneToMany(DisposableContacts linkInformation, UnstructuredGrid grid, DisposableMesh2D meshKernelMesh2D, IDiscretization networkDiscretization, LinkGeneratingType linkType)
+        {
+            Quadtree<Cell> quadtree = MakeQuadTreeOfGridCells(grid);
+
+            var lstNewLinks = new List<Link1D2D>();
+            var logger = new LogHandler(Resources.Generate1D2DLinksHelper_Creates1d2dLinks_Creating_1D2D_links_from_MeshKernel, log);
+
+            for (var i = 0; i < linkInformation.NumContacts; i++)
+            {
+                int pointIndex = linkInformation.Mesh1dIndices[i];
+                int meshKernelCellIndex = linkInformation.Mesh2dIndices[i];
+
+                Cell cell = null;
+                var meshKernelFaceCoordinate = new Coordinate(meshKernelMesh2D.FaceX[meshKernelCellIndex], meshKernelMesh2D.FaceY[meshKernelCellIndex]);
+                
+                var searchEnvelope = new Envelope(meshKernelFaceCoordinate);
+                IList<Cell> potentialCells = quadtree.Query(searchEnvelope);
+                var point = new Point(meshKernelFaceCoordinate);
+                cell = potentialCells.FirstOrDefault(c => c != null && c.ToPolygon(grid).Covers(point));
+                if (cell == null)
+                {
+                    logger.ReportErrorFormat(Resources.Generate1D2DLinksHelper_Creates1d2dLinks_Could_not_find_matching_grid_cell_in_the_Unstructured_Grid_at_coordinate_used_in_2d_mesh_from_MeshKernel__0_, meshKernelFaceCoordinate);
+                    continue;
+                }
+
+                INetworkLocation node = networkDiscretization.Locations.Values[pointIndex];
+                var link = new Link1D2D(pointIndex, grid.Cells.IndexOf(cell))
+                {
+                    Geometry = new LineString(new[] { node.Geometry.Coordinate, cell.Center }),
+                    TypeOfLink = linkType.GetLinkStorageType()
+                };
+                lstNewLinks.Add(link);
+            }
+
+            logger.LogReport();
+            return lstNewLinks;
+        }
+
+        private static Quadtree<Cell> MakeQuadTreeOfGridCells(UnstructuredGrid grid)
+        {
+            var quadtree = new Quadtree<Cell>();
+
+            foreach(Cell cell in grid.Cells)
+            {
+                Envelope cellEnvelope = cell.ToPolygon(grid).EnvelopeInternal;
+                quadtree.Insert(cellEnvelope, cell);
+            }
+            return quadtree;
+        }
+        
         private static bool IsOnOutletCompartment(IBranchFeature discretisationPoint, ISewerConnection sewerConnection)
         {
             if (discretisationPoint.Chainage == 0)

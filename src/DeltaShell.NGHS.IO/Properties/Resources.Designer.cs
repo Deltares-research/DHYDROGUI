@@ -376,6 +376,34 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find matching grid cell in the Unstructured Grid at coordinate used in 2d mesh from MeshKernel {0}.
+        /// </summary>
+        public static string Generate1D2DLinksHelper_Creates1d2dLinks_Could_not_find_matching_grid_cell_in_the_Unstructured_Grid_at_coordinate_used_in_2d_mesh_from_MeshKernel__0_ {
+            get {
+                return ResourceManager.GetString("Generate1D2DLinksHelper_Creates1d2dLinks_Could_not_find_matching_grid_cell_in_the" +
+                        "_Unstructured_Grid_at_coordinate_used_in_2d_mesh_from_MeshKernel__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating 1D2D links from MeshKernel.
+        /// </summary>
+        public static string Generate1D2DLinksHelper_Creates1d2dLinks_Creating_1D2D_links_from_MeshKernel {
+            get {
+                return ResourceManager.GetString("Generate1D2DLinksHelper_Creates1d2dLinks_Creating_1D2D_links_from_MeshKernel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot retrieve the MeshKernel 2d grid used to calculate the contacts (1D2D links), impossible to generate links because the provided 2d mesh (grid) administration is different.
+        /// </summary>
+        public static string Generate1D2DLinksHelper_Generate1D2DLinks_Cannot_retrieve_the_MeshKernel_2d_grid {
+            get {
+                return ResourceManager.GetString("Generate1D2DLinksHelper_Generate1D2DLinks_Cannot_retrieve_the_MeshKernel_2d_grid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not load links from {0}. This is not a UGrid file..
         /// </summary>
         public static string GeneratedObjectsForLinks_Read1D2DLinks_Could_not_load_links_from__0___This_is_not_a_UGrid_file_ {

@@ -1,13 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.MeshKernel;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMapTestUtils;
@@ -99,6 +106,40 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.MeshKernel
             var linksWithoutArea = Generate1D2DLinksHelper.Generate1D2DLinks(null, LinkGeneratingType.EmbeddedOneToOne, unstructuredGrid, gullies, discretization).ToList();
             
             Assert.AreEqual(linksWithArea.Count, linksWithoutArea.Count, "When generating links without area, the total extend should be used");
+        }
+
+        /// <summary>
+        /// Tests generating a computational grid filter for 1d2d linking with correct grid cell index when this is reversed
+        /// Embedded one to many makes its own 2d administration en thus needs to be mapped. To see the visualized ugrid
+        /// entities see issue : FM1D2D-3079
+        /// </summary>
+        /// <param name="linkGeneratingType">Type of linking</param>
+        /// <param name="expectedNumberOfLinks">Nr of links expected to be generated</param>
+        [TestCase(LinkGeneratingType.Lateral, 16, 60)]
+        [TestCase(LinkGeneratingType.EmbeddedOneToMany, 20, 89)]
+        [TestCase(LinkGeneratingType.EmbeddedOneToOne, 3, 79)]
+        [TestCase(LinkGeneratingType.GullySewer, 1, 98)]
+        public void GivenGenerate1D2DLinksHelper_Generate1D2DLinksWithDifferentCellIndicesAsMK2dMesh_ShouldCreateCorrectLinks(LinkGeneratingType linkGeneratingType, int expectedNumberOfLinks, int firstDiscretizationPointConnectsToCellIndex)
+        {
+            //Arrange
+            var discretization = GetTestChannelDiscretization();
+            var unstructuredGrid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 10, 10);
+            var area = GetFullArea();
+            var gullies = linkGeneratingType == LinkGeneratingType.GullySewer
+                              ? new List<Gully>
+                              {
+                                  new Gully { Geometry = new Point(-30, 22) }, // outside selection area
+                                  new Gully { Geometry = new Point(10, 5) }
+                              }
+                              : new List<Gully>();
+            // Act
+            //Change (reverse) cell indices so calculation mesh2d is different, similar to a grid geom read grid.
+            unstructuredGrid.ResetState(unstructuredGrid.Vertices, unstructuredGrid.Edges, unstructuredGrid.Cells.Reverse().ToList());
+            var links = Generate1D2DLinksHelper.Generate1D2DLinks(area, linkGeneratingType, unstructuredGrid, gullies, discretization).ToList();
+
+            // Assert
+            Assert.AreEqual(expectedNumberOfLinks, links.Count);
+            Assert.That(links[0].FaceIndex, Is.EqualTo(firstDiscretizationPointConnectsToCellIndex));
         }
 
         private static IPolygon GetFullArea()
@@ -242,6 +283,64 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.MeshKernel
                 Chainage = 0,
                 Geometry = new Point(0, 20),
                 Name = "branch1_begin"
+            });
+
+            discretisation.Locations.Values.Add(new NetworkLocation()
+            {
+                Branch = branch1,
+                Chainage = 100,
+                Geometry = new Point(100, 20),
+                Name = "branch1_end"
+            });
+
+            return discretisation;
+        }
+
+        /// <summary>
+        /// Discretization with a 1d computational node on channel start, mid and end 
+        /// (branch1 -> start, mid, end)
+        /// 
+        ///            Channel1 [2]
+        ///   N1 ---------- N2 ---------- N3
+        ///  0,20          50,20         100,20
+        ///
+        ///
+        /// 
+        /// </summary> 
+        private static Discretization GetTestChannelDiscretization()
+        {
+            var network = new HydroNetwork();
+            
+            var node1 = new HydroNode() { Name = "node1", Geometry = new Point(0, 20) };
+            var node2 = new HydroNode() { Name = "node2", Geometry = new Point(100, 20) };
+            var branch1 = new Channel(node1, node2)
+            {
+                Name = "Channel1",
+                Geometry =
+                    new LineString(new[]
+                    {new Coordinate(node1.Geometry.Coordinate.X, node1.Geometry.Coordinate.Y), new Coordinate(node2.Geometry.Coordinate.X, node2.Geometry.Coordinate.Y)})
+            };
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+            network.Branches.Add(branch1);
+
+            var discretisation = new Discretization() { Network = network };
+
+            
+            discretisation.Locations.Values.Add(new NetworkLocation()
+            {
+                Branch = branch1,
+                Chainage = 0,
+                Geometry = new Point(0, 20),
+                Name = "branch1_begin"
+            });
+            
+            discretisation.Locations.Values.Add(new NetworkLocation()
+            {
+                Branch = branch1,
+                Chainage = 50,
+                Geometry = new Point(50, 20),
+                Name = "branch1_mid"
             });
 
             discretisation.Locations.Values.Add(new NetworkLocation()
