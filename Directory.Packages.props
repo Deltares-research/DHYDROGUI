@@ -11,8 +11,8 @@
     <PackageVersion Include="Deltares.NET.Infrastructure.API" Version="0.2.0.242"/>
     <PackageVersion Include="DeltaShell.Framework" Version="3.0.0.4001" />
     <PackageVersion Include="DeltaShell.TestProject" Version="3.0.0.4001" />
-    <PackageVersion Include="DHYDRO.Common" Version="1.2.0.376" />
-    <PackageVersion Include="DHYDRO.Common.TestUtils" Version="1.2.0.376" />
+    <PackageVersion Include="DHYDRO.Common" Version="1.2.0.377" />
+    <PackageVersion Include="DHYDRO.Common.TestUtils" Version="1.2.0.377" />
     <PackageVersion Include="DHYDRO.SharedConfigurations" Version="1.0.0.41" />
     <PackageVersion Include="DHYDRO.TestModels.Common" Version="4.0.0.8" />
     <PackageVersion Include="DHYDRO.TestModels.DFlowFM" Version="4.0.0.8" />
