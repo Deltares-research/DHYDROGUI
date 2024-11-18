@@ -58,7 +58,7 @@
 					<param
 					mask="False"
 					name="ProjectExclusionList"
-					value="voorne_putten_final;Project5c;westernscheldt01;After_Chapter2_Running_model;Chapter2_EndResult;Chapter3_EndResult;Chapter4_EndResult;drtc_tutorial_dflow1d">
+					value="voorne_putten_final;Project5c;westernscheldt01;After_Chapter2_Running_model;Chapter2_EndResult;Chapter3_EndResult;Chapter4_EndResult;drtc_tutorial_dflow1d;r030\FM_model">
 					</param>
 					<param
 					mask="False"
