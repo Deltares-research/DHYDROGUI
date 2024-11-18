@@ -84,8 +84,8 @@
   <String Id="SetupTypeDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Choose the setup type that best suits your needs</String>
   <String Id="LicenseAgreementDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Please read the following license agreement carefully</String>
   <String Id="FullProductName" Overridable="yes">!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)</String>
-  <String Id="PublicReleaseVersion">2025.01</String>
-  <String Id="ReleaseVersion">4.16.0</String> <!--Need to discuss with the team-->
+  <String Id="PublicReleaseVersion">2025.02</String>
+  <String Id="ReleaseVersion">4.17.0</String> <!--Need to discuss with the team-->
   <String Id="ProductName">!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)</String>
   <String Id="DeltaShellFeatureName">DeltaShell</String>
   <String Id="DeltaShellFeatureDescription">The framework enables to develop a range of modeling suites, each distinguished by the components and — most significantly — the (numerical) modules, which are plugged in.</String>
