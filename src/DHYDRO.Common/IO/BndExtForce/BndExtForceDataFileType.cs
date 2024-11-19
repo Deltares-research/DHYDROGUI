@@ -12,9 +12,15 @@ namespace DHYDRO.Common.IO.BndExtForce
         /// </summary>
         [Description("")]
         None,
+        
+        /// <summary>
+        /// Space-uniform time series file (*.bc).
+        /// </summary>
+        [Description("bcascii")]
+        BcAscii,
 
         /// <summary>
-        /// Space-uniform time series file.
+        /// Space-uniform time series file (*.tim).
         /// </summary>
         [Description("uniform")]
         Uniform,

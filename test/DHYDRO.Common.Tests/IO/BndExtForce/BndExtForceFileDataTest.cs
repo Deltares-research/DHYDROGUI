@@ -305,9 +305,7 @@ namespace DHYDRO.Common.Tests.IO.BndExtForce
             var logHandler = Substitute.For<ILogHandler>();
 
             fileSystem.File.Exists(Arg.Any<string>()).Returns(true);
-            fileData.BoundaryDataValidator.FileSystem = fileSystem;
-            fileData.LateralDataValidator.FileSystem = fileSystem;
-            fileData.MeteoDataValidator.FileSystem = fileSystem;
+            fileData.FileSystem = fileSystem;
 
             fileData.RemoveInvalidForcings(logHandler);
 

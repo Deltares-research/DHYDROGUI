@@ -49,44 +49,46 @@ namespace DHYDRO.Common.IO.BndExtForce
         /// </summary>
         /// <remarks>
         /// The default value of 0s means that the Thatcher-Harleman return time has no impact.
-        /// This is an optional value.
+        /// This is an optional value, defaults to <see cref="double.NaN"/>.
         /// </remarks>
-        public double ReturnTime { get; set; }
+        public double ReturnTime { get; set; } = double.NaN;
 
         /// <summary>
         /// Gets or sets the fall velocity for the tracer (m/s).
         /// </summary>
         /// <remarks>
         /// The default value 0m/s means that settling is disabled for this tracer.
-        /// This is an optional value.
+        /// This is an optional value, defaults to <see cref="double.NaN"/>.
         /// </remarks>
-        public double TracerFallVelocity { get; set; }
+        public double TracerFallVelocity { get; set; } = double.NaN;
 
         /// <summary>
         /// Gets or sets decay lifetime (τ) for the tracer (s).
         /// </summary>
         /// <remarks>
         /// The default value 0s means that tracer decay is disabled for this tracer.
-        /// This is an optional value.
+        /// This is an optional value, defaults to <see cref="double.NaN"/>.
         /// </remarks>
-        public double TracerDecayTime { get; set; }
+        public double TracerDecayTime { get; set; } = double.NaN;
 
         /// <summary>
         /// Gets or sets the custom width for boundary flow link,
         /// to override default mirrored internal flow link width.
         /// </summary>
         /// <remarks>
-        /// Only used for 1D. This is an optional value.
+        /// Only used for 1D.
+        /// This is an optional value, defaults to <see cref="double.NaN"/>.
         /// </remarks>
-        public double FlowLinkWidth { get; set; }
+        public double FlowLinkWidth { get; set; } = double.NaN;
 
         /// <summary>
         /// Gets or sets the custom bed level depth below initial water level for boundary point,
         /// to override default mirrored bed level from internal pressure point.
         /// </summary>
         /// <remarks>
-        /// Only used for 1D. This is an optional value.
+        /// Only used for 1D.
+        /// This is an optional value, defaults to <see cref="double.NaN"/>.
         /// </remarks>
-        public double BedLevelDepth { get; set; }
+        public double BedLevelDepth { get; set; } = double.NaN;
     }
 }

@@ -10,6 +10,7 @@ namespace DHYDRO.Common.Tests.IO.BndExtForce
             => new Dictionary<BndExtForceDataFileType, string>
             {
                 { BndExtForceDataFileType.None, "" },
+                { BndExtForceDataFileType.BcAscii, "bcascii" },
                 { BndExtForceDataFileType.Uniform, "uniform" },
                 { BndExtForceDataFileType.UniMagDir, "unimagdir" },
                 { BndExtForceDataFileType.ArcInfo, "arcinfo" },

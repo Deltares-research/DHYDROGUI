@@ -25,7 +25,7 @@ namespace DHYDRO.Common.Tests.IO.BndExtForce
                 Assert.That(lateralData.LocationType, Is.EqualTo(BndExtForceLocationType.All));
                 Assert.That(lateralData.NodeId, Is.Null);
                 Assert.That(lateralData.BranchId, Is.Null);
-                Assert.That(lateralData.Chainage, Is.Zero);
+                Assert.That(lateralData.Chainage, Is.NaN);
                 Assert.That(lateralData.NumCoordinates, Is.Zero);
                 Assert.That(lateralData.XCoordinates, Is.Empty);
                 Assert.That(lateralData.YCoordinates, Is.Empty);
@@ -63,7 +63,7 @@ namespace DHYDRO.Common.Tests.IO.BndExtForce
                 Assert.That(lateralData.LocationType, Is.EqualTo(BndExtForceLocationType.All));
                 Assert.That(lateralData.NodeId, Is.Empty);
                 Assert.That(lateralData.BranchId, Is.Empty);
-                Assert.That(lateralData.Chainage, Is.Zero);
+                Assert.That(lateralData.Chainage, Is.NaN);
                 Assert.That(lateralData.NumCoordinates, Is.Zero);
                 Assert.That(lateralData.XCoordinates, Is.Empty);
                 Assert.That(lateralData.YCoordinates, Is.Empty);

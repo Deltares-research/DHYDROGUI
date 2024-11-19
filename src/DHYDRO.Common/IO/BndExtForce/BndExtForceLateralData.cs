@@ -55,9 +55,9 @@ namespace DHYDRO.Common.IO.BndExtForce
         /// </summary>
         /// <remarks>
         /// For a 1D point lateral. Used in combination with <see cref="BranchId"/>.
-        /// This is an optional value.
+        /// This is an optional value, defaults to <see cref="double.NaN"/>.
         /// </remarks>
-        public double Chainage { get; set; }
+        public double Chainage { get; set; } = double.NaN;
 
         /// <summary>
         /// Gets or sets the number of values in <see cref="XCoordinates"/> and <see cref="YCoordinates"/>.

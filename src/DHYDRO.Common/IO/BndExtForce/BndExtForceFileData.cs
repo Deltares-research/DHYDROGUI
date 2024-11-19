@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using Deltares.Infrastructure.API.Guards;
 using Deltares.Infrastructure.API.Logging;
@@ -16,6 +17,7 @@ namespace DHYDRO.Common.IO.BndExtForce
         private readonly List<BndExtForceLateralData> lateralForcings;
         private readonly List<BndExtForceMeteoData> meteoForcings;
 
+        private IFileSystem fileSystem;
         private BndExtForceFileInfo fileInfo;
 
         /// <summary>
@@ -26,11 +28,21 @@ namespace DHYDRO.Common.IO.BndExtForce
             boundaryForcings = new List<BndExtForceBoundaryData>();
             lateralForcings = new List<BndExtForceLateralData>();
             meteoForcings = new List<BndExtForceMeteoData>();
+            fileSystem = new FileSystem();
             fileInfo = new BndExtForceFileInfo();
+        }
 
-            BoundaryDataValidator = new BndExtForceBoundaryDataValidator();
-            LateralDataValidator = new BndExtForceLateralDataValidator();
-            MeteoDataValidator = new BndExtForceMeteoDataValidator();
+        /// <summary>
+        /// Provides access to the file system.
+        /// </summary>
+        public IFileSystem FileSystem
+        {
+            get => fileSystem;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                fileSystem = value;
+            }
         }
 
         /// <summary>
@@ -46,21 +58,6 @@ namespace DHYDRO.Common.IO.BndExtForce
                 fileInfo = value;
             }
         }
-
-        /// <summary>
-        /// Gets or sets the boundary forcing data validator.
-        /// </summary>
-        internal BndExtForceBoundaryDataValidator BoundaryDataValidator { get; set; }
-
-        /// <summary>
-        /// Gets or sets the lateral forcing data validator.
-        /// </summary>
-        internal BndExtForceLateralDataValidator LateralDataValidator { get; set; }
-
-        /// <summary>
-        /// Gets or sets the meteo forcing data validator.
-        /// </summary>
-        internal BndExtForceMeteoDataValidator MeteoDataValidator { get; set; }
 
         /// <summary>
         /// Gets the boundary data in the external forcings file.
@@ -180,9 +177,13 @@ namespace DHYDRO.Common.IO.BndExtForce
         {
             Ensure.NotNull(logHandler, nameof(logHandler));
 
-            boundaryForcings.RemoveAll(data => !BoundaryDataValidator.IsValidWithLogging(data, logHandler));
-            lateralForcings.RemoveAll(data => !LateralDataValidator.IsValidWithLogging(data, logHandler));
-            meteoForcings.RemoveAll(data => !MeteoDataValidator.IsValidWithLogging(data, logHandler));
+            var boundaryDataValidator = new BndExtForceBoundaryDataValidator { FileSystem = fileSystem };
+            var lateralDataValidator = new BndExtForceLateralDataValidator { FileSystem = fileSystem };
+            var meteoDataValidator = new BndExtForceMeteoDataValidator { FileSystem = fileSystem };
+
+            boundaryForcings.RemoveAll(data => !boundaryDataValidator.IsValidWithLogging(data, logHandler));
+            lateralForcings.RemoveAll(data => !lateralDataValidator.IsValidWithLogging(data, logHandler));
+            meteoForcings.RemoveAll(data => !meteoDataValidator.IsValidWithLogging(data, logHandler));
         }
     }
 }

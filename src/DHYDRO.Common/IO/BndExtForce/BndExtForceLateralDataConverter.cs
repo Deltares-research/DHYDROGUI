@@ -22,7 +22,7 @@ namespace DHYDRO.Common.IO.BndExtForce
                 LocationType = section.GetPropertyValue(BndExtForceFileConstants.Keys.LocationType, BndExtForceLocationType.All),
                 NodeId = section.GetPropertyValue(BndExtForceFileConstants.Keys.NodeId),
                 BranchId = section.GetPropertyValue(BndExtForceFileConstants.Keys.BranchId),
-                Chainage = section.GetPropertyValue<double>(BndExtForceFileConstants.Keys.Chainage),
+                Chainage = section.GetPropertyValue(BndExtForceFileConstants.Keys.Chainage, double.NaN),
                 NumCoordinates = section.GetPropertyValue<int>(BndExtForceFileConstants.Keys.NumCoordinates),
                 XCoordinates = section.GetMultiValuePropertyValues<double>(BndExtForceFileConstants.Keys.XCoordinates),
                 YCoordinates = section.GetMultiValuePropertyValues<double>(BndExtForceFileConstants.Keys.YCoordinates),
@@ -42,12 +42,8 @@ namespace DHYDRO.Common.IO.BndExtForce
             section.AddProperty(BndExtForceFileConstants.Keys.Name, lateralData.Name);
             section.AddPropertyIf(BndExtForceFileConstants.Keys.LocationType, lateralData.LocationType, _ => lateralData.NumCoordinates > 0);
             section.AddPropertyIf(BndExtForceFileConstants.Keys.NodeId, lateralData.NodeId, value => !string.IsNullOrEmpty(value));
-
-            if (lateralData.Chainage > 0)
-            {
-                section.AddProperty(BndExtForceFileConstants.Keys.BranchId, lateralData.BranchId);
-                section.AddProperty(BndExtForceFileConstants.Keys.Chainage, lateralData.Chainage);
-            }
+            section.AddPropertyIf(BndExtForceFileConstants.Keys.BranchId, lateralData.BranchId, value => !string.IsNullOrEmpty(value));
+            section.AddPropertyIf(BndExtForceFileConstants.Keys.Chainage, lateralData.Chainage, value => !double.IsNaN(value));
 
             if (lateralData.NumCoordinates > 0)
             {

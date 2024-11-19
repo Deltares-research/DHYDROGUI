@@ -130,9 +130,9 @@ namespace DHYDRO.Common.IO.InitialField
             iniSection.AddProperty(InitialFieldFileConstants.Keys.ExtrapolationMethod, initialFieldData.ExtrapolationMethod ? "yes" : "no");
             iniSection.AddProperty(InitialFieldFileConstants.Keys.LocationType, initialFieldData.LocationType);
 
-            if (initialFieldData.DataFileType == InitialFieldDataFileType.Polygon && !double.IsNaN(initialFieldData.Value))
+            if (initialFieldData.DataFileType == InitialFieldDataFileType.Polygon)
             {
-                iniSection.AddProperty(InitialFieldFileConstants.Keys.Value, initialFieldData.Value);
+                iniSection.AddPropertyIf(InitialFieldFileConstants.Keys.Value, initialFieldData.Value, value => !double.IsNaN(value));
             }
 
             if (initialFieldData.Quantity == InitialFieldQuantity.FrictionCoefficient)

@@ -164,7 +164,7 @@ namespace DHYDRO.Common.Tests.IO.BndExtForce
             {
                 Quantity = "rainfall",
                 ForcingFile = "rainfall.nc",
-                ForcingFileType = BndExtForceDataFileType.Uniform
+                ForcingFileType = BndExtForceDataFileType.NetCDF
             };
 
             var extForceFileData = new BndExtForceFileData { FileInfo = fileInfo };
@@ -205,7 +205,7 @@ namespace DHYDRO.Common.Tests.IO.BndExtForce
                 Assert.That(meteoSection, Is.Not.Null);
                 Assert.That(meteoSection.GetPropertyValue(BndExtForceFileConstants.Keys.Quantity), Is.EqualTo("rainfall"));
                 Assert.That(meteoSection.GetPropertyValue(BndExtForceFileConstants.Keys.ForcingFile), Is.EqualTo("rainfall.nc"));
-                Assert.That(meteoSection.GetPropertyValue(BndExtForceFileConstants.Keys.ForcingFileType), Is.EqualTo("uniform"));
+                Assert.That(meteoSection.GetPropertyValue(BndExtForceFileConstants.Keys.ForcingFileType), Is.EqualTo("netcdf"));
             });
         }
     }

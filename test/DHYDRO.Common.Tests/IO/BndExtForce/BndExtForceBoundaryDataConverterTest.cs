@@ -23,11 +23,11 @@ namespace DHYDRO.Common.Tests.IO.BndExtForce
                 Assert.That(boundaryData.NodeId, Is.Null);
                 Assert.That(boundaryData.LocationFile, Is.Null);
                 Assert.That(boundaryData.ForcingFiles, Is.Empty);
-                Assert.That(boundaryData.ReturnTime, Is.Zero);
-                Assert.That(boundaryData.TracerFallVelocity, Is.Zero);
-                Assert.That(boundaryData.TracerDecayTime, Is.Zero);
-                Assert.That(boundaryData.FlowLinkWidth, Is.Zero);
-                Assert.That(boundaryData.BedLevelDepth, Is.Zero);
+                Assert.That(boundaryData.ReturnTime, Is.NaN);
+                Assert.That(boundaryData.TracerFallVelocity, Is.NaN);
+                Assert.That(boundaryData.TracerDecayTime, Is.NaN);
+                Assert.That(boundaryData.FlowLinkWidth, Is.NaN);
+                Assert.That(boundaryData.BedLevelDepth, Is.NaN);
             });
         }
 
@@ -58,11 +58,11 @@ namespace DHYDRO.Common.Tests.IO.BndExtForce
                 Assert.That(boundaryData.NodeId, Is.Empty);
                 Assert.That(boundaryData.LocationFile, Is.Empty);
                 Assert.That(boundaryData.ForcingFiles, Is.Empty);
-                Assert.That(boundaryData.ReturnTime, Is.Zero);
-                Assert.That(boundaryData.TracerFallVelocity, Is.Zero);
-                Assert.That(boundaryData.TracerDecayTime, Is.Zero);
-                Assert.That(boundaryData.FlowLinkWidth, Is.Zero);
-                Assert.That(boundaryData.BedLevelDepth, Is.Zero);
+                Assert.That(boundaryData.ReturnTime, Is.NaN);
+                Assert.That(boundaryData.TracerFallVelocity, Is.NaN);
+                Assert.That(boundaryData.TracerDecayTime, Is.NaN);
+                Assert.That(boundaryData.FlowLinkWidth, Is.NaN);
+                Assert.That(boundaryData.BedLevelDepth, Is.NaN);
             });
         }
 
