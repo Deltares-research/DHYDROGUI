@@ -1,0 +1,8 @@
+d3d_qp('openfile','D:\niesten\Projects\1000202-001_FMtesting\thindams_IN\c18_bedslope_effect_slope044\dflowfmoutput\str_map.nc')
+d3d_qp('selectfield','flow element center velocity vector - nmesh2d_face: mean')
+d3d_qp('colour',[ 0.6 0.2 0 ])
+d3d_qp('quickview')
+d3d_qp('openfile','D:\niesten\Projects\1000202-001_FMtesting\thindams_IN\c18_bedslope_effect_slope044\delft3d\trim-str.dat')
+d3d_qp('selectfield','depth averaged velocity')
+d3d_qp('colour',[ 0 0 1 ])
+d3d_qp('addtoplot')

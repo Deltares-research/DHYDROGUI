@@ -1,0 +1,29 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=01.07.02
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=1
+NumberOfLocations=15
+T0=1951.01.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Location Descriptions]
+1=WAAL_1
+2=WAAL_2
+3=PN1_Y1
+4=min.afvoer Nedrijn1
+5=min.afvoer Nedrijn2
+6=NEDR_2
+7=NEDR_3
+8=LEK__1
+9=LEK__2
+10=Kortsl Rhederlaag1
+11=kortsl Rhederlaag2
+12=Y2__OY
+13=Y3__Y4
+14=Y5Y6TK
+15=Y7__Y8
+ 

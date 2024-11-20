@@ -1,0 +1,38 @@
+* Created: 10/10/2023 11:19:54
+* Use the default data set for other input (always 1) 
+1
+*Aantal stations
+1
+*Namen van stations
+'Global'
+* Number of events and the period in seconds 
+1 3600 
+* The first record contains the start date and time (yyyy mm dd HH mm ss), * followed by the length of the event (dd HH mm ss). 
+* The last part is the data for each time step.
+2023 10 10 00 00 00 01 00 00 00
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+0.00 
+

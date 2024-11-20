@@ -1,0 +1,16 @@
+[General]
+fileVersion      = 2.00
+fileType         = structure
+
+[structure]
+id               = w
+type             = weir
+numCoordinates   = 2
+xCoordinates     = 1 2
+yCoordinates     = 3 4
+crestLevel       = 3
+Im_a_nonexistent_property = hax		# This property is not in the schema!
+crestWidth       = 4
+corrCoeff        = 1
+allowedFlowDir   = 0
+useVelocityHeight = true

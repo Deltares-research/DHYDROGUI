@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.PumpShapeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="10"
+             d:DesignWidth="10"
+             mc:Ignorable="d">
+    <UserControl.DataContext>
+        <local:PumpShapeControlViewModel x:Name="ViewModel" />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary Source="NetworkStructureBrushes.xaml" />
+    </UserControl.Resources>
+    <Grid x:Name="ViewGrid"
+          SizeChanged="ViewGrid_OnSizeChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Canvas>
+            <!--  Suction  -->
+            <!--  Connector  -->
+            <Polyline Points="{Binding SuctionConnection}"
+                      Stroke="Black"
+                      StrokeThickness="2" />
+
+            <!--  Start  -->
+            <Polyline Points="{Binding SuctionStartLevel}"
+                      Stroke="ForestGreen"
+                      StrokeThickness="2" />
+
+            <!--  Stop  -->
+            <Polyline Points="{Binding SuctionStopLevel}"
+                      Stroke="Red"
+                      StrokeThickness="2" />
+
+            <!--  Delivery  -->
+            <!--  Connector  -->
+            <Polyline Points="{Binding Connection}"
+                      Stroke="Black"
+                      StrokeThickness="2" />
+
+            <!--  Start  -->
+            <Polyline Points="{Binding DeliveryStartLevel}"
+                      Stroke="ForestGreen"
+                      StrokeThickness="2" />
+
+            <!--  Stop  -->
+            <Polyline Points="{Binding DeliveryStopLevel}"
+                      Stroke="Red"
+                      StrokeThickness="2" />
+
+            <!--  Pump  -->
+            <Rectangle Canvas.Left="{Binding IconLeftOffset}"
+                       Canvas.Top="{Binding IconTopOffset}"
+                       Width="16"
+                       Height="16"
+                       Fill="{StaticResource PumpBrush}" />
+        </Canvas>
+    </Grid>
+</UserControl>

@@ -1,0 +1,34 @@
+** INFO   : @(#)Deltares, SOBEKSIM Version 4.06.091.31199, Nov 29 2013, 11:46:00
+** INFO   : Balance Error in          3 Discharge down:        0.969816 Discharge up:        0.972921 error      -0.159819
+** INFO   : Balance Error in          4 Discharge down:        0.925919 Discharge up:        0.927792 error      -0.101076
+** INFO   : Balance Error in          5 Discharge down:        1.394244 Discharge up:        1.395580 error      -0.047919
+** INFO   : Balance Error in          6 Discharge down:        1.375257 Discharge up:        1.375748 error      -0.017868
+** INFO   : Balance Error in          7 Discharge down:        1.366110 Discharge up:        1.366404 error      -0.010743
+** INFO   : Balance Error in          8 Discharge down:        1.360839 Discharge up:        1.360905 error      -0.002432
+** INFO   : Balance Error in          3 Discharge down:        1.014291 Discharge up:        1.012839 error       0.071642
+** INFO   : Balance Error in          4 Discharge down:        1.033401 Discharge up:        1.032680 error       0.034884
+** INFO   : Balance Error in          5 Discharge down:        1.544794 Discharge up:        1.544355 error       0.014191
+** INFO   : Balance Error in          6 Discharge down:        1.550164 Discharge up:        1.550074 error       0.002917
+** INFO   : Balance Error in          7 Discharge down:        1.552452 Discharge up:        1.552353 error       0.003171
+** INFO   : Balance Error in          8 Discharge down:        1.554660 Discharge up:        1.554622 error       0.001198
+** INFO   : Balance Error in          3 Discharge down:        1.001710 Discharge up:        1.001534 error       0.008778
+** INFO   : Balance Error in          4 Discharge down:        1.004313 Discharge up:        1.004196 error       0.005819
+** INFO   : Balance Error in          5 Discharge down:        1.506269 Discharge up:        1.506188 error       0.002698
+** INFO   : Balance Error in          6 Discharge down:        1.507538 Discharge up:        1.507499 error       0.001285
+** INFO   : Balance Error in          7 Discharge down:        1.508227 Discharge up:        1.508207 error       0.000688
+** INFO   : Balance Error in          8 Discharge down:        1.508574 Discharge up:        1.508570 error       0.000125
+** INFO   : Balance Error in          3 Discharge down:        0.999964 Discharge up:        0.999968 error      -0.000184
+** INFO   : Balance Error in          4 Discharge down:        0.999834 Discharge up:        0.999844 error      -0.000478
+** INFO   : Balance Error in          5 Discharge down:        1.499639 Discharge up:        1.499649 error      -0.000324
+** INFO   : Balance Error in          6 Discharge down:        1.499424 Discharge up:        1.499433 error      -0.000323
+** INFO   : Balance Error in          7 Discharge down:        1.499230 Discharge up:        1.499237 error      -0.000225
+** INFO   : Balance Error in          8 Discharge down:        1.499105 Discharge up:        1.499107 error      -0.000056
+** INFO   : Balance Error in          3 Discharge down:        1.000002 Discharge up:        1.000002 error       0.000012
+** INFO   : Balance Error in          7 Discharge down:        1.500004 Discharge up:        1.500004 error       0.000004
+** INFO   : cpu computation =       0.109201
+
+****************************************
+Info Messages :    28
+****************************************
+
+** Normal End of Sobeksim

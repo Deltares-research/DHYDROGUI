@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true" namespace="DeltaShell.NGHS.IO.DataObjects" assembly="DeltaShell.NGHS.IO">
+  <class
+    name="DeltaShell.NGHS.IO.DataObjects.Model1DLateralSourceData, DeltaShell.NGHS.IO" 
+    table="water_flow_model_1d_lateral_source_data" 
+    lazy="false" batch-size="25">
+
+    <id name="Id" column="id" type="Int64" unsaved-value="0" access="property">
+      <generator class="increment" />
+    </id>
+
+    <many-to-one name="Feature"
+                 class="DelftTools.Hydro.LateralSource, DelftTools.Hydro"
+                 column="feature_id"/>
+    
+    <property name ="DataType"/>    
+
+    <many-to-one name="SeriesDataItem" cascade="all"
+                 class="DelftTools.Shell.Core.Workflow.DataItems.DataItem, DelftTools.Shell.Core"
+                 column="datadataitem_id"/>
+
+    <many-to-one name="FlowConstantDataItem" cascade="all"
+                 class="DelftTools.Shell.Core.Workflow.DataItems.DataItem, DelftTools.Shell.Core"
+                 column="flowdataitem_id"/>
+
+    <property name="useSalt" access="field"/>
+    <property name="SaltLateralDischargeType" />
+    <property name="SaltMassDischargeConstant" />
+    <property name="SaltConcentrationDischargeConstant" />
+    <many-to-one name="SaltMassTimeSeries" 
+                 cascade="all-delete-orphan"
+                 class="DelftTools.Functions.TimeSeries, DelftTools.Functions"
+                 column="SaltMassTimeSeries_id"/>
+    <many-to-one name="SaltConcentrationTimeSeries"
+                     cascade="all-delete-orphan"
+                     class="DelftTools.Functions.TimeSeries, DelftTools.Functions"
+                     column="SaltConcentrationTimeSeries_id"/>
+
+    <property name="useTemperature" access="field"/>
+    <property name="TemperatureLateralDischargeType" />
+    <property name="TemperatureConstant" />
+    <many-to-one name="TemperatureTimeSeries"
+                     cascade="all-delete-orphan"
+                     class="DelftTools.Functions.TimeSeries, DelftTools.Functions"
+                     column="TemperatureTimeSeries_id"/>
+
+  </class> 
+</hibernate-mapping>

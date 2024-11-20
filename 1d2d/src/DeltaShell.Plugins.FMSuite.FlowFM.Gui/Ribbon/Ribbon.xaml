@@ -1,0 +1,185 @@
+<UserControl x:Class="DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon.Ribbon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ribbon="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon"
+             xmlns:ext="clr-namespace:DelftTools.Shell.Gui.Wpf.Extensions;assembly=DelftTools.Shell.Gui.Wpf"
+             Width="686.4"
+             Height="168"
+             Background="White"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Fluent;Component/Themes/generic.xaml" />
+                <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;Component/Brushes.xaml" />
+                <ResourceDictionary Source="RibbonBrushes.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <fluent:Ribbon Name="RibbonControl"
+                   x:FieldModifier="private">
+        <fluent:Ribbon.ContextualGroups>
+            <fluent:RibbonContextualTabGroup Name="geospatialContextualGroup"
+                                             Background="Green"
+                                             BorderBrush="Green"
+                                             Header="GIS"
+                                             Visibility="Visible" />
+        </fluent:Ribbon.ContextualGroups>
+        <fluent:RibbonTabItem Name="mapTab"
+                              fluent:KeyTip.Keys="M"
+                              Group="{Binding ElementName=geospatialContextualGroup}"
+                              Header="Map"
+                              ReduceOrder="FmRegion">
+            <fluent:RibbonGroupBox Name="Region2D"
+                                   Header="2D Region"
+                                   ext:RibbonExtensions.GroupSortIndex="9">
+                <fluent:RibbonGroupBox.DataContext>
+                    <ribbon:RibbonViewModelRegion x:Name="ViewModelRegion" />
+                </fluent:RibbonGroupBox.DataContext>
+                <!--<fluent:ToggleButton x:Name="ButtonAddDredging" ToolTip="Add a (2D) dredging polygon" Header="Add Dredging" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\dredging.png" Size="Middle" SizeDefinition="Middle,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddDumping" ToolTip="Add a (2D) dumping polygon" Header="Add Dumping" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\dumping.png" Size="Middle" SizeDefinition="Middle,Small,Small" />-->
+                <fluent:ToggleButton x:Name="ButtonAddBoundary"
+                                     Command="{Binding ActivateAddBoundaryToolCommand}"
+                                     Header="Add Flow Boundary"
+                                     Icon="/DeltaShell.Plugins.FMSuite.Common.Gui;component\Resources\boundary.png"
+                                     IsChecked="{Binding ActivateAddBoundaryToolCommand.IsActive}"
+                                     Size="Middle"
+                                     SizeDefinition="Small,Small,Small"
+                                     ToolTip="Add a (2D) flow boundary" />
+                <fluent:ToggleButton x:Name="ButtonAddSourceSink"
+                                     Command="{Binding ActivateAddSourceSinkToolCommand}"
+                                     Header="Add Source/Sink"
+                                     Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\SourceSink.png"
+                                     IsChecked="{Binding ActivateAddSourceSinkToolCommand.IsActive}"
+                                     Size="Middle"
+                                     SizeDefinition="Small,Small,Small"
+                                     ToolTip="Add a (2D) source/sink" />
+                <fluent:ToggleButton x:Name="ButtonAddSource"
+                                     Command="{Binding ActivateAddSourceToolCommand}"
+                                     Header="Add Point Source"
+                                     Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\LateralSourceMap.png"
+                                     IsChecked="{Binding ActivateAddSourceToolCommand.IsActive}"
+                                     Size="Middle"
+                                     SizeDefinition="Small,Small,Small"
+                                     ToolTip="Add a (2D) point source" />
+                <fluent:Button x:Name="ButtonReverseLine"
+                               Command="{Binding ActivateReverseLineToolCommand}"
+                               Header="Reverse line(s)"
+                               Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\arrow_switch.png"
+                               Size="Middle"
+                               SizeDefinition="Small, Small, Small" />
+                <fluent:Button x:Name="ButtonGenerateEmbankments"
+                               Command="{Binding ActivateGenerateEmbankmentsToolCommand}"
+                               Header="Generate embankments"
+                               Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\guide.png"
+                               Size="Middle"
+                               SizeDefinition="Small, Small, Small"
+                               ToolTip="Generate embankments for selected channels" />
+                <fluent:Button x:Name="ButtonMergeEmbankments"
+                               Command="{Binding ActivateMergeEmbankmentsToolCommand}"
+                               Header="Merge embankments"
+                               Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\wrenchPlus.png"
+                               Size="Middle"
+                               SizeDefinition="Small, Small, Small"
+                               ToolTip="Merge two selected embankments" />
+                <fluent:ToggleButton x:Name="ButtonGridWizard"
+                                     Command="{Binding ActivateGridWizardToolCommand}"
+                                     Header="Grid creation wizard"
+                                     Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\gridwizard.png"
+                                     Size="Middle"
+                                     SizeDefinition="Small, Small, Small"
+                                     ToolTip="Generate grid based on embankments" />
+            </fluent:RibbonGroupBox>
+            <fluent:RibbonGroupBox Name="Fm1D2D"
+                                   Header="1D2D Links"
+                                   ext:RibbonExtensions.GroupSortIndex="10">
+                <fluent:RibbonGroupBox.DataContext>
+                    <ribbon:RibbonViewModel1D2D x:Name="ViewModel1D2D" />
+                </fluent:RibbonGroupBox.DataContext>
+
+                <fluent:DropDownButton VerticalAlignment="Top"
+                                       ClosePopupOnMouseDown="True"
+                                       Header="{Binding SelectedRibbonLink.Name}"
+                                       SizeDefinition="Large;Middle">
+                    <fluent:DropDownButton.Icon>
+                        <Rectangle MinWidth="16"
+                                   MinHeight="16"
+                                   DataContext="{Binding SelectedRibbonLink.Type}"
+                                   Style="{StaticResource LinkTypeStyle}" />
+                    </fluent:DropDownButton.Icon>
+                    <fluent:DropDownButton.LargeIcon>
+                        <StackPanel>
+                            <Rectangle MinWidth="32"
+                                       MinHeight="32"
+                                       DataContext="{Binding SelectedRibbonLink.Type}"
+                                       Style="{StaticResource LinkTypeStyle}" />
+                        </StackPanel>
+                    </fluent:DropDownButton.LargeIcon>
+                    <ListView BorderThickness="0"
+                              ItemsSource="{Binding LinkTypes}"
+                              SelectedValue="{Binding SelectedRibbonLink}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="ribbon:RibbonLink">
+                                <Border MinWidth="64"
+                                        MinHeight="64"
+                                        BorderBrush="Transparent"
+                                        BorderThickness="4">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle MinWidth="32"
+                                                   MinHeight="32"
+                                                   HorizontalAlignment="Left"
+                                                   DataContext="{Binding Type}"
+                                                   Style="{StaticResource LinkTypeStyle}" />
+                                        <TextBlock Padding="5"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding Name}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </fluent:DropDownButton>
+                <fluent:ToggleButton x:Name="ButtonGenerateLinks"
+                                     Command="{Binding ActivateGenerateLinksToolCommand}"
+                                     Header="Generate links"
+                                     IsChecked="{Binding ActivateGenerateLinksToolCommand.IsActive}"
+                                     Size="Middle"
+                                     SizeDefinition="Middle,Middle,Middle"
+                                     ToolTip="Generate 1D2D links in selected area">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource GenerateLinksBrush}" />
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
+                <fluent:ToggleButton x:Name="ButtonAddLink"
+                                     Command="{Binding ActivateAddLinksToolCommand}"
+                                     Header="Add link"
+                                     IsChecked="{Binding ActivateAddLinksToolCommand.IsActive}"
+                                     Size="Middle"
+                                     SizeDefinition="Middle,Middle,Middle"
+                                     ToolTip="Add 1D2D Link">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource AddLinkBrush}" />
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
+            </fluent:RibbonGroupBox>
+        </fluent:RibbonTabItem>
+        <fluent:RibbonTabItem Group="{Binding ElementName=geospatialContextualGroup}"
+                              Header="Spatial Operations">
+            <fluent:RibbonGroupBox x:Name="SpatialOperationsGroup"
+                                   fluent:KeyTip.Keys="SO"
+                                   Header="Spatial Operations">
+                <fluent:Button x:Name="ButtonAddRasterSamples"
+                               fluent:KeyTip.Keys="RT"
+                               Click="ButtonCreateRasterSamples_Click"
+                               Header="Add rasterfile samples"
+                               Icon="/DeltaShell.Plugins.SharpMapGis.Gui;component\Resources\points.png"
+                               SizeDefinition="Middle,Small,Small"
+                               ToolTip="Add rasterfile points" />
+            </fluent:RibbonGroupBox>
+        </fluent:RibbonTabItem>
+    </fluent:Ribbon>
+</UserControl>

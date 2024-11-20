@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <!-- Manuals -->
+  <File Id="RGFGRID_User_Manual" Source="$(var.ProjectDir)..\FM\!(loc.Delft3DPackageName)_Manuals\RGFGRID_User_Manual.pdf"/>
+</Include>

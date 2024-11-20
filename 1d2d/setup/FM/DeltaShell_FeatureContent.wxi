@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?ifdef manualswxi?>
+    <ComponentRef Id="plugin_manuals_component"/>
+  <?endif?>
+
+  <?ifdef plugin_manualshortcuts?>
+    <ComponentRef Id="ManualsMenuShortcut"/>
+  <?endif?>
+
+  <?ifndef noDeltaShellFrameworkManual?>
+    <ComponentRef Id="Delta_Shell_User_Manual"/>
+    <ComponentRef Id="ManualsMenuDSUMShortcut"/>
+  <?endif?>
+
+  <?ifdef additionalfiles?>
+    <ComponentRef Id="additional_files_component"/>
+  <?endif?>
+  
+  <?ifdef plugin_utilityshortcuts ?>
+    <ComponentRef Id="UtilitiesMenuShortcuts"/>
+  <?endif?>
+
+  <?ifdef windowlayoutpath?>
+    <ComponentRef Id="WindowLayout_normalID_Component"/>
+  <?endif?>
+  <ComponentRef Id="LicenseIDComponent"/>
+</Include>

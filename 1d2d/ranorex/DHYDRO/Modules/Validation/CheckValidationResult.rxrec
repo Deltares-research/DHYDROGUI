@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="8474cc58-38f2-4607-b7f7-f35d4429d1cf"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="CheckValidationResult"
+	namespace="DHYDRO.Modules.Validation">
+	</codegen>
+	<variables>
+		<var
+		id="46b29690-5506-49af-a98f-9fbb6d67f7b3"
+		name="ExpectedValidationResult">
+		</var>
+	</variables>
+	<recorditems>
+		<userrecorditem
+		classname="CheckValidationResult"
+		enabled="True"
+		isexternaltestmethod="False"
+		methodname="CheckModelValidationResult"
+		namespace="DHYDRO.Modules.Validation"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<arguments
+			id="614f00cc-1b91-4953-a0da-97bd83d669ba">
+				<argument
+				argname="info"
+				id="35c8a0dd-83f7-42cd-9618-9a3609069627">
+					<argvaluetype>
+						Ranorex.Core.Repository.RepoItemInfo, Ranorex.Core, Culture=neutral
+					</argvaluetype>
+					<argvalue>
+					</argvalue>
+					<info
+					id="967bb5de-5b15-44fe-b753-5ca06eb3bf3e"
+					sourcename="RepositoryEditor">
+						<path>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='ValidationView']
+						</path>
+						<robustPath>
+						</robustPath>
+					</info>
+				</argument>
+			</arguments>
+		</userrecorditem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		CheckValidationResult.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

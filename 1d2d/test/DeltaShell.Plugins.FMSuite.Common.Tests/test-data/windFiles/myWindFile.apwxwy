@@ -1,0 +1,13 @@
+### START OF HEADER
+# Created with dflowfm_io_meteo_write.m on 07-Oct-2013 13:31:49
+# Additional commments
+FileVersion      = 1.03
+filetype         = meteo_on_curvilinear_grid
+NODATA_value     = -9999.000000
+grid_file        = wind1.grd
+first_data_value = grid_llcorner
+data_row         = grid_row
+n_quantity       = 3
+quantity1        = apwxwy
+unit1            = Pa
+### END OF HEADER

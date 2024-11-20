@@ -1,0 +1,11 @@
+BBB2.2
+*
+* Configuratie file
+* Filename voor:
+* 1. Knoop data
+* 2. Tak data
+* 3. Lateraal data
+*
+'\SOBEK211\Tanshui.Lit\work\3b_nod.tp'
+'\SOBEK211\Tanshui.Lit\work\3b_link.tp'
+'\SOBEK211\Tanshui.Lit\work\3bRunoff.tp'

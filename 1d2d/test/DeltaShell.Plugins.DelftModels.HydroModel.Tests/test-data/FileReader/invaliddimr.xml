@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<dimrConfig xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr http://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
+  <documentation>
+    <fileVersion>1.2</fileVersion>
+    <createdBy>Deltares, Coupling Team</createdBy>
+    <creationDate>2018-10-05T08:54:18.6912248Z</creationDate>
+  </documentation>
+  <!--<control>
+          The <control> specifies the workflow of the deltaresHydro executable.
+          It indicates which components are started in which order. If the data
+          transfer is to be arranged by the main program "d_hydro", then a coupler
+          should be included.
+          The main <control> block is a sequential block; this means that each
+          component is initialized, time stepped, and finalized before the next
+          component starts.
+      <parallel>
+          Within a <parallel> tag the components are started
+          concurrently (if the mpi process ids listed per component don't overlap)
+          or executed synchronously in sequence (first all initialize, then time
+          stepping, and to conclude all finalization calls).
+      <start>
+          A <parallel> block contains exactly one <start/> component, defining the
+          start and end time of the simulation. This is the component inside
+          the <parallel> block with the smallest time step. All other
+          components must be defined with a <startGroup>.
+      <startGroup>
+          A <startGroup> should be used if a component (possibly including couplers)
+          should only be executed at a subset of simulation time steps.
+
+      For each component/coupler there will be a corresponding component/coupler
+      specification block defined below.-->
+  <component name="real-time control">
+    <library>FBCTools_BMI</library>
+    <workingDir>rtc</workingDir>
+    <inputFile>.</inputFile>
+  </component>
+  <component name="rijn-flow-model">
+    <library>cf_dll</library>
+    <workingDir>dflow1d</workingDir>
+    <inputFile>rijn-flow-model.md1d</inputFile>
+  </component>
+  <coupler name="rtc_to_flow1d">
+    <sourceComponent>real-time control</sourceComponent>
+    <targetComponent>rijn-flow-model</targetComponent>
+    <item>
+      <sourceName>output_ST_Driel_zom_Crest level (s)</sourceName>
+      <targetName>weirs/ST_Driel_zom/structure_crest_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_ST_Driel_zom_Crest width (s)</sourceName>
+      <targetName>weirs/ST_Driel_zom/structure_crest_width</targetName>
+    </item>
+    <item>
+      <sourceName>output_ST_Amerongen_zom_Crest level (s)</sourceName>
+      <targetName>weirs/ST_Amerongen_zom/structure_crest_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_ST_Amerongen_zom_Crest width (s)</sourceName>
+      <targetName>weirs/ST_Amerongen_zom/structure_crest_width</targetName>
+    </item>
+    <item>
+      <sourceName>output_ST_Hagestein_zom_Crest level (s)</sourceName>
+      <targetName>weirs/ST_Hagestein_zom/structure_crest_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_ST_Hagestein_zom_Crest width (s)</sourceName>
+      <targetName>weirs/ST_Hagestein_zom/structure_crest_width</targetName>
+    </item>
+    <item>
+      <sourceName>output_Sluis_Marijke_Gate lower edge level (s)</sourceName>
+      <targetName>weirs/Sluis_Marijke/structure_gate_lower_edge_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_Sluis_Bernhard_Gate lower edge level (s)</sourceName>
+      <targetName>weirs/Sluis_Bernhard/structure_gate_lower_edge_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_ST_Driel_oml_Crest level (s)</sourceName>
+      <targetName>weirs/ST_Driel_oml/structure_crest_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_ST_Amerongen_oml_Crest level (s)</sourceName>
+      <targetName>weirs/ST_Amerongen_oml/structure_crest_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_ST_Hagestein_oml_Crest level (s)</sourceName>
+      <targetName>weirs/ST_Hagestein_oml/structure_crest_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_Blok1_Vees_wap_Crest level (s)</sourceName>
+      <targetName>weirs/Blok1_Vees_wap/structure_crest_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_VeesWap1_onttrek_Actual discharge (l)</sourceName>
+      <targetName>laterals/VeesWap1_onttrek/water_discharge</targetName>
+    </item>
+    <item>
+      <sourceName>output_Blok2_Vees_wap_Crest level (s)</sourceName>
+      <targetName>weirs/Blok2_Vees_wap/structure_crest_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_Blok3_Vees_wap_Crest level (s)</sourceName>
+      <targetName>weirs/Blok3_Vees_wap/structure_crest_level</targetName>
+    </item>
+    <item>
+      <sourceName>output_Blok4_Vees_wap_Crest level (s)</sourceName>
+      <targetName>weirs/Blok4_Vees_wap/structure_crest_level</targetName>
+    </item>
+    <logger>
+      <workingDir>.</workingDir>
+      <outputFile>rtc_to_flow1d.nc</outputFile>
+    </logger>
+  </coupler>
+  <coupler name="flow1d_to_rtc">
+    <sourceComponent>rijn-flow-model</sourceComponent>
+    <targetComponent>real-time control</targetComponent>
+    <item>
+      <sourceName>weirs/ST_Driel_zom/structure_crest_level</sourceName>
+      <targetName>input_ST_Driel_zom_Crest level (s)</targetName>
+    </item>
+    <item>
+      <sourceName>weirs/ST_Amerongen_zom/structure_crest_level</sourceName>
+      <targetName>input_ST_Amerongen_zom_Crest level (s)</targetName>
+    </item>
+    <item>
+      <sourceName>weirs/ST_Hagestein_zom/structure_crest_level</sourceName>
+      <targetName>input_ST_Hagestein_zom_Crest level (s)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/LMW.Amerongenbov/water_level</sourceName>
+      <targetName>input_LMW.Amerongenbov_Water level (op)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/LMW.Hagesteinboven/water_level</sourceName>
+      <targetName>input_LMW.Hagesteinboven_Water level (op)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/Wijk_bij_Duurstede/water_level</sourceName>
+      <targetName>input_Wijk_bij_Duurstede_Water level (op)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/LMW.TielWaal/water_level</sourceName>
+      <targetName>input_LMW.TielWaal_Water level (op)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/LMW.Lobith/water_level</sourceName>
+      <targetName>input_LMW.Lobith_Water level (op)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/LMW.IJsselkop/water_level</sourceName>
+      <targetName>input_LMW.IJsselkop_Water level (op)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/LMW.Drielboven/water_level</sourceName>
+      <targetName>input_LMW.Drielboven_Water level (op)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/stuurp. VeesWap1/water_level</sourceName>
+      <targetName>input_stuurp. VeesWap1_Water level (op)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/Stuurpunt_pomp/water_level</sourceName>
+      <targetName>input_Stuurpunt_pomp_Water level (op)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/974.00_IJ/water_level</sourceName>
+      <targetName>input_974.00_IJ_Water level (op)</targetName>
+    </item>
+    <item>
+      <sourceName>weirs/Blok1_Vees_wap/water_discharge</sourceName>
+      <targetName>input_Blok1_Vees_wap_Discharge (s)</targetName>
+    </item>
+    <item>
+      <sourceName>observations/VeesWap1_892/water_level</sourceName>
+      <targetName>input_VeesWap1_892_Water level (op)</targetName>
+    </item>
+    <logger>
+      <workingDir>.</workingDir>
+      <outputFile>flow1d_to_rtc.nc</outputFile>
+    </logger>
+  </coupler>
+</dimrConfig>

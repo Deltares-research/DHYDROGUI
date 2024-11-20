@@ -1,0 +1,24 @@
+[
+  {
+    "SourceRegionName": "Basin",
+    "TargetRegionName": "Network",
+    "Exchanges": [
+      {
+        "TargetType": "DelftTools.Hydro.LateralSource, DelftTools.Hydro",
+        "SourceType": "DelftTools.Hydro.Catchment, DelftTools.Hydro",
+        "SourceName": "Catchment_1D_1",
+        "TargetName": "LateralSource_1D_1",
+        "LinkName": "HydroLink_1D_1",
+        "LinkGeometryWkt": "LINESTRING(-1273.8107258677069 2008.2579447923918 0,-1297.1767633312184 1029.1740639720526 0)"
+      },
+      {
+        "TargetType": "DelftTools.Hydro.LateralSource, DelftTools.Hydro",
+        "SourceType": "DelftTools.Hydro.Catchment, DelftTools.Hydro",
+        "SourceName": "Catchment_1D_2",
+        "TargetName": "LateralSource_1D_2",
+        "LinkName": "HydroLink_1D_2",
+        "LinkGeometryWkt": "LINESTRING(-314.16412671115864 2021.9197442176605 0,-501.28079515043328 1022.1098985739983 0)"
+      }
+    ]
+  }
+]

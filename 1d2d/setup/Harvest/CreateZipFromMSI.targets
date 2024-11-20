@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <INSTALL_AND_CHECK Condition=" '$(INSTALL_AND_CHECK)' == '' ">True</INSTALL_AND_CHECK>
+  </PropertyGroup>
+
+  <!--
+  for this to work include the following statement at top of .wixproj-file:
+
+  <UsingTask TaskName="Zip" AssemblyFile="$(MSBuildProjectDirectory)\..\..\..\build\tools\MSBuild.Community.Tasks.dll" />
+
+  Install MSI into temporary folder, create zip-file from contents of that folder, and uninstall MSI again.
+
+  -->
+  <UsingTask
+    TaskName="Zip"
+    AssemblyFile="$(MSBuildProjectDirectory)\..\wix\Zip\MSBuild.Community.Tasks.dll" />
+
+  <UsingTask
+    TaskName="ReadMsiPropertyValue"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+
+    <ParameterGroup>
+      <MsiFile ParameterType="System.String" Required="true" />
+      <MsiProperty ParameterType="System.String" Required="true" />
+      <MsiPropertyValue ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="$(WixToolPath)\Microsoft.Deployment.WindowsInstaller.dll"/>
+      <Using Namespace="Microsoft.Deployment.WindowsInstaller" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+            using (Database db = new Database(MsiFile, DatabaseOpenMode.ReadOnly))
+              MsiPropertyValue = (string) db.ExecuteScalar("SELECT `Value` FROM `Property` WHERE `Property` = '{0}'", MsiProperty);
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="AfterBuild" Condition=" '$(INSTALL_AND_CHECK)' == 'True' ">
+    <WixAssignCulture
+      Cultures="$(Cultures)"
+      Files="@(EmbeddedResource)">
+
+      <Output TaskParameter="CultureGroups" ItemName="MyCultureGroup" />
+    </WixAssignCulture>
+    <!--<Message Text="Current culture outputfolder : %(MyCultureGroup.OutputFolder)"/>-->
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="InstallAndCheck"
+             Properties="MyCultureOutputFolder=%(MyCultureGroup.OutputFolder);ProductCode=$(MyProductCode)"
+             Condition=" '$(BUILD_NUMBER)' != '' "/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="InstallAndCheck"
+             Properties="MyCultureOutputFolder=fm\;ProductCode=$(MyProductCode)"
+             Condition=" '$(BUILD_NUMBER)' == '' "/>
+
+  </Target>
+
+  <Target Name="InstallAndCheck" DependsOnTargets="TargetSetVersioningForSystemTest">
+    <Message Text="culture:$(MyCultureOutputFolder)"/>
+    <CreateProperty
+      Value="$(MyCultureOutputFolder.TrimEnd('\'))">
+      <Output
+        TaskParameter="Value"
+        PropertyName="_CultureName" />
+    </CreateProperty>
+
+    <ReadMsiPropertyValue MsiFile="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)$(OutputName).msi" MsiProperty="ProductName" ContinueOnError="WarnAndContinue">
+      <Output TaskParameter="MsiPropertyValue" PropertyName="_ProductName" />
+    </ReadMsiPropertyValue >
+    <Message Text="My product name : $(_ProductName)" Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'"/>
+    <Message Text="My product name : $(_ProductName) ($(BUILD_NUMBER))" Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'"/>
+
+    <ReadMsiPropertyValue MsiFile="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)$(OutputName).msi" MsiProperty="ApplicationName" ContinueOnError="WarnAndContinue">
+      <Output TaskParameter="MsiPropertyValue" PropertyName="_ApplicationName" />
+    </ReadMsiPropertyValue >
+    <ReadMsiPropertyValue MsiFile="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)$(OutputName).msi" MsiProperty="DistributionName" ContinueOnError="WarnAndContinue">
+      <Output TaskParameter="MsiPropertyValue" PropertyName="_DistributionName" />
+    </ReadMsiPropertyValue >
+
+    <Message Text="##teamcity[testSuiteStarted name='$(_ProductName)']" Importance="high" Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'"/>
+    <Message Text="##teamcity[testSuiteStarted name='$(_ProductName) ($(BUILD_NUMBER))']" Importance="high" Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'"/>
+
+    <RemoveDir Directories="$(OutputPath)$(MyCultureOutputFolder)install"/>
+    <MakeDir Directories="$(OutputPath)$(MyCultureOutputFolder)install"/>
+
+    <!-- install MSI -->
+    <Message Text="Installing MSI in the local directory ..." Importance="high"/>
+    <CallTarget Targets="TargetSetVersioningForSystemTest" Condition="!Exists('$(_CheckDeltaShellGuiExeFileVersion)')"/>
+
+    <Message Text="##teamcity[testSuiteStarted name='Pre-Install']" Importance="high"/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TargetSystemTests" Properties="Status=Pre-Install;ProductName=$(_ProductName);ApplicationName=$(_ApplicationName);DistributionName=$(_DistributionName);ConditionState=true;CheckingFor=removed;ProductCode=$(ProductCode)" />
+    <Message Text="##teamcity[testSuiteFinished name='Pre-Install']" Importance="high"/>
+
+    <Exec Command="msiexec /l*vx install.log /norestart /quiet ADDLOCAL=ALL INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName)&quot; /i &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'"/>
+    <Exec Command="msiexec /l*vx install.log /norestart /quiet ADDLOCAL=ALL INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName) ($(BUILD_NUMBER))&quot; /i &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'"/>
+
+    <Message Text="##teamcity[testSuiteStarted name='Post-Install']" Importance="high"/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TargetSystemTests" Properties="Status=Post-Install;ProductName=$(_ProductName);ApplicationName=$(_ApplicationName);DistributionName=$(_DistributionName);ConditionState=false;CheckingFor=available;ProductCode=$(ProductCode)" />
+    <Message Text="##teamcity[testSuiteFinished name='Post-Install']" Importance="high"/>
+
+    <Message Text="Generate list of version numbers with command: %env.PYTHON_PATH%\python.exe -B $(MSBuildProjectDirectory)\..\Scripts\find_all_versions.py --srcdir &quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install&quot; --output &quot;$(OutputName)_versions.html&quot; --useHTML" Importance="high"/>
+    <Exec Command="python.exe -B $(MSBuildProjectDirectory)\..\Scripts\find_all_versions.py --srcdir &quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install&quot; --output &quot;$(OutputName)_versions.html&quot; --useHTML" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' != ''" ContinueOnError="WarnAndContinue" />
+
+    <!-- zip -->
+    <CreateItem Include="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\**\*.*">
+      <Output TaskParameter="Include" ItemName="InstallationFiles"/>
+    </CreateItem>
+
+    <Zip Files="@(InstallationFiles)" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install" ZipFileName="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)$(OutputName).zip" ContinueOnError="false" />
+
+    <!-- uninstall MSI -->
+    <Message Text="Uninstalling MSI from the local directory ..." Importance="high"/>
+    <Exec Command="msiexec /l*vx uninstall.log /norestart /quiet INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName)&quot; /x &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'"/>
+    <Exec Command="msiexec /l*vx uninstall.log /norestart /quiet INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName) ($(BUILD_NUMBER))&quot; /x &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'"/>
+
+    <Message Text="##teamcity[testSuiteStarted name='After-Uninstall']" Importance="high"/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TargetSystemTests" Properties="Status=After-Uninstall;ProductName=$(_ProductName);ApplicationName=$(_ApplicationName);DistributionName=$(_DistributionName);ConditionState=true;CheckingFor=removed;ProductCode=$(ProductCode)" />
+
+    <Message Text="##teamcity[testSuiteFinished name='After-Uninstall']" Importance="high"/>
+
+    <RemoveDir Directories="$(OutputPath)$(MyCultureOutputFolder)install"/>
+
+    <Message Text="##teamcity[testSuiteFinished name='$(_ProductName)']" Importance="high" Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'"/>
+    <Message Text="##teamcity[testSuiteFinished name='$(_ProductName) ($(BUILD_NUMBER))']" Importance="high" Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'"/>
+  </Target>
+
+
+</Project>

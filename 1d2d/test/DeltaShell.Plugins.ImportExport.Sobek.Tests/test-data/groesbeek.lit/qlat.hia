@@ -1,0 +1,21 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=Deltares, DELFTIO Version 1.09.00.6403, Aug 03 2016, 15:15:02
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=3
+NumberOfLocations=1580
+T0=1995.01.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+1=Lateral disch.(m3/s) Actual
+2=Defined Lateral Discharge(m3/s)
+3=Difference Actual-Defined(m3/s)
+ 
+[Long Locations]
+128=l_0230.007v-0230.009v
+1574=l_Wgroeske_5-WR-8391_02
+ 

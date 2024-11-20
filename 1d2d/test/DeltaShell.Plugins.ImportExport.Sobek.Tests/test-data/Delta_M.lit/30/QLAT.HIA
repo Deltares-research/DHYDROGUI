@@ -1,0 +1,64 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=01.07.03
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=1
+NumberOfLocations=71
+T0=2000.01.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Location Descriptions]
+3=Vliet
+4=Gem_Volk
+5=RWZI_Volk
+7=Gem_zoom
+8=RWZI_Tholen
+9=Gem_Eendracht
+10=Markiez
+13=PL_Prommel
+14=PL_Zuidhoek
+15=PL_Sas
+16=PL_Kattendijke
+19=PL_Noord
+20=PL_Loohoek
+21=PL_Duiveland
+24=PL_Luyster
+25=PL_Moer
+28=PL_Rattekaai
+31=Zoom
+32=PL_Vliet
+35=PL_Valle
+38=PL_Dreischor
+41=PL_De Kille
+44=PL_Herkingen
+45=PL_Battenoord
+46=PL_Den Osse
+47=PL_Wilhelmina
+48=PL_Adriaan
+49=PL_Oosterland
+50=PL_Willem
+51=PL_De Piet
+52=PL_Oostwateringe
+53=PL_Kleverskerke
+54=PL_Jacoba
+55=PL_Hedwige(noWQ)
+56=PL_Rhitthem(noWQ)
+57=PL_Quarles
+58=PL_Nieuwe Sluis
+59=PL_Nol Zeven
+60=PL_Braakman
+61=PL_W Rijkswl
+62=PL_Othene kreek
+63=PL_Hellewout
+64=PL_Borssele
+65=PL_Groenewege
+66=PL_Maalstede
+67=PL_Campen
+68=PL_Kruiningen
+69=PL_Waarde
+70=PL_Paal
+71=PL_Nr een
+ 

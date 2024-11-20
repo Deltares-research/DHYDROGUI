@@ -1,0 +1,736 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="area2d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\area2d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Observation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Observation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="unstruc" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\unstruc.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="unstrucWater" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\unstrucWater.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="unstrucModel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\unstrucmodel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PumpSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PumpSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StructureFeatureSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StructureFeatureSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WeirSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WeirSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TextDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\textdocument.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dry_point" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dry_point.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="GateSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\gatesmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FlowFMApplicationPlugin_Description" xml:space="preserve">
+    <value>Allows to simulate 2D/3D flow of water in rivers, channels, lakes, estuarine &amp; coastal areas and seas.</value>
+  </data>
+  <data name="FunctionGrid2D" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\grid_2d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hurricane2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hurricane2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TimeSeries" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\function_timeseries.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData" xml:space="preserve">
+    <value>Failed to construct grid spatial data : {0}</value>
+  </data>
+  <data name="FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_NetcdfVariableHasBeenIgnored" xml:space="preserve">
+    <value>Netcdf variable {0} of type {1} has been ignored.</value>
+  </data>
+  <data name="FMMapFileFunctionStore_CreateCoverage_CannotCreateSpatialDataOnVolumeLocation" xml:space="preserve">
+    <value>Cannot create spatial data {0} on volume location. This is currenty not supported. </value>
+  </data>
+  <data name="FMMapFileFunctionStore_CreateCoverage_NetlinkDimensionCurrentyNotSupported" xml:space="preserve">
+    <value>{0} depends on Netlink dimension. This is currenty not supported. </value>
+  </data>
+  <data name="FMMapFileFunctionStore_CreateCoverage_UnexpectedLocationDimension" xml:space="preserve">
+    <value>Unexpected location (dimension) '{0}'</value>
+  </data>
+  <data name="FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set" xml:space="preserve">
+    <value>Could not set coordinate system in output map because grid is not set.</value>
+  </data>
+  <data name="ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct" xml:space="preserve">
+    <value>Cannot export in this format if the grid is not correct.</value>
+  </data>
+  <data name="FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out" xml:space="preserve">
+    <value>Will not import three dimensional time dependent variable ({0}), because the map file version does not support it.</value>
+  </data>
+  <data name="WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_" xml:space="preserve">
+    <value>MapFormat property value of FlowFM model {0} is changed to 1, because it is part of an 1D2D integrated model.</value>
+  </data>
+  <data name="WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_" xml:space="preserve">
+    <value>MapFormat property value of FlowFM model {0} is changed to 4 due to activation of Morphology.</value>
+  </data>
+  <data name="WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model" xml:space="preserve">
+    <value>FM Model {0} is part of a 1D2D model and can't have morphology properties and / or sediments. Removing these properties from the model</value>
+  </data>
+  <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or" xml:space="preserve">
+    <value>Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation. Please interpolate the operation to the grid or click the "Copy to spatial data"-button to generate the xyz file.</value>
+  </data>
+  <data name="SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_path__0_" xml:space="preserve">
+    <value>Could not get directory name from file path {0}</value>
+  </data>
+  <data name="WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_" xml:space="preserve">
+    <value>Duplication of spatial operations for {0}. Please verify the model after saving.</value>
+  </data>
+  <data name="MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_integer__number__in_file__0_" xml:space="preserve">
+    <value>Cannot read ibedcond because this is not an integer (number) in file {0}</value>
+  </data>
+  <data name="BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target" xml:space="preserve">
+    <value>Morphology boundary condition bcm-file importer could not import data onto given target.</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_" xml:space="preserve">
+    <value>Morphology boundary condition must have a Hydro boundary condition!</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_" xml:space="preserve">
+    <value>Sediment concentration boundary condition must have a Hydro boundary condition!</value>
+  </data>
+  <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_" xml:space="preserve">
+    <value>No spatial operations of type Import, Add or Value found for spatially varying property {0}. Remember to interpolate them to generate the xyz file. Otherwise the model might not run as expected.</value>
+  </data>
+  <data name="WaterFlowFMModelDefinitionValidator_Validate_" xml:space="preserve">
+    <value>Conveyance2D type in Geometry should be set to 'R=HU' (-1), 'R=H' (0) or 'R=A/P' (1) when morphology is active.</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_point_with_generated_data_" xml:space="preserve">
+    <value>A morphology boundary condition cannot have more than one point with generated data.</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_" xml:space="preserve">
+    <value>Time series contains forbidden negative values for {0} at point {1}</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_names_are_not_supported_by_gui" xml:space="preserve">
+    <value>Support point number {0} has a name of '{1}', but '{2}' was expected. Custom names are not yet supported in the GUI.</value>
+  </data>
+  <data name="UnstructuredGridCoverageExtensions_ToPointCloud_Converting_time_dependent_spatial_data_to_samples_is_not_supported" xml:space="preserve">
+    <value>Converting time dependent spatial data to samples is not supported</value>
+  </data>
+  <data name="UnstructuredGridCoverageExtensions_ToPointCloud_Converting_a_non_double_valued_coverage_component_to_a_point_cloud_is_not_supported" xml:space="preserve">
+    <value>Converting a non-double valued coverage component to a point cloud is not supported</value>
+  </data>
+  <data name="UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__number_of_coordinate_does_not_match_number_of_values" xml:space="preserve">
+    <value>Spatial data is not consistent: number of coordinate does not match number of values</value>
+  </data>
+  <data name="GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_" xml:space="preserve">
+    <value>It was not possible to load from file: {0}. LogFilePath: {1}</value>
+  </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning" xml:space="preserve">
+    <value>Morphology / Sediment Beta warning</value>
+  </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateSedimentName_Value_cannot_be_coverted_to_valid_sediment_fraction_name__You_can_only_use_characters__numbers__underscore_____and_hyphen_____and_it_cannot_start_only_with_a______it_NEEDS_a_closing_____" xml:space="preserve">
+    <value>Value cannot be coverted to valid sediment fraction name. You can only use characters, numbers, underscore (_) and hyphen (-) and it cannot start only with a '#', it NEEDS a closing '#' </value>
+  </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_" xml:space="preserve">
+    <value>********Morphology is beta version********{0}You are using morphology / sediment in this model. Please be aware this feature is in beta!</value>
+  </data>
+  <data name="WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_" xml:space="preserve">
+    <value>No computational grid defined. Either a Flow1D or a 2D grid needs to be created.</value>
+  </data>
+  <data name="WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_cells_defined_for_branch__0___can_not_start_calculation_" xml:space="preserve">
+    <value>No computational grid cells defined for branch {0}; can not start calculation.</value>
+  </data>
+  <data name="WaterFlowFMModelComputationalGridValidator_FiniteVolumeCheckStructuresNotOnGridPoints_Original_discretization_is_invalid__structure__0__is_on_a_grid_point" xml:space="preserve">
+    <value>Original discretization is invalid: structure {0} is on a grid point</value>
+  </data>
+  <data name="WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_defined__all_channels_will_be_using_the_default_values_" xml:space="preserve">
+    <value>No CrossSection defined, all channels will be using the default values.</value>
+  </data>
+  <data name="WaterFlowFMGridValidator_Validate_Grid_is_empty" xml:space="preserve">
+    <value>Grid is empty</value>
+  </data>
+  <data name="WaterFlowFMModelNetworkValidator_GetBranchOrderNumbersAtNode_More_than_two_branches_with_the_same_ordernumber___0___are_connected_to_node__1___can_not_start_calculation_" xml:space="preserve">
+    <value>More than two branches with the same ordernumber '{0}' are connected to node {1}; can not start calculation.</value>
+  </data>
+  <data name="WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Target_and_source_node_of_branch___0___have_the_same_id____1____Circular_branch_" xml:space="preserve">
+    <value>Target and source node of branch '{0}' have the same id, '{1}'. Circular branch?</value>
+  </data>
+  <data name="WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Branch___0___has_an_order_number_of___1____Ordernumber_can_be__1__no_interpolation_over_node__or_greater_than_or_equal_to_0_" xml:space="preserve">
+    <value>Branch '{0}' has an order number of '{1}'. Ordernumber can be -1 (no interpolation over node) or greater than or equal to 0 </value>
+  </data>
+  <data name="WaterFlowFMModelNetworkValidator_GetCorrectCrossSectionsOnChannelIssue_Multiple_cross_section_types__mix_of_Standard_ZW_and_Geometry_YZ__per_branch_es__not_supported___0__" xml:space="preserve">
+    <value>Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({0})</value>
+  </data>
+  <data name="WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_" xml:space="preserve">
+    <value>No grid points defined between structure {0} and {1}</value>
+  </data>
+  <data name="WaterFlowFMModelComputationalGridValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_" xml:space="preserve">
+    <value>Not enough grid points defined for branch {0}. Make sure you have at least gridpoints at start and end of branch.</value>
+  </data>
+  <data name="WaterFlowFMEnclosureValidator_Validate_Only_one_enclosure_per_model_is_allowed__Enclosures_in_model___0_" xml:space="preserve">
+    <value>Only one enclosure per FM model is allowed. Enclosures found in model: {0}</value>
+  </data>
+  <data name="WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid" xml:space="preserve">
+    <value>The drawn polygon {0} is not valid to create an enclosure. Verify it is not self-intersected.</value>
+  </data>
+  <data name="MduFile_ReadAreaFeatures_Multiple_enclosures_added_to_the_model__Validate_or_run_will_fail_if_more_than_one_enclosure_is_present_" xml:space="preserve">
+    <value>Multiple enclosures added to the model. Validate or run will fail if more than one enclosure is present.</value>
+  </data>
+  <data name="WaterFlowFMEnclosureValidator_Validate_GeometryNotValid" xml:space="preserve">
+    <value>Geometry not valid for {0}. It must be a closed polygon.</value>
+  </data>
+  <data name="MduFile_ReadFeaturesDryPoints_DryPoints_parameter_contains_more_than_one_file_format__Only_one_format__Area_or_Points__is_allowed___0_" xml:space="preserve">
+    <value>DryPoints parameter contains more than one file format. Only one format (Area or Points) is allowed. {0}</value>
+  </data>
+  <data name="MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists" xml:space="preserve">
+    <value>A file '{0}' already exists in the project folder. Features in group '{1}' are written to this file.
+Change this group name and save the project again to write these features to a separate file.</value>
+  </data>
+  <data name="MduFileHelper_GetUniqueFilePathsForWindows_Features_With_Group_Name___Are_Written_To_File___" xml:space="preserve">
+    <value>Features with group name '{0}' are written to file '{1}'.
+Change this group name and save the project again to write these features to a separate file.</value>
+  </data>
+  <data name="FMOutputSnappedFeaturesGroupLayerData_GetValidLayersLocation_Output_snapped_feature_layers_location_not_found_at___0_" xml:space="preserve">
+    <value>Output snapped feature layers location not found at: {0}</value>
+  </data>
+  <data name="MduFile_RemoveAllStructuresFilesWithBadReferences_" xml:space="preserve">
+    <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.
+File import of structures file '{1}' has failed.</value>
+  </data>
+  <data name="TimFileExporter_Export_Failed_to_export_data_to__0____1_" xml:space="preserve">
+    <value>Failed to export data to {0}: {1}</value>
+  </data>
+  <data name="Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_" xml:space="preserve">
+    <value>Invalid Variables detected in imported SourceAndSink Function: {0}</value>
+  </data>
+  <data name="File_import_failed___0_" xml:space="preserve">
+    <value>File import failed: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed___0_" xml:space="preserve">
+    <value>Tim-file import failed: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed__could_not_retrieve_model_for_SourceAndSink___0_" xml:space="preserve">
+    <value>Tim-file import failed: could not retrieve model for SourceAndSink: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed__could_not_retrieve_function_for_SourceAndSink___0_" xml:space="preserve">
+    <value>Tim-file import failed: could not retrieve variable for SourceAndSink: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed__could_not_determine_physical_processes_for_imported_SourceAndSink__0_" xml:space="preserve">
+    <value>Tim-file import failed: could not determine physical processes for imported SourceAndSink {0}</value>
+  </data>
+  <data name="Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_" xml:space="preserve">
+    <value>Read SourceAndSink values failed: no variable detected for SourceAndSink {0}</value>
+  </data>
+  <data name="Read_SourceAndSink_values_failed__could_not_determine_component_values_for_SourceAndSink__0_" xml:space="preserve">
+    <value>Read SourceAndSink values failed: could not determine component values for SourceAndSink {0}</value>
+  </data>
+  <data name="SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes" xml:space="preserve">
+    <value>Additional values detected for one or more physical processes</value>
+  </data>
+  <data name="CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_" xml:space="preserve">
+    <value>Unknown key {0} from file {1}. It will not be imported.</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_" xml:space="preserve">
+    <value>Error reading log file: {0}, {1}</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_" xml:space="preserve">
+    <value>Could not find log file: {0} at expected path: {1}</value>
+  </data>
+  <data name="Could_not_export_data_for_SourceAndSink___0___no_Function_was_found" xml:space="preserve">
+    <value>Could not export data for SourceAndSink: {0}, no Function was found</value>
+  </data>
+  <data name="UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_" xml:space="preserve">
+    <value>API failed to generate snapped feature {0}. Try reopening the project if the problem persists.</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_Validate_Boundary___0___does_not_contain_a_boundary_condition" xml:space="preserve">
+    <value>Boundary '{0}' does not contain a boundary condition</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_No_data_defined_for_boundary_condition___0___at_boundary___1__" xml:space="preserve">
+    <value>No data defined for boundary condition '{0}' at boundary '{1}'</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_timeseries_per_boundary_" xml:space="preserve">
+    <value>A morphology boundary condition cannot have more than one timeseries per boundary.</value>
+  </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness" xml:space="preserve">
+    <value>At least one sediment fraction should have a positive thickness</value>
+  </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology" xml:space="preserve">
+    <value>At least one sediment fraction is required when using morphology.</value>
+  </data>
+  <data name="lines" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\lines.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="points" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\points.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="polygon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\polygon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_more_columns_in_the___tim_file_for__0__than_expected" xml:space="preserve">
+    <value>There were more columns in the *.tim file for {0} than expected</value>
+  </data>
+  <data name="SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_less_columns_in_the___tim_file_for__0__than_expected" xml:space="preserve">
+    <value>There were less columns in the *.tim file for {0} than expected</value>
+  </data>
+  <data name="MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_too_many_column_s__defined_for__1___The_last__2__column_s__have_been_ignored" xml:space="preserve">
+    <value>Based on the Bridge Pillar file {0}, there are too many column(s) defined for {1}. The last {2} column(s) have been ignored</value>
+  </data>
+  <data name="MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values" xml:space="preserve">
+    <value>Based on the Bridge Pillar file {0}, there are not enough column(s) defined for {1}. The last {2} column(s) have been generated using default values</value>
+  </data>
+  <data name="WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_" xml:space="preserve">
+    <value>Invalid gui group id for {0} in the scheme of dflowfm-mor-properties.csv: '{1}'</value>
+  </data>
+  <data name="WaterFlowFMMeteoValidation_ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFieldsNotPossibleGenerator_Meteo_location_types__feature__grid___polygon_are_not_yet_supported_" xml:space="preserve">
+    <value>Meteo location types: feature, grid &amp; polygon are not yet supported.</value>
+  </data>
+  <data name="WaterFlowFMMeteoValidation_ValidateFmMeteoQuantitiesCanHaveOnlyOneGlobalLocationType_There_is_more_than_one_global__0__present__only__1__will_be_used_in_the_calculation" xml:space="preserve">
+    <value>There is more than one global {0} present, only {1} will be used in the calculation</value>
+  </data>
+  <data name="WaterFlowFMMeteoValidation_Validate_Water_flow_FM_model_meteo_items" xml:space="preserve">
+    <value>Water flow FM model meteo items</value>
+  </data>
+  <data name="RasterFileImporter_ImportItem_There_is_already_a_grid_present__Remove_the_current_grid_before_importing_a_new_one_" xml:space="preserve">
+    <value>There is already a grid present. Remove the current grid before importing a new one.</value>
+  </data>
+  <data name="Roughness_Main_Channels_Filename" xml:space="preserve">
+    <value>roughness-Channels.ini</value>
+  </data>
+  <data name="ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1" xml:space="preserve">
+    <value>Branch ({0}) where the roughness should be put on is not available in the model.</value>
+  </data>
+  <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__properly_1" xml:space="preserve">
+    <value>Could not read content section {0} properly</value>
+  </data>
+  <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__properly__1__is_not_a_valid_friction_type1" xml:space="preserve">
+    <value>Could not read content section {0} properly; {1} is not a valid friction type</value>
+  </data>
+  <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__properly__1__is_not_a_valid_function_type" xml:space="preserve">
+    <value>Could not read content section {0} properly; {1} is not a valid variable type</value>
+  </data>
+  <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_invalid_global_value_was_given" xml:space="preserve">
+    <value>Could not read file {0} properly, invalid global value was given.</value>
+  </data>
+  <data name="ReadFile_Could_not_read_file__0__properly_no_global_property_was_found" xml:space="preserve">
+    <value>Could not read file {0} properly, no global property was found.</value>
+  </data>
+  <data name="ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist" xml:space="preserve">
+    <value>Could not read file {0} properly, it doesn't exist.</value>
+  </data>
+  <data name="ReadFile_Could_not_read_file__0__properly__it_seems_empty" xml:space="preserve">
+    <value>Could not read file {0} properly, it seems empty.</value>
+  </data>
+  <data name="ChannelInitialConditionDefinitionFileReader_ReadFile_Branch___0___where_the_initial_condition_should_be_put_on_is_not_available_in_the_model" xml:space="preserve">
+    <value>Branch ({0}) where the initial condition should be put on is not available in the model.</value>
+  </data>
+  <data name="ChannelInitialConditionDefinitionFileReader_ReadFile_Could_not_read__0__properly__1__is_not_a_valid_quantity" xml:space="preserve">
+    <value>Could not read {0} properly; {1} is not a valid quantity.</value>
+  </data>
+  <data name="FeatureFile1D2DReader_ReadInitialConditionFiles_No_initial_condition_filename_found_in_the_mdu_file_skipping_reading_initial_conditions" xml:space="preserve">
+    <value>No initial condition filename found in the mdu file. Skipping reading initial conditions.</value>
+  </data>
+  <data name="Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_the_first_and_ignoring_all_others" xml:space="preserve">
+    <value>Only one quantity is currently supported. Reading the first and ignoring all others.</value>
+  </data>
+  <data name="ReadFile_Could_not_read_file__0__properly__no_valid_content_categories_found" xml:space="preserve">
+    <value>Could not read file {0} properly, no valid content categories found.</value>
+  </data>
+  <data name="WaterFlowFMModel_GetEngineParametersForLocation_CubicMeter" xml:space="preserve">
+    <value>m³</value>
+  </data>
+  <data name="CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_" xml:space="preserve">
+    <value>Could not copy {0} to {1} due to: {2}</value>
+  </data>
+  <data name="Error_CannotRemoveBranch" xml:space="preserve">
+    <value>Cannot remove the {0} when the model has output.</value>
+  </data>
+  <data name="WaterFlowFMModel__0__has_changed__clearing_results_" xml:space="preserve">
+    <value>{0} has changed, clearing results.</value>
+  </data>
+  <data name="LateralSourceFileImporter_Not_Supported_CsvFileImporterMode_SeveralFunctionsBasedOnDiscriminator" xml:space="preserve">
+    <value>SeriesCsvFileImporter does not support importer mode SeveralFunctionsBasedOnDiscriminator</value>
+  </data>
+  <data name="LateralSourceFileImporter_Import_Cancelled_Or_Error_Occured_On_Import" xml:space="preserve">
+    <value>Import either cancelled or an error occured when reading the CSV file</value>
+  </data>
+  <data name="LateralSourceImporter_Error_Occured_While_Setting__0__to_target__1_" xml:space="preserve">
+    <value>An error occurred while setting {0} to target {1}</value>
+  </data>
+  <data name="LateralSourceImporter_Could_Not_Find_Suitable_Target_For__0_" xml:space="preserve">
+    <value>Could not find suitable target for: {0}</value>
+  </data>
+  <data name="FeatureFile1D2DReader_ReadRetentionsFile_Could_not_read_file__0__properly__it_seems_empty" xml:space="preserve">
+    <value>Could not read file {0} properly, it seems empty</value>
+  </data>
+  <data name="MduFile_MduFile_Error_retrieving_FM_Dll_version___0_" xml:space="preserve">
+    <value>Error retrieving FM Dll version: {0}</value>
+  </data>
+  <data name="MduFile_MduFile_Unknown_DFlowFMDll_version" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="FeatureFile1D2DReader_ReadInitialConditionFiles_No_Initial_Quantity_ini_file_found_" xml:space="preserve">
+    <value>No Initial Quantity ini file found.</value>
+  </data>
+  <data name="Key_0_in_1_is_deprecated_and_automatically_removed_from_model" xml:space="preserve">
+    <value>Key {0} in {1} is deprecated and automatically removed from model.</value>
+  </data>
+  <data name="Realtime_lateral_must_have_link_between_catchment_or_a_WWTP_and_lateral" xml:space="preserve">
+    <value>A lateral of type realtime must have a hydrolink between a catchment or a waste water treatment plant and the lateral.</value>
+  </data>
+  <data name="WaterFlowFMHydroLinksValidator_Hydrolink_between_catchment_and_lateral_must_be_realtime" xml:space="preserve">
+    <value>A hydrolink between a catchment and a lateral must be of type realtime.</value>
+  </data>
+  <data name="FlowFMApplicationPlugin_ProjectTemplates_Import_FM_mdu_as_model" xml:space="preserve">
+    <value>Import FM mdu as model</value>
+  </data>
+  <data name="FlowFMApplicationPlugin_ProjectTemplates_DFlowFM_mdu_import" xml:space="preserve">
+    <value>D-Flow FM MDU import</value>
+  </data>
+  <data name="WaterFlowFMDataAccessListener_OnPostLoad_Model_output_is_removed_because_project_has_been_migrated_from_older_project_version" xml:space="preserve">
+    <value>Model output is removed because project has been migrated from older project version</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_routes" xml:space="preserve">
+    <value>Reading routes</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_cross_section_definitions" xml:space="preserve">
+    <value>Reading cross section definitions</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_structures" xml:space="preserve">
+    <value>Reading structures</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_observation_points" xml:space="preserve">
+    <value>Reading observation points</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_roughness" xml:space="preserve">
+    <value>Reading roughness</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_retentions" xml:space="preserve">
+    <value>Reading retentions</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_initial_conditions" xml:space="preserve">
+    <value>Reading initial conditions</value>
+  </data>
+  <data name="MduFile_Read_Reading_properties" xml:space="preserve">
+    <value>Reading properties</value>
+  </data>
+  <data name="MduFile_Read_Reading_morphology_properties" xml:space="preserve">
+    <value>Reading morphology properties</value>
+  </data>
+  <data name="MduFile_Read_Reading_area_features" xml:space="preserve">
+    <value>Reading area features</value>
+  </data>
+  <data name="MduFile_Read_Reading_external_forcings_file" xml:space="preserve">
+    <value>Reading external forcings file</value>
+  </data>
+  <data name="MduFile_Read_Reading_boundary_external_forcings_file" xml:space="preserve">
+    <value>Reading boundary external forcings file</value>
+  </data>
+  <data name="MduFile_Read_Reading_FouFile_if_used" xml:space="preserve">
+    <value>Reading FouFile if used</value>
+  </data>
+  <data name="WaterFlowFMFileImporter_OnImportItem_Import_finished" xml:space="preserve">
+    <value>Import finished</value>
+  </data>
+  <data name="MduFile_Read_Reading_1d2d_features" xml:space="preserve">
+    <value>Reading 1d2d features</value>
+  </data>
+  <data name="MduFile_Read_done_reading_1d2d_features" xml:space="preserve">
+    <value>done reading 1d2d features</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadFromMdu_Reading_spatial_operations" xml:space="preserve">
+    <value>Reading spatial operations</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadFromMdu_Reading_sewer_roughness" xml:space="preserve">
+    <value>Reading sewer roughness</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Reading_grid" xml:space="preserve">
+    <value>Reading grid</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Renaming_sub_files" xml:space="preserve">
+    <value>Renaming sub files</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Initialize_input_spatial_data" xml:space="preserve">
+    <value>Initialize input spatial data</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Reading_Coordinate_system_from__0_" xml:space="preserve">
+    <value>Reading Coordinate system from {0}</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Assemble_tracer_definitions" xml:space="preserve">
+    <value>Assemble tracer definitions</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Assemble_spatially_varying_sediment_properties" xml:space="preserve">
+    <value>Assemble spatially varying sediment properties</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Populate_source_and_sinks" xml:space="preserve">
+    <value>Populate source and sinks</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadModelFromMdu_Loading_restart" xml:space="preserve">
+    <value>Loading restart</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectOutputFiles_Reading_output_files" xml:space="preserve">
+    <value>Reading output files</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectOutputFiles_Reading_output_files___done" xml:space="preserve">
+    <value>Reading output files - done</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectMapFile_Reading_output_files___Reading_map_2d_file" xml:space="preserve">
+    <value>Reading output files - Reading map 2d file</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectMapFile_Reading_output_files___Reading_map_1d_file" xml:space="preserve">
+    <value>Reading output files - Reading map 1d file</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectHistoryFile_Reading_output_files___Reading_His_file" xml:space="preserve">
+    <value>Reading output files - Reading His file</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectClassMapFile_Reading_output_files___Reading_Class_Map_file" xml:space="preserve">
+    <value>Reading output files - Reading Class Map file</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectFouFile_Reading_output_files___Reading_Fou_file" xml:space="preserve">
+    <value>Reading output files - Reading Fou file</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectWaterQualityOutputDirectory_Reading_output_files___Reconnect_WAQ_output_dir" xml:space="preserve">
+    <value>Reading output files - Reconnect WAQ output dir</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectSnappedOutputDirectory_Reading_output_files___Reconnect_snapped_output_dir" xml:space="preserve">
+    <value>Reading output files - Reconnect snapped output dir</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectRestartFiles_Reading_output_files___connect_restart_files" xml:space="preserve">
+    <value>Reading output files - connect restart files</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadDiaFile_Reading_output_files___Reading_dia_file" xml:space="preserve">
+    <value>Reading output files - Reading dia file</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadModelFromMdu_Reading_mdu_file" xml:space="preserve">
+    <value>Reading mdu file</value>
+  </data>
+  <data name="WaterFlowFMModel_OnLoad_Reading_1D2D_features" xml:space="preserve">
+    <value>Reading 1D2D features</value>
+  </data>
+  <data name="MduFile_Read_Reading_netFile" xml:space="preserve">
+    <value>Reading netFile</value>
+  </data>
+  <data name="WaterFlowFMModel_CreateUnstructuredGridVertexCoverage_Provided_grid_to_create_grid_vertex_coverage_for_is_null" xml:space="preserve">
+    <value>Provided grid to create grid vertex coverage for is null</value>
+  </data>
+  <data name="WaterFlowFMModel_CreateUnstructuredGridCellCoverage_Provided_grid_to_create_grid_cell_coverage_for_is_null" xml:space="preserve">
+    <value>Provided grid to create grid cell coverage for is null</value>
+  </data>
+  <data name="WaterFlowFMModel_CreateUnstructuredGridFlowLinkCoverage_Provided_grid_to_create_grid_flowlink_coverage_for_is_null" xml:space="preserve">
+    <value>Provided grid to create grid flowlink coverage for is null</value>
+  </data>
+  <data name="Links1D2DHelper_SetGeometry1D2DLinks__1d2d_link_discretization_point_problem_" xml:space="preserve">
+    <value>1d2d link discretization point problem.</value>
+  </data>
+  <data name="Links1D2DHelper_SetGeometry1D2DLinks__1d2d_link_grid_cell_problem_" xml:space="preserve">
+    <value>1d2d link grid cell problem.</value>
+  </data>
+  <data name="Links1D2DHelper_SetGeometry1D2DLinks__Cannot_create_geometry_of_1d2d_link__link_Name__from_network_discretization_point__link_DiscretisationPointIndex__to_grid_cell__link_FaceIndex_" xml:space="preserve">
+    <value> Cannot create geometry of 1d2d link {link.Name} from network discretization point {link.DiscretisationPointIndex} to grid cell {link.FaceIndex}</value>
+  </data>
+  <data name="MduFile_ReadProperties_An_unrecognized_keyword___0___has_been_detected" xml:space="preserve">
+    <value>An unrecognized keyword *{0}* has been detected. The setting will be preserved and written back to the MDU file on export.</value>
+  </data>
+  <data name="MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values" xml:space="preserve">
+    <value>Based on the Fixed Weir Scheme {0}, there are not enough column(s) defined for {1} in the imported fixed weir file. The last {2} column(s) have been generated using default values</value>
+  </data>
+  <data name="MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored" xml:space="preserve">
+    <value>Based on the Fixed Weir Scheme {0}, there are too many column(s) defined for {1} in the imported fixed weir file. The last {2} column(s) have been ignored</value>
+  </data>
+  <data name="MduFile_Read_Reading_grid" xml:space="preserve">
+    <value>Reading grid</value>
+  </data>
+  <data name="BndExtForceFile_WriteIniFile_Writing_external_forcings_to__0__" xml:space="preserve">
+    <value>Writing external forcings to {0}.</value>
+  </data>
+  <data name="BndExtForceFile_ReadIniFile_Reading_external_forcings_from__0__" xml:space="preserve">
+    <value>Reading external forcings from {0}.</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00" xml:space="preserve">
+    <value>Time zone of boundary condition '{0}' falls outside of allowed range -12:00 and +12:00</value>
+  </data>
+  <data name="MduFileReferenceDoesNotExist" xml:space="preserve">
+    <value>File at location '{0}' does not exist, but is defined in MDU file '{1}' property '{2}'. Information might have been lost while loading model '{3}'.</value>
+  </data>
+  <data name="MduFile_Read_Validating_morphology_properties" xml:space="preserve">
+    <value>Validating morphology properties</value>
+  </data>
+  <data name="MduFileReferencePathContainsInvalidCharacters" xml:space="preserve">
+    <value>File path '{0}' contains invalid characters. MDU file '{1}' property '{2}'. Information might have been lost while loading model '{3}'.</value>
+  </data>
+  <data name="Initial_field_file_does_not_exist_0_" xml:space="preserve">
+    <value>Initial field file does not exist: {0}</value>
+  </data>
+  <data name="Reading_initial_field_data_from_0_" xml:space="preserve">
+    <value>Reading initial field data from {0}</value>
+  </data>
+  <data name="reading_the_initial_field_file" xml:space="preserve">
+    <value>reading the initial field file</value>
+  </data>
+  <data name="writing_the_initial_field_file" xml:space="preserve">
+    <value>writing the initial field file</value>
+  </data>
+  <data name="Writing_initial_field_data_to_0_" xml:space="preserve">
+    <value>Writing initial field data to {0}</value>
+  </data>
+  <data name="Property_0_contains_unsupported_value_1_" xml:space="preserve">
+    <value>Property '{0}' contains unsupported value: {1}.</value>
+  </data>
+  <data name="Friction_type_does_not_match_the_expected_uniform_model_friction_type_" xml:space="preserve">
+    <value>Friction type does not match the expected uniform model friction type.</value>
+  </data>
+  <data name="Reading_external_forcings_file_from_0_" xml:space="preserve">
+    <value>Reading external forcings file from {0}</value>
+  </data>
+  <data name="ExtForceFile_StoreUnknownQuantities_Spatial_varying_quantity__0__detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_" xml:space="preserve">
+    <value>Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.</value>
+  </data>
+  <data name="ConstructFunctions_Reading_file_output_into_our_FM_model" xml:space="preserve">
+    <value>Reading {0} file {1} (as output) into our model.</value>
+  </data>
+  <data name="LoadStateFromMdu_Reading_Z_coordinate_NoDataValue_from__0_" xml:space="preserve">
+    <value>Reading Z-coordinate NoDataValue from {0}</value>
+  </data>
+  <data name="Interval_must_be_a_multiple_of_the_user_timestep_" xml:space="preserve">
+    <value>{0} interval must be a multiple of the user timestep.</value>
+  </data>
+  <data name="The_selected_fou_file_quantity___0___is_not_yet_available_or_validated_for_1D_" xml:space="preserve">
+    <value>The selected fou file quantity '{0}' is not yet available or validated for 1D.</value>
+  </data>
+  <data name="No_D_Flow_FM_property_defined_for_fou_file_quantity____0___with_analysis_type____1___" xml:space="preserve">
+    <value>No D-Flow FM property defined for fou file quantity '{0}' with analysis type '{1}'.</value>
+  </data>
+  <data name="Failed_parsing_fou_file_line____0___" xml:space="preserve">
+    <value>Failed parsing fou file line: '{0}'.</value>
+  </data>
+  <data name="Reading_statistical_analysis_input_file_from___0___" xml:space="preserve">
+    <value>Reading statistical analysis input file from '{0}'.</value>
+  </data>
+  <data name="Writing_statistical_analysis_input_file_to___0___" xml:space="preserve">
+    <value>Writing statistical analysis input file to '{0}'.</value>
+  </data>
+  <data name="DefaultFouFileHeader" xml:space="preserve">
+    <value>*quantity tstart    tstop     numcyc    knfac     v0plu     layno     param</value>
+  </data>
+</root>

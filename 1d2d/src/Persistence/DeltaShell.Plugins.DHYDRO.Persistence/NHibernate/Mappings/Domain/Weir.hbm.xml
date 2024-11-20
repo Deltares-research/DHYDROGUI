@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false" 
+                    namespace="DelftTools.Hydro.Structures" 
+                    assembly="DelftTools.Hydro">
+  <subclass name="DelftTools.Hydro.Structures.Weir, DelftTools.Hydro" discriminator-value="branch_structure_weir"  extends="DelftTools.Hydro.IStructure1D, DelftTools.Hydro">
+    <meta attribute="anyType">IValueConverter.OriginalValue</meta>
+
+    <property name="CrestWidth" column="crest_width" />
+    <property name="CrestLevel" column="crest_level" />    
+    <property name="CrestShape" column="crest_shape" />    
+    <many-to-one name="WeirFormula" cascade="all"/>
+    <property name="FlowDirection" column="flow_direction" />
+  </subclass>
+
+
+</hibernate-mapping>

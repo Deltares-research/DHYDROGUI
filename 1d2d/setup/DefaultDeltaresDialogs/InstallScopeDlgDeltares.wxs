@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  <copyright file="InstallScopeDlg.wxs" company="Outercurve Foundation">
+    Copyright (c) 2004, Outercurve Foundation.
+    This software is released under Microsoft Reciprocal License (MS-RL).
+    The license and further copyright text can be found in the file
+    LICENSE.TXT at the root directory of the distribution.
+  </copyright>
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <UI>
+            <Dialog Id="InstallScopeDlgDeltares" Width="370" Height="270" Title="!(loc.InstallScopeDlg_Title)" KeepModeless="yes">
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="58" TabSkip="no" Text="!(loc.InstallScopeDlgBannerBitmap)" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="58" Width="370" Height="0" />
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Description" Type="Text" X="20" Y="210" Width="340" Height="60" Transparent="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgDescription)" />
+                <Control Id="Title" Type="Text" X="!(loc.TitleXPosition)" Y="21" Width="275" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgTitle)" />
+                <Control Id="BothScopes" Type="RadioButtonGroup" X="20" Y="60" Width="330" Height="120" Property="DeltaresWixAppFolder" Hidden="yes">
+                    <RadioButtonGroup Property="DeltaresWixAppFolder">
+                        <RadioButton Value="WixPerUserFolder" X="0" Y="0" Width="295" Height="16" Text="!(loc.InstallScopeDlgPerUser)" />
+                        <RadioButton Value="WixPerMachineFolder" X="0" Y="60" Width="295" Height="16" Text="!(loc.InstallScopeDlgPerMachine)" />
+                    </RadioButtonGroup>
+                    <Condition Action="show">Privileged AND (!(wix.WixUISupportPerUser) AND !(wix.WixUISupportPerMachine))</Condition>
+                </Control>
+                <Control Id="PerUserDescription" Type="Text" X="33" Y="75" Width="300" Height="36" Hidden="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgPerUserDescription)">
+                    <Condition Action="show">!(wix.WixUISupportPerUser)</Condition>
+                </Control>
+                <Control Id="NoPerUserDescription" Type="Text" X="33" Y="75" Width="300" Height="36" Hidden="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgNoPerUserDescription)">
+                    <Condition Action="show">NOT !(wix.WixUISupportPerUser)</Condition>
+                </Control>
+                <Control Id="PerMachineDescription" Type="Text" X="33" Y="136" Width="300" Height="36" Hidden="yes" NoPrefix="yes" Text="!(loc.InstallScopeDlgPerMachineDescription)">
+                    <Condition Action="show">Privileged</Condition>
+                </Control>
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)" />
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlgDeltares">1</Publish>
+                </Control>
+            </Dialog>
+        </UI>
+    </Fragment>
+</Wix>

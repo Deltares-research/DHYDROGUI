@@ -1,0 +1,8 @@
+BBB2.2
+BRCH id '4' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'GFE1022' en 'cnGFE1022'  brch
+BRCH id '5' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'GFE1021' en 'cnGFE1021'  brch
+BRCH id '11' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'PVD02' en 'cnPVD02'  brch
+BRCH id '12' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'PVD01' en 'cnPVD01'  brch
+BRCH id '13' ri '-1' mt 1 '1' bt 18 ObID '3B_LINK_RWZI' bn 'PVD01' en 'WWTP'  brch
+BRCH id '14' ri '-1' mt 1 '1' bt 18 ObID '3B_LINK_RWZI' bn 'PVD02' en 'WWTP'  brch
+BRCH id '17' ri '-1' mt 1 '1' bt 18 ObID '3B_LINK_RWZI' bn 'WWTP' en 'cnWWTP'  brch

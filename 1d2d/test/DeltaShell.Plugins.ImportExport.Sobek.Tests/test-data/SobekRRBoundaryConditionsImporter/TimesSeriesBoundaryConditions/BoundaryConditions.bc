@@ -1,0 +1,16 @@
+[General]
+    fileVersion           = 1.01                
+    fileType              = boundConds          
+
+[Boundary]
+    name                  = LateralSource_1D_1  
+    function              = timeseries          
+    timeInterpolation     = linear              
+    quantity              = time                
+    unit                  = minutes since 2023-02-15 00:00:00
+    quantity              = water_level         
+    unit                  = m                   
+    0 1 
+    525600 2 
+    1052640 3 
+

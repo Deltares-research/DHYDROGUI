@@ -1,0 +1,70 @@
+@(#)Deltares, SOBEKSIM Version 4.03.05.12609, Sep  1 2010, 16:22:16
+opened file : D:\SBK212_2\Programs\flow\sobeksim.lng
+closed file : D:\SBK212_2\Programs\flow\sobeksim.lng
+ConvtabYzprof
+Opened file : branch.tbl
+closed file : branch.tbl
+Opened file : node.tbl
+closed file : node.tbl
+Opened file : grid.tbl
+closed file : grid.tbl
+Opened file : reachdwn.tbl
+closed file : reachdwn.tbl
+Opened file : reachup.tbl
+closed file : reachup.tbl
+Opened file : structup.tbl
+closed file : structup.tbl
+Opened file : structdwn.tbl
+closed file : structdwn.tbl
+Opened file : casedesc.cmt
+closed file : casedesc.cmt
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N0
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N5
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N26
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N27
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N32
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N33
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N34
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N36
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N37
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N43
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N45
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N47
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N48
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N55
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N57
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N75
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N78
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N41
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node N82
+ Warning in subroutine initial
+ Extreme differences in bottomlevel in reach segment 44_8
+ Warning in subroutine initial
+ Extreme differences in bottomlevel in reach segment R46_3
+ Warning in subroutine initial
+ Extreme differences in bottomlevel in reach segment 95_12
+opened file : ..\work\flow_bal.out
+closed file : ..\work\flow_bal.out
+cpu computation =       4.890625
+---------------------------------
+Normal end of Sobeksim
+closed file : ..\work\sobek.log

@@ -1,0 +1,231 @@
+CN_1.1
+FLBO id 'dki310_23' ci 'dki310_23' flbo
+FLBO id 'dki310_54' ci 'dki310_54' flbo
+FLBO id 'dki310_102' ci 'dki310_102' flbo
+FLBO id 'dki310_76' ci 'dki310_76' flbo
+FLBO id 'dki31043' ci 'dki31043' flbo
+FLBO id 'dki310156' ci 'dki310156' flbo
+FLBO id 'dki31084' ci 'dki31084' flbo
+FLBO id 'dki310114' ci 'dki310114' flbo
+FLBO id 'p_dki310298' ci 'p_dki310298' flbo
+FLBO id 'N_CGS_1_1' ci 'N_CGS_1_1' flbo
+FLBO id 'N_MuK_1_3' ci 'N_MuK_1_3' flbo
+FLBO id 'N_Plu_0_18' ci 'N_Plu_0_18' flbo
+FLBO id 'N_Sen_16_1' ci 'N_Sen_16_1' flbo
+FLBO id 'a_N_Plu_0_20' ci 'a_N_Plu_0_20' flbo
+FLBO id 'dki310_65' ci 'dki310_65' flbo
+FLBO id 'dki310_45' ci 'dki310_45' flbo
+FLBO id '74' ci '74' flbo
+FLBO id '100' ci '100' flbo
+FLBO id 'N_Sen_1_5' ci 'N_Sen_1_5' flbo
+FLBO id 'KaMa_66' ci 'KaMa_66' flbo
+FLBO id 'KaMa_PT' ci 'KaMa_PT' flbo
+FLBX id 'outlet_1210' nm '3015' ci 'dki310_12' lc 2352.62327548041 flbx 
+FLBX id 'outlet_1206' nm '3004' ci 'dki310_12' lc 7526.1788384126 flbx 
+FLBX id 'outlet_1372' nm '3000' ci 'dki310_12' lc 8829.23736369487 flbx 
+FLBX id 'outlet_1273' nm '2973' ci 'dki310_12' lc 20819.6243687214 flbx 
+FLBX id 'outlet_1278' nm '2985' ci 'dki310_12' lc 22758.9354605187 flbx 
+FLBX id 'outlet_1282' nm '2958' ci 'dki310_12' lc 24487.8572400132 flbx 
+FLBX id '82' nm '' ci 'dki310_12' lc 31817.3852406205 flbx 
+FLBX id 'outlet_1304' nm '2897' ci 'dki310_12' lc 39847.5722610013 flbx 
+FLBX id 'outlet_1325' nm '2846' ci 'dki310_12' lc 50733.6443089574 flbx 
+FLBX id 'outlet_1330' nm '2835' ci 'dki310_12' lc 52020.6115311222 flbx 
+FLBX id 'outlet_1345' nm '2798' ci 'dki310_12' lc 59169.2604108752 flbx 
+FLBX id 'outlet_1370' nm '2786' ci 'dki310_12' lc 60930.5011373467 flbx 
+FLBX id 'outlet_1352' nm '2755' ci 'dki310_12' lc 66674.4442082764 flbx 
+FLBX id 'outlet_1426' nm '2745' ci 'dki310_12' lc 67582.2298156007 flbx 
+FLBX id 'outlet_1359' nm '2722' ci 'dki310_12' lc 70458.3062245349 flbx 
+FLBX id 'outlet_1411' nm '2686' ci 'dki310_12' lc 77429.3110758594 flbx 
+FLBX id 'outlet_1387' nm '2717' ci 'dki310_37' lc 2258.08966064582 flbx 
+FLBX id 'outlet_1024' nm '2714' ci 'dki310_37' lc 4068.90333442552 flbx 
+FLBX id 'outlet_1046' nm '2600' ci 'dki310_37' lc 16565.7773730086 flbx 
+FLBX id 'outlet_1044' nm '2599' ci 'dki310_37' lc 17053.5816562801 flbx 
+FLBX id 'outlet_1063' nm '2685' ci 'dki310_66' lc 455.761246425909 flbx 
+FLBX id 'outlet_1055' nm '2662' ci 'dki310_66' lc 2849.78535326175 flbx 
+FLBX id 'outlet_1056' nm '2647' ci 'dki310_66' lc 4511.72621276822 flbx 
+FLBX id '117' nm '' ci 'dki310_66' lc 7810.81377156793 flbx 
+FLBX id 'outlet_1091' nm '2843' ci 'dki310_67' lc 6620.96323759696 flbx 
+FLBX id 'outlet_1090' nm '2789' ci 'dki310_67' lc 12737.3110259677 flbx 
+FLBX id 'outlet_1083' nm '2778' ci 'dki310_67' lc 13635.2910548672 flbx 
+FLBX id 'outlet_1071' nm '2740' ci 'dki310_67' lc 17567.019264706 flbx 
+FLBX id 'outlet_1402' nm '2681' ci 'dki39_14' lc 452.650608462545 flbx 
+FLNX id 'dki31072' nm '' ci 'dki31072' flnx
+FLBX id 'outlet_1207' nm '3028' ci '5' lc 65.6525118047814 flbx 
+FLBX id 'outlet_1097' nm '2660' ci 'dki31022' lc 5471.6457032447 flbx 
+FLBX id 'outlet_1214' nm '3023' ci 'dki31035' lc 5372.39396643986 flbx 
+FLBX id 'outlet_1217' nm '3013' ci 'dki31035' lc 11607.5301042615 flbx 
+FLBX id 'outlet_1218' nm '3012' ci 'dki31035' lc 11621.7805019263 flbx 
+FLBX id 'outlet_1224' nm '3003' ci 'dki31035' lc 18973.4234328662 flbx 
+FLBX id 'outlet_1228' nm '3002' ci 'dki31035' lc 19671.5534241818 flbx 
+FLBX id 'outlet_1230' nm '2988' ci 'dki31035' lc 23839.0593437115 flbx 
+FLNX id 'dki310124' nm '' ci 'dki310124' flnx
+FLBX id 'outlet_1321' nm '2858' ci 'dki31082' lc 1243.77294734498 flbx 
+FLBX id 'outlet_1329' nm '2871' ci 'dki31082' lc 3429.14657039645 flbx 
+FLBX id 'outlet_1336' nm '2825' ci 'dki31082' lc 4406.53740994753 flbx 
+FLBX id 'outlet_1364' nm '2820' ci 'dki31082' lc 5412.63156925988 flbx 
+FLBX id 'outlet_1158' nm '2763' ci 'dki31082' lc 12345.7582972426 flbx 
+FLBX id 'outlet_1154' nm '2759' ci 'dki31082' lc 13105.5645052347 flbx 
+FLBX id 'outlet_1153' nm '2746' ci 'dki31082' lc 14049.1388010988 flbx 
+FLBX id 'outlet_1021' nm '2733' ci 'dki31082' lc 15320.5490855286 flbx 
+FLBX id '81' nm '' ci 'dki31082' lc 15962.4601482018 flbx 
+FLNX id 'dki310151' nm '' ci 'dki310151' flnx
+FLBX id 'outlet_1010' nm '2876' ci 'dki310101' lc 8882.57808248646 flbx 
+FLBX id 'outlet_1181' nm '2848' ci 'dki310101' lc 12824.8800769017 flbx 
+FLBX id 'outlet_1166' nm '2839' ci 'dki310101' lc 13720.9094880345 flbx 
+FLBX id 'outlet_1168' nm '2814' ci 'dki310101' lc 17510.7853153896 flbx 
+FLBX id 'outlet_1165' nm '2827' ci 'dki310101' lc 18927.3358904008 flbx 
+FLBX id 'outlet_1016' nm '2806' ci 'dki310101' lc 23718.8321919554 flbx 
+FLBX id 'outlet_1079' nm '2766' ci 'dki310101' lc 24522.8482542087 flbx 
+FLBX id 'outlet_1092' nm '2852' ci 'dki310105' lc 1121.48619494105 flbx 
+FLBX id 'outlet_1089' nm '2840' ci 'dki310105' lc 9210.61994290873 flbx 
+FLBX id 'outlet_1074' nm '2751' ci 'dki310121' lc 836.757566242325 flbx 
+FLBX id 'outlet_1062' nm '2688' ci 'dki310121' lc 4509.50865735546 flbx 
+FLBX id 'outlet_1054' nm '2620' ci 'dki310121' lc 11299.1420794896 flbx 
+FLBX id 'outlet_1423' nm '2606' ci 'dki310121' lc 12565.0825071495 flbx 
+FLBX id 'outlet_1295' nm '2927' ci 'dki310133' lc 2853.13289519413 flbx 
+FLBX id 'outlet_1291' nm '2928' ci 'dki310133' lc 2855.66390822858 flbx 
+FLBX id 'outlet_1293' nm '2925' ci 'dki310133' lc 3000.95417169281 flbx 
+FLBX id 'outlet_1296' nm '2919' ci 'dki310133' lc 4692.98997341568 flbx 
+FLBX id 'outlet_1298' nm '2912' ci 'dki310133' lc 6167.82000682483 flbx 
+FLBX id 'outlet_1317' nm '2870' ci 'dki310133' lc 20474.9254883293 flbx 
+FLNX id 'dki310184' nm '' ci 'dki310184' flnx
+FLBX id 'outlet_1362' nm '2693' ci 'dki310136' lc 197.560914916106 flbx 
+FLNX id 'dki3108' nm '' ci 'dki3108' flnx
+FLBX id 'outlet_1094' nm '2860' ci '22' lc 2691.78798956712 flbx 
+FLBX id 'outlet_1015' nm '2836' ci '22' lc 4501.26779580686 flbx 
+FLBX id 'outlet_1084' nm '2817' ci '22' lc 9068.20219576727 flbx 
+FLBX id 'outlet_1014' nm '2803' ci '22' lc 11621.764144734 flbx 
+FLBX id 'outlet_1117' nm '2657' ci '24' lc 256.404747408118 flbx 
+FLBX id 'outlet_1126' nm '2687' ci 'p_dki310250' lc 7605.24582829189 flbx 
+FLBX id 'outlet_1121' nm '2680' ci 'p_dki310250' lc 8298.86134882721 flbx 
+FLBX id 'outlet_1122' nm '2659' ci '25' lc 18.7154041767349 flbx 
+FLBX id 'outlet_1102' nm '2646' ci '25' lc 1171.52003420339 flbx 
+FLBX id 'outlet_1101' nm '2639' ci '25' lc 1878.22030075311 flbx 
+FLBX id 'outlet_1390' nm '2712' ci 'p1_37' lc 885.521398239913 flbx 
+FLBX id 'outlet_1383' nm '2703' ci 'p1_37' lc 1370.20957510058 flbx 
+FLBX id 'outlet_1395' nm '2673' ci 'dR_1' lc 7845.88091749049 flbx 
+FLBX id 'outlet_1105' nm '2623' ci 'aR_3' lc 513.758176354682 flbx 
+FLBX id 'outlet_1397' nm '2668' ci 'bR_1' lc 3466.68032572428 flbx 
+FLBX id 'outlet_1108' nm '2642' ci 'bR_2' lc 61.7739872217479 flbx 
+FLBX id 'outlet_1113' nm '2640' ci 'bR_2' lc 785.616066638496 flbx 
+FLBX id 'outlet_1401' nm '2675' ci 'bR_6' lc 1016.66399764869 flbx 
+FLBX id 'outlet_1107' nm '2645' ci 'bR_6' lc 2865.80433035304 flbx 
+FLBX id 'outlet_1110' nm '2643' ci 'bR_7' lc 76.5443731539988 flbx 
+FLBX id 'outlet_1398' nm '2632' ci 'bR_9' lc 3219.08157363347 flbx 
+FLBX id 'outlet_1111' nm '2636' ci 'bR_10' lc 8.58408458584885 flbx 
+FLBX id 'outlet_1133' nm '2630' ci 'bR_11' lc 4818.54073160474 flbx 
+FLBX id 'outlet_1112' nm '2621' ci 'bR_12' lc 1608.44508497478 flbx 
+FLBX id 'outlet_1030' nm '2629' ci 'bR_13' lc 176.803197496417 flbx 
+FLBX id 'outlet_1031' nm '2619' ci 'bR_13' lc 912.004146548434 flbx 
+FLBX id 'outlet_1051' nm '2611' ci 'bR_13' lc 1940.01242312619 flbx 
+FLBX id 'outlet_1048' nm '2613' ci 'bR_14' lc 100.437432115019 flbx 
+FLBX id 'outlet_1106' nm '2627' ci 'bR_16' lc 480.537907662674 flbx 
+FLBX id 'outlet_1049' nm '2612' ci 'bR_17' lc 450.791959935986 flbx 
+FLNO id 'PLT_RESV' nm 'PLUIT_RESERVOIR' ci 'PLT_RESV' flno 
+FLBX id 'outlet_1142' nm '2653' ci 'cR_2' lc 207.194265652004 flbx 
+FLNX id 'N_Sen_35_3' nm '' ci 'N_Sen_35_3' flnx
+FLBX id 'outlet_1388' nm '2709' ci 'eR_1' lc 2266.77790224107 flbx 
+FLBX id 'outlet_1389' nm '2704' ci 'eR_1' lc 3735.62744050212 flbx 
+FLNO id 'Resv_01' nm 'Melati_Reservoir' ci 'Resv_01' flno 
+FLBX id 'outlet_1392' nm '2682' ci '1' lc 1731.35502528818 flbx 
+FLBX id 'outlet_1050' nm '2615' ci '2' lc 429.428471535066 flbx 
+FLBX id 'outlet_1368' nm '2676' ci '4' lc 49.505293274517 flbx 
+FLBX id 'outlet_1098' nm '2648' ci '6' lc 3245.18173598668 flbx 
+FLBX id 'outlet_1028' nm '2650' ci '6' lc 4177.16366611637 flbx 
+FLBX id 'outlet_1103' nm '2652' ci '6' lc 5509.73197468115 flbx 
+FLBX id 'outlet_1320' nm '2859' ci '7' lc 709.130123428457 flbx 
+FLBX id 'outlet_1331' nm '2829' ci '7' lc 5296.8740419374 flbx 
+FLBX id 'outlet_1346' nm '2809' ci '7' lc 8427.43435727561 flbx 
+FLBX id 'outlet_1124' nm '2791' ci '7' lc 11865.2925086943 flbx 
+FLBX id 'outlet_1199' nm '2857' ci '8' lc 3420.9151377162 flbx 
+FLBX id 'outlet_1012' nm '2845' ci '8' lc 4319.66536263564 flbx 
+FLBX id 'outlet_1179' nm '2795' ci '8' lc 16293.5399489845 flbx 
+FLBX id 'outlet_1178' nm '2770' ci '8' lc 20233.8199826312 flbx 
+FLBX id 'outlet_1139' nm '2744' ci '8' lc 23362.2770778141 flbx 
+FLBX id 'outlet_1022' nm '2725' ci '8' lc 27141.2774078756 flbx 
+FLBX id 'outlet_1391' nm '2720' ci '8' lc 28052.1026844039 flbx 
+FLBX id 'outlet_1069' nm '2708' ci '9' lc 479.530072485709 flbx 
+FLBX id 'outlet_1067' nm '2702' ci '9' lc 3376.37940370107 flbx 
+FLBX id 'outlet_1064' nm '2689' ci '9' lc 6088.02061772973 flbx 
+FLBX id 'outlet_1082' nm '2777' ci '10' lc 616.793315601792 flbx 
+FLBX id 'outlet_1078' nm '2750' ci '10' lc 3644.60664504245 flbx 
+FLBX id 'outlet_1077' nm '2734' ci '10' lc 5077.54609172223 flbx 
+FLBX id 'outlet_1017' nm '2784' ci '11' lc 1403.46386210243 flbx 
+FLBX id 'outlet_1080' nm '2764' ci '11' lc 4007.52618143642 flbx 
+FLBX id 'outlet_1019' nm '2753' ci '11' lc 5554.53262860346 flbx 
+FLBX id 'outlet_1073' nm '2727' ci '11' lc 7969.32218191437 flbx 
+FLBX id 'outlet_1061' nm '2701' ci '11' lc 10677.4485531326 flbx 
+FLBX id 'outlet_1053' nm '2677' ci '11' lc 13602.4809107695 flbx 
+FLBX id 'outlet_1052' nm '2622' ci '11' lc 19787.4813218461 flbx 
+FLBX id 'outlet_1422' nm '2598' ci '11' lc 22200.3356966051 flbx 
+FLBX id 'outlet_1123' nm '2691' ci '12' lc 13394.9608469495 flbx 
+FLBX id 'outlet_1116' nm '2674' ci '12' lc 16675.3861962944 flbx 
+FLBX id 'outlet_1114' nm '2665' ci '12' lc 17430.0257676846 flbx 
+FLBX id 'outlet_1104' nm '2656' ci '12' lc 18283.9809793591 flbx 
+FLBX id '103' nm '' ci '12' lc 20768.2581857115 flbx 
+FLBX id 'outlet_1099' nm '2618' ci '12' lc 21853.9232997828 flbx 
+FLBX id 'outlet_1043' nm '2602' ci '12' lc 23210.5157666302 flbx 
+FLNX id '29' nm '' ci '29' flnx
+FLBX id 'outlet_1157' nm '2730' ci '13' lc 7177.26564244866 flbx 
+FLBX id 'outlet_1146' nm '2719' ci '13' lc 8147.9847925128 flbx 
+FLBX id 'outlet_1144' nm '2706' ci '13' lc 9729.45176920379 flbx 
+FLBX id 'outlet_1143' nm '2683' ci '13' lc 11408.5877810812 flbx 
+FLBX id 'outlet_1212' nm '3026' ci '21' lc 5632.59443053813 flbx 
+FLBX id 'outlet_1219' nm '3018' ci '21' lc 10144.7628071921 flbx 
+FLBX id 'outlet_1227' nm '3016' ci '21' lc 10972.3630587279 flbx 
+FLBX id 'outlet_1226' nm '2997' ci '21' lc 21310.686949452 flbx 
+FLBX id 'outlet_1374' nm '2987' ci '21' lc 26933.0961963455 flbx 
+FLBX id 'outlet_1238' nm '2980' ci '21' lc 28987.8383359304 flbx 
+FLBX id 'outlet_1247' nm '2974' ci '21' lc 32483.1871024874 flbx 
+FLBX id 'outlet_1254' nm '2934' ci '21' lc 41894.5624981683 flbx 
+FLBX id 'outlet_1253' nm '2933' ci '21' lc 42006.2638597483 flbx 
+FLBX id 'outlet_1262' nm '2907' ci '21' lc 47884.148541843 flbx 
+FLBX id 'outlet_1265' nm '2883' ci '21' lc 55406.1840808514 flbx 
+FLNX id '73' nm '' ci '73' flnx
+FLNX id '95' nm '' ci '95' flnx
+FLNO id '125' nm '' ci '125' flno 
+FLNX id '183' nm '' ci '183' flnx
+FLNO id '129' nm '' ci '129' flno 
+FLNX id '186' nm '' ci '186' flnx
+FLNO id '194' nm '' ci '194' flno
+FLNO id '200' nm '' ci '200' flno
+FLNX id '206' nm '' ci '206' flnx
+FLNO id '134' nm '' ci '134' flno 
+FLNX id '212' nm '' ci '212' flnx
+FLNO id '119' nm '' ci '119' flno 
+FLNX id '181' nm '' ci '181' flnx
+FLNO id '98' nm '' ci '98' flno 
+FLNX id '209' nm '' ci '209' flnx
+FLNO id 'WadukSunterUtara' nm '' ci 'WadukSunterUtara' flno 
+FLNX id '222' nm '' ci '222' flnx
+FLNO id '140' nm '' ci '140' flno 
+FLNX id '226' nm '' ci '226' flnx
+FLNO id '189' nm '' ci '189' flno 
+FLNX id '229' nm '' ci '229' flnx
+FLNO id '138' nm '' ci '138' flno 
+FLNX id '237' nm '' ci '237' flnx
+FLNO id '142' nm '' ci '142' flno 
+FLNX id '234' nm '' ci '234' flnx
+FLNO id '144' nm '' ci '144' flno 
+FLNX id '245' nm '' ci '245' flnx
+FLNX id '101' nm '' ci '101' flnx
+FLNX id '107' nm '' ci '107' flnx
+FLNO id '41' nm 'AREA UNKNOWN THEREFORE ESTIMATED' ci '41' flno 
+FLNX id '110' nm '' ci '110' flnx
+FLNO id '146' nm '' ci '146' flno 
+FLNX id '12' nm '' ci '12' flnx
+FLNX id '136' nm '' ci '136' flnx
+FLNX id '150' nm '' ci '150' flnx
+FLNO id '149' nm '' ci '149' flno 
+FLNX id '151' nm '' ci '151' flnx
+FLBX id 'outlet_1414' nm '2617' ci '82' lc 2059.76847706213 flbx 
+FLBX id '13' nm '' ci 'KaMa_39' lc 484.487850595122 flbx 
+FLBX id '43' nm '' ci 'KaMa_39' lc 2871.58352031293 flbx 
+FLBX id '172' nm '' ci 'KaMa_40' lc 397.043726135267 flbx 
+FLBX id '173' nm '' ci 'KaMa_40' lc 634.640618006425 flbx 
+FLBX id '174' nm '' ci 'KaMa_40' lc 984.211052321544 flbx 
+FLBX id '175' nm '' ci 'KaMa_40' lc 1179.72026214595 flbx 
+FLBX id 'outlet_1140' nm '2633' ci 'KaMa_41' lc 162.36940497051 flbx 
+FLBX id '167' nm '' ci 'KaMa_41' lc 2161.71101205204 flbx 
+FLNX id '57' nm '' ci '57' flnx
+FLNO id 'Kemayorang' nm '' ci 'Kemayorang' flno 

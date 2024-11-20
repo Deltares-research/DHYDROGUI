@@ -1,0 +1,413 @@
+# Basecase
+# Basecase - long description
+HYDRINP 0
+IO  ..\BASECASE\defcnd.1
+IO  ..\BASECASE\defcnd.2
+IO  ..\BASECASE\defcnd.3
+IO  ..\BASECASE\defcnd.4
+IO  ..\BASECASE\defcnd.5
+IO  ..\BASECASE\defcnd.6
+IO  ..\BASECASE\defcnd.7
+IO  ..\BASECASE\defcnd.8
+IO  ..\BASECASE\defcnd.9
+IO  ..\BASECASE\defcnd.a
+IO  ..\BASECASE\defcrs.1
+IO  ..\BASECASE\defcrs.2
+IO  ..\BASECASE\defcrs.3
+IO  ..\BASECASE\defdis.1
+IO  ..\BASECASE\defdis.2
+IO  ..\BASECASE\defdis.3
+IO  ..\BASECASE\defdis.4
+IO  ..\BASECASE\defdis.5
+IO  ..\BASECASE\deffrc.1
+IO  ..\BASECASE\deffrc.2
+IO  ..\BASECASE\deffrc.3
+IO  ..\BASECASE\deffrc.4
+IO  ..\BASECASE\defglb.1
+IO  ..\BASECASE\defgrd.1
+IO  ..\BASECASE\defgrd.2
+IO  ..\BASECASE\defgrd.3
+IO  ..\BASECASE\defgwm.1
+IO  ..\BASECASE\deficn.1
+IO  ..\BASECASE\deficn.2
+IO  ..\BASECASE\deficn.3
+IO  ..\BASECASE\deficn.4
+IO  ..\BASECASE\deficn.5
+IO  ..\BASECASE\defmet.1
+IO  ..\BASECASE\defmet.2
+IO  ..\BASECASE\defmet.3
+IO  ..\BASECASE\defmet.4
+IO  ..\BASECASE\defrun.1
+IO  ..\BASECASE\defrun.2
+IO  ..\BASECASE\defrun.3
+IO  ..\BASECASE\defrun.4
+IO  ..\BASECASE\defrun.5
+IO  ..\BASECASE\defrun.6
+IO  ..\BASECASE\defrun.7
+IO  ..\BASECASE\defrun.8
+IO  ..\BASECASE\defrun.9
+IO  ..\BASECASE\defrun.a
+IO  ..\BASECASE\defrun.b
+IO  ..\BASECASE\defrun.c
+IO  ..\BASECASE\defrun.d
+IO  ..\BASECASE\defrun.e
+IO  ..\BASECASE\defrun.f
+IO  ..\BASECASE\defrun.g
+IO  ..\BASECASE\defrun.h
+IO  ..\BASECASE\defrun.i
+IO  ..\BASECASE\defrun.j
+IO  ..\BASECASE\defstr.1
+IO  ..\BASECASE\defstr.2
+IO  ..\BASECASE\defstr.3
+IO  ..\BASECASE\defstr.4
+IO  ..\BASECASE\defstr.5
+IO  ..\BASECASE\defstr.6
+IO  ..\BASECASE\defstr.7
+IO  ..\BASECASE\defstr.8
+IO  ..\BASECASE\defstr.9
+IO  ..\BASECASE\defsub.1
+IO  ..\BASECASE\deftop.1
+IO  ..\BASECASE\deftop.2
+IO  ..\BASECASE\deftop.3
+IO  ..\BASECASE\deftop.4
+IO  ..\BASECASE\deftop.5
+IO  ..\BASECASE\deftrn.1
+IO  ..\BASECASE\grainp.txt
+IO  ..\BASECASE\parsen.ini
+OIO ..\BASECASE\parsen.dmp
+OIO ..\BASECASE\parsen.seq
+HYDRCOMP 0
+I   ..\BASECASE\defcnd.1
+I   ..\BASECASE\defcnd.2
+I   ..\BASECASE\defcnd.3
+I   ..\BASECASE\defcnd.4
+I   ..\BASECASE\defcnd.5
+I   ..\BASECASE\defcnd.6
+I   ..\BASECASE\defcnd.7
+I   ..\BASECASE\defcnd.8
+I   ..\BASECASE\defcnd.9
+I   ..\BASECASE\defcnd.a
+I   ..\BASECASE\defcrs.1
+I   ..\BASECASE\defcrs.2
+I   ..\BASECASE\defcrs.3
+I   ..\BASECASE\defdis.1
+I   ..\BASECASE\defdis.2
+I   ..\BASECASE\defdis.3
+I   ..\BASECASE\defdis.4
+I   ..\BASECASE\defdis.5
+I   ..\BASECASE\deffrc.1
+I   ..\BASECASE\deffrc.2
+I   ..\BASECASE\deffrc.3
+I   ..\BASECASE\deffrc.4
+I   ..\BASECASE\defglb.1
+I   ..\BASECASE\defgrd.1
+I   ..\BASECASE\defgrd.2
+I   ..\BASECASE\defgrd.3
+I   ..\BASECASE\defgwm.1
+I   ..\BASECASE\deficn.1
+I   ..\BASECASE\deficn.2
+I   ..\BASECASE\deficn.3
+I   ..\BASECASE\deficn.4
+I   ..\BASECASE\deficn.5
+I   ..\BASECASE\defmet.1
+I   ..\BASECASE\defmet.2
+I   ..\BASECASE\defmet.3
+I   ..\BASECASE\defmet.4
+I   ..\BASECASE\defrun.1
+I   ..\BASECASE\defrun.2
+I   ..\BASECASE\defrun.3
+I   ..\BASECASE\defrun.4
+I   ..\BASECASE\defrun.5
+I   ..\BASECASE\defrun.6
+I   ..\BASECASE\defrun.7
+I   ..\BASECASE\defrun.8
+I   ..\BASECASE\defrun.9
+I   ..\BASECASE\defrun.a
+I   ..\BASECASE\defrun.b
+I   ..\BASECASE\defrun.c
+I   ..\BASECASE\defrun.d
+I   ..\BASECASE\defrun.e
+I   ..\BASECASE\defrun.f
+I   ..\BASECASE\defrun.g
+I   ..\BASECASE\defrun.h
+I   ..\BASECASE\defrun.i
+I   ..\BASECASE\defrun.j
+I   ..\BASECASE\defstr.1
+I   ..\BASECASE\defstr.2
+I   ..\BASECASE\defstr.3
+I   ..\BASECASE\defstr.4
+I   ..\BASECASE\defstr.5
+I   ..\BASECASE\defstr.6
+I   ..\BASECASE\defstr.7
+I   ..\BASECASE\defstr.8
+I   ..\BASECASE\defstr.9
+I   ..\BASECASE\defsub.1
+I   ..\BASECASE\deftop.1
+I   ..\BASECASE\deftop.2
+I   ..\BASECASE\deftop.3
+I   ..\BASECASE\deftop.4
+I   ..\BASECASE\deftop.5
+I   ..\BASECASE\deftrn.1
+I   ..\BASECASE\grainp.txt
+IO  ..\BASECASE\bekken.rep
+IO  ..\BASECASE\parsen.ini "Parser INI-file " "Parser INI-file " Y
+OIO ..\BASECASE\sobek.mda
+OIO ..\BASECASE\sobek.mdf
+OIO ..\BASECASE\sobekrst.nda
+OIO ..\BASECASE\sobekrst.ndf
+OIO ..\BASECASE\sobeksim.oda
+OIO ..\BASECASE\sobeksim.odf
+OIO ..\BASECASE\parsen.dmp "Parser Errors/Warning " "Parser Errors/Warning " Y
+OIO ..\BASECASE\parsen.seq
+OIO ..\BASECASE\flowmap.his "f(x) Flow module " "f(x) Waterbewegingsmodule " Y
+OIO ..\BASECASE\flowhis.his "f(t) Flow module " "f(t) Waterbewegingsmodule " Y
+OIO ..\BASECASE\struchis.his "Structures " "Kunstwerken " Y
+OIO ..\BASECASE\qlathis.his "Lateral discharges " "Laterale instroming " Y
+OIO ..\BASECASE\minmax.his "Min/Max Values " "Min/Max Waarden " Y
+OIO ..\BASECASE\kafhmap.his
+OIO ..\BASECASE\kafhhis.his
+OIO ..\BASECASE\kafpmap.his
+OIO ..\BASECASE\kafphis.his
+OIO ..\BASECASE\kafrmap.his
+OIO ..\BASECASE\kafrhis.his
+OIO ..\BASECASE\kaphmap.his
+OIO ..\BASECASE\kaphhis.his
+OIO ..\BASECASE\kappmap.his
+OIO ..\BASECASE\kapphis.his
+OIO ..\BASECASE\saltmap.his "f(x) Salt " "f(x) Zout " Y
+OIO ..\BASECASE\salthis.his "f(t) Salt " "f(t) Zout " Y
+OIO ..\BASECASE\sedtmap.his "f(x) Sediment transport " "f(x) Sediment transport " Y
+OIO ..\BASECASE\sedthis.his "f(t) Sediment transport " "f(t) Sediment transport " Y
+OIO ..\BASECASE\morpmap.his "f(x) Morphology " "f(x) Morfologie " Y
+OIO ..\BASECASE\morphis.his "f(t) Morphology " "f(t) Morfologie " Y
+OIO ..\BASECASE\tawatlev.fix "f(t) TA Waterlevels " "f(t) GA Waterstanden " Y 
+OIO ..\BASECASE\tadisch.fix "f(t) TA Discharges " "f(t) GA Debieten " Y
+OIO ..\BASECASE\tavelo.fix "f(t) TA Velocities " "f(t) GA Snelheden " Y
+OIO ..\BASECASE\taconcen.fix "f(t) TA Concentrations " "f(t) GA Concentraties " Y
+OIO ..\BASECASE\tareport.txt "TA Report " "GA Rapport " Y
+OIO ..\BASECASE\gsedhis.his "f(t) Graded Sediment " "f(t) Gegradeerd Sediment " Y 
+OIO ..\BASECASE\gsedmap.his "f(x) Graded Sediment " "f(x) Gegradeerd Sediment " Y 
+OIO ..\BASECASE\graout.txt "GS Mixtures " "GS Mengsels " Y
+OIO ..\BASECASE\gralog.txt "GS Log File " "GS Log File " Y
+OIO ..\BASECASE\sobekwq.exa
+OIO ..\BASECASE\sobekwq.exf
+OIO ..\BASECASE\sobekwq.len
+OIO ..\BASECASE\sobekwq.poi
+OIO ..\BASECASE\sobekwq.sgf
+OIO ..\BASECASE\sobekwq.vol
+OIO ..\BASECASE\sobekls.log "Simulation Messages " "Simulation Messages " Y
+OIO ..\BASECASE\sobekls.sta "Status File " "Status File " Y
+OIO ..\BASECASE\trainp
+OIO ..\BASECASE\traout
+OIO ..\BASECASE\griout
+OIO ..\BASECASE\dumpres "Last Residues " "Last Residues " Y
+OIO ..\BASECASE\dumpsol "Solution Last Steps " "Solution Last Steps " Y
+OIO ..\BASECASE\dumpstr "Str. Data Last Steps " "Str. Data Last Steps " Y
+OIO ..\BASECASE\froude "Froude Numbers " "Froude Numbers " Y
+OIO ..\BASECASE\residu "Res. without Conv. ""Res. without Conv. " Y
+HYDRCHRT 0
+OI  ..\BASECASE\flowhis.his
+OI  ..\BASECASE\flowmap.his
+OI  ..\BASECASE\struchis.his
+OI  ..\BASECASE\qlathis.his
+OI  ..\BASECASE\minmax.his
+OI  ..\BASECASE\tawatlev.fix
+OI  ..\BASECASE\tadisch.fix
+OI  ..\BASECASE\tavelo.fix
+OI  ..\BASECASE\taconcen.fix
+OI  ..\BASECASE\tareport.txt
+OI  ..\BASECASE\gsedhis.his
+OI  ..\BASECASE\gsedmap.his
+OI  ..\BASECASE\graout.txt
+OI  ..\BASECASE\gralog.txt
+OI  ..\BASECASE\kafhmap.his
+OI  ..\BASECASE\kafhhis.his
+OI  ..\BASECASE\kafpmap.his
+OI  ..\BASECASE\kafphis.his
+OI  ..\BASECASE\kafrmap.his
+OI  ..\BASECASE\kafrhis.his
+OI  ..\BASECASE\kaphmap.his
+OI  ..\BASECASE\kaphhis.his
+OI  ..\BASECASE\kappmap.his
+OI  ..\BASECASE\kapphis.his
+OI  ..\BASECASE\saltmap.his
+OI  ..\BASECASE\salthis.his
+OI  ..\BASECASE\sedtmap.his
+OI  ..\BASECASE\sedthis.his
+OI  ..\BASECASE\morpmap.his
+OI  ..\BASECASE\morphis.his
+OI  ..\BASECASE\parsen.dmp
+OI  ..\BASECASE\sobekls.log
+OI  ..\BASECASE\sobekls.sta
+OI  ..\BASECASE\dumpres
+OI  ..\BASECASE\dumpsol
+OI  ..\BASECASE\dumpstr
+OI  ..\BASECASE\froude
+OI  ..\BASECASE\residu
+PROCEDIT 0
+OIO ..\BASECASE\substate.0
+O   ..\BASECASE\substate.sub
+COEFEDIT 0
+I   ..\BASECASE\substate.sub
+IO  ..\BASECASE\constant.dwq
+IO  ..\BASECASE\defsub.1
+WQUACOMP 0
+I   ..\BASECASE\defcnd.1
+I   ..\BASECASE\defcnd.2
+I   ..\BASECASE\defcnd.3
+I   ..\BASECASE\defcnd.4
+I   ..\BASECASE\defcnd.5
+I   ..\BASECASE\defcnd.6
+I   ..\BASECASE\defcnd.7
+I   ..\BASECASE\defcnd.8
+I   ..\BASECASE\defcnd.9
+I   ..\BASECASE\defcnd.a
+I   ..\BASECASE\defcrs.1
+I   ..\BASECASE\defcrs.2
+I   ..\BASECASE\defcrs.3
+I   ..\BASECASE\defdis.1
+I   ..\BASECASE\defdis.2
+I   ..\BASECASE\defdis.3
+I   ..\BASECASE\defdis.4
+I   ..\BASECASE\defdis.5
+I   ..\BASECASE\deffrc.1
+I   ..\BASECASE\deffrc.2
+I   ..\BASECASE\deffrc.3
+I   ..\BASECASE\deffrc.4
+I   ..\BASECASE\defglb.1
+I   ..\BASECASE\defgrd.1
+I   ..\BASECASE\defgrd.2
+I   ..\BASECASE\defgrd.3
+I   ..\BASECASE\defgwm.1
+I   ..\BASECASE\deficn.1
+I   ..\BASECASE\deficn.2
+I   ..\BASECASE\deficn.3
+I   ..\BASECASE\deficn.4
+I   ..\BASECASE\deficn.5
+I   ..\BASECASE\defmet.1
+I   ..\BASECASE\defmet.2
+I   ..\BASECASE\defmet.3
+I   ..\BASECASE\defmet.4
+I   ..\BASECASE\defrun.1
+I   ..\BASECASE\defrun.2
+I   ..\BASECASE\defrun.3
+I   ..\BASECASE\defrun.4
+I   ..\BASECASE\defrun.5
+I   ..\BASECASE\defrun.6
+I   ..\BASECASE\defrun.7
+I   ..\BASECASE\defrun.8
+I   ..\BASECASE\defrun.9
+I   ..\BASECASE\defrun.a
+I   ..\BASECASE\defrun.b
+I   ..\BASECASE\defrun.c
+I   ..\BASECASE\defrun.d
+I   ..\BASECASE\defrun.e
+I   ..\BASECASE\defrun.f
+I   ..\BASECASE\defrun.g
+I   ..\BASECASE\defrun.h
+I   ..\BASECASE\defrun.i
+I   ..\BASECASE\defrun.j
+I   ..\BASECASE\defstr.1
+I   ..\BASECASE\defstr.2
+I   ..\BASECASE\defstr.3
+I   ..\BASECASE\defstr.4
+I   ..\BASECASE\defstr.5
+I   ..\BASECASE\defstr.6
+I   ..\BASECASE\defstr.7
+I   ..\BASECASE\defstr.8
+I   ..\BASECASE\defstr.9
+I   ..\BASECASE\defsub.1
+I   ..\BASECASE\deftop.1
+I   ..\BASECASE\deftop.2
+I   ..\BASECASE\deftop.3
+I   ..\BASECASE\deftop.4
+I   ..\BASECASE\deftop.5
+I   ..\BASECASE\deftrn.1
+IO  ..\BASECASE\bekken.rep
+IO  ..\BASECASE\parsen.ini "Parser INI-file" "Parser INI-file " Y 
+OIO ..\BASECASE\sobek.mda
+OIO ..\BASECASE\sobek.mdf
+OIO ..\BASECASE\sobekrst.nda
+OIO ..\BASECASE\sobekrst.ndf
+OIO ..\BASECASE\sobeksim.oda
+OIO ..\BASECASE\sobeksim.odf
+OIO ..\BASECASE\parsenwq.dmp "Parser Errors/Warning " "Parser Errors/Warning " Y
+OIO ..\BASECASE\parsenwq.seq
+OIO ..\BASECASE\flowmap.his "f(x) Flow module " "f(x) Waterbewegingsmodule " Y
+OIO ..\BASECASE\flowhis.his "f(t) Flow module " "f(t) Waterbewegingsmodule " Y
+OIO ..\BASECASE\struchis.his "Structures " "Kunstwerken " Y
+OIO ..\BASECASE\qlathis.his "Lateral discharges " "Laterale instroming " Y
+OIO ..\BASECASE\minmax.his "Min/Max Values " "Min/Max Waarden " Y
+OIO ..\BASECASE\kafhmap.his
+OIO ..\BASECASE\kafhhis.his
+OIO ..\BASECASE\kafpmap.his
+OIO ..\BASECASE\kafphis.his
+OIO ..\BASECASE\kafrmap.his
+OIO ..\BASECASE\kafrhis.his
+OIO ..\BASECASE\kaphmap.his
+OIO ..\BASECASE\kaphhis.his
+OIO ..\BASECASE\kappmap.his
+OIO ..\BASECASE\kapphis.his
+OIO ..\BASECASE\saltmap.his "f(x) Salt " "f(x) Zout " Y
+OIO ..\BASECASE\salthis.his "f(t) Salt " "f(t) Zout " Y
+OIO ..\BASECASE\sedtmap.his "f(x) Sediment transport " "f(x) Sediment transport " Y
+OIO ..\BASECASE\sedthis.his "f(t) Sediment transport " "f(t) Sediment transport " Y
+OIO ..\BASECASE\morpmap.his "f(x) Morphology " "f(x) Morfologie " Y
+OIO ..\BASECASE\morphis.his "f(t) Morphology " "f(t) Morfologie " Y
+OI  ..\BASECASE\sobekwq.exa
+OI  ..\BASECASE\sobekwq.exf
+OI  ..\BASECASE\sobekwq.ini
+OI  ..\BASECASE\sobekwq.len
+OO  ..\BASECASE\sobekwq.poi
+OI  ..\BASECASE\sobekwq.sgf
+OI  ..\BASECASE\sobekwq.vol
+OIO ..\BASECASE\sobekwq.his "f(t) WQ module " "f(t) WQ module " Y
+OIO ..\BASECASE\sobekwq.map "f(x) WQ module " "f(x) WQ module " Y
+OIO ..\BASECASE\sobekls.log "Simulation Messages " "Simulation Messages " Y
+OIO ..\BASECASE\sobekls.sta "Status File " "Status File " Y
+OIO ..\BASECASE\trainp
+OIO ..\BASECASE\traout
+OIO ..\BASECASE\griout
+OIO ..\BASECASE\dumpres "Last Residues " "Last Residues " Y
+OIO ..\BASECASE\dumpsol "Solution Last Steps " "Solution Last Steps " Y
+OIO ..\BASECASE\dumpstr "Str. Data Last Steps " "Str. Data Last Steps " Y
+OIO ..\BASECASE\froude "Froude Numbers " "Froude Numbers " Y
+OIO ..\BASECASE\residu "Res. without Conv. ""Res. without Conv. " Y
+WQUACHRT 0
+OI  ..\BASECASE\flowhis.his
+OI  ..\BASECASE\flowmap.his
+OI  ..\BASECASE\struchis.his
+OI  ..\BASECASE\qlathis.his
+OI  ..\BASECASE\minmax.his
+OI  ..\BASECASE\tawatlev.fix
+OI  ..\BASECASE\tadisch.fix
+OI  ..\BASECASE\tavelo.fix
+OI  ..\BASECASE\taconcen.fix
+OI  ..\BASECASE\gsedhis.his
+OI  ..\BASECASE\gsedmap.his
+OI  ..\BASECASE\kafhmap.his
+OI  ..\BASECASE\kafhhis.his
+OI  ..\BASECASE\kafpmap.his
+OI  ..\BASECASE\kafphis.his
+OI  ..\BASECASE\kafrmap.his
+OI  ..\BASECASE\kafrhis.his
+OI  ..\BASECASE\kaphmap.his
+OI  ..\BASECASE\kaphhis.his
+OI  ..\BASECASE\kappmap.his
+OI  ..\BASECASE\kapphis.his
+OI  ..\BASECASE\saltmap.his
+OI  ..\BASECASE\salthis.his
+OI  ..\BASECASE\sedtmap.his
+OI  ..\BASECASE\sedthis.his
+OI  ..\BASECASE\morpmap.his
+OI  ..\BASECASE\morphis.his
+OI  ..\BASECASE\sobekwq.his
+OI  ..\BASECASE\sobekwq.map
+OI  ..\BASECASE\parsenwq.dmp
+OI  ..\BASECASE\sobekls.log
+OI  ..\BASECASE\sobekls.sta
+OI  ..\BASECASE\dumpres
+OI  ..\BASECASE\dumpsol
+OI  ..\BASECASE\dumpstr
+OI  ..\BASECASE\froude
+OI  ..\BASECASE\residu

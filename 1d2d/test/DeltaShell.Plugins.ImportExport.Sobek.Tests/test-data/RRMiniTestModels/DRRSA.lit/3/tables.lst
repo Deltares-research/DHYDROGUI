@@ -1,0 +1,14 @@
+DLF1.0
+[General Information]
+@simulate.rep = Information about the Simulation
+[RR, Flow and RTC Logfiles]
+@sobek_3b.log = Logfile of Rainfall-Runoff Module
+@sobek.log = Logfile of Flow Module
+[Schematisation]
+@3B_GENER.OUT = Overview of Rainfall-Runoff Schematisation
+[Rainfall Runoff Module: Statistical Data]
+@PAVED.OUT = Paved Areas
+@UNPAVED.OUT = Unpaved Areas
+@BOUND3B.OUT = Boundaries
+[Flow Module: Indications]
+@indicat.flw = Indication of Maximum Velocities

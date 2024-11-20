@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define scripts_plugin_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.Toolbox\Scripts\"?>
+  <Directory Id='HydroModelScripts_DeltaShell.Plugins.Toolbox' Name='DeltaShell.Plugins.Toolbox'>
+    <Directory Id='HydroModelScripts' Name='Scripts'>
+
+      <Directory Id="hydro_model_scripts_examples" Name="Examples">
+        <?define hydro_model_scripts_examples_dir="$(var.scripts_plugin_dir)Examples\"?>
+        <Directory Id="hydro_model_scripts_example_DamBreach" Name="SOBEKDamBreach">
+          <Component Id="hydro_model_scripts_examples_files" Guid="5D0C6DCB-5543-4831-9585-DF4945E8ABDF">
+            <?define hydro_model_scripts_example_dambreach_dir="$(var.hydro_model_scripts_examples_dir)SOBEKDamBreach\"?>
+            <File Id="hydro_model_scripts_example_dambreach___init__.py" Source="$(var.hydro_model_scripts_example_dambreach_dir)__init__.py" />
+            <File Id="hydro_model_scripts_example_dambreach_RunDamBreach.py" Source="$(var.hydro_model_scripts_example_dambreach_dir)RunDamBreach.py" />
+            <File Id="hydro_model_scripts_example_dambreach_SOBEKDamBreach.py" Source="$(var.hydro_model_scripts_example_dambreach_dir)SOBEKDamBreach.py" />
+            <?undef hydro_model_scripts_example_dambreach_dir ?>
+          </Component>
+        </Directory>
+        <?undef hydro_model_scripts_examples_dir ?>
+      </Directory>
+
+      <Directory Id="hydro_model_scripts_libraries" Name="Libraries">
+        <?define hydro_model_scripts_libraries_dir="$(var.scripts_plugin_dir)Libraries\"?>
+        <Component Id="hydro_model_scripts_libraries_files" Guid="C81F6A90-4703-4717-8553-4506528C6B3F">
+          <File Id="hydro_model_scripts_libraries_file_SobekFunctions.py" Source="$(var.hydro_model_scripts_libraries_dir)SobekFunctions.py" />
+        </Component>
+        <?undef hydro_model_scripts_libraries_dir ?>
+      </Directory>
+
+    </Directory>
+  </Directory>
+  <?undef scripts_plugin_dir ?>
+</Include>

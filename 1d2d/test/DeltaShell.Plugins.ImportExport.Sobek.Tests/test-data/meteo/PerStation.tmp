@@ -1,0 +1,39 @@
+* Created: 05/19/2022 17:17:30
+* Use the default data set for other input (always 1) 
+1
+*Aantal stations
+2
+*Namen van stations
+'temp1'
+'temp2'
+* Number of events and the period in seconds 
+1 3600 
+* The first record contains the start date and time (yyyy mm dd HH mm ss), * followed by the length of the event (dd HH mm ss). 
+* The last part is the data for each time step.
+2022 05 19 00 00 00 01 00 00 00
+3.000 5.000 
+0.000 0.000 
+0.000 0.000 
+0.000 0.000 
+0.000 0.000 
+8.000 6.000 
+0.000 0.000 
+0.000 0.000 
+0.000 0.000 
+0.000 0.000 
+0.000 9.000 
+0.000 0.000 
+9.000 0.000 
+0.000 0.000 
+0.000 0.000 
+4.000 0.000 
+0.000 0.000 
+0.000 0.000 
+3.000 6.000 
+0.000 0.000 
+2.000 0.000 
+0.000 5.000 
+0.000 0.000 
+3.000 0.000 
+0.000 0.000 
+

@@ -1,0 +1,37 @@
+<Project>
+  <PropertyGroup>
+    <TestDataPath>$(OutputPath)test-data\</TestDataPath>
+    <TestDataProjectPath>$(TestDataPath)\$(ProjectName)</TestDataProjectPath>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Remove="test-data\**"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('Properties\Resources.resx')">
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <Target Name="CopyTestDataItems" AfterTargets="Build">
+    <ItemGroup>
+      <TestDataItems Include="$(ProjectDir)test-data\**\*.*"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(TestDataItems)"
+          DestinationFiles="@(TestDataItems->'$(TestDataProjectPath)\%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"
+          ContinueOnError="true"/>
+  </Target>
+
+  <Target Name="CleanTestDataItems" AfterTargets="Clean" Condition="Exists($(TestDataProjectPath))">
+    <RemoveDir Directories="$(TestDataProjectPath)" ContinueOnError="true"/>
+  </Target>
+</Project>

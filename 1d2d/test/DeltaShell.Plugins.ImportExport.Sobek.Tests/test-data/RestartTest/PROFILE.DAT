@@ -1,0 +1,10 @@
+CRSN id 'Weir1_IntervalControllers' di '1' rl  0 rs  20 crsn
+CRSN id 'Weir2_TimeControllers' di '1' rl  0 rs  2 crsn
+CRSN id 'Weir3_HydraulicControllers' di '1' rl  0 rs  2 crsn
+CRSN id 'Weir4_PIDControllers' di '1' rl  0 rs  2 crsn
+CRSN id 'Weir5_RelativeTimeControllers' di '1' rl  0 rs  2 crsn
+CRSN id '18' di '1' rl  0 rs  2 crsn
+CRSN id 'Weir6_RelValueControllers' di '1' rl  0 rs  2 crsn
+CRSN id 'Weir7_Time_IntV_PID_Cntrl' di '1' rl  0 rs  2 crsn
+CRSN id 'Weir8_RelTime_Hydr_PID_Cntrl' di '1' rl  0 rs  2 crsn
+CRSN id 'Weir9_RelValue_IntV_Hydr_Cntrl' di '1' rl  0 rs  2 crsn

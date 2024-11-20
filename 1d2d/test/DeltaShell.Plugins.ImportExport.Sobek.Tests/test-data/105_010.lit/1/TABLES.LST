@@ -1,0 +1,7 @@
+DLF1.0
+[General Information]
+@simulate.rep = Information about the Simulation
+[RR, Flow and RTC Logfiles]
+@sobek.log = Logfile of Flow Module
+[Flow Module: Indications]
+@indicat.flw = Indication of Maximum Velocities

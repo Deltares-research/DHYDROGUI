@@ -1,0 +1,15 @@
+DLF1.0
+[General Information]
+@simulate.rep = Information about the Simulation
+[RR, Flow and RTC Logfiles]
+@parsen.msg = Logfile of Flow Preprocessor
+@sobek.log = Logfile of Flow Module
+[Water Quality Logfiles]
+@wqint.lst = Listfile Coupling (WQINT)
+@delwaq.lst = Listfile of Pre-Processing
+@delwaq.lsp = System Information on WQ Processes
+@delwaq.mon = WQ Monitoring File
+[Flow Module: Indications]
+@indicat.flw = Indication of Maximum Velocities
+[Water Quality Module]
+@waterbal.prn = Waterbalance for WQ network

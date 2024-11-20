@@ -1,0 +1,20 @@
+** INFO   : @(#)Deltares, SOBEKSIM Version 4.08.035.46968, Aug  3 2016, 15:14:45
+** WARNING: Minimum Length set for reachsegment 16-650Bc1_16-650Bc2       0.100000      1.000000
+** WARNING: Minimum Length set for reachsegment 10-BBB6c1_10-BBB6c2       0.100000      1.000000
+** WARNING: Minimum Length set for reachsegment 10-BBB7c1_10-BBB7c2       0.100000      1.000000
+** WARNING: Main width in grid point 10-BBB7c1 is equal to 0. main width is now set to maximum width in channel
+** WARNING: Main width in grid point 10-BBB6c2 is equal to 0. main width is now set to maximum width in channel
+** WARNING: Main width in grid point 10-BBB5c1 is equal to 0. main width is now set to maximum width in channel
+** WARNING: Main width in grid point 10-615R is equal to 0. main width is now set to maximum width in channel
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id = l_16-650Bc1_16-650Bc2
+** WARNING: Subroutine plchst: Structure Orifice, id = l_16-650Bc1_16-650Bc2 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Weir, id = l_10-BBB6c1_10-BBB6c2 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Weir, id = l_10-BBB7c1_10-BBB7c2 might generate numerical oscillations due to broad crest and small storage area around the structure
+** INFO   : cpu computation =       0.140401
+
+****************************************
+Info Messages :     2
+Warnings      :    11
+****************************************
+
+** Normal End of Sobeksim

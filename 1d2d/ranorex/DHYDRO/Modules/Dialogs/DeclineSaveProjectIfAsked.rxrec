@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="c0e50c3f-984e-4093-b08a-7b0af7da95e7"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="DeclineSaveProjectIfAsked"
+	namespace="DHYDRO.Modules.Dialogs">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<userrecorditem
+		classname="UserCodeLibrary"
+		enabled="True"
+		isexternaltestmethod="True"
+		methodname="ClickIfExists"
+		namespace="DHYDRO.Code"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<arguments
+			id="81dd8fad-426d-4750-a364-b7dc70895a66">
+				<argument
+				argname="repoItemInfo"
+				id="b36c4249-f167-4360-b348-a0cc8a9af2c8">
+					<argvaluetype>
+						Ranorex.Core.Repository.RepoItemInfo, Ranorex.Core, Culture=neutral
+					</argvaluetype>
+					<argvalue>
+					</argvalue>
+					<info
+					id="5c1acbb0-3409-48cd-a982-116c88b2a4bb"
+					sourcename="RepositoryEditor">
+						<path>
+							/form[@title='Closing project ...']/button[@text='&amp;No']
+						</path>
+						<robustPath>
+						</robustPath>
+					</info>
+				</argument>
+				<argument
+				argname="waitPeriodInMilliSeconds"
+				id="c7570b86-fe36-4bea-8eb6-5d874c85522f">
+					<argvaluetype>
+						System.Int32
+					</argvaluetype>
+					<argvalue>
+						2000
+					</argvalue>
+				</argument>
+			</arguments>
+		</userrecorditem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		DeclineSaveProjectIfAsked.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

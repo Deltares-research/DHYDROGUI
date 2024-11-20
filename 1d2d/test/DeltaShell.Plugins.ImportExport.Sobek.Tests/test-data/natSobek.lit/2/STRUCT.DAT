@@ -1,0 +1,160 @@
+STRU id 'C_NDB_2##S_NDB_13' nm 'NDB_Hvl_1' dd 'NDB_0' ca 1 1 0 0 cj '5617158_1' '5617159_1' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17125' nm 'NDB_hvl_2' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17127' nm 'NDB_hvl_3' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17128' nm 'NDB_hvl_4' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17129' nm 'NDB_hvl_5' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17132' nm 'NDB_hvl_6' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17133' nm 'NDB_hvl_7' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17134' nm 'NDB_hvl_8' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17135' nm 'NDB_hvl_9' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17136' nm 'NDB_hvl_10' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17137' nm 'NDB_hvl_11' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17138' nm 'NDB_hvl_12' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17139' nm 'NDB_hvl_13' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17140' nm 'NDB_hvl_14' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17141' nm 'NDB_hvl_15' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17142' nm 'NDB_hvl_16' dd 'NDB_16223' ca 1 1 0 0 cj '5617158_2' '5617159_2' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_2##S_NDB_17143' nm 'NDB_hvl_17' dd 'NDB_0' ca 1 1 0 0 cj '5617158_1' '5617159_1' '-1' '-1'  cm 1 mo 'C_NDB_2' stru
+STRU id 'C_NDB_3##S_NDB_1' nm 'NDB_SVKW_b' dd 'NDB_1' ca 1 1 1 1 cj 'NDB_61_1' '5617171_1' 'NDB_60_1' '5617170_1'  cm 1 mo 'C_NDB_3' stru
+STRU id 'C_NDB_3##S_NDB_2' nm 'NDB_SVKW_a' dd 'NDB_2' ca 1 1 0 0 cj 'NDB_59_1' '5617168_1' '-1' '-1'  cm 1 mo 'C_NDB_3' stru
+STRU id 'C_NDB_3##S_NDB_3' nm 'NDB_SVKW_c' dd 'NDB_5' ca 1 1 0 0 cj 'NDB_18974_1' '5619849_1' '-1' '-1'  cm 1 mo 'C_NDB_3' stru
+STRU id 'C_NDB_4##S_NDB_4' nm 'NDB_SVKH_breed_schuif' dd 'NDB_3' ca 1 1 0 0 cj 'NDB_63_1' '5617162_1' '-1' '-1'  cm 1 mo 'C_NDB_4' stru
+STRU id 'C_NDB_4##S_NDB_5' nm 'NDB_SVKH_breed_top' dd 'NDB_6' ca 1 1 0 0 cj 'NDB_19885_1' '5619847_1' '-1' '-1'  cm 1 mo 'C_NDB_4' stru
+STRU id 'C_NDB_4##S_NDB_6' nm 'NDB_SVKH_smal_schuif' dd 'NDB_4' ca 1 1 0 0 cj 'NDB_65_1' '5617166_1' '-1' '-1'  cm 1 mo 'C_NDB_4' stru
+STRU id 'C_NDB_4##S_NDB_7' nm 'NDB_SVKH_smal_top' dd 'NDB_7' ca 1 1 0 0 cj 'NDB_19887_1' '5617164_1' '-1' '-1'  cm 1 mo 'C_NDB_4' stru
+STRU id 'C_MS_01##S_MS_01' nm 'MS_stuw_Borgh zom' dd 'MS_01' ca 1 1 0 0 cj 'MS_01_1' 'MS_5930_1' '-1' '-1'  cm 1 mo 'C_MS_01' stru
+STRU id 'C_MS_01##S_MS_02' nm 'MS_stuw_Borg Bosv' dd 'MS_02' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_MS_01' stru
+STRU id 'C_MS_01##S_MS_03' nm 'MS_stuw_Borgh win' dd 'MS_03' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_MS_01' stru
+STRU id 'C_MS_02##S_MS_07' nm 'MS_stuw_Linne_zom' dd 'MS_07' ca 1 1 0 0 cj 'MS_02_1' 'MS_5590_1' '-1' '-1'  cm 1 mo 'C_MS_02' stru
+STRU id 'C_MS_02##S_MS_08' nm 'MS_stuw Linnoverl' dd 'MS_08' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_MS_02' stru
+STRU id 'C_MS_02##S_MS_09' nm 'MS_stuw_Linne_win' dd 'MS_09' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_MS_02' stru
+STRU id 'C_MS_04##S_MS_13' nm 'MS_stuw_Belfe_zom' dd 'MS_13' ca 1 1 0 0 cj 'MS_04_1' 'MS_5594_1' '-1' '-1'  cm 1 mo 'C_MS_04' stru
+STRU id 'C_MS_04##S_MS_14' nm 'MS_stuw_Belfe_win' dd 'MS_14' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_MS_04' stru
+STRU id 'C_MS_05##S_MS_15' nm 'MS_stuw_Sambe_zom' dd 'MS_15' ca 1 1 0 0 cj 'MS_05_1' 'MS_5596_1' '-1' '-1'  cm 1 mo 'C_MS_05' stru
+STRU id 'C_MS_05##S_MS_16' nm 'MS_stuw_Sambe_win' dd 'MS_16' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_MS_05' stru
+STRU id 'C_MS_06##S_MS_19' nm 'MS_stuw_Grave_zom' dd 'MS_19' ca 1 1 0 0 cj 'MS_06_1' 'MS_5598_1' '-1' '-1'  cm 1 mo 'C_MS_06' stru
+STRU id 'C_MS_06##S_MS_20' nm 'MS_stuw_Grave_win' dd 'MS_20' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_MS_06' stru
+STRU id 'C_MS_07##S_MS_21' nm 'MS_stuw_Lith__zom' dd 'MS_21' ca 1 1 0 0 cj 'MS_07_1' 'MS_5600_1' '-1' '-1'  cm 1 mo 'C_MS_07' stru
+STRU id 'C_MS_07##S_MS_22' nm 'MS_stuw_Lith__win' dd 'MS_22' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_MS_07' stru
+STRU id 'C_MS_4477##S_MS_10' nm 'MS_stuw_Roerm_zom' dd 'MS_10' ca 1 1 0 0 cj 'MS_03_1' 'MS_5592_1' '-1' '-1'  cm 1 mo 'C_MS_4477' stru
+STRU id 'C_MS_4477##S_MS_11' nm 'MS_stuw_Roerm_win' dd 'MS_11' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_MS_4477' stru
+STRU id 'C_MS_4477##S_MS_4473' nm 'MS_stuw_Roermond_groene_rivier' dd 'MS_4471' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_MS_4477' stru
+STRU id 'C_RT_02##S_RT_2577' nm 'RT_stuw Amero omloop' dd 'RT_2574' ca 1 1 0 0 cj 'RT_2463_1' 'RT_2464_1' '-1' '-1'  cm 1 mo 'C_RT_02' stru
+STRU id 'C_RT_02##S_RT_04' nm 'RT_stuw Amero win' dd 'RT_04' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_RT_02' stru
+STRU id 'C_RT_02##S_RT_03' nm 'RT_stuw Amero zom' dd 'RT_03' ca 1 1 1 0 cj 'RT_02_1' 'RT_2460_1' 'RT_2461_1' '-1'  cm 1 mo 'C_RT_02' stru
+STRU id 'C_RT_03##S_RT_2697' nm 'RT_stuw Hages omloop' dd 'RT_2695' ca 1 1 0 0 cj 'RT_2831_1' 'RT_2829_1' '-1' '-1'  cm 1 mo 'C_RT_03' stru
+STRU id 'C_RT_03##S_RT_06' nm 'RT_stuw Hages win' dd 'RT_06' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_RT_03' stru
+STRU id 'C_RT_03##S_RT_05' nm 'RT_stuw Hages zom' dd 'RT_05' ca 1 1 1 0 cj 'RT_03_1' 'RT_2817_1' 'RT_2819_1' '-1'  cm 1 mo 'C_RT_03' stru
+STRU id 'C_RT_2237##S_RT_01' nm 'RT_stuw Driel zom' dd 'RT_01' ca 1 1 0 0 cj 'RT_1928_1' 'RT_2349_1' '-1' '-1'  cm 1 mo 'C_RT_2237' stru
+STRU id 'C_RT_2237##S_RT_02' nm 'RT_stuw Driel win' dd 'RT_02' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_RT_2237' stru
+STRU id 'C_RT_2237##S_RT_2235' nm 'RT_stuw Driel omloop' dd 'RT_2137' ca 1 1 0 0 cj 'RT_2244_1' 'RT_2239_1' '-1' '-1'  cm 1 mo 'C_RT_2237' stru
+STRU id 'C_YSV_P_15630##S_YSV_P_2870' nm 'YSV_Hardenberg_st' dd 'YSV_P_2848' ca 1 0 0 0 cj 'YSV_P_15883_1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15630' stru
+STRU id 'C_YSV_P_15630##S_YSV_P_15624' nm 'YSV_Hardenberg_vis' dd 'YSV_P_15615' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15630' stru
+STRU id 'C_YSV_P_15630##S_YSV_P_15625' nm 'YSV_Hardenb_uitw_1' dd 'YSV_P_15616' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15630' stru
+STRU id 'C_YSV_P_15630##S_YSV_P_15626' nm 'YSV_Hardenb_uitw_2' dd 'YSV_P_15617' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15630' stru
+STRU id 'C_YSV_P_15630##S_YSV_P_15627' nm 'YSV_Hardenb_uitw_3' dd 'YSV_P_15618' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15630' stru
+STRU id 'C_YSV_P_15641##S_YSV_P_2871' nm 'YSV_Marienberg_st' dd 'YSV_P_2850' ca 1 0 0 0 cj 'YSV_P_15884_1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15641' stru
+STRU id 'C_YSV_P_15641##S_YSV_P_15637' nm 'YSV_Marienberg_vis' dd 'YSV_P_15634' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15641' stru
+STRU id 'C_YSV_P_15641##S_YSV_P_15639' nm 'YSV_Marienb_uitw_1' dd 'YSV_P_15633' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15641' stru
+STRU id 'C_YSV_P_15732##S_YSV_P_2872' nm 'YSV_Junne_st' dd 'YSV_P_2851' ca 1 0 0 0 cj 'YSV_P_15885_1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15732' stru
+STRU id 'C_YSV_P_15732##S_YSV_P_15720' nm 'YSV_Junne_vis' dd 'YSV_P_15704' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15732' stru
+STRU id 'C_YSV_P_15732##S_YSV_P_15721' nm 'YSV_Junne_uitw1' dd 'YSV_P_15705' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15732' stru
+STRU id 'C_YSV_P_15732##S_YSV_P_15722' nm 'YSV_Junne_uitw2' dd 'YSV_P_15708' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15732' stru
+STRU id 'C_YSV_P_15732##S_YSV_P_15723' nm 'YSV_Junne_uitw3' dd 'YSV_P_15709' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15732' stru
+STRU id 'C_YSV_P_15733##S_YSV_P_2874' nm 'YSV_Vilsteren_st' dd 'YSV_P_2852' ca 1 0 0 0 cj 'YSV_P_15886_1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15733' stru
+STRU id 'C_YSV_P_15733##S_YSV_P_15724' nm 'YSV_Vilsteren_vis' dd 'YSV_P_15711' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15733' stru
+STRU id 'C_YSV_P_15733##S_YSV_P_15725' nm 'YSV_Vilster_uitw1' dd 'YSV_P_15712' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15733' stru
+STRU id 'C_YSV_P_15733##S_YSV_P_15726' nm 'YSV_Vilster_uitw2' dd 'YSV_P_15713' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15733' stru
+STRU id 'C_YSV_P_15733##S_YSV_P_15727' nm 'YSV_Vilster_uitw3' dd 'YSV_P_15714' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15733' stru
+STRU id 'C_YSV_P_15734##S_YSV_P_2875' nm 'YSV_Vechterweerd_st' dd 'YSV_P_2853' ca 1 0 0 0 cj 'YSV_P_15887_1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15734' stru
+STRU id 'C_YSV_P_15734##S_YSV_P_15728' nm 'YSV_Vechterweerd_vis' dd 'YSV_P_15716' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15734' stru
+STRU id 'C_YSV_P_15734##S_YSV_P_15729' nm 'YSV_Vechterw_uitw1' dd 'YSV_P_15717' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15734' stru
+STRU id 'C_YSV_P_15734##S_YSV_P_15730' nm 'YSV_Vechterw_uitw2' dd 'YSV_P_15718' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15734' stru
+STRU id 'C_YSV_P_15809##S_YSV_P_2869' nm 'YSV_Haandrik_st' dd 'YSV_P_2833' ca 1 0 0 0 cj 'YSV_P_15882_1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15809' stru
+STRU id 'C_YSV_P_15809##S_YSV_P_15623' nm 'YSV_Haandrik_vis' dd 'YSV_P_15612' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_YSV_P_15809' stru
+STRU id 'C_RND_2897##S_RND_2895' nm 'RND_Knardyk-schf' dd 'RND_2547' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_RND_2897' stru
+STRU id 'C_RND_2897##S_RND_2249' nm 'RND_Knardyk-W-op' dd 'RND_2245' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_RND_2897' stru
+STRU id 'C_RND_3921##S_RND_3918' nm 'RND_Rogbot-spui' dd 'RND_3793' ca 1 1 1 0 cj 'RND_3797_1' '5631214_1' 'RND_3796_1' '-1'  cm 1 mo 'C_RND_3921' stru
+STRU id 'C_RND_3921##S_RND_2243' nm 'RND_Rogbot-schut' dd 'RND_1959' ca 1 1 0 0 cj 'RND_2251_1' 'RND_4058_1' '-1' '-1'  cm 1 mo 'C_RND_3921' stru
+STRU id 'C_5668085##S_5668078' nm 'ARK_IJmu-Pmp1' dd '5668071' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_5668085' stru
+STRU id 'C_5668085##S_5668079' nm 'ARK_IJmu-Pmp2' dd '5668075' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_5668085' stru
+STRU id 'C_5668085##S_5668080' nm 'ARK_IJmu-Pmp3' dd '5668076' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_5668085' stru
+STRU id 'C_5668086##S_5668082' nm 'ARK_Zburg-Pmp1' dd '5668071' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_5668086' stru
+STRU id 'C_5668086##S_5668083' nm 'ARK_Zburg-Pmp2' dd '5668072' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_5668086' stru
+STRU id 'S_NDB_24' nm 'NDB_SVKHY' dd 'NDB_24' ca 1 1 0 0 cj 'NDB_68_1' 'NDB_69_1' '-1' '-1'  cm 0 stru
+STRU id 'S_MS_04' nm 'MS_sluis___Limmel' dd 'MS_04' ca 1 0 0 0 cj 'MS_08_1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MS_05' nm 'MS_sluis_____Born' dd 'MS_05' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MS_06' nm 'MS_sluis_Maasbrac' dd 'MS_06' ca 1 0 0 0 cj 'MS_09_1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MS_12' nm 'MS_sluis_____Heel' dd 'MS_12' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MS_17' nm 'MS_sluis___Heumen' dd 'MS_17' ca 1 0 0 0 cj 'MS_10_1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MS_18' nm 'MS_sluis_Kraaijpl' dd 'MS_18' ca 1 0 0 0 cj 'MS_11_1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MS_5172' nm 'MS_Kering_afgedamde_Maas' dd 'MS_4919' ca 1 0 0 0 cj 'MS_4921_1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_5' nm 'ARK_HAV3' dd 'ARK_3' ca 1 1 0 0 cj 'ARK_10_1' 'ARK_11_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_6' nm 'ARK_HAV4' dd 'ARK_3' ca 1 1 0 0 cj 'ARK_12_1' 'ARK_13_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_7' nm 'ARK_IJfront' dd 'ARK_4' ca 1 1 0 0 cj 'ARK_17_1' 'ARK_16_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_8' nm 'ARK_IJmu_sl1' dd 'ARK_0' ca 1 1 1 0 cj 'ARK_38_1' 'ARK_3_1' 'ARK_3_1' '-1'  cm 0 stru
+STRU id 'S_ARK_10' nm 'ARK_HAV1' dd 'ARK_3' ca 1 1 0 0 cj 'ARK_6_1' 'ARK_7_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_11' nm 'ARK_HAV2' dd 'ARK_3' ca 1 1 0 0 cj 'ARK_8_1' 'ARK_9_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_12' nm 'ARK_Amstelfront' dd 'ARK_8' ca 1 1 0 0 cj 'ARK_36_1' 'ARK_37_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_15' nm 'ARK_HAV5' dd 'ARK_11' ca 1 1 0 0 cj 'ARK_28_1' 'ARK_29_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_19' nm 'ARK_Irenesluis' dd 'ARK_12' ca 1 1 0 0 cj 'ARK_26_1' 'ARK_27_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_21' nm 'ARK_Muidersluis' dd 'ARK_2' ca 1 1 0 0 cj 'ARK_18_1' 'ARK_19_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_22' nm 'ARK_IJmu_sl2' dd 'ARK_0' ca 1 1 0 0 cj 'ARK_39_1' 'ARK_40_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_3171' nm 'ARK_diemersluis-str' dd 'ARK_9' ca 1 1 0 0 cj 'ARK_23_1' 'ARK_22_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_5157' nm 'ARK_Beatrixsluis' dd 'ARK_12' ca 1 1 0 0 cj 'ARK_24_1' 'ARK_25_1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_7146' nm 'ARK_Pr.Marijkessluis' dd 'ARK_7143' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_7147' nm 'ARK_Bernhardsluis' dd 'ARK_7144' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_ARK_7630' nm 'ARK_Oranjesluis' dd 'ARK_1' ca 1 1 1 1 cj 'ARK_14_1' 'ARK_15_1' 'ARK_33_1' 'ARK_34_1'  cm 0 stru
+STRU id 'S_ARK_7636' nm 'ARK_Ipenslotersluis' dd 'ARK_10' ca 1 1 0 0 cj 'ARK_21_1' 'ARK_20_1' '-1' '-1'  cm 0 stru
+STRU id 'S_MAK_1714' nm 'MAK_Krabgat-sluis' dd 'MAK_1700' ca 1 1 0 0 cj 'MAK_1722_1' '5582713_1' '-1' '-1'  cm 0 stru
+STRU id 'S_MAK_1718' nm 'MAK_Strekdam-wr' dd 'MAK_1705' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MAK_1719' nm 'MAK_Hollandbrug-wr' dd 'MAK_1708' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MAK_1720' nm 'MAK_Stichtsbrug-wr' dd 'MAK_1709' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MAK_2999' nm 'MAK_Gouwz-gat-wr' dd 'MAK_1704' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MAK_3364' nm 'MAK_Broekhaven-w' dd 'MAK_3361' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_MAK_5193' nm 'MAK_Houtrb-sluis' dd 'MAK_1702' ca 1 1 0 0 cj 'MAK_1723_1' '5582711_1' '-1' '-1'  cm 0 stru
+STRU id 'S_MAK_5195' nm 'MAK_Lelystad-hvn' dd 'MAK_3360' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_20323' nm 'YSV_Zwolle_br' dd 'YSV_P_20318' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_20324' nm 'YSV_Dalfsen_br' dd 'YSV_P_20319' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_20325' nm 'YSV_Ommen_br' dd 'YSV_P_20320' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_20326' nm 'YSV_Haandrik_spbr' dd 'YSV_P_20321' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_146430' nm 'YSV_SW_B50_str' dd 'YSV_P_146422' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_146432' nm 'YSV_SW_B50A_str' dd 'YSV_P_146423' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_146433' nm 'YSV_SW_B51_str' dd 'YSV_P_146424' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_147162' nm 'YSV_SW_B18_str' dd 'YSV_P_146435' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_147163' nm 'YSV_SW_B19_str' dd 'YSV_P_146436' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_147444' nm 'YSV_SGM_B01_str' dd 'YSV_P_146152' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_5540635' nm 'YSV_Sluis_DOV' dd 'YSV_P_5540632' ca 1 1 0 0 cj 'YSV_P_5540638_1' 'YSV_P_5570498_1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_P_5540636' nm 'YSV_Sluis_KWZ' dd 'YSV_P_5540633' ca 1 1 0 0 cj 'YSV_P_5540639_1' 'YSV_P_5570500_1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5631997' nm 'YSV_wr-Kpeil-NW' dd 'YSV_P_120144' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5631998' nm 'YSV_wr-Kpeil-Ras' dd 'YSV_P_120144' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5632000' nm 'YSV_wr-Kpeil-ZW-195' dd 'YSV_P_120151' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5632001' nm 'YSV_wr-Kpeil-W-200' dd 'YSV_P_120145' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5632002' nm 'YSV_wr-Kpeil-NNW-300' dd 'YSV_P_120148' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5632003' nm 'YSV_wr-Kpeil-O' dd 'YSV_P_120150' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5632004' nm 'YSV_wr-Kpeil-NO' dd 'YSV_P_120149' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5632005' nm 'YSV_wr-Kpeil-N-440' dd 'YSV_P_120148' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5633613' nm 'YSV_wr-Kpeil-NNW-0600' dd 'YSV_P_120147' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5633614' nm 'YSV_wr-Kpeil-N-1000' dd 'YSV_P_120147' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634088' nm 'YSV_wr-Mandje-Z' dd 'YSV_P_120165' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634089' nm 'YSV_wr-Mandje-NO' dd 'YSV_P_120162' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634090' nm 'YSV_wr-Mandje-NO-1400' dd 'YSV_P_120163' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634091' nm 'YSV_wr-Mandje-W-0700' dd 'YSV_P_120163' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634092' nm 'YSV_wr-Piper-Z-0020' dd 'YSV_P_5584262' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634093' nm 'YSV_wr-Piper-Z-3240' dd 'YSV_P_5584262' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634094' nm 'YSV_wr-Pieper-M-0020' dd 'YSV_P_120166' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634095' nm 'YSV_wr-Pieper-M-2340' dd 'YSV_P_120167' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634096' nm 'YSV_wr-Pieper-N-0020' dd 'YSV_P_120166' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634097' nm 'YSV_wr-Pieper-N-1400' dd 'YSV_P_5584261' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634099' nm 'YSV_wr-ZZ-pld-0020' dd 'YSV_P_120168' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634100' nm 'YSV_wr-ZZ-pld-2520' dd 'YSV_P_120169' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5634101' nm 'YSV_wr-ZZ-pl-O-2420' dd 'YSV_P_120169' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5639437' nm 'YSV_Ramsdiep-balg' dd 'YSV_P_121873' ca 1 1 0 0 cj 'YSV_P_5520282_1' 'YSV_P_5520280_1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5639522' nm 'YSV_Kadoelen-wr' dd 'YSV_5639520' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5640401' nm 'YSV_Ramsgeul-balg' dd 'YSV_P_121870' ca 1 1 0 0 cj 'YSV_P_5520274_1' 'YSV_P_5520278_1' '-1' '-1'  cm 0 stru
+STRU id 'S_YSV_5643721' nm 'YSV_Zwolle-N-str' dd 'YSV_5643719' ca 1 1 0 0 cj 'YSV_5644445_1' 'YSV_5644446_1' '-1' '-1'  cm 0 stru
+STRU id 'S_RND_2242' nm 'RND_Nijkerksluis' dd 'RND_1956' ca 1 1 0 0 cj 'RND_2252_1' 'RND_4197_1' '-1' '-1'  cm 0 stru
+STRU id 'S_RND_2248' nm 'RND_Kanrdyk-O-op' dd 'RND_2246' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_RND_2657' nm 'RND_Elburgbrug' dd 'RND_2655' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_5592818' nm 'Ysv_wr-Mandje-W-0100' dd 'YSV_P_120162' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_5595843' nm 'YSV_wr-ZZ-zud-20' dd 'YSV_P_120168' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru

@@ -1,0 +1,7 @@
+ Results 3B calculation
+
+ Rainfall file                      : default.bui                                                                                                                     
+ Evaporation file                   : default.evp                                                                                                                     
+ Crop factor file                   : cropfact                                                                                                                        
+ Storage coefficient file           : bergcoef                                                                                                                        
+ Timestep size (s)                  :     3600

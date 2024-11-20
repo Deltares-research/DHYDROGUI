@@ -1,0 +1,7 @@
+BBB2.2
+NODE id 'dkfjsdfefsdfdf' nm 'dkfjsdfefsdfdf' ri '1' mt 1 '6' nt 34 ObID 'SBK_SBK-3B-REACH' px -15116.8477855634 py 528255.898837998  node
+NODE id 'paved' nm 'paved' ri '-1' mt 1 '1' nt 43 ObID '3B_PAVED' px -25630.7121460548 py 555371.059660297  node
+NODE id 'wwtp' nm 'wwtp' ri '-1' mt 1 '14' nt 56 ObID '3B_WWTP' px -1434.48156260369 py 566752.100849257  node
+NODE id 'paved2' nm 'paved2' ri '-1' mt 1 '1' nt 43 ObID '3B_PAVED' px 21338.441339468 py 545412.648619958  node
+NODE id 'wwtp_test' nm 'wwtp test' ri '-1' mt 1 '14' nt 56 ObID '3B_WWTP' px 19915.1336580885 py 561061.580254777  node
+NODE id 'unpaved' nm 'unpaved' ri '-1' mt 1 '2' nt 44 ObID '3B_UNPAVED' px -41287.0966412291 py 548969.223991507  node

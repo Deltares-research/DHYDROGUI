@@ -1,0 +1,19 @@
+*
+*
+*
+*
+[DredgeFileInformation]
+   FileCreatedBy    = WL | Delft Hydraulics, Delft3D-QUICKIN Version 4.11.00; Feb 2004
+   FileCreationDate = 15:32:06, 05-03-2004
+   FileVersion      = 01.02
+   PolygonFile      = dad.pol
+[Dredge]
+Name             = DR01
+DredgeDepth      = 10.0
+Dump             = DU01
+Percentage       =  90.0
+Dump             = DU03
+Percentage       =  10.0
+[Sandmining]
+Name             = SM01
+Volume           = 2500000.0

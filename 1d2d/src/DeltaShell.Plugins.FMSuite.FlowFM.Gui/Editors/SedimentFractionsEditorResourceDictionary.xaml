@@ -1,0 +1,190 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors"
+                    xmlns:valueConverters="clr-namespace:DelftTools.Controls.Wpf.ValueConverters;assembly=DelftTools.Controls.Wpf">
+    <local:SedimentPropertyDataTemplateSelector x:Key="DataTemplateSelector" />
+    <local:SedimentPropertyValidationRule x:Key="SedimentPropertyValidationRule" />
+    <valueConverters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    <!--<Style TargetType="TextBox" x:Key="CustomTextBoxStyle">
+        <Setter Property="local:InputBindingsManager.UpdatePropertySourceWhenEnterPressed" Value="TextBox.Text"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>-->
+    <Style x:Key="ExampleErrorTemplate"
+           TargetType="Control">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="true">
+                <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style BasedOn="{StaticResource ExampleErrorTemplate}"
+           TargetType="TextBox" />
+    <DataTemplate x:Key="SedimentPropertyDefaultTemplate">
+        <Grid Margin="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*"
+                                  MinWidth="100" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0"
+                   VerticalAlignment="Center"
+                   Content="{Binding Path=Description}" />
+            <TextBox Grid.Column="1"
+                     VerticalAlignment="Center"
+                     Text="{Binding Path=Value}" />
+            <Label Grid.Column="2"
+                   VerticalAlignment="Center"
+                   Content="{Binding Path=Unit}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="SpatiallyVaryingSedimentPropertyDoubleTemplate">
+        <Grid Margin="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*"
+                                  MinWidth="100" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0"
+                   VerticalAlignment="Center"
+                   Content="{Binding Path=Description}" />
+            <TextBox Grid.Column="1"
+                     VerticalAlignment="Center"
+                     local:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"
+                     IsEnabled="{Binding Path=IsSpatiallyVarying, Converter={StaticResource InverseBooleanConverter}}">
+                <TextBox.Resources>
+                    <local:BindingProxy x:Key="proxy"
+                                        Data="{Binding}" />
+                </TextBox.Resources>
+                <TextBox.Text>
+                    <Binding Path="Value"
+                             UpdateSourceTrigger="LostFocus">
+                        <Binding.ValidationRules>
+                            <local:SedimentPropertyValidationRule>
+                                <local:SedimentPropertyValidationRule.MinIsOpened>
+                                    <local:ComparisonBoolValue Value="{Binding Data.MinIsOpened, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MinIsOpened>
+                                <local:SedimentPropertyValidationRule.MaxIsOpened>
+                                    <local:ComparisonBoolValue Value="{Binding Data.MaxIsOpened, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MaxIsOpened>
+                                <local:SedimentPropertyValidationRule.MinValue>
+                                    <local:ComparisonValue Value="{Binding Data.MinValue, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MinValue>
+                                <local:SedimentPropertyValidationRule.MaxValue>
+                                    <local:ComparisonValue Value="{Binding Data.MaxValue, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MaxValue>
+                            </local:SedimentPropertyValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Label Grid.Column="2"
+                   VerticalAlignment="Center"
+                   Content="{Binding Path=Unit}" />
+            <CheckBox Grid.Column="3"
+                      Margin="5"
+                      VerticalAlignment="Center"
+                      Content="Spatially varying"
+                      IsChecked="{Binding Path=IsSpatiallyVarying}"
+                      IsEnabled="{Binding Path=IsEnabled}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="SedimentPropertyDoubleTemplate">
+        <Grid Margin="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*"
+                                  MinWidth="100" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0"
+                   VerticalAlignment="Center"
+                   Content="{Binding Path=Description}" />
+            <TextBox Grid.Column="1"
+                     VerticalAlignment="Center"
+                     local:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text">
+                <TextBox.Resources>
+                    <local:BindingProxy x:Key="proxy"
+                                        Data="{Binding}" />
+                </TextBox.Resources>
+                <TextBox.Text>
+                    <Binding Path="Value"
+                             UpdateSourceTrigger="LostFocus">
+                        <Binding.ValidationRules>
+                            <local:SedimentPropertyValidationRule>
+                                <local:SedimentPropertyValidationRule.MinIsOpened>
+                                    <local:ComparisonBoolValue Value="{Binding Data.MinIsOpened, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MinIsOpened>
+                                <local:SedimentPropertyValidationRule.MaxIsOpened>
+                                    <local:ComparisonBoolValue Value="{Binding Data.MaxIsOpened, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MaxIsOpened>
+                                <local:SedimentPropertyValidationRule.MinValue>
+                                    <local:ComparisonValue Value="{Binding Data.MinValue, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MinValue>
+                                <local:SedimentPropertyValidationRule.MaxValue>
+                                    <local:ComparisonValue Value="{Binding Data.MaxValue, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MaxValue>
+                            </local:SedimentPropertyValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Label Grid.Column="2"
+                   VerticalAlignment="Center"
+                   Content="{Binding Path=Unit}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="SedimentPropertyIntegerTemplate">
+        <Grid Margin="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*"
+                                  MinWidth="100" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0"
+                   VerticalAlignment="Center"
+                   Content="{Binding Path=Description}" />
+            <TextBox Grid.Column="1"
+                     VerticalAlignment="Center"
+                     local:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text">
+                <TextBox.Resources>
+                    <local:BindingProxy x:Key="proxy"
+                                        Data="{Binding}" />
+                </TextBox.Resources>
+                <TextBox.Text>
+                    <Binding Path="Value"
+                             UpdateSourceTrigger="LostFocus">
+                        <Binding.ValidationRules>
+                            <local:SedimentPropertyValidationRule>
+                                <local:SedimentPropertyValidationRule.MinIsOpened>
+                                    <local:ComparisonBoolValue Value="{Binding Data.MinIsOpened, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MinIsOpened>
+                                <local:SedimentPropertyValidationRule.MaxIsOpened>
+                                    <local:ComparisonBoolValue Value="{Binding Data.MaxIsOpened, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MaxIsOpened>
+                                <local:SedimentPropertyValidationRule.MinValue>
+                                    <local:ComparisonValue Value="{Binding Data.MinValue, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MinValue>
+                                <local:SedimentPropertyValidationRule.MaxValue>
+                                    <local:ComparisonValue Value="{Binding Data.MaxValue, Source={StaticResource proxy}}" />
+                                </local:SedimentPropertyValidationRule.MaxValue>
+                            </local:SedimentPropertyValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Label Grid.Column="2"
+                   VerticalAlignment="Center"
+                   Content="{Binding Path=Unit}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="SedimentPropertyBoolTemplate">
+        <CheckBox Margin="5"
+                  VerticalAlignment="Center"
+                  Content="{Binding Path=Description}"
+                  IsChecked="{Binding Path=Value}" />
+    </DataTemplate>
+</ResourceDictionary>

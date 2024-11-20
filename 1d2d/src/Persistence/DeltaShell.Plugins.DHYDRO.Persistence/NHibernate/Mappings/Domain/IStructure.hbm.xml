@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <subclass name="DelftTools.Hydro.IStructure1D, DelftTools.Hydro" extends="GeoAPI.Extensions.Networks.IBranchFeature, GeoAPI.Extensions" batch-size="500">
+    <many-to-one name="ParentStructure" cascade="save-update" class="DelftTools.Hydro.Structures.ICompositeBranchStructure, DelftTools.Hydro" column="parent_structure_id"   />
+    <property name="OffsetY"/>
+    <property name="LongName"/>
+  </subclass>
+</hibernate-mapping>

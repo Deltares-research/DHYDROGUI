@@ -1,0 +1,35 @@
+[General]
+fileVersion           = 2.00                
+fileType              = extForce            
+
+
+[Boundary]
+quantity=waterlevelbnd
+locationfile=f1/Test_Boundary01.pli
+forcingfile=f2/Test_WaterLevel.bc
+
+[Boundary]
+quantity=1d2dbnd
+locationfile=f3/Test_Embankment_2D_01_bnk.pliz
+forcingfile=REALTIME
+isOnOutletCompartment=true
+
+[Boundary]
+quantity=waterlevelbnd
+nodeId=Node001
+forcingfile=f4/Test_FlowFM_boundaryconditions1d.bc
+
+[Lateral]
+id=LateralSource_1D_1
+name=LateralSource_1D_1
+branchId=Channel_1D_1
+chainage=7.3006222e+002
+discharge=f5/Test_FlowFM_lateral_sources.bc
+
+[meteo]
+quantity=rainfall_rate
+forcingfile=f6/Test_FlowFM_meteo.bc
+forcingFileType=bcAscii
+targetMaskFile=f7/Test_FlowFM_roofs.pol
+targetMaskInvert=true
+interpolationMethod=nearestNb

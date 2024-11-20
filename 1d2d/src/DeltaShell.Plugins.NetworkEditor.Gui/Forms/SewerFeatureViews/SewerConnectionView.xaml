@@ -1,0 +1,242 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.SewerConnectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:crossSectionView="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
+             xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sewer="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             x:Name="UserControl"
+             d:DesignHeight="800"
+             d:DesignWidth="1000"
+             d:DataContext="{d:DesignInstance {x:Type local:SewerConnectionViewModel}, IsDesignTimeCreatable=True}"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider x:Key="SewerConnectionWaterTypes"
+                                MethodName="GetValues"
+                                ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="hydro:SewerConnectionWaterType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider x:Key="MaterialTypes"
+                                MethodName="GetValues"
+                                ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="sewer:SewerProfileMapping+SewerProfileMaterial" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="0,3,3,3" />
+            </Style>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Margin" Value="0,3,3,3" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}">
+                <Setter Property="Margin" Value="0,3,3,3" />
+            </Style>
+            <Style x:Key="IndentationMargin"
+                   TargetType="Panel">
+                <Setter Property="Margin" Value="5,3,0,7" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid AutomationProperties.AutomationId="SewerConnectionView">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <!--  General info  -->
+            <Expander Grid.Row="0"
+                      Grid.Column="0"
+                      IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock FontWeight="Bold"
+                               Text="General info" />
+                </Expander.Header>
+                <Grid Margin="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="130" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Row 0  -->
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Content="Name" />
+                    <TextBox Grid.Row="0"
+                             Grid.Column="1"
+                             Text="{Binding SewerConnection.Name}" />
+
+                    <!--  Row 1  -->
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           Content="Type" />
+                    <ComboBox Grid.Row="1"
+                              Grid.Column="1"
+                              ItemsSource="{Binding Source={StaticResource SewerConnectionWaterTypes}}"
+                              SelectedItem="{Binding SewerConnection.WaterType}" />
+
+                    <!--  Row 2  -->
+                    <Label Grid.Row="2"
+                           Grid.Column="0"
+                           Content="Length [m]" />
+                    <TextBox Grid.Row="2"
+                             Grid.Column="1"
+                             Text="{Binding SewerConnection.Length, StringFormat={}{0:#.##}}" />
+
+                    <!--  Row 3  -->
+                    <Label Grid.Row="3"
+                           Grid.Column="0"
+                           Content="Slope [deg]" />
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="1"
+                               Text="{Binding PipeSlope, StringFormat={}{0:G3}}" />
+
+                    <!--  Row 4  -->
+                    <Label Grid.Row="4"
+                           Grid.Column="0"
+                           Content="Material" />
+                    <ComboBox Grid.Row="4"
+                              Grid.Column="1"
+                              ItemsSource="{Binding Source={StaticResource MaterialTypes}}"
+                              SelectedItem="{Binding SewerConnection.Material}" />
+
+                    <!--  Row 5  -->
+                    <Label Grid.Row="5"
+                           Grid.Column="0"
+                           Content="Roughness" />
+                    <TextBlock Grid.Row="5"
+                               Grid.Column="1"
+                               Text="{Binding PipeRoughnessValue, Mode=OneWay}" />
+
+                    <!--  Row 6  -->
+                    <Label Grid.Row="6"
+                           Grid.Column="0"
+                           Content="Roughness type" />
+                    <TextBlock Grid.Row="6"
+                               Grid.Column="1"
+                               Text="{Binding PipeRoughnessType, Mode=OneWay}" />
+
+                    <!--  Row 7  -->
+                    <!--<Label Grid.Column="0" Grid.Row="7" Content="Flow direction"/>
+                    <ComboBox Grid.Column="1" Grid.Row="7"/>-->
+                </Grid>
+            </Expander>
+
+            <!--  Connections and levels  -->
+            <Expander Grid.Row="1"
+                      Grid.Column="0"
+                      IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock FontWeight="Bold"
+                               Text="Connections and levels" />
+                </Expander.Header>
+                <StackPanel>
+                    <Grid Style="{StaticResource IndentationMargin}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="130" />
+                            <ColumnDefinition Width="130" />
+                            <ColumnDefinition Width="130" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Row 0  -->
+                        <Label Grid.Row="0"
+                               Grid.Column="1"
+                               Content="Begin node" />
+                        <Label Grid.Row="0"
+                               Grid.Column="2"
+                               Content="End node" />
+
+                        <!--  Row 1  -->
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Manhole ID" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="1"
+                                   Text="{Binding SourceNodeName}" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="2"
+                                   Text="{Binding TargetNodeName}" />
+
+                        <!--  Row 2  -->
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Compartment ID" />
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="1"
+                                   Text="{Binding SourceCompartmentName}" />
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="2"
+                                   Text="{Binding TargetCompartmentName}" />
+
+                        <!--  Row 3  -->
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="Invert level [m]" />
+                        <TextBox Grid.Row="3"
+                                 Grid.Column="1"
+                                 Text="{Binding SewerConnection.LevelSource}" />
+                        <TextBox Grid.Row="3"
+                                 Grid.Column="2"
+                                 Text="{Binding SewerConnection.LevelTarget}" />
+                    </Grid>
+
+                    <local:SewerConnectionVisualization Width="400"
+                                                        Height="200"
+                                                        Margin="0,10,0,0"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Bottom"
+                                                        ClipToBounds="True"
+                                                        SewerConnection="{Binding ElementName=UserControl, Path=DataContext.SewerConnection}" />
+                </StackPanel>
+
+            </Expander>
+
+
+            <!--  Cross section  -->
+            <Expander Grid.Row="0"
+                      Grid.RowSpan="3"
+                      Grid.Column="1"
+                      IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock FontWeight="Bold"
+                               Text="Cross section" />
+                </Expander.Header>
+                <WindowsFormsHost local:WindowsFormsHostCrossSectionView.SewerConnection="{Binding SewerConnection}">
+                    <WindowsFormsHost.Child>
+                        <crossSectionView:CrossSectionPipeView x:Name="CrossSectionPipeView" />
+                    </WindowsFormsHost.Child>
+                </WindowsFormsHost>
+            </Expander>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

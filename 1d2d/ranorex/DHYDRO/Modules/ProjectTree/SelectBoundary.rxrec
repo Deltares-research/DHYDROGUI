@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="a02a983e-6a9c-4c79-91ce-3aab358535b6"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="SelectBoundary"
+	namespace="DHYDRO.Modules.ProjectTree">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<invokeactionrecorditem
+		action="Focus"
+		enabled="True"
+		optional="False"
+		searchpropertyid="5b9e4d84-1906-4de3-b21e-0566c846ec93">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="4159f057-49b8-4273-bb34-60029ba3a178"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem/treeitem[@accessiblename='Boundary Conditions']/treeitem[@accessiblename=$boundaryName]
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+			<arguments
+			id="b9c2e3d0-6d6e-4981-94af-5178eb0b87fa">
+			</arguments>
+		</invokeactionrecorditem>
+		<mouseitem
+		action="DoubleClick"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="-.05;.5"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="a9670767-ba9a-4766-bd00-4d877cd7536d"
+		sx="139"
+		sy="528"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="4159f057-49b8-4273-bb34-60029ba3a178"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem/treeitem[@accessiblename='Boundary Conditions']/treeitem[@accessiblename=$boundaryName]
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		SelectBoundary.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

@@ -1,0 +1,161 @@
+ Residues in case of continuing with no convergence
+ Each record contains:
+  - Time step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  - Waterlevel convergence error
+    (if waterlevel criterion specified)
+  - Waterlevel convergence error factor
+    (if waterlevel criterion specified)
+  - Discharge convergence error
+    (if any discharge criterion specified)
+  - Discharge convergence error factor
+    (if any discharge criterion specified)
+  
+ Time step =    11
+    Branch001                      X=  15000.00 DH=  -0.07380
+    Branch001                      X=  15500.00 DQ=    15.025
+    Waterlevel convergence error=   0.06380
+    Waterlevel convergence error factor=     7.380
+    Discharge convergence error=  14.92539
+    Discharge convergence error factor=   150.254
+ Time step =    12
+    Branch001                      X=  13000.00 DH=  -0.08651
+    Branch001                      X=  10500.00 DQ=   -30.381
+    Waterlevel convergence error=   0.07651
+    Waterlevel convergence error factor=     8.651
+    Discharge convergence error=  30.28086
+    Discharge convergence error factor=   303.809
+ Time step =    13
+    Branch001                      X=   9000.00 DH=  -0.05456
+    Branch001                      X=   7000.00 DQ=    37.291
+    Waterlevel convergence error=   0.04456
+    Waterlevel convergence error factor=     5.456
+    Discharge convergence error=  37.19102
+    Discharge convergence error factor=   372.910
+ Time step =    59
+    Branch001                      X=  14500.00 DH=   0.04647
+    Branch001                      X=  13500.00 DQ=    28.980
+    Waterlevel convergence error=   0.03647
+    Waterlevel convergence error factor=     4.647
+    Discharge convergence error=  28.88047
+    Discharge convergence error factor=   289.805
+ Time step =    60
+    Branch001                      X=  11000.00 DH=   0.05898
+    Branch001                      X=  12500.00 DQ=    11.518
+    Waterlevel convergence error=   0.04898
+    Waterlevel convergence error factor=     5.898
+    Discharge convergence error=  11.41758
+    Discharge convergence error factor=   115.176
+ Time step =    61
+    Branch001                      X=   9500.00 DH=   0.27944
+    Branch001                      X=  10500.00 DQ=   -47.727
+    Waterlevel convergence error=   0.26944
+    Waterlevel convergence error factor=    27.944
+    Discharge convergence error=  47.62656
+    Discharge convergence error factor=   477.266
+ Time step =   107
+    Branch001                      X=  14500.00 DH=   0.04648
+    Branch001                      X=  13500.00 DQ=    29.004
+    Waterlevel convergence error=   0.03648
+    Waterlevel convergence error factor=     4.648
+    Discharge convergence error=  28.90391
+    Discharge convergence error factor=   290.039
+ Time step =   108
+    Branch001                      X=  11000.00 DH=   0.06255
+    Branch001                      X=  10000.00 DQ=    48.219
+    Waterlevel convergence error=   0.05255
+    Waterlevel convergence error factor=     6.255
+    Discharge convergence error=  48.11875
+    Discharge convergence error factor=   482.188
+ Time step =   109
+    Branch001                      X=   8500.00 DH=  -0.05018
+    Branch001                      X=   7500.00 DQ=   -65.100
+    Waterlevel convergence error=   0.04018
+    Waterlevel convergence error factor=     5.018
+    Discharge convergence error=  64.99961
+    Discharge convergence error factor=   650.996
+ Time step =   155
+    Branch001                      X=  14500.00 DH=   0.04648
+    Branch001                      X=  13500.00 DQ=    28.992
+    Waterlevel convergence error=   0.03648
+    Waterlevel convergence error factor=     4.648
+    Discharge convergence error=  28.89219
+    Discharge convergence error factor=   289.922
+ Time step =   156
+    Branch001                      X=  11000.00 DH=   0.06255
+    Branch001                      X=  10000.00 DQ=    48.211
+    Waterlevel convergence error=   0.05255
+    Waterlevel convergence error factor=     6.255
+    Discharge convergence error=  48.11094
+    Discharge convergence error factor=   482.109
+ Time step =   157
+    Branch001                      X=   8500.00 DH=  -0.05017
+    Branch001                      X=   7500.00 DQ=   -65.094
+    Waterlevel convergence error=   0.04017
+    Waterlevel convergence error factor=     5.017
+    Discharge convergence error=  64.99375
+    Discharge convergence error factor=   650.938
+ Time step =   203
+    Branch001                      X=  14500.00 DH=   0.04648
+    Branch001                      X=  13500.00 DQ=    28.994
+    Waterlevel convergence error=   0.03648
+    Waterlevel convergence error factor=     4.648
+    Discharge convergence error=  28.89414
+    Discharge convergence error factor=   289.941
+ Time step =   204
+    Branch001                      X=  11000.00 DH=   0.06255
+    Branch001                      X=  10000.00 DQ=    48.227
+    Waterlevel convergence error=   0.05255
+    Waterlevel convergence error factor=     6.255
+    Discharge convergence error=  48.12656
+    Discharge convergence error factor=   482.266
+ Time step =   205
+    Branch001                      X=   8500.00 DH=  -0.05017
+    Branch001                      X=   7500.00 DQ=   -65.094
+    Waterlevel convergence error=   0.04017
+    Waterlevel convergence error factor=     5.017
+    Discharge convergence error=  64.99375
+    Discharge convergence error factor=   650.938
+ Time step =   251
+    Branch001                      X=  14500.00 DH=   0.04648
+    Branch001                      X=  13500.00 DQ=    28.996
+    Waterlevel convergence error=   0.03648
+    Waterlevel convergence error factor=     4.648
+    Discharge convergence error=  28.89609
+    Discharge convergence error factor=   289.961
+ Time step =   252
+    Branch001                      X=  11000.00 DH=   0.05899
+    Branch001                      X=  12500.00 DQ=    11.398
+    Waterlevel convergence error=   0.04899
+    Waterlevel convergence error factor=     5.899
+    Discharge convergence error=  11.29844
+    Discharge convergence error factor=   113.984
+ Time step =   253
+    Branch001                      X=   9500.00 DH=  -0.06413
+    Branch001                      X=   8500.00 DQ=   -19.312
+    Waterlevel convergence error=   0.05413
+    Waterlevel convergence error factor=     6.413
+    Discharge convergence error=  19.21250
+    Discharge convergence error factor=   193.125
+ Time step =   299
+    Branch001                      X=  14500.00 DH=   0.04648
+    Branch001                      X=  13500.00 DQ=    29.000
+    Waterlevel convergence error=   0.03648
+    Waterlevel convergence error factor=     4.648
+    Discharge convergence error=  28.90000
+    Discharge convergence error factor=   290.000
+ Time step =   300
+    Branch001                      X=  11000.00 DH=   0.06255
+    Branch001                      X=  10000.00 DQ=    48.217
+    Waterlevel convergence error=   0.05255
+    Waterlevel convergence error factor=     6.255
+    Discharge convergence error=  48.11680
+    Discharge convergence error factor=   482.168
+ Time step =   301
+    Branch001                      X=   8500.00 DH=  -0.05017
+    Branch001                      X=   7500.00 DQ=   -65.096
+    Waterlevel convergence error=   0.04017
+    Waterlevel convergence error factor=     5.017
+    Discharge convergence error=  64.99570
+    Discharge convergence error factor=   650.957

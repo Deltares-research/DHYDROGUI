@@ -1,0 +1,13 @@
+CMUPDATE: update of the application \SBO212_5\171_001.lit
+6 tasks need update:SUFHYD,CASEDEF1,PLUVIUS1,MAPPER1,VIEW1,VIEW2,
+
+Updating case: 2 - REF 171_001 (HT-048) Basis Referentie
+
+Erased files: 
+    none
+New files in the application :
+..\2\NETWORK.OBI   created as empty file
+..\2\LOADSWQ.DAT   created as empty file
+..\2\LOADSWQ.TYP   created as empty file
+\SBO212_5\FIXED\DEFAULT.TMP
+\SBO212_5\FIXED\DEFAULT.RNF

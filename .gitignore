@@ -55,10 +55,12 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# AcceptanceModels folder containing the test data for the acceptance tests
+# Acceptance test folders containing the test data and diagnostics for the acceptance tests
 AcceptanceModels
+AcceptanceModelsReferenceSaveData
+AcceptanceModelsReferenceOutput
 AcceptanceModelsRTCFMDimrXmlBased
-
+DiagnosticReport
 
 # Automatically generated
 src/DeltaShell.Dimr/drtc_xsd/rtcRuntimeConfig.cs
@@ -68,6 +70,9 @@ src/DeltaShell.Plugins.DelftModels.RTCShapes/Xsd/rtcShapesConfig.cs
 
 # Ranorex
 [Rr]eports
+RanorexReport.css
+RanorexReport.png
+RanorexReport.xsl
 *.rxlog
 *.rxlog.data
 *.rxuser
@@ -83,7 +88,6 @@ ranorex/test-data
 ranorex/RanorexAutomationHelpers/packages.config
 ranorex/RanorexAutomationHelpers/Ranorex Automation Helpers.csproj
 ranorex/RanorexAutomationHelpers/packages.config
-
 
 # Installer generated
 HarvestedDeltaShellFiles.wxs

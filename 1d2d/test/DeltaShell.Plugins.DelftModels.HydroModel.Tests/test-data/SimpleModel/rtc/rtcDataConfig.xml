@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcDataConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews C:\D-HYDRO-test\_SimpleModel\export\rtc\rtcDataConfig.xsd">
+  <importSeries>
+    <PITimeSeriesFile>
+      <timeSeriesFile>timeseries_import.xml</timeSeriesFile>
+      <useBinFile>false</useBinFile>
+    </PITimeSeriesFile>
+    <timeSeries id="Maeslantkering/ts_Maeslant_GateOpeningWidth">
+      <PITimeSeries>
+        <locationId>[TimeRule]Maeslantkering/ts_Maeslant_GateOpeningWidth</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="Maeslantkering/ts_Maeslant_GateLowerEdgeLevel">
+      <PITimeSeries>
+        <locationId>[TimeRule]Maeslantkering/ts_Maeslant_GateLowerEdgeLevel</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="Hartelkering/ts_HartelkeringZ_GateLowerEdgeLevel">
+      <PITimeSeries>
+        <locationId>[TimeRule]Hartelkering/ts_HartelkeringZ_GateLowerEdgeLevel</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="Hartelkering/ts_HartelkeringN_GateLowerEdgeLevel">
+      <PITimeSeries>
+        <locationId>[TimeRule]Hartelkering/ts_HartelkeringN_GateLowerEdgeLevel</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="Volkerakdam/ts_Volkerak1_GateLowerEdgeLevel">
+      <PITimeSeries>
+        <locationId>[TimeRule]Volkerakdam/ts_Volkerak1_GateLowerEdgeLevel</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+  </importSeries>
+  <exportSeries>
+    <CSVTimeSeriesFile decimalSeparator="." delimiter="," adjointOutput="false"></CSVTimeSeriesFile>
+    <PITimeSeriesFile>
+      <timeSeriesFile>timeseries_export.xml</timeSeriesFile>
+      <useBinFile>false</useBinFile>
+    </PITimeSeriesFile>
+    <timeSeries id="[Output]NW_1026.34_C_SK_Maeslantkering/GateOpeningWidth">
+      <OpenMIExchangeItem>
+        <elementId>NW_1026.34_C_SK_Maeslantkering</elementId>
+        <quantityId>GateOpeningWidth</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]NW_1026.34_C_SK_Maeslantkering/GateLowerEdgeLevel">
+      <OpenMIExchangeItem>
+        <elementId>NW_1026.34_C_SK_Maeslantkering</elementId>
+        <quantityId>GateLowerEdgeLevel</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]HK_1.67_C_SK_HartelkeringZ/GateLowerEdgeLevel">
+      <OpenMIExchangeItem>
+        <elementId>HK_1.67_C_SK_HartelkeringZ</elementId>
+        <quantityId>GateLowerEdgeLevel</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]HK_1.67_R_SK_HartelkeringN/GateLowerEdgeLevel">
+      <OpenMIExchangeItem>
+        <elementId>HK_1.67_R_SK_HartelkeringN</elementId>
+        <quantityId>GateLowerEdgeLevel</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]HD_998.75_L_US_Volkeraksluizen/GateLowerEdgeLevel">
+      <OpenMIExchangeItem>
+        <elementId>HD_998.75_L_US_Volkeraksluizen</elementId>
+        <quantityId>GateLowerEdgeLevel</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+  </exportSeries>
+</rtcDataConfig>

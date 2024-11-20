@@ -1,0 +1,15 @@
+[General]
+    fileVersion           = 1.01                
+    fileType              = boundConds          
+
+[forcing]
+    name                  = Node001             
+    function              = timeseries          
+    timeInterpolation     = linear              
+    quantity              = time                
+    unit                  = minutes since 2024-06-10 00:00:00
+    quantity              = waterlevelbnd       
+    unit                  = m
+    0 0 
+    1440 2 
+

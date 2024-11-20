@@ -1,0 +1,134 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.FMSuite.Common.Gui.Forms.Model1DBoundaryNodeDataViewWpf"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.Common.Gui.Forms"
+             xmlns:dsswf="clr-namespace:DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;assembly=DeltaShell.Plugins.CommonTools.Gui"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:dsf1DDataObjects="clr-namespace:DeltaShell.NGHS.IO.DataObjects;assembly=DeltaShell.NGHS.IO"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" 
+             d:DesignWidth="300">
+    <UserControl.DataContext>
+        <local:Model1DBoundaryNodeDataViewWpfViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <ObjectDataProvider MethodName="GetValues"
+        ObjectType="{x:Type sys:Enum}"
+        x:Key="FlowConditionTypeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="dsf1DDataObjects:Model1DBoundaryNodeDataType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider MethodName="GetValues"
+        ObjectType="{x:Type sys:Enum}"
+        x:Key="SaltConditionTypeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="dsf1DDataObjects:SaltBoundaryConditionType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider MethodName="GetValues"
+        ObjectType="{x:Type sys:Enum}"
+        x:Key="TemperatureConditionTypeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="dsf1DDataObjects:TemperatureBoundaryConditionType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <Grid>
+        <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AutomationProperties.AutomationId="BoundaryData1DSettings">
+            <TabItem Header="Flow Data">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Type" Grid.Row="0" Grid.Column="0"/>
+                        <Label Content="Flow [m³/s]" Grid.Row="1"  Grid.Column="0" Visibility="{Binding UseFlowConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Label Content="Water level [m]" Grid.Row="2"  Grid.Column="0" Visibility="{Binding UseWaterLevelConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                        <ComboBox Grid.Row="0"  Grid.Column="1" ItemsSource="{Binding Source={StaticResource FlowConditionTypeValues}}" SelectedValue="{Binding BoundaryNodeDataType}" SelectionChanged="OnSelectionFlowDataTypeChanged" AutomationProperties.AutomationId="Flow"/>
+                        <TextBox Text="{Binding Flow}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="1" Grid.Column="1" Visibility="{Binding UseFlowConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}" AutomationProperties.AutomationId="Type"/>
+                        <TextBox Text="{Binding WaterLevel}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="2" Grid.Column="1" Visibility="{Binding UseWaterLevelConstantForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}" AutomationProperties.AutomationId="WaterLevel"/>
+                    </Grid>
+                    <WindowsFormsHost local:WindowsFormsHostFunctionView.Data="{Binding Model1DBoundaryNodeData.Data}"  Grid.Row="1" Visibility="{Binding UseTimeseriesForFlowData, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <dsswf:FunctionView/>
+                    </WindowsFormsHost>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Salinity Data" Visibility="{Binding SalinityEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Type" Grid.Row="0" Grid.Column="0"/>
+                        <Label Content="Thatcher-Harleman time-lag [s]" Grid.Row="1"  Grid.Column="0" Visibility="{Binding UseConstantOrTimeSeriesForSalinityData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Label Content="Salinity concentration [ppt]" Grid.Row="2"  Grid.Column="0" Visibility="{Binding UseConstantForSalinityData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                        <ComboBox Grid.Row="0"  Grid.Column="1" ItemsSource="{Binding Source={StaticResource SaltConditionTypeValues}}" SelectedValue="{Binding SaltConditionType}" SelectionChanged="OnSelectionSalinityDataTypeChanged"/>
+                        <TextBox Text="{Binding ThatcherHarlemannCoefficient}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="1" Grid.Column="1" Visibility="{Binding UseConstantOrTimeSeriesForSalinityData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <TextBox Text="{Binding SaltConcentrationConstant}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="2" Grid.Column="1" Visibility="{Binding UseConstantForSalinityData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    </Grid>
+                    <WindowsFormsHost local:WindowsFormsHostFunctionView.Data="{Binding Model1DBoundaryNodeData.SaltConcentrationTimeSeries}" Grid.Row="1" Visibility="{Binding UseTimeseriesForSalinityData, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <dsswf:FunctionView/>
+                    </WindowsFormsHost>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Temperature Data" Visibility="{Binding TemperatureEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Type" Grid.Row="0" Grid.Column="0"/>
+                        <Label Content="Temperature [°C]" Grid.Row="1"  Grid.Column="0" Visibility="{Binding UseConstantForTemperatureData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                        <ComboBox Grid.Row="0"  Grid.Column="1" ItemsSource="{Binding Source={StaticResource TemperatureConditionTypeValues}}" SelectedValue="{Binding TemperatureConditionType}" SelectionChanged="OnSelectionTemperatureDataTypeChanged"/>
+                        <TextBox Text="{Binding TemperatureConstant}" PreviewKeyDown="ProhibitSpaceKey" PreviewTextInput="NumberValidationTextBox" Grid.Row="1" Grid.Column="1" Visibility="{Binding UseConstantForTemperatureData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    </Grid>
+                    <WindowsFormsHost local:WindowsFormsHostFunctionView.Data="{Binding Model1DBoundaryNodeData.TemperatureTimeSeries}" Grid.Row="1" Visibility="{Binding UseTimeseriesForTemperatureData, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <dsswf:FunctionView/>
+                    </WindowsFormsHost>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

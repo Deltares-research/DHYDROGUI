@@ -1,0 +1,28 @@
+DLF1.0
+[Rainfall Runoff Module: Simulation Results]
+FILE "@balansdt.his"     LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Balances per Timestep
+FILE "@3blinks.his"      LAYER " " TYPE branch VAR 1 HISLOC 2 LINKSEP ""    = Flows on Links
+FILE "@upflowdt.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Unpaved Nodes
+FILE "@bndflodt.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Boundary Nodes
+FILE "@bndfltot.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Daily Totals towards Boundary
+FILE "@rrbalans.his"    LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = System Balance per Timestep
+[Rainfall Runoff Module: Dimensions]
+FILE "@3bareas.his"      LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Node Areas
+[Flow Module: Results]
+FILE "@calcpnt.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Results at Nodes
+FILE "@reachseg.his"    LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Results at Reach Segments
+FILE "@reachvol.his"    LAYER " " TYPE branch VAR 1 HISLOC 2               = Info at Reach Segments
+FILE "@reachflw.his"    LAYER " " TYPE branch VAR 1 HISLOC 2               = Flow Balance of Reach Segments
+FILE "@qlat.his"        LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Lateral Flows
+FILE "@struc.his"       LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Results at Structures
+FILE "@controll.his"       LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Results at Controllers
+FILE "@qwb.his"         LAYER " " TYPE node VAR 1 HISLOC 2                 = Water Balance
+FILE "@flowanal.his"    LAYER " " TYPE reachgridvirtual VAR 6 HISLOC 2     = Simulation Info at the Reach Segments
+[Flow Module: Dimensions]
+FILE "@calcdim.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Nodes
+FILE "@reachdim.his"    LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Reach Segments
+FILE "@strucdim.his"    LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Structures
+[Water Quality Module]
+FILE "@wqbou20.his"     LAYER " " TYPE delwaq VAR 1 HISLOC 2               = Balance of Water Quantity
+FILE "@delwaq.his"      LAYER " " TYPE delwaq VAR 1 HISLOC 2               = History Results of Water Quality
+FILE "@delwaq.map"      LAYER " " TYPE delwaq VAR 1 HISLOC 2               = Map Results of Water Quality

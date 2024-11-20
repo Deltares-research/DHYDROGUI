@@ -1,0 +1,42 @@
+ Run datum (DD-MM-YY) and time: 24-11-2022  20:11
+
+ Summary of common data    
+ ===============================
+
+ Case name                                     
+ Number of nodes                5     70.00 ha
+ Number of links                6
+ Number of paved areas          2     70.00 ha
+ Number of unpaved areas        0      0.00 ha
+ Number of greenhouse-areas     0      0.00 ha
+           with basins                 0.00 ha
+ Number of open water nodes     0      0.00 ha
+ Number of structures           0
+ Number of boundaries           1
+ Number of NWRW nodes           0      0.00 ha
+ Number of Sacramento nodes     0      0.00 ha
+ Number of RR Runoff nodes      0      0.00 ha
+ Number of Cells                0      0.00 ha
+
+ Number of events               1
+ Timestepsize    (s)           60
+
+
+
+
+ Summary input data paved area          
+
+ Node identification     Node    Surface    Surf. max storage    max.storage  Capacity  
+                         name                         street      sewer       sewerpump  
+                                   (ha)      (m NAP)    (mm)       (mm)         (m3/s)   
+===========================================================================================
+paved                paved           40.000      1.50      0.00      0.00     0.000
+paved2               paved2          30.000      1.50      0.00      0.00     0.000
+
+
+ Summary input data boundaries      
+
+ Node identification   Node    Init.level variable  serie
+                       name      (m NAP)   (1=yes)   number
+================================================================
+dkfjsdfefsdfdf       dkfjsdfefsdf    0.000        2        0

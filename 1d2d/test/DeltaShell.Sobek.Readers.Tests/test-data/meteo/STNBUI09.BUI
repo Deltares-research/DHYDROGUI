@@ -1,0 +1,41 @@
+*Standaardbui T05.0_29.4: T=5.0 V=29.4
+*Herhalingstijd 5.0 jaar Volume = 29.4 mm totaal
+*Gebruik defaultdataset (1) of 30-jaar reeks (0)
+1
+* aantal stations
+1
+* namen van stations
+'   '
+*Aantal gebeurtenissen en tijdstapgrootte van reeks in seconden ( 5 minuten)
+1 300
+*Meteo data: rainfall stations; for each station: rainfall intensity in mm
+*First recordL start date & time, and number of steps; data in mm/step
+*Format: Date (yyyymmdd:hhmmss) and,
+*daarna duur van de bui: dg hr mm ss
+1995 01 01 00 00 00 00 00 120 00
+1.5
+2.7
+4.8
+4.8
+4.2
+3.3
+2.7
+2.1
+1.5
+0.9
+0.6
+0.3
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+

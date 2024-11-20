@@ -1,0 +1,6 @@
+  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock
+                         15.70 ; integration option
+           1997/01/01-01:00:00 ; simulation starting time
+           1998/01/01-01:00:00 ; simulation end time
+                             0 ; timestep constant
+                     000010018 ; simulation timestep

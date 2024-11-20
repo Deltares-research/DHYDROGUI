@@ -1,0 +1,7 @@
+event.*   \SBK212_2\fixed\stnbui01.bui
+evapor.*  \SBK212_2\fixed\3b\evapor.plv
+wind.*    \SBK212_2\fixed\stnbui01.wdc
+delwaq.*  \SBK212_2\fixed\stnbui01.qsc
+wq_wind.* \SBK212_2\fixed\stnbui01.qwc
+temp.*    \SBK212_2\fixed\stnbui01.tmp
+rnff.*    \SBK212_2\fixed\stnbui01.rnf

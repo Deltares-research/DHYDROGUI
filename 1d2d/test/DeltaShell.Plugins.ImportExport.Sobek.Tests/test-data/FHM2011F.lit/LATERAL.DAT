@@ -1,0 +1,218 @@
+FLNO id 'PLT_RESV' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id 'Resv_01' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '125' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '129' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '194' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '200' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '134' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '119' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '98' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id 'WadukSunterUtara' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '140' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '189' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '138' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '142' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '144' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '41' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '146' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id '149' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id 'dki31072' sc 0 lt 0 dc lt 1 0 0 PDIN 0 0  pdin
+TBLE
+'2012/01/01;00:00:00' 2 <
+'2012/01/01;02:00:00' 4 <
+'2012/01/01;04:00:00' 8 <
+'2012/01/01;06:00:00' 16 <
+'2012/01/01;08:00:00' 32 <
+'2012/01/01;10:00:00' 64 <
+'2012/01/01;12:00:00' 32 <
+'2012/01/01;14:00:00' 16 <
+'2012/01/01;16:00:00' 8 <
+'2012/01/01;18:00:00' 4 <
+'2012/01/01;20:00:00' 2 <
+'2012/01/01;22:00:00' 0 <
+tble flno
+FLNO id '181' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '101' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '107' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '110' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '12' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '136' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '150' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '151' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '183' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '186' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '206' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '209' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '212' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '222' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '226' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '229' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '234' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '237' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '245' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '29' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '73' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id '95' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id 'dki310124' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id 'dki310151' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id 'dki310184' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id 'dki31072' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id 'dki3108' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLNO id 'N_Sen_35_3' sc 0 lt 0 dc lt 11 'dki31072'  flno
+FLBR id '42' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id '81' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id '82' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id '103' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id '117' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1010' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1012' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1014' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1015' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1016' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1017' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1019' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1021' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1022' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1024' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1028' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1030' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1031' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1032' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1043' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1044' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1046' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1048' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1049' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1050' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1051' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1052' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1053' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1054' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1055' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1056' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1061' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1063' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1064' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1067' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1069' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1071' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1073' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1074' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1077' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1078' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1079' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1080' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1082' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1083' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1084' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1089' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1090' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1091' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1092' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1094' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1097' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1098' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1099' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1101' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1102' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1103' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1104' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1105' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1106' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1107' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1108' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1110' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1111' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1112' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1113' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1114' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1116' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1117' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1121' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1122' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1123' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1124' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1126' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1133' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1139' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1140' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1142' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1143' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1144' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1146' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1153' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1154' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1157' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1158' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1165' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1166' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1168' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1178' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1179' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1181' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1199' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1206' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1207' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1210' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1212' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1214' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1217' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1218' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1219' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1224' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1226' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1227' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1228' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1230' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1238' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1247' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1253' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1254' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1262' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1265' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1273' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1278' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1282' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1291' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1293' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1295' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1296' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1298' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1304' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1317' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1320' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1321' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1325' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1329' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1330' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1331' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1336' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1345' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1346' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1352' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1359' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1362' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1364' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1368' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1370' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1372' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1374' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1383' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1387' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1388' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1389' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1390' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1391' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1392' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1395' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1397' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1398' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1401' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1402' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1411' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1413' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1414' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1422' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1423' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+FLBR id 'outlet_1426' sc 0 lt 0 dc lt 11 'dki31072'  flbr
+

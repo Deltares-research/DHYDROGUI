@@ -1,0 +1,460 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="output" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\output.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StopHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StopHS.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rule" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\rule.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rtcmodel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rtcmodel.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteHS.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="condition" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\condition.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="controlgroup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\controlgroup.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="brick_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\brick_add.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="input" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\input.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PlayHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PlayHS.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PropertiesHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PropertiesHS.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="controlgroup_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\controlgroup_add.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CopyHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CopyHS.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="directionalcondition" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\directionalcondition.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="timecondition" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\timecondition.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="standardcondition" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\standardcondition.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cog1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cog1.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cog_active" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cog_active.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExclamationOverlay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\exclamation-small.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="validation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\validation.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RealTimeControlModelProperties_Name_Description" xml:space="preserve">
+    <value>Name of the Real-Time Control Model.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_LimitMemory_Description" xml:space="preserve">
+    <value>Option to limit memory usage.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_UseSaveStateTimeRange_DisplayName" xml:space="preserve">
+    <value>Use save state time range</value>
+  </data>
+  <data name="RealTimeControlModelProperties_UseSaveStateTimeRange_Description" xml:space="preserve">
+    <value>Determines whether or not to write model states on specified time instances.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateStartTime_DisplayName" xml:space="preserve">
+    <value>Save state time range: start time</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateStartTime_Description" xml:space="preserve">
+    <value>Start writing model states when simulation time is equal or larger than this time.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateStopTime_DisplayName" xml:space="preserve">
+    <value>Save state time range: stop time</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateStopTime_Description" xml:space="preserve">
+    <value>Stop writing model states when simulation time is beyond this time.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateTimeStep_DisplayName" xml:space="preserve">
+    <value>Save state time range: time step interval</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateTimeStep_Description" xml:space="preserve">
+    <value>Write model state at each multiple of this time step after the 'Save state start time'.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_UseRestart_DisplayName" xml:space="preserve">
+    <value>Use restart</value>
+  </data>
+  <data name="RealTimeControlModelProperties_UseRestart_Description" xml:space="preserve">
+    <value>Use provided (restart) state as initial condition.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_WriteRestart_DisplayName" xml:space="preserve">
+    <value>Write restart</value>
+  </data>
+  <data name="RealTimeControlModelProperties_WriteRestart_Description" xml:space="preserve">
+    <value>Determines whether or not to write model states (can be used to restart from). On true, a state is written at the end of the model run.</value>
+  </data>
+  <data name="Categories_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Common_Name_DisplayName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="RealTimeControlModelProperties_Category_RunParameters" xml:space="preserve">
+    <value>Run parameters</value>
+  </data>
+  <data name="RealTimeControlModelProperties_DisplayName" xml:space="preserve">
+    <value>Real-Time Control Model</value>
+  </data>
+  <data name="RealTimeControlModelProperties_LimitMemory_DisplayName" xml:space="preserve">
+    <value>Limit memory</value>
+  </data>
+  <data name="RealTimeControlModelProperties_OutputTimeStep_Description" xml:space="preserve">
+    <value>Determines at which interval the model output is written</value>
+  </data>
+  <data name="RealTimeControlModelProperties_OutputTimeStep_DisplayName" xml:space="preserve">
+    <value>Output timestep</value>
+  </data>
+  <data name="signal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\signal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RealTimeControlApplicationPlugin_Description" xml:space="preserve">
+    <value>Allows to simulate Real-Time Control for models, such as D-Flow 1D.</value>
+  </data>
+  <data name="RealTimeControlModel_BrokenDataItemLinkDetected" xml:space="preserve">
+    <value>Broken DataItem link detected in Model:{0}, Controlgroup:{1}, at the {2} linked to ({3}).{4}Connection to {5} must be manually re-established.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_CoordinateSystem_Description" xml:space="preserve">
+    <value>Coordinate system (geographic or projected) used for drawing.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_CoordinateSystem_DisplayName" xml:space="preserve">
+    <value>Coordinate System</value>
+  </data>
+  <data name="RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_not_TimeSeries" xml:space="preserve">
+    <value>PIDRule {0} time series will not be included in the DIMR XML as "Set Point Type" is not "TimeSeries"</value>
+  </data>
+  <data name="RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_IntervalRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Signal" xml:space="preserve">
+    <value>IntervalRule {0} time series will not be included in the DIMR XML as "Set Point Type" is "Signal"</value>
+  </data>
+  <data name="RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime" xml:space="preserve">
+    <value>Series '{0}' in RTC control group '{1}' has one or more timesteps that exceed the model stop time {2}.</value>
+  </data>
+  <data name="RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime" xml:space="preserve">
+    <value>Series '{0}' in RTC control group '{1}' has one or more timesteps that precede the model start time {2}.</value>
+  </data>
+  <data name="RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep" xml:space="preserve">
+    <value>Series '{0}' in RTC control group '{1}': the amount of time steps is not a multiple of the model time step {2}.</value>
+  </data>
+  <data name="RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_name__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___2__" xml:space="preserve">
+    <value>Unable to update ControlGroup name, all ControlGroup names must be unique!{0}'{1}' has been reverted back to '{2}'</value>
+  </data>
+  <data name="RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_are_now_unique_" xml:space="preserve">
+    <value>ControlGroup names for Model {0} were not unique.{1}Control Groups have been renamed such that they are now unique.</value>
+  </data>
+  <data name="RealTimeControlModel_Merge_There_already_exists_a_ControlGroup_named__0__in_Model__1___ControlGroup__0__will_be_renamed_to__2_" xml:space="preserve">
+    <value>There already exists a ControlGroup named {0} in Model {1}, ControlGroup {0} will be renamed to {2}</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlConverter_AddOutputAsInputForRelativeTimeRule_Output___0___is_input_for_rule___1____but_the_rule_could_not_be_found__See_file____2___" xml:space="preserve">
+    <value>Output '{0}' is input for rule '{1}', but the rule could not be found. See file: '{2}'.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlConverter_AddOutputAsInputForRelativeTimeRule_Relative_Time_Rules_can_only_have_one_output_as_input__It_seems_that_rule___0___has_multiple_outputs_as_input__See_file____1___" xml:space="preserve">
+    <value>Relative Time Rules can only have one output as input. It seems that rule '{0}' has multiple outputs as input. See file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlConverter_AddOutputAsInputForRelativeTimeRule_When_getting_an_output_as_input_for_rule___0____the_output___1___could_not_be_found_in_the_file__See_file____2___" xml:space="preserve">
+    <value>When getting an output as input for rule '{0}', the output '{1}' could not be found in the file. See file: '{2}'.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddRule_For_Rule___0____corresponding_control_group___1___could_not_be_found__See_file___2_" xml:space="preserve">
+    <value>For Rule '{0}', corresponding control group '{1}' could not be found. See file: {2}</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddRule_Control_Group___0___already_contains_a_rule_with_name___1____Names_must_be_unique__See_file___2__" xml:space="preserve">
+    <value>Control Group '{0}' already contains a rule with name '{1}'. Names must be unique. See file: {2}.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddCondition_For_Condition___0____corresponding_control_group___1___could_not_be_found__See_file___2_" xml:space="preserve">
+    <value>For Condition '{0}', corresponding control group '{1}' could not be found. See file: {2}</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddCondition_Control_Group___0___already_contains_a_condition_with_name___1____Names_must_be_unique__See_file___2__" xml:space="preserve">
+    <value>Control Group '{0}' already contains a condition with name '{1}'. Names must be unique. See file: {2}.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlReader_Read_File___0___does_not_exist_" xml:space="preserve">
+    <value>File '{0}' does not exist.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlReader_Read_Could_not_read_control_groups_from_file___0___" xml:space="preserve">
+    <value>Could not read control groups from file '{0}'.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlReader_Read_File___0___seems_to_be_empty_" xml:space="preserve">
+    <value>File '{0}' seems to be empty.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlReader_Read_Could_not_read_connection_points_from_file___0___" xml:space="preserve">
+    <value>Could not read connection points from file '{0}'.</value>
+  </data>
+  <data name="RealTimeControlRuntimeConfigXmlReader_Read_File___0___does_not_exist_" xml:space="preserve">
+    <value>File '{0}' does not exist.</value>
+  </data>
+  <data name="RealTimeControlRuntimeConfigXmlReader_Read_There_is_no_time_data_for_the_RTC_model_in_the_file___0____Time_data_is_set_with_default_values_" xml:space="preserve">
+    <value>There is no time data for the RTC model in the file '{0}'. Time data is set with default values.</value>
+  </data>
+  <data name="RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Object_with_id___0___does_not_seem_to_be_a_Time_Rule_or_Time_Condition__See_file____1___" xml:space="preserve">
+    <value>Object with id '{0}' does not seem to be a Time Rule or Time Condition. See file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported" xml:space="preserve">
+    <value>Rule with id '{0}' does not seem to use a time serie as setpoint. See file: '{1}'. Therefore, the time serie is not imported.</value>
+  </data>
+  <data name="RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_fixed_or_variable_setpoint_type_Setpoint_type_will_be_variable;;" xml:space="preserve">
+    <value>For interval rule with id '{0}', there is no time data found in file '{1}' for setting fixed or variable setpoint type. Setpoint type will be variable.</value>
+  </data>
+  <data name="RealTimeControlTimeSeriesXmlReader_Read_File___0___does_not_exist_" xml:space="preserve">
+    <value>File '{0}' does not exist.</value>
+  </data>
+  <data name="RealTimeControlToolsConfigComponentConnector_ConnectTimeRules_Could_not_find_Time_Rule_with_id___0____See_file____1___" xml:space="preserve">
+    <value>Could not find Time Rule with id '{0}'. See file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlToolsConfigComponentConnector_ConnectTimeRules_The_output_of_a_rule_should_be_an_output__tagged_with___0____See_file____1___" xml:space="preserve">
+    <value>The output of a rule should be an output, tagged with '{0}'. See file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlToolsConfigComponentConnector_ConnectRelativeTimeRules_Could_not_find_Relative_Time_Rule_with_id___0____See_file____1___" xml:space="preserve">
+    <value>Could not find Relative Time Rule with id '{0}'. See file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlToolsConfigComponentConnector_ConnectRelativeTimeRules_The_output_of_relative_time_rule___0___should_be_an_output__see_tag__Output____See_file____1___" xml:space="preserve">
+    <value>The output of relative time rule '{0}' should be an output (see tag [Output]). See file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlToolsConfigXmlReader_Read_File___0___does_not_exist_" xml:space="preserve">
+    <value>File '{0}' does not exist.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_controlgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the controlgroup '{0}' that is referenced in id '{1}'. The group needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_GetConnectionPointByName_Could_not_find_the_input_output___0____The_input_output_needs_to_be_referenced_in_file___1___" xml:space="preserve">
+    <value>Could not find the input/output '{0}'. The input/output needs to be referenced in file '{1}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_ConnectInputToRule_Could_not_find_the_input_for_rule___0____in_control_group__1___The_input_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the input for rule '{0}' in control group '{1}'. The input needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_ConnectInputToRule_Could_not_find_the_input_for_signal___0____in_control_group__1___The_input_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the input for signal '{0}' in control group '{1}'. The input needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_ConnectOutputToRule_Could_not_find_the_output_for_rule___0____in_control_group__1___The_output_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the output for rule '{0}' in control group '{1}'. The output needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_input_output___0___that_is_referenced_in_id___1____The_input_output_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the input/output '{0}' that is referenced in id '{1}'. The input/output needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_GetConditionByElementIdInControlGroup_Could_not_find_the_condition___0____The_condition_needs_to_be_referenced_in_file___1___" xml:space="preserve">
+    <value>Could not find the condition '{0}'. The condition needs to be referenced in file '{1}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the rule '{0}' that is referenced in id '{1}'.The rule needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_GetSignalByElementIdInControlGroup_Could_not_find_the_signal___0___that_is_referenced_in_id___1___The_signal_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the rule '{0}' that is referenced in id '{1}'.The rule needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlTimeSeriesXmlReader_Read_There_was_an_error_reading_the_time_series_file____0____Please_check_file___1__" xml:space="preserve">
+    <value>There was an error reading the time series file: '{0}'. Please check file: {1}.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Hydraulic_rule___0___must_have_an_input__Please_check_file____1___" xml:space="preserve">
+    <value>Hydraulic rule '{0}' must have an input. Please check file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlSetter_SetSetPointOnPIDRules_PID_rule___0___must_have_a_setpoint__Please_check_file____1___" xml:space="preserve">
+    <value>PID rule '{0}' must have a setpoint. Please check file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlSetter_SetSetPointOnIntervalRules_Interval_rule___0___must_have_a_setpoint__Please_check_file____1___" xml:space="preserve">
+    <value>Interval rule '{0}' must have a setpoint. Please check file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Cannot_find_input_with_element_ID___0___for_rule___1____Please_check_file____2___" xml:space="preserve">
+    <value>Cannot find input with element ID '{0}' for rule '{1}'. Please check file: '{2}'.</value>
+  </data>
+  <data name="RealTimeControlModelXmlReader_Please_note_that_Use_Restart_option_in_D-RTC_is_set_to_False" xml:space="preserve">
+    <value>Please note that Use Restart option in D-RTC is set to False.</value>
+  </data>
+  <data name="RealTimeControlModelIntervalRule_Import_time_series_for_signals_are_not_existing_export_failed" xml:space="preserve">
+    <value>Import time series for signals are not existing, export failed.</value>
+  </data>
+  <data name="RealTimeControlModelIntervalRule_Interval_rule__0__has_empty_time_series" xml:space="preserve">
+    <value>Interval rule '{0}' has empty time series.</value>
+  </data>
+  <data name="RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input" xml:space="preserve">
+    <value>Interval rule '{0}' requires 1 input.</value>
+  </data>
+  <data name="ControlGroupValidator_Output_item_0_has_multiple_active_condition_paths_1" xml:space="preserve">
+    <value>Output item {0} has multiple Active Condition Paths: {1}.</value>
+  </data>
+  <data name="RealTimeControlGroupErrorLogEmptyValue" xml:space="preserve">
+    <value>Error changing the Name. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes.</value>
+  </data>
+  <data name="MathExpr" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MathExpr.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="QuestionMark" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QuestionMark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MathematicalExpressionSerializer_ParseMathematicalExpressionToRootBranchNode_Mathematical_expression__0__contains_invalid_expression__1__" xml:space="preserve">
+    <value>Mathematical expression {0} contains invalid expression "{1}".</value>
+  </data>
+  <data name="RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings" xml:space="preserve">
+    <value>The D-Real Time Control model '{0}' was migrated to the newest version. If applicable, please verify the restart file settings.</value>
+  </data>
+  <data name="RtcLegacyLoader36_an_error_occurred_while_deleting_file" xml:space="preserve">
+    <value>An error occurred while deleting {0}: {1}</value>
+  </data>
+  <data name="RealTimeControlModelImporter_OnImportItem_Target_null_expected" xml:space="preserve">
+    <value>Null is expected, because target argument is unused.</value>
+  </data>
+  <data name="RealTimeControlModelNodePresenter_OutputLocationWarningMessage" xml:space="preserve">
+    <value>Output RTC rule already assigned to a different output. Are you sure you want to assign it?</value>
+  </data>
+  <data name="RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="RtcLegacyLoader37_An_error_occurred_while_writing_file" xml:space="preserve">
+    <value>An error occurred while writing file {0}: {1}</value>
+  </data>
+  <data name="RtcLegacyLoader37_migration_of_the_rtc_model" xml:space="preserve">
+    <value>the migration of the D-RTC model</value>
+  </data>
+  <data name="RtcLegacyLoader37_File_does_not_exist" xml:space="preserve">
+    <value>File does not exist: {0}</value>
+  </data>
+  <data name="RealTimeControlModelImporter_GetXmlDirectory_Could_not_find_settings_json__importing_from_RTC_model_from__0__" xml:space="preserve">
+    <value>Could not find settings.json, importing from RTC model from {0}.</value>
+  </data>
+  <data name="RealTimeControlModelImporter_GetXmlDirectory_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory" xml:space="preserve">
+    <value>Could not import RTC model, the settings. json file should contain an xml directory.</value>
+  </data>
+  <data name="RealTimeControlModelXmlReader_ReadFromXml_Directory___0___does_not_exist" xml:space="preserve">
+    <value>Directory '{0}' does not exist</value>
+  </data>
+  <data name="RealTimeControlModelXmlReader_ReadFromXml_Import_of_the_Real_Time_Control_Model" xml:space="preserve">
+    <value>Import of the Real-Time Control Model</value>
+  </data>
+  <data name="RealTimeControlModelXmlReader_ThrowOnReportedError_Reading_the_Real_Time_Control_Model_XML_files_failed_" xml:space="preserve">
+    <value>Reading the Real-Time Control Model XML files failed.</value>
+  </data>
+</root>

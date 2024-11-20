@@ -1,0 +1,2590 @@
+Mass balances output file
+
+Water quality calculation Sobek-WQ      
+                                        
+                                        
+
+All terms in basic mass units,for Processes Library always (g)
+
+Simulation starts: T0: 2010.01.01 00:00:00  (scu=       1s)
+Mass balances output period:
+start:     0.000 days
+stop :     6.042 days
+
+Balance for sum parameter TotN                 consists of:
+substance           scale factor
+NH4                     1.0000
+
+
+MASS BALANCE PER DUMPAREA
+All terms in basic mass units,for Processes Library always (g)
+
+
+============================================================
+Mass balances for Start               
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.43892E+01
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.19842E+06   -0.19842E+06
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.19842E+06   -0.19842E+06
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.00000E+00   -0.40331E+01
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.19834E+06   -0.19818E+06
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.15717E+03
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.19834E+06   -0.19834E+06
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.62851E+02   -0.60801E+02
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.12822E+01
+CBOD5 _dSedBOD5                   0.00000E+00   -0.76533E+00
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.62851E+02   -0.62849E+02
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.00000E+00   -0.31671E+01
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.19815E+06   -0.19761E+06
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.24624E+03
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.29386E+03
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.19815E+06   -0.19815E+06
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.34088E+02
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.10935E+07   -0.10979E+07
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.71842E+03
+OXY   _dREAROXY                   0.53388E+04    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.24752E+03
+OXY   _dOxSOD                     0.00000E+00   -0.17806E-11
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.10989E+07   -0.10989E+07
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.00000E+00   -0.40331E+01
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.19834E+06   -0.19818E+06
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.15717E+03
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.19834E+06   -0.19834E+06
+
+
+============================================================
+Mass balances for Upstream pipe       
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.24559E+01
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.19841E+06   -0.19841E+06
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.19841E+06   -0.19841E+06
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.00000E+00   -0.16677E+01
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.19802E+06   -0.19786E+06
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.15727E+03
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.19802E+06   -0.19802E+06
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.17390E-03
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.28111E+04   -0.27238E+04
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.54578E+02
+CBOD5 _dSedBOD5                   0.00000E+00   -0.32660E+02
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.28111E+04   -0.28111E+04
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.24704E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.19807E+06   -0.19749E+06
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.26083E+03
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.31224E+03
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.19807E+06   -0.19807E+06
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.35317E+02
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.11021E+07   -0.11063E+07
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.71888E+03
+OXY   _dREAROXY                   0.52063E+04    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.31541E+03
+OXY   _dOxSOD                     0.00000E+00   -0.17700E-11
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.11073E+07   -0.11073E+07
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.00000E+00   -0.16677E+01
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.19802E+06   -0.19786E+06
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.15727E+03
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.19802E+06   -0.19802E+06
+
+
+============================================================
+Mass balances for Near pipe           
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.49402E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.20168E+06   -0.20168E+06
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.20168E+06   -0.20168E+06
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.71594E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.21568E+06   -0.21552E+06
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.16296E+03
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.21569E+06   -0.21568E+06
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.17648E-01
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.19554E+06   -0.19499E+06
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.34124E+03
+CBOD5 _dSedBOD5                   0.00000E+00   -0.20536E+03
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.19554E+06   -0.19554E+06
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.36442E+01    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.32651E+06   -0.32574E+06
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.35144E+03
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.42237E+03
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.32652E+06   -0.32652E+06
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.35914E+02
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.11312E+07   -0.11348E+07
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.74491E+03
+OXY   _dREAROXY                   0.50675E+04    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.69268E+03
+OXY   _dOxSOD                     0.00000E+00   -0.17591E-11
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.11362E+07   -0.11362E+07
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.71594E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.21568E+06   -0.21552E+06
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.16296E+03
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.21569E+06   -0.21568E+06
+
+
+============================================================
+Mass balances for Far field           
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.19248E+03    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.00000E+00    0.00000E+00
+Contin_SWT_SWTTy                  0.20955E+06   -0.20974E+06
+SUM OF ALL TERMS                  0.20974E+06   -0.20974E+06
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.18885E+03    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.00000E+00    0.00000E+00
+NH4   _SWT_SWTTy                  0.25276E+06   -0.25288E+06
+NH4   _dNitrif                    0.00000E+00   -0.73816E+02
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.25295E+06   -0.25295E+06
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.63933E+02
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_SWTTy                  0.59303E+06   -0.59199E+06
+CBOD5 _dCBOD5                     0.00000E+00   -0.49130E+03
+CBOD5 _dSedBOD5                   0.00000E+00   -0.48850E+03
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.59303E+06   -0.59303E+06
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.15522E+03    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5__SWT_SWTTy                  0.58999E+06   -0.58938E+06
+CBOD5__dCBOD5_2                   0.00000E+00   -0.25517E+03
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.51022E+03
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.59014E+06   -0.59014E+06
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.14848E+04    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.00000E+00    0.00000E+00
+OXY   _SWT_SWTTy                  0.12176E+07   -0.12210E+07
+OXY   _dNitrif                    0.00000E+00   -0.33741E+03
+OXY   _dREAROXY                   0.30383E+04    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.74647E+03
+OXY   _dOxSOD                     0.00000E+00   -0.70712E-12
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.12221E+07   -0.12221E+07
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.18885E+03    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.00000E+00    0.00000E+00
+TotN  _SWT_SWTTy                  0.25276E+06   -0.25288E+06
+TotN  _dNitrif                    0.00000E+00   -0.73816E+02
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.25295E+06   -0.25295E+06
+
+
+============================================================
+Mass balances for SWT_Normal          
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.66697E+01
+Contin_Upstream                   0.19842E+06    0.00000E+00
+Contin_CSO                        0.32700E+04    0.00000E+00
+Contin_Lateral i                  0.68987E+04    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.00000E+00    0.00000E+00
+Contin_SWT_SWTTy                  0.00000E+00   -0.20859E+06
+SUM OF ALL TERMS                  0.20859E+06   -0.20859E+06
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.00000E+00   -0.92275E+01
+NH4   _Upstream                   0.19842E+06    0.00000E+00
+NH4   _CSO                        0.17985E+05    0.00000E+00
+NH4   _Lateral i                  0.37943E+05    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.00000E+00    0.00000E+00
+NH4   _SWT_SWTTy                  0.00000E+00   -0.25280E+06
+NH4   _dNitrif                    0.00000E+00   -0.15445E+04
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.25435E+06   -0.25435E+06
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.17850E+03
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.19620E+06    0.00000E+00
+CBOD5 _Lateral i                  0.41392E+06    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_SWTTy                  0.00000E+00   -0.60507E+06
+CBOD5 _dCBOD5                     0.00000E+00   -0.30334E+04
+CBOD5 _dSedBOD5                   0.00000E+00   -0.18361E+04
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.61012E+06   -0.61012E+06
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.00000E+00   -0.85606E+02
+CBOD5__Upstream                   0.19842E+06    0.00000E+00
+CBOD5__CSO                        0.13080E+06    0.00000E+00
+CBOD5__Lateral i                  0.27595E+06    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5__SWT_SWTTy                  0.00000E+00   -0.59787E+06
+CBOD5__dCBOD5_2                   0.00000E+00   -0.32747E+04
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.39415E+04
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.60517E+06   -0.60517E+06
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.33562E+03
+OXY   _Upstream                   0.10913E+07    0.00000E+00
+OXY   _CSO                        0.21255E+05    0.00000E+00
+OXY   _Lateral i                  0.44841E+05    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.00000E+00    0.00000E+00
+OXY   _SWT_SWTTy                  0.00000E+00   -0.11921E+07
+OXY   _dNitrif                    0.00000E+00   -0.70597E+04
+OXY   _dREAROXY                   0.48367E+05    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.63081E+04
+OXY   _dOxSOD                     0.00000E+00   -0.16721E-10
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.12058E+07   -0.12058E+07
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.00000E+00   -0.92275E+01
+TotN  _Upstream                   0.19842E+06    0.00000E+00
+TotN  _CSO                        0.17985E+05    0.00000E+00
+TotN  _Lateral i                  0.37943E+05    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.00000E+00    0.00000E+00
+TotN  _SWT_SWTTy                  0.00000E+00   -0.25280E+06
+TotN  _dNitrif                    0.00000E+00   -0.15445E+04
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.25435E+06   -0.25435E+06
+
+
+============================================================
+Mass balances for SWT_SWTType2        
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.12551E+04    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00   -0.20984E+06
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.20859E+06    0.00000E+00
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.20984E+06   -0.20984E+06
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.12001E+04    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00   -0.25294E+06
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.25280E+06    0.00000E+00
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.10616E+04
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.25400E+06   -0.25400E+06
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.92902E+03
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00   -0.59148E+06
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.60507E+06    0.00000E+00
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.70981E+04
+CBOD5 _dSedBOD5                   0.00000E+00   -0.55661E+04
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.60507E+06   -0.60507E+06
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.70271E+03    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00   -0.58909E+06
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.59787E+06    0.00000E+00
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.36833E+04
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.58036E+04
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.59857E+06   -0.59857E+06
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.10872E+05    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00   -0.12227E+07
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.11921E+07    0.00000E+00
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.48528E+04
+OXY   _dREAROXY                   0.35385E+05    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.10781E+05
+OXY   _dOxSOD                     0.00000E+00   -0.10160E-10
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.12384E+07   -0.12384E+07
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.12001E+04    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00   -0.25294E+06
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.25280E+06    0.00000E+00
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.10616E+04
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.25400E+06   -0.25400E+06
+
+
+============================================================
+Mass balances for Sum_of_balance_areas
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.14336E+04    0.00000E+00
+Contin_Upstream                   0.19842E+06    0.00000E+00
+Contin_CSO                        0.32700E+04    0.00000E+00
+Contin_Lateral i                  0.68987E+04    0.00000E+00
+Contin_Boundary                   0.00000E+00   -0.20984E+06
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.80710E+06   -0.59851E+06
+Contin_SWT_SWTTy                  0.20955E+06   -0.41833E+06
+SUM OF ALL TERMS                  0.12267E+07   -0.12267E+07
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.13747E+04    0.00000E+00
+NH4   _Upstream                   0.19842E+06    0.00000E+00
+NH4   _CSO                        0.17985E+05    0.00000E+00
+NH4   _Lateral i                  0.37943E+05    0.00000E+00
+NH4   _Boundary                   0.00000E+00   -0.25294E+06
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.86485E+06   -0.61157E+06
+NH4   _SWT_SWTTy                  0.25276E+06   -0.50567E+06
+NH4   _dNitrif                    0.00000E+00   -0.31573E+04
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.13733E+07   -0.13733E+07
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.11715E+04
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.19620E+06    0.00000E+00
+CBOD5 _Lateral i                  0.41392E+06    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00   -0.59148E+06
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.80348E+06   -0.19778E+06
+CBOD5 _SWT_SWTTy                  0.59303E+06   -0.11971E+07
+CBOD5 _dCBOD5                     0.00000E+00   -0.11020E+05
+CBOD5 _dSedBOD5                   0.00000E+00   -0.81295E+04
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.20066E+07   -0.20066E+07
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.77305E+03    0.00000E+00
+CBOD5__Upstream                   0.19842E+06    0.00000E+00
+CBOD5__CSO                        0.13080E+06    0.00000E+00
+CBOD5__Lateral i                  0.27595E+06    0.00000E+00
+CBOD5__Boundary                   0.00000E+00   -0.58909E+06
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.13206E+07   -0.72084E+06
+CBOD5__SWT_SWTTy                  0.58999E+06   -0.11872E+07
+CBOD5__dCBOD5_2                   0.00000E+00   -0.80717E+04
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.11284E+05
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.25165E+07   -0.25165E+07
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.11916E+05    0.00000E+00
+OXY   _Upstream                   0.10913E+07    0.00000E+00
+OXY   _CSO                        0.21255E+05    0.00000E+00
+OXY   _Lateral i                  0.44841E+05    0.00000E+00
+OXY   _Boundary                   0.00000E+00   -0.12227E+07
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.45189E+07   -0.33389E+07
+OXY   _SWT_SWTTy                  0.12176E+07   -0.24131E+07
+OXY   _dNitrif                    0.00000E+00   -0.14432E+05
+OXY   _dREAROXY                   0.10240E+06    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.19092E+05
+OXY   _dOxSOD                     0.00000E+00   -0.32898E-10
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.70082E+07   -0.70082E+07
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.13747E+04    0.00000E+00
+TotN  _Upstream                   0.19842E+06    0.00000E+00
+TotN  _CSO                        0.17985E+05    0.00000E+00
+TotN  _Lateral i                  0.37943E+05    0.00000E+00
+TotN  _Boundary                   0.00000E+00   -0.25294E+06
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.86485E+06   -0.61157E+06
+TotN  _SWT_SWTTy                  0.25276E+06   -0.50567E+06
+TotN  _dNitrif                    0.00000E+00   -0.31573E+04
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.13733E+07   -0.13733E+07
+
+
+MASS BALANCE PER SURFACE
+All terms in basic mass units/m2,for Processes Library always (g)
+
+
+============================================================
+Mass balances for Start               
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.89927E-02
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.40653E+03   -0.40653E+03
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.40653E+03   -0.40653E+03
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.00000E+00   -0.82633E-02
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.40637E+03   -0.40604E+03
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.32201E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.40637E+03   -0.40637E+03
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.12877E+00   -0.12457E+00
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.26270E-02
+CBOD5 _dSedBOD5                   0.00000E+00   -0.15680E-02
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.12877E+00   -0.12877E+00
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.00000E+00   -0.64889E-02
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.40598E+03   -0.40487E+03
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.50451E+00
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.60207E+00
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.40598E+03   -0.40598E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.69840E-01
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.22405E+04   -0.22494E+04
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.14719E+01
+OXY   _dREAROXY                   0.10938E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.50713E+00
+OXY   _dOxSOD                     0.00000E+00   -0.36482E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.22514E+04   -0.22514E+04
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.00000E+00   -0.82633E-02
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.40637E+03   -0.40604E+03
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.32201E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.40637E+03   -0.40637E+03
+
+
+============================================================
+Mass balances for Upstream pipe       
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.50477E-02
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.40780E+03   -0.40780E+03
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.40780E+03   -0.40780E+03
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.00000E+00   -0.34276E-02
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.40700E+03   -0.40667E+03
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.32324E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.40700E+03   -0.40700E+03
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.35742E-06
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.57776E+01   -0.55983E+01
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.11218E+00
+CBOD5 _dSedBOD5                   0.00000E+00   -0.67126E-01
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.57776E+01   -0.57776E+01
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.50774E-03    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.40709E+03   -0.40591E+03
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.53609E+00
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.64175E+00
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.40709E+03   -0.40709E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.72587E-01
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.22652E+04   -0.22737E+04
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.14775E+01
+OXY   _dREAROXY                   0.10701E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.64826E+00
+OXY   _dOxSOD                     0.00000E+00   -0.36380E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.22759E+04   -0.22759E+04
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.00000E+00   -0.34276E-02
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.40700E+03   -0.40667E+03
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.32324E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.40700E+03   -0.40700E+03
+
+
+============================================================
+Mass balances for Near pipe           
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.10186E-02
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.41585E+03   -0.41585E+03
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.41585E+03   -0.41585E+03
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.14762E-02    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.44473E+03   -0.44439E+03
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.33602E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.44473E+03   -0.44473E+03
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.36388E-04
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.40319E+03   -0.40206E+03
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.70361E+00
+CBOD5 _dSedBOD5                   0.00000E+00   -0.42345E+00
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.40319E+03   -0.40319E+03
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.75142E-02    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.67325E+03   -0.67166E+03
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.72465E+00
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.87090E+00
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.67326E+03   -0.67326E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.74053E-01
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.23324E+04   -0.23398E+04
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.15360E+01
+OXY   _dREAROXY                   0.10449E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.14283E+01
+OXY   _dOxSOD                     0.00000E+00   -0.36273E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.23429E+04   -0.23429E+04
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.14762E-02    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.44473E+03   -0.44439E+03
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.33602E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.44473E+03   -0.44473E+03
+
+
+============================================================
+Mass balances for Far field           
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.58926E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.00000E+00    0.00000E+00
+Contin_SWT_SWTTy                  0.64153E+03   -0.64212E+03
+SUM OF ALL TERMS                  0.64212E+03   -0.64212E+03
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.57816E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.00000E+00    0.00000E+00
+NH4   _SWT_SWTTy                  0.77382E+03   -0.77417E+03
+NH4   _dNitrif                    0.00000E+00   -0.22598E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.77440E+03   -0.77440E+03
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.19573E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_SWTTy                  0.18155E+04   -0.18123E+04
+CBOD5 _dCBOD5                     0.00000E+00   -0.15041E+01
+CBOD5 _dSedBOD5                   0.00000E+00   -0.14955E+01
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.18155E+04   -0.18155E+04
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.47520E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5__SWT_SWTTy                  0.18062E+04   -0.18044E+04
+CBOD5__dCBOD5_2                   0.00000E+00   -0.78120E+00
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.15620E+01
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.18067E+04   -0.18067E+04
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.45458E+01    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.00000E+00    0.00000E+00
+OXY   _SWT_SWTTy                  0.37275E+04   -0.37380E+04
+OXY   _dNitrif                    0.00000E+00   -0.10330E+01
+OXY   _dREAROXY                   0.93017E+01    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.22853E+01
+OXY   _dOxSOD                     0.00000E+00   -0.21648E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.37413E+04   -0.37413E+04
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.57816E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.00000E+00    0.00000E+00
+TotN  _SWT_SWTTy                  0.77382E+03   -0.77417E+03
+TotN  _dNitrif                    0.00000E+00   -0.22598E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.77440E+03   -0.77440E+03
+
+
+============================================================
+Mass balances for SWT_Normal          
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.14472E-02
+Contin_Upstream                   0.43053E+02    0.00000E+00
+Contin_CSO                        0.70951E+00    0.00000E+00
+Contin_Lateral i                  0.14968E+01    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.00000E+00    0.00000E+00
+Contin_SWT_SWTTy                  0.00000E+00   -0.45258E+02
+SUM OF ALL TERMS                  0.45259E+02   -0.45259E+02
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.00000E+00   -0.20021E-02
+NH4   _Upstream                   0.43053E+02    0.00000E+00
+NH4   _CSO                        0.39023E+01    0.00000E+00
+NH4   _Lateral i                  0.82326E+01    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.00000E+00    0.00000E+00
+NH4   _SWT_SWTTy                  0.00000E+00   -0.54851E+02
+NH4   _dNitrif                    0.00000E+00   -0.33511E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.55188E+02   -0.55188E+02
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.38730E-01
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.42570E+02    0.00000E+00
+CBOD5 _Lateral i                  0.89810E+02    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_SWTTy                  0.00000E+00   -0.13129E+03
+CBOD5 _dCBOD5                     0.00000E+00   -0.65816E+00
+CBOD5 _dSedBOD5                   0.00000E+00   -0.39839E+00
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.13238E+03   -0.13238E+03
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.00000E+00   -0.18574E-01
+CBOD5__Upstream                   0.43053E+02    0.00000E+00
+CBOD5__CSO                        0.28380E+02    0.00000E+00
+CBOD5__Lateral i                  0.59873E+02    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5__SWT_SWTTy                  0.00000E+00   -0.12972E+03
+CBOD5__dCBOD5_2                   0.00000E+00   -0.71053E+00
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.85521E+00
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.13131E+03   -0.13131E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.72820E-01
+OXY   _Upstream                   0.23679E+03    0.00000E+00
+OXY   _CSO                        0.46118E+01    0.00000E+00
+OXY   _Lateral i                  0.97294E+01    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.00000E+00    0.00000E+00
+OXY   _SWT_SWTTy                  0.00000E+00   -0.25865E+03
+OXY   _dNitrif                    0.00000E+00   -0.15318E+01
+OXY   _dREAROXY                   0.10494E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.13687E+01
+OXY   _dOxSOD                     0.00000E+00   -0.36281E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.26163E+03   -0.26163E+03
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.00000E+00   -0.20021E-02
+TotN  _Upstream                   0.43053E+02    0.00000E+00
+TotN  _CSO                        0.39023E+01    0.00000E+00
+TotN  _Lateral i                  0.82326E+01    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.00000E+00    0.00000E+00
+TotN  _SWT_SWTTy                  0.00000E+00   -0.54851E+02
+TotN  _dNitrif                    0.00000E+00   -0.33511E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.55188E+02   -0.55188E+02
+
+
+============================================================
+Mass balances for SWT_SWTType2        
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.33899E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00   -0.56675E+02
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.56336E+02    0.00000E+00
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.56675E+02   -0.56675E+02
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.32413E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00   -0.68314E+02
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.68277E+02    0.00000E+00
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.28673E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.68601E+02   -0.68601E+02
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.25091E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00   -0.15975E+03
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.16342E+03    0.00000E+00
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.19171E+01
+CBOD5 _dSedBOD5                   0.00000E+00   -0.15033E+01
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.16342E+03   -0.16342E+03
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.18979E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00   -0.15910E+03
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.16148E+03    0.00000E+00
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.99480E+00
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.15675E+01
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.16167E+03   -0.16167E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.29365E+01    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00   -0.33024E+03
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.32197E+03    0.00000E+00
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.13107E+01
+OXY   _dREAROXY                   0.95569E+01    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.29119E+01
+OXY   _dOxSOD                     0.00000E+00   -0.27440E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.33446E+03   -0.33446E+03
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.32413E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00   -0.68314E+02
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.68277E+02    0.00000E+00
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.28673E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.68601E+02   -0.68601E+02
+
+
+============================================================
+Mass balances for Sum_of_balance_areas
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.14197E+00    0.00000E+00
+Contin_Upstream                   0.19651E+02    0.00000E+00
+Contin_CSO                        0.32384E+00    0.00000E+00
+Contin_Lateral i                  0.68320E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00   -0.20781E+02
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.79930E+02   -0.59272E+02
+Contin_SWT_SWTTy                  0.20752E+02   -0.41429E+02
+SUM OF ALL TERMS                  0.12148E+03   -0.12148E+03
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.13614E+00    0.00000E+00
+NH4   _Upstream                   0.19651E+02    0.00000E+00
+NH4   _CSO                        0.17811E+01    0.00000E+00
+NH4   _Lateral i                  0.37576E+01    0.00000E+00
+NH4   _Boundary                   0.00000E+00   -0.25049E+02
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.85649E+02   -0.60566E+02
+NH4   _SWT_SWTTy                  0.25032E+02   -0.50079E+02
+NH4   _dNitrif                    0.00000E+00   -0.31268E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.13601E+03   -0.13601E+03
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.11601E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.19430E+02    0.00000E+00
+CBOD5 _Lateral i                  0.40992E+02    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00   -0.58576E+02
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.79572E+02   -0.19586E+02
+CBOD5 _SWT_SWTTy                  0.58730E+02   -0.11855E+03
+CBOD5 _dCBOD5                     0.00000E+00   -0.10913E+01
+CBOD5 _dSedBOD5                   0.00000E+00   -0.80509E+00
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.19872E+03   -0.19872E+03
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.76558E-01    0.00000E+00
+CBOD5__Upstream                   0.19651E+02    0.00000E+00
+CBOD5__CSO                        0.12954E+02    0.00000E+00
+CBOD5__Lateral i                  0.27328E+02    0.00000E+00
+CBOD5__Boundary                   0.00000E+00   -0.58339E+02
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.13078E+03   -0.71388E+02
+CBOD5__SWT_SWTTy                  0.58428E+02   -0.11758E+03
+CBOD5__dCBOD5_2                   0.00000E+00   -0.79937E+00
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.11175E+01
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.24922E+03   -0.24922E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.11801E+01    0.00000E+00
+OXY   _Upstream                   0.10808E+03    0.00000E+00
+OXY   _CSO                        0.21050E+01    0.00000E+00
+OXY   _Lateral i                  0.44408E+01    0.00000E+00
+OXY   _Boundary                   0.00000E+00   -0.12109E+03
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.44753E+03   -0.33066E+03
+OXY   _SWT_SWTTy                  0.12058E+03   -0.23898E+03
+OXY   _dNitrif                    0.00000E+00   -0.14293E+01
+OXY   _dREAROXY                   0.10141E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.18907E+01
+OXY   _dOxSOD                     0.00000E+00   -0.32580E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.69405E+03   -0.69405E+03
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.13614E+00    0.00000E+00
+TotN  _Upstream                   0.19651E+02    0.00000E+00
+TotN  _CSO                        0.17811E+01    0.00000E+00
+TotN  _Lateral i                  0.37576E+01    0.00000E+00
+TotN  _Boundary                   0.00000E+00   -0.25049E+02
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.85649E+02   -0.60566E+02
+TotN  _SWT_SWTTy                  0.25032E+02   -0.50079E+02
+TotN  _dNitrif                    0.00000E+00   -0.31268E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.13601E+03   -0.13601E+03
+
+
+MASS BALANCE PER VOLUME
+All terms in basic mass units/m3,for Processes Library always (g)
+
+
+============================================================
+Mass balances for Start               
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.14874E-01
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.67241E+03   -0.67240E+03
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.67241E+03   -0.67241E+03
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.00000E+00   -0.13667E-01
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.67214E+03   -0.67160E+03
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.53261E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.67214E+03   -0.67214E+03
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.21299E+00   -0.20604E+00
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.43450E-02
+CBOD5 _dSedBOD5                   0.00000E+00   -0.25935E-02
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.21299E+00   -0.21298E+00
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.00000E+00   -0.10733E-01
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.67149E+03   -0.66965E+03
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.83446E+00
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.99584E+00
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.67149E+03   -0.67149E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.11552E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.37058E+04   -0.37205E+04
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.24346E+01
+OXY   _dREAROXY                   0.18092E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.83880E+00
+OXY   _dOxSOD                     0.00000E+00   -0.60342E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.37239E+04   -0.37239E+04
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.00000E+00   -0.13667E-01
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.67214E+03   -0.67160E+03
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.53261E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.67214E+03   -0.67214E+03
+
+
+============================================================
+Mass balances for Upstream pipe       
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.83775E-02
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.67682E+03   -0.67681E+03
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.67682E+03   -0.67682E+03
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.00000E+00   -0.56886E-02
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.67548E+03   -0.67494E+03
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.53647E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.67548E+03   -0.67548E+03
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.59321E-06
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.95889E+01   -0.92913E+01
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.18617E+00
+CBOD5 _dSedBOD5                   0.00000E+00   -0.11141E+00
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.95889E+01   -0.95889E+01
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.84269E-03    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.67563E+03   -0.67368E+03
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.88973E+00
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.10651E+01
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.67564E+03   -0.67564E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.12047E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.37596E+04   -0.37737E+04
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.24522E+01
+OXY   _dREAROXY                   0.17759E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.10759E+01
+OXY   _dOxSOD                     0.00000E+00   -0.60378E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.37773E+04   -0.37773E+04
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.00000E+00   -0.56886E-02
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.67548E+03   -0.67494E+03
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.53647E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.67548E+03   -0.67548E+03
+
+
+============================================================
+Mass balances for Near pipe           
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.16965E-02
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.69259E+03   -0.69259E+03
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.69259E+03   -0.69259E+03
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.24586E-02    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.74069E+03   -0.74013E+03
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.55964E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.74069E+03   -0.74069E+03
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.60604E-04
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.67150E+03   -0.66963E+03
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.11718E+01
+CBOD5 _dSedBOD5                   0.00000E+00   -0.70524E+00
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.67150E+03   -0.67150E+03
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.12515E-01    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.11213E+04   -0.11186E+04
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.12069E+01
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.14505E+01
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.11213E+04   -0.11213E+04
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.12333E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.38846E+04   -0.38969E+04
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.25581E+01
+OXY   _dREAROXY                   0.17402E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.23787E+01
+OXY   _dOxSOD                     0.00000E+00   -0.60411E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.39020E+04   -0.39020E+04
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.24586E-02    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.74069E+03   -0.74013E+03
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.55964E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.74069E+03   -0.74069E+03
+
+
+============================================================
+Mass balances for Far field           
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.16510E+01    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.00000E+00    0.00000E+00
+Contin_SWT_SWTTy                  0.17974E+04   -0.17991E+04
+SUM OF ALL TERMS                  0.17991E+04   -0.17991E+04
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.16199E+01    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.00000E+00    0.00000E+00
+NH4   _SWT_SWTTy                  0.21681E+04   -0.21691E+04
+NH4   _dNitrif                    0.00000E+00   -0.63316E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.21697E+04   -0.21697E+04
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.54839E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_SWTTy                  0.50867E+04   -0.50778E+04
+CBOD5 _dCBOD5                     0.00000E+00   -0.42141E+01
+CBOD5 _dSedBOD5                   0.00000E+00   -0.41901E+01
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.50867E+04   -0.50867E+04
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.13314E+01    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5__SWT_SWTTy                  0.50607E+04   -0.50554E+04
+CBOD5__dCBOD5_2                   0.00000E+00   -0.21888E+01
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.43765E+01
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.50620E+04   -0.50620E+04
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.12736E+02    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.00000E+00    0.00000E+00
+OXY   _SWT_SWTTy                  0.10444E+05   -0.10473E+05
+OXY   _dNitrif                    0.00000E+00   -0.28942E+01
+OXY   _dREAROXY                   0.26061E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.64029E+01
+OXY   _dOxSOD                     0.00000E+00   -0.60654E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.10482E+05   -0.10482E+05
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.16199E+01    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.00000E+00    0.00000E+00
+TotN  _SWT_SWTTy                  0.21681E+04   -0.21691E+04
+TotN  _dNitrif                    0.00000E+00   -0.63316E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.21697E+04   -0.21697E+04
+
+
+============================================================
+Mass balances for SWT_Normal          
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.00000E+00   -0.24093E-02
+Contin_Upstream                   0.71678E+02    0.00000E+00
+Contin_CSO                        0.11812E+01    0.00000E+00
+Contin_Lateral i                  0.24920E+01    0.00000E+00
+Contin_Boundary                   0.00000E+00    0.00000E+00
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.00000E+00    0.00000E+00
+Contin_SWT_SWTTy                  0.00000E+00   -0.75349E+02
+SUM OF ALL TERMS                  0.75351E+02   -0.75351E+02
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.00000E+00   -0.33333E-02
+NH4   _Upstream                   0.71678E+02    0.00000E+00
+NH4   _CSO                        0.64968E+01    0.00000E+00
+NH4   _Lateral i                  0.13706E+02    0.00000E+00
+NH4   _Boundary                   0.00000E+00    0.00000E+00
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.00000E+00    0.00000E+00
+NH4   _SWT_SWTTy                  0.00000E+00   -0.91320E+02
+NH4   _dNitrif                    0.00000E+00   -0.55791E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.91881E+02   -0.91881E+02
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.64481E-01
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.70874E+02    0.00000E+00
+CBOD5 _Lateral i                  0.14952E+03    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00    0.00000E+00
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_SWTTy                  0.00000E+00   -0.21857E+03
+CBOD5 _dCBOD5                     0.00000E+00   -0.10958E+01
+CBOD5 _dSedBOD5                   0.00000E+00   -0.66327E+00
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.22040E+03   -0.22040E+03
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.00000E+00   -0.30924E-01
+CBOD5__Upstream                   0.71678E+02    0.00000E+00
+CBOD5__CSO                        0.47250E+02    0.00000E+00
+CBOD5__Lateral i                  0.99682E+02    0.00000E+00
+CBOD5__Boundary                   0.00000E+00    0.00000E+00
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.00000E+00    0.00000E+00
+CBOD5__SWT_SWTTy                  0.00000E+00   -0.21597E+03
+CBOD5__dCBOD5_2                   0.00000E+00   -0.11829E+01
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.14238E+01
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.21861E+03   -0.21861E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.00000E+00   -0.12124E+00
+OXY   _Upstream                   0.39423E+03    0.00000E+00
+OXY   _CSO                        0.76780E+01    0.00000E+00
+OXY   _Lateral i                  0.16198E+02    0.00000E+00
+OXY   _Boundary                   0.00000E+00    0.00000E+00
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.00000E+00    0.00000E+00
+OXY   _SWT_SWTTy                  0.00000E+00   -0.43063E+03
+OXY   _dNitrif                    0.00000E+00   -0.25502E+01
+OXY   _dREAROXY                   0.17472E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.22787E+01
+OXY   _dOxSOD                     0.00000E+00   -0.60403E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.43558E+03   -0.43558E+03
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.00000E+00   -0.33333E-02
+TotN  _Upstream                   0.71678E+02    0.00000E+00
+TotN  _CSO                        0.64968E+01    0.00000E+00
+TotN  _Lateral i                  0.13706E+02    0.00000E+00
+TotN  _Boundary                   0.00000E+00    0.00000E+00
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.00000E+00    0.00000E+00
+TotN  _SWT_SWTTy                  0.00000E+00   -0.91320E+02
+TotN  _dNitrif                    0.00000E+00   -0.55791E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.91881E+02   -0.91881E+02
+
+
+============================================================
+Mass balances for SWT_SWTType2        
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.74671E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_CSO                        0.00000E+00    0.00000E+00
+Contin_Lateral i                  0.00000E+00    0.00000E+00
+Contin_Boundary                   0.00000E+00   -0.12484E+03
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.12409E+03    0.00000E+00
+Contin_SWT_SWTTy                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.12484E+03   -0.12484E+03
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.71397E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _CSO                        0.00000E+00    0.00000E+00
+NH4   _Lateral i                  0.00000E+00    0.00000E+00
+NH4   _Boundary                   0.00000E+00   -0.15048E+03
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.15040E+03    0.00000E+00
+NH4   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+NH4   _dNitrif                    0.00000E+00   -0.63160E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.15111E+03   -0.15111E+03
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.55269E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.00000E+00    0.00000E+00
+CBOD5 _Lateral i                  0.00000E+00    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00   -0.35189E+03
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.35997E+03    0.00000E+00
+CBOD5 _SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5 _dCBOD5                     0.00000E+00   -0.42228E+01
+CBOD5 _dSedBOD5                   0.00000E+00   -0.33114E+01
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.35997E+03   -0.35997E+03
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.41806E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__CSO                        0.00000E+00    0.00000E+00
+CBOD5__Lateral i                  0.00000E+00    0.00000E+00
+CBOD5__Boundary                   0.00000E+00   -0.35046E+03
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.35569E+03    0.00000E+00
+CBOD5__SWT_SWTTy                  0.00000E+00    0.00000E+00
+CBOD5__dCBOD5_2                   0.00000E+00   -0.21913E+01
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.34527E+01
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.35611E+03   -0.35611E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.64682E+01    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _CSO                        0.00000E+00    0.00000E+00
+OXY   _Lateral i                  0.00000E+00    0.00000E+00
+OXY   _Boundary                   0.00000E+00   -0.72742E+03
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.70921E+03    0.00000E+00
+OXY   _SWT_SWTTy                  0.00000E+00    0.00000E+00
+OXY   _dNitrif                    0.00000E+00   -0.28870E+01
+OXY   _dREAROXY                   0.21051E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.64141E+01
+OXY   _dOxSOD                     0.00000E+00   -0.60443E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.73673E+03   -0.73673E+03
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.71397E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _CSO                        0.00000E+00    0.00000E+00
+TotN  _Lateral i                  0.00000E+00    0.00000E+00
+TotN  _Boundary                   0.00000E+00   -0.15048E+03
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.15040E+03    0.00000E+00
+TotN  _SWT_SWTTy                  0.00000E+00    0.00000E+00
+TotN  _dNitrif                    0.00000E+00   -0.63160E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.15111E+03   -0.15111E+03
+
+
+============================================================
+Mass balances for Sum_of_balance_areas
+============================================================
+
+Substance Continuity           Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+Contin_Storage                    0.26328E+00    0.00000E+00
+Contin_Upstream                   0.36440E+02    0.00000E+00
+Contin_CSO                        0.60053E+00    0.00000E+00
+Contin_Lateral i                  0.12669E+01    0.00000E+00
+Contin_Boundary                   0.00000E+00   -0.38537E+02
+Contin_Loads                      0.00000E+00    0.00000E+00
+Contin_Other                      0.00000E+00    0.00000E+00
+Contin_Start                      0.00000E+00    0.00000E+00
+Contin_Upstream                   0.00000E+00    0.00000E+00
+Contin_Near pipe                  0.00000E+00    0.00000E+00
+Contin_Far field                  0.00000E+00    0.00000E+00
+Contin_SWT_Norma                  0.14822E+03   -0.10992E+03
+Contin_SWT_SWTTy                  0.38484E+02   -0.76825E+02
+SUM OF ALL TERMS                  0.22528E+03   -0.22528E+03
+
+Substance NH4                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+NH4   _Storage                    0.25247E+00    0.00000E+00
+NH4   _Upstream                   0.36440E+02    0.00000E+00
+NH4   _CSO                        0.33029E+01    0.00000E+00
+NH4   _Lateral i                  0.69681E+01    0.00000E+00
+NH4   _Boundary                   0.00000E+00   -0.46451E+02
+NH4   _Loads                      0.00000E+00    0.00000E+00
+NH4   _Other                      0.00000E+00    0.00000E+00
+NH4   _Start                      0.00000E+00    0.00000E+00
+NH4   _Upstream                   0.00000E+00    0.00000E+00
+NH4   _Near pipe                  0.00000E+00    0.00000E+00
+NH4   _Far field                  0.00000E+00    0.00000E+00
+NH4   _SWT_Norma                  0.15883E+03   -0.11231E+03
+NH4   _SWT_SWTTy                  0.46419E+02   -0.92866E+02
+NH4   _dNitrif                    0.00000E+00   -0.57984E+00
+NH4   _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.25221E+03   -0.25221E+03
+
+Substance CBOD5                Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5 _Storage                    0.00000E+00   -0.21514E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _CSO                        0.36032E+02    0.00000E+00
+CBOD5 _Lateral i                  0.76016E+02    0.00000E+00
+CBOD5 _Boundary                   0.00000E+00   -0.10862E+03
+CBOD5 _Loads                      0.00000E+00    0.00000E+00
+CBOD5 _Other                      0.00000E+00    0.00000E+00
+CBOD5 _Start                      0.00000E+00    0.00000E+00
+CBOD5 _Upstream                   0.00000E+00    0.00000E+00
+CBOD5 _Near pipe                  0.00000E+00    0.00000E+00
+CBOD5 _Far field                  0.00000E+00    0.00000E+00
+CBOD5 _SWT_Norma                  0.14756E+03   -0.36321E+02
+CBOD5 _SWT_SWTTy                  0.10891E+03   -0.21984E+03
+CBOD5 _dCBOD5                     0.00000E+00   -0.20238E+01
+CBOD5 _dSedBOD5                   0.00000E+00   -0.14930E+01
+CBOD5 _dTEWORBOD                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.36851E+03   -0.36851E+03
+
+Substance CBOD5_2              Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+CBOD5__Storage                    0.14197E+00    0.00000E+00
+CBOD5__Upstream                   0.36440E+02    0.00000E+00
+CBOD5__CSO                        0.24021E+02    0.00000E+00
+CBOD5__Lateral i                  0.50677E+02    0.00000E+00
+CBOD5__Boundary                   0.00000E+00   -0.10818E+03
+CBOD5__Loads                      0.00000E+00    0.00000E+00
+CBOD5__Other                      0.00000E+00    0.00000E+00
+CBOD5__Start                      0.00000E+00    0.00000E+00
+CBOD5__Upstream                   0.00000E+00    0.00000E+00
+CBOD5__Near pipe                  0.00000E+00    0.00000E+00
+CBOD5__Far field                  0.00000E+00    0.00000E+00
+CBOD5__SWT_Norma                  0.24253E+03   -0.13238E+03
+CBOD5__SWT_SWTTy                  0.10835E+03   -0.21804E+03
+CBOD5__dCBOD5_2                   0.00000E+00   -0.14824E+01
+CBOD5__dSedBOD5_2                 0.00000E+00   -0.20723E+01
+CBOD5__dTEWORBOD2                 0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.46216E+03   -0.46216E+03
+
+Substance OXY                  Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+OXY   _Storage                    0.21884E+01    0.00000E+00
+OXY   _Upstream                   0.20042E+03    0.00000E+00
+OXY   _CSO                        0.39034E+01    0.00000E+00
+OXY   _Lateral i                  0.82350E+01    0.00000E+00
+OXY   _Boundary                   0.00000E+00   -0.22455E+03
+OXY   _Loads                      0.00000E+00    0.00000E+00
+OXY   _Other                      0.00000E+00    0.00000E+00
+OXY   _Start                      0.00000E+00    0.00000E+00
+OXY   _Upstream                   0.00000E+00    0.00000E+00
+OXY   _Near pipe                  0.00000E+00    0.00000E+00
+OXY   _Far field                  0.00000E+00    0.00000E+00
+OXY   _SWT_Norma                  0.82989E+03   -0.61318E+03
+OXY   _SWT_SWTTy                  0.22360E+03   -0.44316E+03
+OXY   _dNitrif                    0.00000E+00   -0.26504E+01
+OXY   _dREAROXY                   0.18806E+02    0.00000E+00
+OXY   _dOxyBODCOD                 0.00000E+00   -0.35061E+01
+OXY   _dOxSOD                     0.00000E+00   -0.60416E-14
+OXY   _dTEWOROXY                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.12871E+04   -0.12871E+04
+
+Substance TotN                 Sources/Inflows Sinks/Outflows
+------------------------------------------------------------
+TotN  _Storage                    0.25247E+00    0.00000E+00
+TotN  _Upstream                   0.36440E+02    0.00000E+00
+TotN  _CSO                        0.33029E+01    0.00000E+00
+TotN  _Lateral i                  0.69681E+01    0.00000E+00
+TotN  _Boundary                   0.00000E+00   -0.46451E+02
+TotN  _Loads                      0.00000E+00    0.00000E+00
+TotN  _Other                      0.00000E+00    0.00000E+00
+TotN  _Start                      0.00000E+00    0.00000E+00
+TotN  _Upstream                   0.00000E+00    0.00000E+00
+TotN  _Near pipe                  0.00000E+00    0.00000E+00
+TotN  _Far field                  0.00000E+00    0.00000E+00
+TotN  _SWT_Norma                  0.15883E+03   -0.11231E+03
+TotN  _SWT_SWTTy                  0.46419E+02   -0.92866E+02
+TotN  _dNitrif                    0.00000E+00   -0.57984E+00
+TotN  _dTEWORNH4                  0.00000E+00    0.00000E+00
+SUM OF ALL TERMS                  0.25221E+03   -0.25221E+03

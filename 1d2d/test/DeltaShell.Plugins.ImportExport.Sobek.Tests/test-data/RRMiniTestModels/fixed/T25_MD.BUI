@@ -1,0 +1,161 @@
+*Name of this file: \SOBEK212\FIXED\T25_MD.BUI
+*Date and time of construction: 01-03-2012   15:22:27
+*Enige algemene wenken:
+*Gebruik de default dataset (1) of de volledige reeks (0) voor overige invoer
+1
+*Aantal stations
+ 1 
+*Namen van stations
+'Station1'
+*Aantal gebeurtenissen (omdat het 1 bui betreft is dit altijd 1)
+*en het aantal seconden per waarnemingstijdstap
+ 1  3600 
+*Elke commentaarregel wordt begonnen met een * (asteriks).
+*Eerste record bevat startdatum en -tijd, lengte van de gebeurtenis in dd hh mm ss
+*Het format is: yyyymmdd:hhmmss:ddhhmmss
+*Daarna voor elk station de neerslag in mm per tijdstap.
+ 2005 12 30 0 0 0 6 0 0 0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  .0165
+  .206
+  .033
+  .3296
+  0
+  .4862
+  0
+  .2142
+  .3296
+  .1236
+  0
+  .1236
+  .1648
+  .3708
+  0
+  .5274
+  0
+  .4664
+  .1496
+  0
+  1.3904
+  .4224
+  .2904
+  2.0328
+  .132
+  .132
+  .132
+  1.2672
+  .528
+  .88
+  .5016
+  2.332
+  1.3288
+  0
+  .9152
+  2.6752
+  2.376
+  2.1824
+  .9592
+  9.3984
+  23.3288
+  10.2344
+  3.036
+  .9592
+  1.056
+  .6952
+  .528
+  1.6632
+  .8008
+  1.0648
+  1.5048
+  .7568
+  3.0008
+  .3432
+  0
+  0
+  .1232
+  .0528
+  1.3376
+  0
+  .0616
+  .3608
+  .2728
+  0
+  0
+  0
+  0
+  .7746
+  .1236
+  0
+  .0412
+  .2225
+  .3214
+  .4697
+  0
+  .3296
+  .1483
+  .0082
+  .1648
+  .2719
+  0
+  .0082
+  0
+  .1236
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0

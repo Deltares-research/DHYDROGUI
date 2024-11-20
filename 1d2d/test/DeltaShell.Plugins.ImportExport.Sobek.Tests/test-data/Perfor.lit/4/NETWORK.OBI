@@ -1,0 +1,49 @@
+OBI2.0
+OBID id '1' ci 'SBK_BOUNDARY' obid
+OBID id '1_1' ci 'SBK_GRIDPOINT' obid
+OBID id '5' ci 'SBK_WEIR' obid
+OBID id 'Start' ci 'SBK_MEASSTAT' obid
+OBID id '1_2' ci 'SBK_GRIDPOINT' obid
+OBID id '6' ci 'SBK_WEIR' obid
+OBID id '1_3' ci 'SBK_GRIDPOINT' obid
+OBID id '7' ci 'SBK_WEIR' obid
+OBID id 'Upstream pipe' ci 'SBK_MEASSTAT' obid
+OBID id '1_4' ci 'SBK_GRIDPOINT' obid
+OBID id '8' ci 'SBK_WEIR' obid
+OBID id 'L1' ci 'SBK_LATERALFLOW' obid
+OBID id '1_5' ci 'SBK_GRIDPOINT' obid
+OBID id '9' ci 'SBK_WEIR' obid
+OBID id 'Near pipe' ci 'SBK_MEASSTAT' obid
+OBID id '1_6' ci 'SBK_GRIDPOINT' obid
+OBID id '10' ci 'SBK_WEIR' obid
+OBID id '1_7' ci 'SBK_GRIDPOINT' obid
+OBID id '11' ci 'SBK_WEIR' obid
+OBID id '2' ci 'SBK_PROFILE' obid
+OBID id '1_8' ci 'SBK_GRIDPOINT' obid
+OBID id '12' ci 'SBK_WEIR' obid
+OBID id '1_9' ci 'SBK_GRIDPOINT' obid
+OBID id '13' ci 'SBK_WEIR' obid
+OBID id '3' ci 'SBK_CHANNELCONNECTION' obid
+OBID id '14' ci 'SBK_WEIR' obid
+OBID id '2_1' ci 'SBK_GRIDPOINT' obid
+OBID id '4' ci 'SBK_PROFILE' obid
+OBID id '15' ci 'SBK_WEIR' obid
+OBID id '2_2' ci 'SBK_GRIDPOINT' obid
+OBID id '16' ci 'SBK_WEIR' obid
+OBID id '2_3' ci 'SBK_GRIDPOINT' obid
+OBID id '17' ci 'SBK_WEIR' obid
+OBID id '2_4' ci 'SBK_GRIDPOINT' obid
+OBID id '18' ci 'SBK_WEIR' obid
+OBID id '2_5' ci 'SBK_GRIDPOINT' obid
+OBID id '19' ci 'SBK_WEIR' obid
+OBID id '2_6' ci 'SBK_GRIDPOINT' obid
+OBID id '20' ci 'SBK_WEIR' obid
+OBID id '2_7' ci 'SBK_GRIDPOINT' obid
+OBID id '22' ci 'SBK_WEIR' obid
+OBID id '2_8' ci 'SBK_GRIDPOINT' obid
+OBID id '23' ci 'SBK_WEIR' obid
+OBID id 'Far field' ci 'SBK_MEASSTAT' obid
+OBID id '2_9' ci 'SBK_GRIDPOINT' obid
+OBID id '21' ci 'SBK_BOUNDARY' obid
+BRID id '1' ci 'SBK_CHANNEL' brid
+BRID id '2' ci 'SBK_CHANNEL' brid

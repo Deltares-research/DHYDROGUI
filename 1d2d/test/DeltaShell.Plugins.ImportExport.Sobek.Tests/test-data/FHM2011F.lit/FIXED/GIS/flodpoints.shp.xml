@@ -1,0 +1,3 @@
+<?xml version="1.0"?>
+<!--<!DOCTYPE metadata SYSTEM "http://www.esri.com/metadata/esriprof80.dtd">-->
+<metadata xml:lang="en"><Esri><MetaID>{8393BB75-B2B6-4D18-B0F5-79C8BD71A8D9}</MetaID><CreaDate>20070813</CreaDate><CreaTime>23214700</CreaTime><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process Name="CreateFeatureclass_5" ToolSource="C:\Program Files\ArcGIS\ArcToolbox\Toolboxes\Data Management Tools.tbx\CreateFeatureclass" Date="20070813" Time="232147">CreateFeatureclass "E:\Gugus Ultimates Corner\workspace\flood extent reconstruction\jakarta barat" flodpoints POINT # DISABLED DISABLED # # 0 0 0 "E:\Gugus Ultimates Corner\workspace\flood extent reconstruction\jakarta barat\flodpoints.shp"</Process></lineage></DataProperties></Esri></metadata>

@@ -1,0 +1,399 @@
+GLFR id 0
+BDFR id '0' ci '0' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 7 st cp 0 30 0 sr cp 0 30 bdfr glfr
+STFR id 'fr_BRI15732' ci 'sd_BRI15732' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15772' ci 'sd_BRI15772' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15778' ci 'sd_BRI15778' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15816' ci 'sd_BRI15816' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18467' ci 'sd_BRI18467' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18468' ci 'sd_BRI18468' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15709' ci 'sd_BRI15709' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15726' ci 'sd_BRI15726' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15760' ci 'sd_BRI15760' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15782' ci 'sd_BRI15782' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15797' ci 'sd_BRI15797' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_BRI18371' ci 'sd_BRI18371' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI19080' ci 'sd_BRI19080' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15711' ci 'sd_BRI15711' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_BRI15742' ci 'sd_BRI15742' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18385' ci 'sd_BRI18385' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18471' ci 'sd_BRI18471' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15721' ci 'sd_BRI15721' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15729' ci 'sd_BRI15729' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15736' ci 'sd_BRI15736' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15754' ci 'sd_BRI15754' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15783' ci 'sd_BRI15783' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15791' ci 'sd_BRI15791' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18575' ci 'sd_BRI18575' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15725' ci 'sd_BRI15725' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15739' ci 'sd_BRI15739' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15794' ci 'sd_BRI15794' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15806' ci 'sd_BRI15806' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15815' ci 'sd_BRI15815' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15817' ci 'sd_BRI15817' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15710' ci 'sd_BRI15710' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15720' ci 'sd_BRI15720' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15723' ci 'sd_BRI15723' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15733' ci 'sd_BRI15733' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_BRI15743' ci 'sd_BRI15743' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15744' ci 'sd_BRI15744' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15788' ci 'sd_BRI15788' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15809' ci 'sd_BRI15809' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18432' ci 'sd_BRI18432' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18465' ci 'sd_BRI18465' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_BRI19052' ci 'sd_BRI19052' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_BRI19078' ci 'sd_BRI19078' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_BRI19079' ci 'sd_BRI19079' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI19088' ci 'sd_BRI19088' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15713' ci 'sd_BRI15713' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_BRI15735' ci 'sd_BRI15735' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_BRI15745' ci 'sd_BRI15745' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15755' ci 'sd_BRI15755' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15757' ci 'sd_BRI15757' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15775' ci 'sd_BRI15775' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15781' ci 'sd_BRI15781' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15800' ci 'sd_BRI15800' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18466' ci 'sd_BRI18466' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18470' ci 'sd_BRI18470' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI19053' ci 'sd_BRI19053' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI19163' ci 'sd_BRI19163' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15734' ci 'sd_BRI15734' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15741' ci 'sd_BRI15741' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15780' ci 'sd_BRI15780' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15785' ci 'sd_BRI15785' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15803' ci 'sd_BRI15803' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15812' ci 'sd_BRI15812' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI15814' ci 'sd_BRI15814' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18431' ci 'sd_BRI18431' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_BRI18469' ci 'sd_BRI18469' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_BRI18472' ci 'sd_BRI18472' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL16039' ci 'sd_CUL16039' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15764' ci 'sd_CUL15764' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26571' ci 'sd_CUL26571' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15548' ci 'sd_CUL15548' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15571' ci 'sd_CUL15571' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15583' ci 'sd_CUL15583' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL13858' ci 'sd_CUL13858' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL13860' ci 'sd_CUL13860' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL13865' ci 'sd_CUL13865' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15712' ci 'sd_CUL15712' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15717' ci 'sd_CUL15717' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15722' ci 'sd_CUL15722' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15724' ci 'sd_CUL15724' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15745' ci 'sd_CUL15745' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15781' ci 'sd_CUL15781' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15782' ci 'sd_CUL15782' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15783' ci 'sd_CUL15783' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15785' ci 'sd_CUL15785' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15786' ci 'sd_CUL15786' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15854' ci 'sd_CUL15854' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL16020' ci 'sd_CUL16020' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL16059' ci 'sd_CUL16059' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26526' ci 'sd_CUL26526' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26527' ci 'sd_CUL26527' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26563' ci 'sd_CUL26563' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26564' ci 'sd_CUL26564' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26565' ci 'sd_CUL26565' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26566' ci 'sd_CUL26566' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26567' ci 'sd_CUL26567' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26569' ci 'sd_CUL26569' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26570' ci 'sd_CUL26570' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26572' ci 'sd_CUL26572' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26573' ci 'sd_CUL26573' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26575' ci 'sd_CUL26575' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26577' ci 'sd_CUL26577' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26578' ci 'sd_CUL26578' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26579' ci 'sd_CUL26579' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26594' ci 'sd_CUL26594' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26595' ci 'sd_CUL26595' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26596' ci 'sd_CUL26596' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26597' ci 'sd_CUL26597' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26598' ci 'sd_CUL26598' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26599' ci 'sd_CUL26599' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26600' ci 'sd_CUL26600' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26601' ci 'sd_CUL26601' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26602' ci 'sd_CUL26602' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26603' ci 'sd_CUL26603' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26604' ci 'sd_CUL26604' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26605' ci 'sd_CUL26605' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26606' ci 'sd_CUL26606' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26607' ci 'sd_CUL26607' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26608' ci 'sd_CUL26608' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26610' ci 'sd_CUL26610' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26611' ci 'sd_CUL26611' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL15784' ci 'sd_CUL15784' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL26612' ci 'sd_CUL26612' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL30321' ci 'sd_CUL30321' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL30323' ci 'sd_CUL30323' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_CUL30409' ci 'sd_CUL30409' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+BDFR id 'fr_SLVRT003' ci 'SLVRT003' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM092' ci 'GECOM092' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM093' ci 'GECOM093' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLVRT002' ci 'SLVRT002' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLVRT001' ci 'SLVRT001' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM105' ci 'GECOM105' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM084' ci 'GECOM084' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM086' ci 'GECOM086' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM083' ci 'GECOM083' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM080' ci 'GECOM080' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM082' ci 'GECOM082' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM073' ci 'GECOM073' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM104' ci 'GECOM104' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM074' ci 'GECOM074' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM113' ci 'GECOM113' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM114' ci 'GECOM114' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM112' ci 'GECOM112' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM076' ci 'GECOM076' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM079' ci 'GECOM079' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM116' ci 'GECOM116' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM115' ci 'GECOM115' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM069' ci 'GECOM069' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLOTERPL8' ci 'SLOTERPL8' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLOTERPL9' ci 'SLOTERPL9' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLOTERPL7' ci 'SLOTERPL7' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLOTERPL6' ci 'SLOTERPL6' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLOTERPL5' ci 'SLOTERPL5' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLOTERPL4' ci 'SLOTERPL4' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_OSBIN112' ci 'OSBIN112' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_MEANDER' ci 'MEANDER' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM048' ci 'GECOM048' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLOTERPL3' ci 'SLOTERPL3' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM049' ci 'GECOM049' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM047' ci 'GECOM047' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLOTERPL1' ci 'SLOTERPL1' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM077' ci 'GECOM077' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM078' ci 'GECOM078' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM045' ci 'GECOM045' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM077A' ci 'GECOM077A' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM043' ci 'GECOM043' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM055' ci 'GECOM055' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM100' ci 'GECOM100' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM108' ci 'GECOM108' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM054' ci 'GECOM054' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM109' ci 'GECOM109' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM035' ci 'GECOM035' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM034' ci 'GECOM034' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLOTERPL2' ci 'SLOTERPL2' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM059' ci 'GECOM059' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM033' ci 'GECOM033' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM032' ci 'GECOM032' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_BURGC002' ci 'BURGC002' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM036' ci 'GECOM036' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM007' ci 'GECOM007' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM042' ci 'GECOM042' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM031' ci 'GECOM031' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM008' ci 'GECOM008' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM001A' ci 'GECOM001A' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM001B' ci 'GECOM001B' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM010' ci 'GECOM010' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM006' ci 'GECOM006' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM009' ci 'GECOM009' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM014' ci 'GECOM014' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM106' ci 'GECOM106' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM005' ci 'GECOM005' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM001' ci 'GECOM001' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM018' ci 'GECOM018' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLVRT001A' ci 'SLVRT001A' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_HEEMSSL' ci 'HEEMSSL' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLVRT008' ci 'SLVRT008' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_AKERSL01' ci 'AKERSL01' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM089' ci 'GECOM089' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_OSBIN113' ci 'OSBIN113' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM107' ci 'GECOM107' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLVRT008A' ci 'SLVRT008A' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_MIAKP124' ci 'MIAKP124' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLVRT007' ci 'SLVRT007' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_NISLO058' ci 'NISLO058' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_NISLO074' ci 'NISLO074' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLVRT006' ci 'SLVRT006' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_MIAKP121' ci 'MIAKP121' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM121' ci 'GECOM121' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLVRT005' ci 'SLVRT005' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM122' ci 'GECOM122' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLVRT004' ci 'SLVRT004' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM068' ci 'GECOM068' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM118' ci 'GECOM118' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM065' ci 'GECOM065' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM064' ci 'GECOM064' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM062' ci 'GECOM062' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM117' ci 'GECOM117' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM061' ci 'GECOM061' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_GECOM120' ci 'GECOM120' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_DUIKER001' ci 'DUIKER001' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'fr_SLOTERPL10' ci 'SLOTERPL10' mf 7 mt cp 0 23 0 mr cp 0 23 0 s1 6 s2 6 bdfr
+BDFR id 'CH523' ci 'CH523' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH496' ci 'CH496' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH6' ci 'CH6' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH103' ci 'CH103' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH38' ci 'CH38' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH184' ci 'CH184' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH165' ci 'CH165' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH520' ci 'CH520' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH544' ci 'CH544' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH569' ci 'CH569' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH567' ci 'CH567' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH454' ci 'CH454' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH143' ci 'CH143' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH221' ci 'CH221' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id '1' ci '1' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH372' ci 'CH372' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH267' ci 'CH267' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH3' ci 'CH3' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH268' ci 'CH268' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH494' ci 'CH494' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH371' ci 'CH371' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH429' ci 'CH429' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH79' ci 'CH79' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH75' ci 'CH75' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH392' ci 'CH392' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH144' ci 'CH144' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id '2' ci '2' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH452' ci 'CH452' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH1' ci 'CH1' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH493' ci 'CH493' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH266' ci 'CH266' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH74' ci 'CH74' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH142' ci 'CH142' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH77' ci 'CH77' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH7' ci 'CH7' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH491' ci 'CH491' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH8' ci 'CH8' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH296' ci 'CH296' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH49' ci 'CH49' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH465' ci 'CH465' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH492' ci 'CH492' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH487' ci 'CH487' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH139' ci 'CH139' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH293' ci 'CH293' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH218' ci 'CH218' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH411' ci 'CH411' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH556' ci 'CH556' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH122' ci 'CH122' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH70' ci 'CH70' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH295' ci 'CH295' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH480' ci 'CH480' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH4' ci 'CH4' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH481' ci 'CH481' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH5' ci 'CH5' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH294' ci 'CH294' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH325' ci 'CH325' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH201' ci 'CH201' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH27' ci 'CH27' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH521' ci 'CH521' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH39' ci 'CH39' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH2' ci 'CH2' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH121' ci 'CH121' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH323' ci 'CH323' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH495' ci 'CH495' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH549' ci 'CH549' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH190' ci 'CH190' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH81' ci 'CH81' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH479' ci 'CH479' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH120' ci 'CH120' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH410' ci 'CH410' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH553' ci 'CH553' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH166' ci 'CH166' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH223' ci 'CH223' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH83' ci 'CH83' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH76' ci 'CH76' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH572' ci 'CH572' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH82' ci 'CH82' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH173' ci 'CH173' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH222' ci 'CH222' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH80' ci 'CH80' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH78' ci 'CH78' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH462' ci 'CH462' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH562' ci 'CH562' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH563' ci 'CH563' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH564' ci 'CH564' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH566' ci 'CH566' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH570' ci 'CH570' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH568' ci 'CH568' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH458' ci 'CH458' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH430' ci 'CH430' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH175' ci 'CH175' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH565' ci 'CH565' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH560' ci 'CH560' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH561' ci 'CH561' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+BDFR id 'CH160' ci 'CH160' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 bdfr
+STFR id 'sd_CUL26597' ci 'sd_CUL26597' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26598' ci 'sd_CUL26598' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL30409' ci 'sd_CUL30409' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15784' ci 'sd_CUL15784' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15785' ci 'sd_CUL15785' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15786' ci 'sd_CUL15786' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26596' ci 'sd_CUL26596' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26575' ci 'sd_CUL26575' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL16039' ci 'sd_CUL16039' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26610' ci 'sd_CUL26610' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26603' ci 'sd_CUL26603' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL13858' ci 'sd_CUL13858' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26608' ci 'sd_CUL26608' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26571' ci 'sd_CUL26571' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15724' ci 'sd_CUL15724' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL16059' ci 'sd_CUL16059' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26563' ci 'sd_CUL26563' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26594' ci 'sd_CUL26594' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL16020' ci 'sd_CUL16020' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26612' ci 'sd_CUL26612' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15745' ci 'sd_CUL15745' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26604' ci 'sd_CUL26604' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26573' ci 'sd_CUL26573' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26572' ci 'sd_CUL26572' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26601' ci 'sd_CUL26601' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26569' ci 'sd_CUL26569' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL13865' ci 'sd_CUL13865' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26599' ci 'sd_CUL26599' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26595' ci 'sd_CUL26595' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26566' ci 'sd_CUL26566' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26578' ci 'sd_CUL26578' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL13860' ci 'sd_CUL13860' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26577' ci 'sd_CUL26577' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15722' ci 'sd_CUL15722' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26579' ci 'sd_CUL26579' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15583' ci 'sd_CUL15583' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26526' ci 'sd_CUL26526' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26527' ci 'sd_CUL26527' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15783' ci 'sd_CUL15783' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15781' ci 'sd_CUL15781' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26611' ci 'sd_CUL26611' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26605' ci 'sd_CUL26605' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26600' ci 'sd_CUL26600' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL30323' ci 'sd_CUL30323' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15717' ci 'sd_CUL15717' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26606' ci 'sd_CUL26606' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL15782' ci 'sd_CUL15782' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26564' ci 'sd_CUL26564' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26607' ci 'sd_CUL26607' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26567' ci 'sd_CUL26567' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26602' ci 'sd_CUL26602' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_CUL26570' ci 'sd_CUL26570' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+BDFR id '3' ci '3' mf 7 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 7 st cp 0 30 0 sr cp 0 30 bdfr
+BDFR id '7' ci '7' mf 7 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 7 st cp 0 30 0 sr cp 0 30 bdfr
+CRFR id 'cd_P_10246' nm 'Friction' cs 'cd_P_10246'
+lt ys
+TBLE
+0 19.04 <
+tble
+ft ys
+TBLE
+3 30 <
+tble
+fr ys
+TBLE
+3 30 <
+tble crfr
+BDFR id '5' ci '5' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 7 st cp 0 30 0 sr cp 0 30 bdfr
+CRFR id 'cd_P_7003' nm 'Friction' cs 'cd_P_7003'
+lt ys
+TBLE
+0 12.04 <
+tble
+ft ys
+TBLE
+3 30 <
+tble
+fr ys
+TBLE
+3 30 <
+tble crfr
+STFR id 'BR_NrdzdOostoev' ci 'BR_NrdzdOostoev' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 33 0 sr cp 0 33 stfr

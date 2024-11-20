@@ -1,0 +1,1227 @@
+ Last residues before crash or continuation without
+ convergence. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  
+ Time step =   177 Nr iter. =  50
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+ Time step =   177 Nr iter. =  49
+    OV_20_35                       X=   6400.00 DH=  -0.00478
+    OV_20_35                       X=   6400.00 DQ=     0.371
+ Time step =   177 Nr iter. =  48
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+ Time step =   177 Nr iter. =  47
+    OV_20_35                       X=   6400.00 DH=  -0.00478
+    OV_20_35                       X=   6400.00 DQ=     0.371
+ Time step =   177 Nr iter. =  46
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+ Time step =   177 Nr iter. =  45
+    OV_20_35                       X=   6400.00 DH=  -0.00478
+    OV_20_35                       X=   6400.00 DQ=     0.371
+ Time step =   177 Nr iter. =  44
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+ Time step =   177 Nr iter. =  43
+    OV_20_35                       X=   6400.00 DH=  -0.00478
+    OV_20_35                       X=   6400.00 DQ=     0.371
+ Time step =   177 Nr iter. =  42
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+ Time step =   177 Nr iter. =  41
+    OV_20_35                       X=   6400.00 DH=  -0.00478
+    OV_20_35                       X=   6400.00 DQ=     0.371
+ Time step =   177 Nr iter. =  40
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+ Time step =   177 Nr iter. =  39
+    OV_20_35                       X=   6400.00 DH=  -0.00478
+    OV_20_35                       X=   6400.00 DQ=     0.371
+ Time step =   177 Nr iter. =  38
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+ Time step =   177 Nr iter. =  37
+    OV_20_35                       X=   6400.00 DH=  -0.00478
+    OV_20_35                       X=   6400.00 DQ=     0.371
+ Time step =   177 Nr iter. =  36
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+ Time step =   177 Nr iter. =  35
+    OV_20_35                       X=   6400.00 DH=  -0.00478
+    OV_20_35                       X=   6400.00 DQ=     0.371
+ Time step =   177 Nr iter. =  34
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+ Time step =   177 Nr iter. =  33
+    OV_20_35                       X=   6400.00 DH=  -0.00478
+    OV_20_35                       X=   6400.00 DQ=     0.371
+ Time step =   177 Nr iter. =  32
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+ Time step =   177 Nr iter. =  31
+    OV_20_35                       X=   6400.00 DH=  -0.00478
+    OV_20_35                       X=   6400.00 DQ=     0.371
+  
+ Time step =   181 Nr iter. =  50
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+ Time step =   181 Nr iter. =  49
+    OV_13_20                       X=   6600.00 DH=   0.00470
+    OV_13_20                       X=   6600.00 DQ=    -0.280
+ Time step =   181 Nr iter. =  48
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+ Time step =   181 Nr iter. =  47
+    OV_13_20                       X=   6600.00 DH=   0.00470
+    OV_13_20                       X=   6600.00 DQ=    -0.280
+ Time step =   181 Nr iter. =  46
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+ Time step =   181 Nr iter. =  45
+    OV_13_20                       X=   6600.00 DH=   0.00470
+    OV_13_20                       X=   6600.00 DQ=    -0.280
+ Time step =   181 Nr iter. =  44
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+ Time step =   181 Nr iter. =  43
+    OV_13_20                       X=   6600.00 DH=   0.00470
+    OV_13_20                       X=   6600.00 DQ=    -0.280
+ Time step =   181 Nr iter. =  42
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+ Time step =   181 Nr iter. =  41
+    OV_13_20                       X=   6600.00 DH=   0.00470
+    OV_13_20                       X=   6600.00 DQ=    -0.280
+ Time step =   181 Nr iter. =  40
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+ Time step =   181 Nr iter. =  39
+    OV_13_20                       X=   6600.00 DH=   0.00470
+    OV_13_20                       X=   6600.00 DQ=    -0.280
+ Time step =   181 Nr iter. =  38
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+ Time step =   181 Nr iter. =  37
+    OV_13_20                       X=   6600.00 DH=   0.00470
+    OV_13_20                       X=   6600.00 DQ=    -0.280
+ Time step =   181 Nr iter. =  36
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+ Time step =   181 Nr iter. =  35
+    OV_13_20                       X=   6600.00 DH=   0.00470
+    OV_13_20                       X=   6600.00 DQ=    -0.280
+ Time step =   181 Nr iter. =  34
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+ Time step =   181 Nr iter. =  33
+    OV_13_20                       X=   6600.00 DH=   0.00470
+    OV_13_20                       X=   6600.00 DQ=    -0.280
+ Time step =   181 Nr iter. =  32
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+ Time step =   181 Nr iter. =  31
+    OV_13_20                       X=   6600.00 DH=   0.00470
+    OV_13_20                       X=   6600.00 DQ=    -0.280
+  
+ Time step =   183 Nr iter. =  50
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+ Time step =   183 Nr iter. =  49
+    OV_13_20                       X=   6600.00 DH=   0.00476
+    OV_13_20                       X=   6600.00 DQ=    -0.284
+ Time step =   183 Nr iter. =  48
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+ Time step =   183 Nr iter. =  47
+    OV_13_20                       X=   6600.00 DH=   0.00476
+    OV_13_20                       X=   6600.00 DQ=    -0.284
+ Time step =   183 Nr iter. =  46
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+ Time step =   183 Nr iter. =  45
+    OV_13_20                       X=   6600.00 DH=   0.00476
+    OV_13_20                       X=   6600.00 DQ=    -0.284
+ Time step =   183 Nr iter. =  44
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+ Time step =   183 Nr iter. =  43
+    OV_13_20                       X=   6600.00 DH=   0.00476
+    OV_13_20                       X=   6600.00 DQ=    -0.284
+ Time step =   183 Nr iter. =  42
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+ Time step =   183 Nr iter. =  41
+    OV_13_20                       X=   6600.00 DH=   0.00476
+    OV_13_20                       X=   6600.00 DQ=    -0.284
+ Time step =   183 Nr iter. =  40
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+ Time step =   183 Nr iter. =  39
+    OV_13_20                       X=   6600.00 DH=   0.00476
+    OV_13_20                       X=   6600.00 DQ=    -0.284
+ Time step =   183 Nr iter. =  38
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+ Time step =   183 Nr iter. =  37
+    OV_13_20                       X=   6600.00 DH=   0.00476
+    OV_13_20                       X=   6600.00 DQ=    -0.284
+ Time step =   183 Nr iter. =  36
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+ Time step =   183 Nr iter. =  35
+    OV_13_20                       X=   6600.00 DH=   0.00476
+    OV_13_20                       X=   6600.00 DQ=    -0.284
+ Time step =   183 Nr iter. =  34
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+ Time step =   183 Nr iter. =  33
+    OV_13_20                       X=   6600.00 DH=   0.00476
+    OV_13_20                       X=   6600.00 DQ=    -0.284
+ Time step =   183 Nr iter. =  32
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+ Time step =   183 Nr iter. =  31
+    OV_13_20                       X=   6600.00 DH=   0.00476
+    OV_13_20                       X=   6600.00 DQ=    -0.284
+  
+ Time step =   184 Nr iter. =  50
+    OV_13_20                       X=   6600.00 DH=  -0.00290
+    OV_13_20                       X=   6600.00 DQ=     0.185
+ Time step =   184 Nr iter. =  49
+    OV_13_20                       X=   6600.00 DH=   0.00740
+    OV_13_20                       X=   6600.00 DQ=    -0.438
+ Time step =   184 Nr iter. =  48
+    OV_13_20                       X=   6600.00 DH=  -0.00450
+    OV_13_20                       X=   6601.00 DQ=     0.253
+ Time step =   184 Nr iter. =  47
+    OV_13_20                       X=   6600.00 DH=  -0.00289
+    OV_13_20                       X=   6600.00 DQ=     0.185
+ Time step =   184 Nr iter. =  46
+    OV_13_20                       X=   6600.00 DH=   0.00740
+    OV_13_20                       X=   6600.00 DQ=    -0.438
+ Time step =   184 Nr iter. =  45
+    OV_13_20                       X=   6600.00 DH=  -0.00450
+    OV_13_20                       X=   6601.00 DQ=     0.253
+ Time step =   184 Nr iter. =  44
+    OV_13_20                       X=   6600.00 DH=  -0.00290
+    OV_13_20                       X=   6600.00 DQ=     0.185
+ Time step =   184 Nr iter. =  43
+    OV_13_20                       X=   6600.00 DH=   0.00740
+    OV_13_20                       X=   6600.00 DQ=    -0.438
+ Time step =   184 Nr iter. =  42
+    OV_13_20                       X=   6600.00 DH=  -0.00450
+    OV_13_20                       X=   6601.00 DQ=     0.253
+ Time step =   184 Nr iter. =  41
+    OV_13_20                       X=   6600.00 DH=  -0.00290
+    OV_13_20                       X=   6600.00 DQ=     0.185
+ Time step =   184 Nr iter. =  40
+    OV_13_20                       X=   6600.00 DH=   0.00740
+    OV_13_20                       X=   6600.00 DQ=    -0.438
+ Time step =   184 Nr iter. =  39
+    OV_13_20                       X=   6600.00 DH=  -0.00450
+    OV_13_20                       X=   6601.00 DQ=     0.253
+ Time step =   184 Nr iter. =  38
+    OV_13_20                       X=   6600.00 DH=  -0.00289
+    OV_13_20                       X=   6600.00 DQ=     0.185
+ Time step =   184 Nr iter. =  37
+    OV_13_20                       X=   6600.00 DH=   0.00740
+    OV_13_20                       X=   6600.00 DQ=    -0.438
+ Time step =   184 Nr iter. =  36
+    OV_13_20                       X=   6600.00 DH=  -0.00450
+    OV_13_20                       X=   6601.00 DQ=     0.253
+ Time step =   184 Nr iter. =  35
+    OV_13_20                       X=   6600.00 DH=  -0.00290
+    OV_13_20                       X=   6600.00 DQ=     0.185
+ Time step =   184 Nr iter. =  34
+    OV_13_20                       X=   6600.00 DH=   0.00740
+    OV_13_20                       X=   6600.00 DQ=    -0.438
+ Time step =   184 Nr iter. =  33
+    OV_13_20                       X=   6600.00 DH=  -0.00450
+    OV_13_20                       X=   6601.00 DQ=     0.253
+ Time step =   184 Nr iter. =  32
+    OV_13_20                       X=   6600.00 DH=  -0.00289
+    OV_13_20                       X=   6600.00 DQ=     0.185
+ Time step =   184 Nr iter. =  31
+    OV_13_20                       X=   6600.00 DH=   0.00740
+    OV_13_20                       X=   6600.00 DQ=    -0.438
+  
+ Time step =   191 Nr iter. =  50
+    OV_13_20                       X=   6600.00 DH=  -0.00291
+    OV_13_20                       X=   6600.00 DQ=     0.187
+ Time step =   191 Nr iter. =  49
+    OV_13_20                       X=   6600.00 DH=   0.00746
+    OV_13_20                       X=   6600.00 DQ=    -0.444
+ Time step =   191 Nr iter. =  48
+    OV_13_20                       X=   6600.00 DH=  -0.00454
+    OV_13_20                       X=   6601.00 DQ=     0.257
+ Time step =   191 Nr iter. =  47
+    OV_13_20                       X=   6600.00 DH=  -0.00291
+    OV_13_20                       X=   6600.00 DQ=     0.187
+ Time step =   191 Nr iter. =  46
+    OV_13_20                       X=   6600.00 DH=   0.00746
+    OV_13_20                       X=   6600.00 DQ=    -0.444
+ Time step =   191 Nr iter. =  45
+    OV_13_20                       X=   6600.00 DH=  -0.00454
+    OV_13_20                       X=   6601.00 DQ=     0.257
+ Time step =   191 Nr iter. =  44
+    OV_13_20                       X=   6600.00 DH=  -0.00291
+    OV_13_20                       X=   6600.00 DQ=     0.187
+ Time step =   191 Nr iter. =  43
+    OV_13_20                       X=   6600.00 DH=   0.00746
+    OV_13_20                       X=   6600.00 DQ=    -0.444
+ Time step =   191 Nr iter. =  42
+    OV_13_20                       X=   6600.00 DH=  -0.00454
+    OV_13_20                       X=   6601.00 DQ=     0.257
+ Time step =   191 Nr iter. =  41
+    OV_13_20                       X=   6600.00 DH=  -0.00291
+    OV_13_20                       X=   6600.00 DQ=     0.187
+ Time step =   191 Nr iter. =  40
+    OV_13_20                       X=   6600.00 DH=   0.00746
+    OV_13_20                       X=   6600.00 DQ=    -0.444
+ Time step =   191 Nr iter. =  39
+    OV_13_20                       X=   6600.00 DH=  -0.00454
+    OV_13_20                       X=   6601.00 DQ=     0.257
+ Time step =   191 Nr iter. =  38
+    OV_13_20                       X=   6600.00 DH=  -0.00291
+    OV_13_20                       X=   6600.00 DQ=     0.187
+ Time step =   191 Nr iter. =  37
+    OV_13_20                       X=   6600.00 DH=   0.00746
+    OV_13_20                       X=   6600.00 DQ=    -0.444
+ Time step =   191 Nr iter. =  36
+    OV_13_20                       X=   6600.00 DH=  -0.00454
+    OV_13_20                       X=   6601.00 DQ=     0.257
+ Time step =   191 Nr iter. =  35
+    OV_13_20                       X=   6600.00 DH=  -0.00291
+    OV_13_20                       X=   6600.00 DQ=     0.187
+ Time step =   191 Nr iter. =  34
+    OV_13_20                       X=   6600.00 DH=   0.00746
+    OV_13_20                       X=   6600.00 DQ=    -0.444
+ Time step =   191 Nr iter. =  33
+    OV_13_20                       X=   6600.00 DH=  -0.00454
+    OV_13_20                       X=   6601.00 DQ=     0.257
+ Time step =   191 Nr iter. =  32
+    OV_13_20                       X=   6600.00 DH=  -0.00291
+    OV_13_20                       X=   6600.00 DQ=     0.187
+ Time step =   191 Nr iter. =  31
+    OV_13_20                       X=   6600.00 DH=   0.00746
+    OV_13_20                       X=   6600.00 DQ=    -0.444
+  
+ Time step =   194 Nr iter. =  50
+    OV_20_35                       X=  12044.00 DH=  -0.01118
+    OV_13_20                       X=   6601.00 DQ=     0.258
+ Time step =   194 Nr iter. =  49
+    OV_20_35                       X=  12044.00 DH=   0.01987
+    OV_20_35                       X=  12246.00 DQ=    -0.202
+ Time step =   194 Nr iter. =  48
+    OV_13_20                       X=   6600.00 DH=   0.00752
+    OV_13_20                       X=   6600.00 DQ=    -0.446
+ Time step =   194 Nr iter. =  47
+    OV_20_35                       X=  12044.00 DH=  -0.00552
+    OV_13_20                       X=   6601.00 DQ=     0.258
+ Time step =   194 Nr iter. =  46
+    OV_20_35                       X=  12044.00 DH=  -0.01119
+    OV_13_20                       X=   6600.00 DQ=     0.188
+ Time step =   194 Nr iter. =  45
+    OV_20_35                       X=  12044.00 DH=   0.01963
+    OV_13_20                       X=   6600.00 DQ=    -0.446
+ Time step =   194 Nr iter. =  44
+    OV_13_20                       X=   6600.00 DH=  -0.00459
+    OV_13_20                       X=   6601.00 DQ=     0.258
+ Time step =   194 Nr iter. =  43
+    OV_20_35                       X=  12044.00 DH=  -0.00487
+    OV_13_20                       X=   6600.00 DQ=     0.188
+ Time step =   194 Nr iter. =  42
+    OV_20_35                       X=  12044.00 DH=  -0.00995
+    OV_13_20                       X=   6600.00 DQ=    -0.446
+ Time step =   194 Nr iter. =  41
+    OV_20_35                       X=  12044.00 DH=  -0.01989
+    OV_13_20                       X=   6601.00 DQ=     0.258
+ Time step =   194 Nr iter. =  40
+    OV_20_35                       X=  12044.00 DH=  -0.03946
+    OV_20_35                       X=  12246.00 DQ=     0.322
+ Time step =   194 Nr iter. =  39
+    OV_20_35                       X=  12044.00 DH=   0.07577
+    OV_20_35                       X=  12246.00 DQ=    -0.612
+ Time step =   194 Nr iter. =  38
+    OV_13_20                       X=   6600.00 DH=  -0.00459
+    OV_13_20                       X=   6601.00 DQ=     0.258
+ Time step =   194 Nr iter. =  37
+    OV_20_35                       X=  12044.00 DH=  -0.00707
+    OV_13_20                       X=   6600.00 DQ=     0.188
+ Time step =   194 Nr iter. =  36
+    OV_20_35                       X=  12044.00 DH=   0.01198
+    OV_13_20                       X=   6600.00 DQ=    -0.446
+ Time step =   194 Nr iter. =  35
+    OV_13_20                       X=   6600.00 DH=  -0.00459
+    OV_13_20                       X=   6601.00 DQ=     0.258
+ Time step =   194 Nr iter. =  34
+    OV_20_35                       X=  12044.00 DH=  -0.00396
+    OV_13_20                       X=   6600.00 DQ=     0.188
+ Time step =   194 Nr iter. =  33
+    OV_20_35                       X=  12044.00 DH=  -0.00820
+    OV_13_20                       X=   6600.00 DQ=    -0.446
+ Time step =   194 Nr iter. =  32
+    OV_20_35                       X=  12044.00 DH=  -0.01597
+    OV_13_20                       X=   6601.00 DQ=     0.258
+ Time step =   194 Nr iter. =  31
+    OV_20_35                       X=  12044.00 DH=   0.02917
+    OV_20_35                       X=  12246.00 DQ=    -0.273
+  
+ Time step =   195 Nr iter. =  50
+    OV_20_35                       X=  11842.00 DH=  -0.00340
+    OV_20_35                       X=  12044.00 DQ=     0.210
+ Time step =   195 Nr iter. =  49
+    OV_20_35                       X=  11842.00 DH=  -0.00616
+    OV_20_35                       X=  12044.00 DQ=     0.155
+ Time step =   195 Nr iter. =  48
+    OV_20_35                       X=  11842.00 DH=  -0.01208
+    OV_20_35                       X=  11842.00 DQ=     0.078
+ Time step =   195 Nr iter. =  47
+    OV_20_35                       X=  11842.00 DH=  -0.02516
+    OV_20_35                       X=  11640.00 DQ=     0.050
+ Time step =   195 Nr iter. =  46
+    OV_20_35                       X=  11842.00 DH=  -0.05554
+    OV_20_35                       X=  12044.00 DQ=    -0.218
+ Time step =   195 Nr iter. =  45
+    OV_20_35                       X=  11842.00 DH=  -0.09229
+    OV_20_35                       X=  12044.00 DQ=     0.736
+ Time step =   195 Nr iter. =  44
+    OV_20_35                       X=  11842.00 DH=   0.19478
+    OV_20_35                       X=  12044.00 DQ=    -1.384
+ Time step =   195 Nr iter. =  43
+    OV_20_35                       X=  11842.00 DH=  -0.00436
+    OV_20_35                       X=  12044.00 DQ=     0.181
+ Time step =   195 Nr iter. =  42
+    OV_20_35                       X=  11842.00 DH=  -0.00839
+    OV_20_35                       X=  12044.00 DQ=     0.199
+ Time step =   195 Nr iter. =  41
+    OV_20_35                       X=  11842.00 DH=  -0.01688
+    OV_20_35                       X=  11842.00 DQ=     0.174
+ Time step =   195 Nr iter. =  40
+    OV_20_35                       X=  11842.00 DH=  -0.03528
+    OV_20_35                       X=  11640.00 DQ=     0.153
+ Time step =   195 Nr iter. =  39
+    OV_20_35                       X=  11842.00 DH=  -0.06405
+    OV_20_35                       X=  12044.00 DQ=     0.468
+ Time step =   195 Nr iter. =  38
+    OV_20_35                       X=  11842.00 DH=   0.13104
+    OV_20_35                       X=  12044.00 DQ=    -1.139
+ Time step =   195 Nr iter. =  37
+    OV_20_35                       X=  11842.00 DH=  -0.00256
+    OV_20_35                       X=  12044.00 DQ=     0.164
+ Time step =   195 Nr iter. =  36
+    OV_20_35                       X=  11842.00 DH=  -0.00470
+    OV_20_35                       X=  12044.00 DQ=     0.200
+ Time step =   195 Nr iter. =  35
+    OV_20_35                       X=  11842.00 DH=  -0.00904
+    OV_20_35                       X=  12044.00 DQ=     0.207
+ Time step =   195 Nr iter. =  34
+    OV_20_35                       X=  11842.00 DH=  -0.01820
+    OV_20_35                       X=  11842.00 DQ=     0.168
+ Time step =   195 Nr iter. =  33
+    OV_20_35                       X=  11842.00 DH=  -0.03829
+    OV_20_35                       X=  11640.00 DQ=     0.148
+ Time step =   195 Nr iter. =  32
+    OV_20_35                       X=  11842.00 DH=  -0.06857
+    OV_20_35                       X=  12044.00 DQ=     0.511
+ Time step =   195 Nr iter. =  31
+    OV_20_35                       X=  11842.00 DH=   0.14085
+    OV_20_35                       X=  12044.00 DQ=    -1.126
+  
+ Time step =   196 Nr iter. =  50
+    OV_20_35                       X=  11842.00 DH=  -0.02266
+    OV_20_35                       X=  12044.00 DQ=     0.200
+ Time step =   196 Nr iter. =  49
+    OV_20_35                       X=  11842.00 DH=  -0.04348
+    OV_20_35                       X=  12044.00 DQ=     0.343
+ Time step =   196 Nr iter. =  48
+    OV_20_35                       X=  11842.00 DH=   0.07441
+    OV_20_35                       X=  12044.00 DQ=    -0.218
+ Time step =   196 Nr iter. =  47
+    OV_20_35                       X=  11842.00 DH=  -0.01293
+    OV_20_35                       X=  11842.00 DQ=     0.067
+ Time step =   196 Nr iter. =  46
+    OV_20_35                       X=  11842.00 DH=  -0.02693
+    OV_20_35                       X=  12260.00 DQ=    -0.061
+ Time step =   196 Nr iter. =  45
+    OV_20_35                       X=  11842.00 DH=  -0.05880
+    OV_20_35                       X=  12044.00 DQ=    -0.231
+ Time step =   196 Nr iter. =  44
+    OV_20_35                       X=  11842.00 DH=  -0.09910
+    OV_20_35                       X=  12044.00 DQ=     0.897
+ Time step =   196 Nr iter. =  43
+    OV_20_35                       X=  11842.00 DH=   0.19061
+    OV_20_35                       X=  12044.00 DQ=    -1.293
+ Time step =   196 Nr iter. =  42
+    OV_20_35                       X=  11842.00 DH=  -0.02252
+    OV_20_35                       X=  12044.00 DQ=     0.198
+ Time step =   196 Nr iter. =  41
+    OV_20_35                       X=  11842.00 DH=  -0.04311
+    OV_20_35                       X=  12044.00 DQ=     0.373
+ Time step =   196 Nr iter. =  40
+    OV_20_35                       X=  11842.00 DH=   0.07305
+    OV_20_35                       X=  12044.00 DQ=    -0.617
+ Time step =   196 Nr iter. =  39
+    OV_20_35                       X=  11842.00 DH=  -0.01472
+    OV_20_35                       X=  12044.00 DQ=     0.195
+ Time step =   196 Nr iter. =  38
+    OV_20_35                       X=  11842.00 DH=  -0.02994
+    OV_20_35                       X=  11842.00 DQ=     0.168
+ Time step =   196 Nr iter. =  37
+    OV_20_35                       X=  11842.00 DH=  -0.05659
+    OV_20_35                       X=  12044.00 DQ=     0.441
+ Time step =   196 Nr iter. =  36
+    OV_20_35                       X=  11842.00 DH=   0.09782
+    OV_20_35                       X=  12044.00 DQ=    -0.835
+ Time step =   196 Nr iter. =  35
+    OV_20_35                       X=  11842.00 DH=  -0.01861
+    OV_20_35                       X=  12044.00 DQ=     0.204
+ Time step =   196 Nr iter. =  34
+    OV_20_35                       X=  11842.00 DH=  -0.03581
+    OV_20_35                       X=  12044.00 DQ=     0.340
+ Time step =   196 Nr iter. =  33
+    OV_20_35                       X=  11842.00 DH=   0.06076
+    OV_20_35                       X=  12044.00 DQ=    -0.582
+ Time step =   196 Nr iter. =  32
+    OV_20_35                       X=  11842.00 DH=  -0.01196
+    OV_20_35                       X=  12044.00 DQ=     0.207
+ Time step =   196 Nr iter. =  31
+    OV_20_35                       X=  11842.00 DH=  -0.02411
+    OV_20_35                       X=  11842.00 DQ=     0.201
+  
+ Time step =   197 Nr iter. =  50
+    OV_20_35                       X=  11842.00 DH=   0.11126
+    OV_20_35                       X=  12044.00 DQ=    -0.824
+ Time step =   197 Nr iter. =  49
+    OV_20_35                       X=  11842.00 DH=  -0.04060
+    OV_20_35                       X=  12044.00 DQ=     0.368
+ Time step =   197 Nr iter. =  48
+    OV_20_35                       X=  11842.00 DH=   0.04907
+    OV_20_35                       X=  12044.00 DQ=    -0.373
+ Time step =   197 Nr iter. =  47
+    OV_20_35                       X=  11842.00 DH=  -0.03296
+    OV_20_35                       X=  11842.00 DQ=     0.174
+ Time step =   197 Nr iter. =  46
+    OV_20_35                       X=  11842.00 DH=  -0.06405
+    OV_20_35                       X=  12044.00 DQ=     0.517
+ Time step =   197 Nr iter. =  45
+    OV_20_35                       X=  11842.00 DH=   0.09013
+    OV_20_35                       X=  12044.00 DQ=    -0.690
+ Time step =   197 Nr iter. =  44
+    OV_20_35                       X=  11842.00 DH=  -0.03909
+    OV_20_35                       X=  12044.00 DQ=     0.358
+ Time step =   197 Nr iter. =  43
+    OV_20_35                       X=  11842.00 DH=   0.04673
+    OV_20_35                       X=  12044.00 DQ=    -0.368
+ Time step =   197 Nr iter. =  42
+    OV_20_35                       X=  11842.00 DH=  -0.03219
+    OV_20_35                       X=  11842.00 DQ=     0.171
+ Time step =   197 Nr iter. =  41
+    OV_20_35                       X=  11842.00 DH=  -0.06263
+    OV_20_35                       X=  12044.00 DQ=     0.499
+ Time step =   197 Nr iter. =  40
+    OV_20_35                       X=  11842.00 DH=   0.08743
+    OV_20_35                       X=  12044.00 DQ=    -0.700
+ Time step =   197 Nr iter. =  39
+    OV_20_35                       X=  11842.00 DH=  -0.03919
+    OV_20_35                       X=  12044.00 DQ=     0.356
+ Time step =   197 Nr iter. =  38
+    OV_20_35                       X=  11842.00 DH=   0.04665
+    OV_20_35                       X=  12044.00 DQ=    -0.405
+ Time step =   197 Nr iter. =  37
+    OV_20_35                       X=  11842.00 DH=  -0.03167
+    OV_20_35                       X=  12044.00 DQ=     0.322
+ Time step =   197 Nr iter. =  36
+    OV_20_35                       X=  11842.00 DH=   0.03618
+    OV_20_35                       X=  12044.00 DQ=    -0.315
+ Time step =   197 Nr iter. =  35
+    OV_20_35                       X=  11842.00 DH=  -0.02756
+    OV_20_35                       X=  12044.00 DQ=     0.195
+ Time step =   197 Nr iter. =  34
+    OV_20_35                       X=  11842.00 DH=  -0.05409
+    OV_20_35                       X=  12044.00 DQ=     0.443
+ Time step =   197 Nr iter. =  33
+    OV_20_35                       X=  11842.00 DH=   0.07160
+    OV_20_35                       X=  12044.00 DQ=    -0.569
+ Time step =   197 Nr iter. =  32
+    OV_20_35                       X=  11842.00 DH=  -0.03702
+    OV_20_35                       X=  12044.00 DQ=     0.346
+ Time step =   197 Nr iter. =  31
+    OV_20_35                       X=  11842.00 DH=   0.04360
+    OV_20_35                       X=  12044.00 DQ=    -0.354
+  
+ Time step =   198 Nr iter. =  50
+    OV_20_35                       X=  11640.00 DH=  -0.04624
+    OV_20_35                       X=  12044.00 DQ=    -0.168
+ Time step =   198 Nr iter. =  49
+    OV_20_35                       X=  11640.00 DH=   0.09090
+    OV_20_35                       X=  11640.00 DQ=    -0.314
+ Time step =   198 Nr iter. =  48
+    OV_20_35                       X=  11842.00 DH=   0.05202
+    OV_20_35                       X=  12044.00 DQ=    -0.466
+ Time step =   198 Nr iter. =  47
+    OV_20_35                       X=  11842.00 DH=  -0.05216
+    OV_20_35                       X=  12044.00 DQ=     0.493
+ Time step =   198 Nr iter. =  46
+    OV_20_35                       X=  11842.00 DH=   0.05212
+    OV_20_35                       X=  12044.00 DQ=    -0.472
+ Time step =   198 Nr iter. =  45
+    OV_20_35                       X=  11842.00 DH=  -0.05260
+    OV_20_35                       X=  12044.00 DQ=     0.504
+ Time step =   198 Nr iter. =  44
+    OV_20_35                       X=  11842.00 DH=   0.05264
+    OV_20_35                       X=  12044.00 DQ=    -0.343
+ Time step =   198 Nr iter. =  43
+    OV_20_35                       X=  11640.00 DH=  -0.03918
+    OV_20_35                       X=  12044.00 DQ=    -0.228
+ Time step =   198 Nr iter. =  42
+    OV_20_35                       X=  11640.00 DH=  -0.07424
+    OV_20_35                       X=  12044.00 DQ=     0.676
+ Time step =   198 Nr iter. =  41
+    OV_20_35                       X=  11640.00 DH=   0.14968
+    OV_20_35                       X=  12044.00 DQ=    -0.735
+ Time step =   198 Nr iter. =  40
+    OV_20_35                       X=  11842.00 DH=  -0.04582
+    OV_20_35                       X=  12044.00 DQ=     0.389
+ Time step =   198 Nr iter. =  39
+    OV_20_35                       X=  11842.00 DH=   0.04105
+    OV_20_35                       X=  12044.00 DQ=    -0.278
+ Time step =   198 Nr iter. =  38
+    OV_20_35                       X=  11842.00 DH=   0.01612
+    OV_20_35                       X=  12044.00 DQ=    -0.138
+ Time step =   198 Nr iter. =  37
+    OV_20_35                       X=  11842.00 DH=  -0.03382
+    OV_20_35                       X=  12044.00 DQ=     0.413
+ Time step =   198 Nr iter. =  36
+    OV_20_35                       X=  11842.00 DH=   0.02476
+    OV_20_35                       X=  12044.00 DQ=    -0.069
+ Time step =   198 Nr iter. =  35
+    OV_20_35                       X=  11640.00 DH=   0.03805
+    OV_20_35                       X=  12044.00 DQ=    -0.362
+ Time step =   198 Nr iter. =  34
+    OV_20_35                       X=  11842.00 DH=  -0.03037
+    OV_20_35                       X=  12044.00 DQ=     0.354
+ Time step =   198 Nr iter. =  33
+    OV_20_35                       X=  11842.00 DH=   0.02111
+    OV_20_35                       X=  11640.00 DQ=     0.112
+ Time step =   198 Nr iter. =  32
+    OV_20_35                       X=  11842.00 DH=  -0.03879
+    OV_20_35                       X=  12044.00 DQ=     0.401
+ Time step =   198 Nr iter. =  31
+    OV_20_35                       X=  11842.00 DH=   0.03172
+    OV_20_35                       X=  11640.00 DQ=     0.274
+  
+ Time step =   199 Nr iter. =  50
+    OV_20_35                       X=  11842.00 DH=   0.00726
+    OV_20_35                       X=  12044.00 DQ=    -0.048
+ Time step =   199 Nr iter. =  49
+    OV_20_35                       X=  11842.00 DH=   0.00471
+    OV_20_35                       X=  12044.00 DQ=    -0.029
+ Time step =   199 Nr iter. =  48
+    OV_20_35                       X=  11842.00 DH=   0.00356
+    OV_20_35                       X=  12044.00 DQ=    -0.019
+ Time step =   199 Nr iter. =  47
+    OV_20_35                       X=  11842.00 DH=   0.00300
+    OV_20_35                       X=  12044.00 DQ=    -0.012
+ Time step =   199 Nr iter. =  46
+    OV_20_35                       X=  11842.00 DH=   0.00278
+    OV_20_35                       X=  12044.00 DQ=    -0.030
+ Time step =   199 Nr iter. =  45
+    OV_20_35                       X=  11842.00 DH=  -0.04287
+    OV_20_35                       X=  12044.00 DQ=     0.300
+ Time step =   199 Nr iter. =  44
+    OV_20_35                       X=  11842.00 DH=   0.01902
+    OV_20_35                       X=  12044.00 DQ=    -0.112
+ Time step =   199 Nr iter. =  43
+    OV_20_35                       X=  11842.00 DH=   0.00839
+    OV_20_35                       X=  12044.00 DQ=    -0.044
+ Time step =   199 Nr iter. =  42
+    OV_20_35                       X=  11842.00 DH=   0.00523
+    OV_20_35                       X=  12044.00 DQ=    -0.018
+ Time step =   199 Nr iter. =  41
+    OV_20_35                       X=  11842.00 DH=   0.00390
+    OV_20_35                       X=  12044.00 DQ=    -0.038
+ Time step =   199 Nr iter. =  40
+    OV_20_35                       X=  11842.00 DH=  -0.04962
+    OV_20_35                       X=  12044.00 DQ=     0.331
+ Time step =   199 Nr iter. =  39
+    OV_20_35                       X=  11842.00 DH=   0.02828
+    OV_20_35                       X=  12044.00 DQ=    -0.144
+ Time step =   199 Nr iter. =  38
+    OV_20_35                       X=  11842.00 DH=   0.01019
+    OV_20_35                       X=  11640.00 DQ=     0.025
+ Time step =   199 Nr iter. =  37
+    OV_20_35                       X=  11842.00 DH=   0.00591
+    OV_20_35                       X=  11640.00 DQ=     0.045
+ Time step =   199 Nr iter. =  36
+    OV_20_35                       X=  11842.00 DH=   0.00420
+    OV_20_35                       X=  11640.00 DQ=     0.096
+ Time step =   199 Nr iter. =  35
+    OV_20_35                       X=  11842.00 DH=  -0.04910
+    OV_20_35                       X=  12044.00 DQ=     0.385
+ Time step =   199 Nr iter. =  34
+    OV_20_35                       X=  11842.00 DH=   0.02853
+    OV_20_35                       X=  12044.00 DQ=    -0.219
+ Time step =   199 Nr iter. =  33
+    OV_20_35                       X=  11842.00 DH=  -0.06926
+    OV_20_35                       X=  12044.00 DQ=     0.539
+ Time step =   199 Nr iter. =  32
+    OV_20_35                       X=  11842.00 DH=   0.06261
+    OV_20_35                       X=  12044.00 DQ=    -0.439
+ Time step =   199 Nr iter. =  31
+    OV_20_35                       X=  11842.00 DH=  -0.07817
+    OV_20_35                       X=  12044.00 DQ=     0.457
+  
+ Time step =   231 Nr iter. =  50
+    OV_0_2                         X=   1423.50 DH=  -0.00319
+    OV_0_2                         X=   1626.50 DQ=     0.040
+ Time step =   231 Nr iter. =  49
+    OV_0_2                         X=   1423.50 DH=   0.00470
+    OV_0_2                         X=   1626.50 DQ=    -0.052
+ Time step =   231 Nr iter. =  48
+    OV_0_2                         X=   1423.50 DH=  -0.00165
+    OV_0_2                         X=   1626.50 DQ=     0.028
+ Time step =   231 Nr iter. =  47
+    OV_0_2                         X=   1423.50 DH=   0.00205
+    OV_0_2                         X=   1626.50 DQ=    -0.038
+ Time step =   231 Nr iter. =  46
+    OV_0_2                         X=   1423.50 DH=  -0.00113
+    OV_0_2                         X=   1626.50 DQ=     0.010
+ Time step =   231 Nr iter. =  45
+    OV_0_2                         X=   1423.50 DH=  -0.00228
+    OV_0_2                         X=   1626.50 DQ=     0.019
+ Time step =   231 Nr iter. =  44
+    OV_0_2                         X=   1423.50 DH=  -0.00471
+    OV_0_2                         X=   1626.50 DQ=     0.049
+ Time step =   231 Nr iter. =  43
+    OV_0_2                         X=   1423.50 DH=   0.00755
+    OV_0_2                         X=   1626.50 DQ=    -0.066
+ Time step =   231 Nr iter. =  42
+    OV_0_2                         X=   1423.50 DH=  -0.00182
+    OV_0_2                         X=   1626.50 DQ=     0.030
+ Time step =   231 Nr iter. =  41
+    OV_0_2                         X=   1423.50 DH=   0.00232
+    OV_0_2                         X=   1626.50 DQ=    -0.039
+ Time step =   231 Nr iter. =  40
+    OV_0_2                         X=   1423.50 DH=  -0.00123
+    OV_0_2                         X=   1626.50 DQ=     0.014
+ Time step =   231 Nr iter. =  39
+    OV_0_2                         X=   1423.50 DH=  -0.00256
+    OV_0_2                         X=   1626.50 DQ=     0.035
+ Time step =   231 Nr iter. =  38
+    OV_0_2                         X=   1423.50 DH=   0.00357
+    OV_0_2                         X=   1626.50 DQ=    -0.048
+ Time step =   231 Nr iter. =  37
+    OV_0_2                         X=   1423.50 DH=  -0.00144
+    OV_0_2                         X=   1626.50 DQ=     0.015
+ Time step =   231 Nr iter. =  36
+    OV_0_2                         X=   1423.50 DH=  -0.00301
+    OV_0_2                         X=   1626.50 DQ=     0.038
+ Time step =   231 Nr iter. =  35
+    OV_0_2                         X=   1423.50 DH=   0.00437
+    OV_0_2                         X=   1626.50 DQ=    -0.055
+ Time step =   231 Nr iter. =  34
+    OV_0_2                         X=   1423.50 DH=  -0.00150
+    OV_0_2                         X=   1626.50 DQ=     0.010
+ Time step =   231 Nr iter. =  33
+    OV_0_2                         X=   1423.50 DH=  -0.00303
+    OV_0_2                         X=   1626.50 DQ=     0.020
+ Time step =   231 Nr iter. =  32
+    OV_0_2                         X=   1423.50 DH=  -0.00626
+    OV_0_2                         X=   1626.50 DQ=     0.056
+ Time step =   231 Nr iter. =  31
+    OV_0_2                         X=   1423.50 DH=   0.01049
+    OV_0_2                         X=   1626.50 DQ=    -0.089
+  
+ Time step =   232 Nr iter. =  50
+    OV_5_13                        X=   7000.00 DH=  -0.00563
+    OV_5_13                        X=   7001.00 DQ=     0.320
+ Time step =   232 Nr iter. =  49
+    OV_5_13                        X=   7000.00 DH=  -0.00367
+    OV_5_13                        X=   7000.00 DQ=     0.222
+ Time step =   232 Nr iter. =  48
+    OV_5_13                        X=   7000.00 DH=   0.00929
+    OV_5_13                        X=   7000.00 DQ=    -0.542
+ Time step =   232 Nr iter. =  47
+    OV_5_13                        X=   7000.00 DH=  -0.00563
+    OV_5_13                        X=   7001.00 DQ=     0.320
+ Time step =   232 Nr iter. =  46
+    OV_5_13                        X=   7000.00 DH=  -0.00367
+    OV_5_13                        X=   7000.00 DQ=     0.222
+ Time step =   232 Nr iter. =  45
+    OV_5_13                        X=   7000.00 DH=   0.00929
+    OV_5_13                        X=   7000.00 DQ=    -0.542
+ Time step =   232 Nr iter. =  44
+    OV_5_13                        X=   7000.00 DH=  -0.00563
+    OV_5_13                        X=   7001.00 DQ=     0.320
+ Time step =   232 Nr iter. =  43
+    OV_5_13                        X=   7000.00 DH=  -0.00367
+    OV_5_13                        X=   7000.00 DQ=     0.222
+ Time step =   232 Nr iter. =  42
+    OV_5_13                        X=   7000.00 DH=   0.00929
+    OV_5_13                        X=   7000.00 DQ=    -0.542
+ Time step =   232 Nr iter. =  41
+    OV_5_13                        X=   7000.00 DH=  -0.00563
+    OV_5_13                        X=   7001.00 DQ=     0.320
+ Time step =   232 Nr iter. =  40
+    OV_5_13                        X=   7000.00 DH=  -0.00367
+    OV_5_13                        X=   7000.00 DQ=     0.222
+ Time step =   232 Nr iter. =  39
+    OV_5_13                        X=   7000.00 DH=   0.00929
+    OV_5_13                        X=   7000.00 DQ=    -0.542
+ Time step =   232 Nr iter. =  38
+    OV_5_13                        X=   7000.00 DH=  -0.00563
+    OV_5_13                        X=   7001.00 DQ=     0.320
+ Time step =   232 Nr iter. =  37
+    OV_5_13                        X=   7000.00 DH=  -0.00367
+    OV_5_13                        X=   7000.00 DQ=     0.222
+ Time step =   232 Nr iter. =  36
+    OV_5_13                        X=   7000.00 DH=   0.00929
+    OV_5_13                        X=   7000.00 DQ=    -0.542
+ Time step =   232 Nr iter. =  35
+    OV_5_13                        X=   7000.00 DH=  -0.00563
+    OV_5_13                        X=   7001.00 DQ=     0.320
+ Time step =   232 Nr iter. =  34
+    OV_5_13                        X=   7000.00 DH=  -0.00367
+    OV_5_13                        X=   7000.00 DQ=     0.222
+ Time step =   232 Nr iter. =  33
+    OV_5_13                        X=   7000.00 DH=   0.00929
+    OV_5_13                        X=   7000.00 DQ=    -0.542
+ Time step =   232 Nr iter. =  32
+    OV_5_13                        X=   7000.00 DH=  -0.00563
+    OV_5_13                        X=   7001.00 DQ=     0.320
+ Time step =   232 Nr iter. =  31
+    OV_5_13                        X=   7000.00 DH=  -0.00367
+    OV_5_13                        X=   7000.00 DQ=     0.222
+  
+ Time step =   251 Nr iter. =  50
+    OV_0_2                         X=    814.50 DH=   0.06372
+    OV_0_2                         X=   1017.50 DQ=    -0.689
+ Time step =   251 Nr iter. =  49
+    OV_5_13                        X=   7001.00 DH=  -0.01012
+    OV_0_2                         X=   1017.50 DQ=     0.109
+ Time step =   251 Nr iter. =  48
+    OV_5_13                        X=   7001.00 DH=  -0.01970
+    OV_0_2                         X=   1017.50 DQ=     0.258
+ Time step =   251 Nr iter. =  47
+    OV_0_2                         X=    814.50 DH=   0.02855
+    OV_0_2                         X=   1017.50 DQ=    -0.415
+ Time step =   251 Nr iter. =  46
+    OV_5_13                        X=   7001.00 DH=  -0.01488
+    OV_0_2                         X=   1017.50 DQ=     0.079
+ Time step =   251 Nr iter. =  45
+    OV_5_13                        X=   7001.00 DH=  -0.02894
+    OV_0_2                         X=    814.50 DQ=     0.121
+ Time step =   251 Nr iter. =  44
+    OV_5_13                        X=   7001.00 DH=   0.04207
+    OV_0_2                         X=   1017.50 DQ=     0.291
+ Time step =   251 Nr iter. =  43
+    OV_0_2                         X=    814.50 DH=   0.03530
+    OV_0_2                         X=   1017.50 DQ=    -0.467
+ Time step =   251 Nr iter. =  42
+    OV_5_13                        X=   7001.00 DH=   0.01938
+    OV_0_2                         X=    814.50 DQ=     0.091
+ Time step =   251 Nr iter. =  41
+    OV_5_13                        X=   7001.00 DH=  -0.01398
+    OV_0_2                         X=    814.50 DQ=     0.132
+ Time step =   251 Nr iter. =  40
+    OV_0_2                         X=    814.50 DH=  -0.02478
+    OV_0_2                         X=   1017.50 DQ=     0.324
+ Time step =   251 Nr iter. =  39
+    OV_0_2                         X=    814.50 DH=   0.04277
+    OV_0_2                         X=   1017.50 DQ=    -0.521
+ Time step =   251 Nr iter. =  38
+    OV_5_13                        X=   7001.00 DH=  -0.02500
+    OV_0_2                         X=    814.50 DQ=     0.100
+ Time step =   251 Nr iter. =  37
+    OV_5_13                        X=   7001.00 DH=  -0.04855
+    OV_0_2                         X=    814.50 DQ=     0.137
+ Time step =   251 Nr iter. =  36
+    OV_5_13                        X=   7001.00 DH=   0.08114
+    OV_0_2                         X=   1017.50 DQ=     0.346
+ Time step =   251 Nr iter. =  35
+    OV_0_2                         X=    814.50 DH=   0.04851
+    OV_0_2                         X=   1017.50 DQ=    -0.555
+ Time step =   251 Nr iter. =  34
+    OV_5_13                        X=   7001.00 DH=  -0.01095
+    OV_0_2                         X=    814.50 DQ=     0.109
+ Time step =   251 Nr iter. =  33
+    OV_0_2                         X=    814.50 DH=  -0.01497
+    OV_0_2                         X=    814.50 DQ=     0.141
+ Time step =   251 Nr iter. =  32
+    OV_0_2                         X=    814.50 DH=  -0.02924
+    OV_0_2                         X=   1017.50 DQ=     0.348
+ Time step =   251 Nr iter. =  31
+    OV_0_2                         X=    814.50 DH=   0.05142
+    OV_0_2                         X=   1017.50 DQ=    -0.485
+  
+ Time step =   252 Nr iter. =  50
+    OV_5_13                        X=   7125.00 DH=  -0.01186
+    OV_0_2                         X=    814.50 DQ=     0.147
+ Time step =   252 Nr iter. =  49
+    OV_5_13                        X=   7125.00 DH=  -0.02169
+    OV_0_2                         X=    611.50 DQ=     0.140
+ Time step =   252 Nr iter. =  48
+    OV_5_13                        X=   7125.00 DH=  -0.04023
+    OV_5_13                        X=   7251.00 DQ=     0.182
+ Time step =   252 Nr iter. =  47
+    OV_5_13                        X=   7125.00 DH=   0.07683
+    OV_0_2                         X=   1017.50 DQ=     0.685
+ Time step =   252 Nr iter. =  46
+    OV_0_2                         X=    814.50 DH=   0.11053
+    OV_0_2                         X=   1017.50 DQ=    -1.037
+ Time step =   252 Nr iter. =  45
+    OV_5_13                        X=   7125.00 DH=  -0.01831
+    OV_0_2                         X=   1017.50 DQ=     0.136
+ Time step =   252 Nr iter. =  44
+    OV_5_13                        X=   7125.00 DH=  -0.03366
+    OV_0_2                         X=   1017.50 DQ=     0.358
+ Time step =   252 Nr iter. =  43
+    OV_5_13                        X=   7125.00 DH=   0.06263
+    OV_0_2                         X=   1017.50 DQ=    -0.532
+ Time step =   252 Nr iter. =  42
+    OV_0_2                         X=    814.50 DH=  -0.01085
+    OV_0_2                         X=   1017.50 DQ=     0.128
+ Time step =   252 Nr iter. =  41
+    OV_0_2                         X=    814.50 DH=  -0.02177
+    OV_0_2                         X=   1017.50 DQ=     0.314
+ Time step =   252 Nr iter. =  40
+    OV_0_2                         X=    814.50 DH=   0.03355
+    OV_0_2                         X=   1017.50 DQ=    -0.452
+ Time step =   252 Nr iter. =  39
+    OV_0_2                         X=    814.50 DH=  -0.00989
+    OV_0_2                         X=   1017.50 DQ=     0.125
+ Time step =   252 Nr iter. =  38
+    OV_0_2                         X=    814.50 DH=  -0.01987
+    OV_0_2                         X=   1017.50 DQ=     0.295
+ Time step =   252 Nr iter. =  37
+    OV_0_2                         X=    814.50 DH=   0.03022
+    OV_0_2                         X=   1017.50 DQ=    -0.394
+ Time step =   252 Nr iter. =  36
+    OV_0_2                         X=    814.50 DH=  -0.00923
+    OV_0_2                         X=    814.50 DQ=     0.124
+ Time step =   252 Nr iter. =  35
+    OV_0_2                         X=    814.50 DH=  -0.01872
+    OV_0_2                         X=    814.50 DQ=     0.147
+ Time step =   252 Nr iter. =  34
+    OV_0_2                         X=    814.50 DH=  -0.03669
+    OV_0_2                         X=   1017.50 DQ=     0.443
+ Time step =   252 Nr iter. =  33
+    OV_0_2                         X=    814.50 DH=   0.06200
+    OV_0_2                         X=   1017.50 DQ=    -0.617
+ Time step =   252 Nr iter. =  32
+    OV_0_2                         X=    814.50 DH=  -0.01164
+    OV_0_2                         X=    814.50 DQ=     0.142
+ Time step =   252 Nr iter. =  31
+    OV_0_2                         X=    814.50 DH=  -0.02392
+    OV_5_13                        X=   7251.00 DQ=     0.147
+  
+ Time step =   255 Nr iter. =  50
+    OV_0_2                         X=    814.50 DH=  -0.00932
+    OV_0_2                         X=    814.50 DQ=     0.123
+ Time step =   255 Nr iter. =  49
+    OV_0_2                         X=    814.50 DH=  -0.01919
+    OV_0_2                         X=    611.50 DQ=     0.160
+ Time step =   255 Nr iter. =  48
+    OV_0_2                         X=    814.50 DH=  -0.03649
+    OV_0_2                         X=   1017.50 DQ=     0.431
+ Time step =   255 Nr iter. =  47
+    OV_0_2                         X=    814.50 DH=   0.07018
+    OV_0_2                         X=   1017.50 DQ=    -0.770
+ Time step =   255 Nr iter. =  46
+    OV_0_2                         X=    814.50 DH=  -0.00414
+    OV_0_2                         X=   1017.50 DQ=     0.070
+ Time step =   255 Nr iter. =  45
+    OV_0_2                         X=    814.50 DH=  -0.00832
+    OV_0_2                         X=    814.50 DQ=     0.112
+ Time step =   255 Nr iter. =  44
+    OV_0_2                         X=    814.50 DH=  -0.01709
+    OV_0_2                         X=    814.50 DQ=     0.154
+ Time step =   255 Nr iter. =  43
+    OV_0_2                         X=    814.50 DH=  -0.03275
+    OV_0_2                         X=   1017.50 DQ=     0.403
+ Time step =   255 Nr iter. =  42
+    OV_0_2                         X=    814.50 DH=   0.06267
+    OV_0_2                         X=   1017.50 DQ=    -0.720
+ Time step =   255 Nr iter. =  41
+    OV_0_2                         X=    814.50 DH=  -0.00378
+    OV_0_2                         X=   1017.50 DQ=     0.064
+ Time step =   255 Nr iter. =  40
+    OV_0_2                         X=    814.50 DH=  -0.00759
+    OV_0_2                         X=    814.50 DQ=     0.104
+ Time step =   255 Nr iter. =  39
+    OV_0_2                         X=    814.50 DH=  -0.01556
+    OV_0_2                         X=    814.50 DQ=     0.149
+ Time step =   255 Nr iter. =  38
+    OV_0_2                         X=    814.50 DH=  -0.02995
+    OV_0_2                         X=   1017.50 DQ=     0.381
+ Time step =   255 Nr iter. =  37
+    OV_0_2                         X=    814.50 DH=   0.05720
+    OV_0_2                         X=   1017.50 DQ=    -0.657
+ Time step =   255 Nr iter. =  36
+    OV_0_2                         X=    814.50 DH=  -0.00340
+    OV_0_2                         X=   1017.50 DQ=     0.080
+ Time step =   255 Nr iter. =  35
+    OV_0_2                         X=    814.50 DH=  -0.00669
+    OV_0_2                         X=    814.50 DQ=     0.123
+ Time step =   255 Nr iter. =  34
+    OV_0_2                         X=    814.50 DH=  -0.01324
+    OV_0_2                         X=    814.50 DQ=     0.155
+ Time step =   255 Nr iter. =  33
+    OV_0_2                         X=    814.50 DH=  -0.02769
+    OV_0_2                         X=    611.50 DQ=     0.174
+ Time step =   255 Nr iter. =  32
+    OV_0_2                         X=    814.50 DH=  -0.05109
+    OV_0_2                         X=   1017.50 DQ=     0.536
+ Time step =   255 Nr iter. =  31
+    OV_0_2                         X=    814.50 DH=   0.10049
+    OV_0_2                         X=   1017.50 DQ=    -0.947
+  
+ Time step =   256 Nr iter. =  50
+    OV_0_2                         X=    814.50 DH=   0.04727
+    OV_0_2                         X=   1017.50 DQ=    -0.420
+ Time step =   256 Nr iter. =  49
+    OV_0_2                         X=    814.50 DH=   0.00873
+    OV_0_2                         X=   1017.50 DQ=    -0.165
+ Time step =   256 Nr iter. =  48
+    OV_0_2                         X=    814.50 DH=  -0.01184
+    OV_0_2                         X=   1017.50 DQ=     0.201
+ Time step =   256 Nr iter. =  47
+    OV_0_2                         X=    814.50 DH=   0.01046
+    OV_0_2                         X=   1017.50 DQ=    -0.181
+ Time step =   256 Nr iter. =  46
+    OV_0_2                         X=    814.50 DH=  -0.01324
+    OV_0_2                         X=   1017.50 DQ=     0.216
+ Time step =   256 Nr iter. =  45
+    OV_0_2                         X=    814.50 DH=   0.01219
+    OV_0_2                         X=   1017.50 DQ=    -0.186
+ Time step =   256 Nr iter. =  44
+    OV_0_2                         X=    814.50 DH=  -0.01420
+    OV_0_2                         X=   1017.50 DQ=     0.230
+ Time step =   256 Nr iter. =  43
+    OV_0_2                         X=    814.50 DH=   0.01349
+    OV_0_2                         X=   1017.50 DQ=    -0.171
+ Time step =   256 Nr iter. =  42
+    OV_0_2                         X=    814.50 DH=  -0.01428
+    OV_0_2                         X=    611.50 DQ=     0.151
+ Time step =   256 Nr iter. =  41
+    OV_0_2                         X=    814.50 DH=  -0.02972
+    OV_0_2                         X=    611.50 DQ=     0.155
+ Time step =   256 Nr iter. =  40
+    OV_0_2                         X=    814.50 DH=  -0.05747
+    OV_0_2                         X=   1017.50 DQ=     0.693
+ Time step =   256 Nr iter. =  39
+    OV_0_2                         X=    814.50 DH=   0.09409
+    OV_0_2                         X=   1017.50 DQ=    -0.874
+ Time step =   256 Nr iter. =  38
+    OV_0_2                         X=    814.50 DH=  -0.02242
+    OV_0_2                         X=    814.50 DQ=     0.152
+ Time step =   256 Nr iter. =  37
+    OV_0_2                         X=    814.50 DH=  -0.04452
+    OV_0_2                         X=   1017.50 DQ=     0.546
+ Time step =   256 Nr iter. =  36
+    OV_0_2                         X=    814.50 DH=   0.06767
+    OV_0_2                         X=   1017.50 DQ=    -0.683
+ Time step =   256 Nr iter. =  35
+    OV_0_2                         X=    814.50 DH=  -0.02166
+    OV_0_2                         X=    814.50 DQ=     0.153
+ Time step =   256 Nr iter. =  34
+    OV_0_2                         X=    814.50 DH=  -0.04390
+    OV_0_2                         X=   1017.50 DQ=     0.479
+ Time step =   256 Nr iter. =  33
+    OV_0_2                         X=    814.50 DH=   0.06566
+    OV_0_2                         X=   1017.50 DQ=    -0.534
+ Time step =   256 Nr iter. =  32
+    OV_0_2                         X=    814.50 DH=   0.00920
+    OV_0_2                         X=   1017.50 DQ=    -0.157
+ Time step =   256 Nr iter. =  31
+    OV_0_2                         X=    814.50 DH=  -0.01183
+    OV_0_2                         X=    814.50 DQ=     0.138
+  
+ Time step =   259 Nr iter. =  50
+    OV_0_2                         X=    611.50 DH=   0.01878
+    OV_0_2                         X=    814.50 DQ=    -0.218
+ Time step =   259 Nr iter. =  49
+    OV_0_2                         X=    611.50 DH=  -0.01460
+    OV_0_2                         X=    814.50 DQ=     0.187
+ Time step =   259 Nr iter. =  48
+    OV_0_2                         X=    611.50 DH=   0.01591
+    OV_0_2                         X=    814.50 DQ=    -0.202
+ Time step =   259 Nr iter. =  47
+    OV_0_2                         X=    611.50 DH=  -0.01330
+    OV_0_2                         X=    814.50 DQ=     0.178
+ Time step =   259 Nr iter. =  46
+    OV_0_2                         X=    611.50 DH=   0.01429
+    OV_0_2                         X=    814.50 DQ=    -0.214
+ Time step =   259 Nr iter. =  45
+    OV_0_2                         X=    611.50 DH=  -0.01240
+    OV_0_2                         X=    814.50 DQ=     0.121
+ Time step =   259 Nr iter. =  44
+    OV_0_2                         X=    611.50 DH=  -0.02461
+    OV_0_2                         X=    814.50 DQ=     0.250
+ Time step =   259 Nr iter. =  43
+    OV_0_2                         X=    611.50 DH=   0.03145
+    OV_0_2                         X=    814.50 DQ=    -0.295
+ Time step =   259 Nr iter. =  42
+    OV_0_2                         X=    611.50 DH=  -0.01784
+    OV_0_2                         X=    814.50 DQ=     0.208
+ Time step =   259 Nr iter. =  41
+    OV_0_2                         X=    611.50 DH=   0.02047
+    OV_0_2                         X=    814.50 DQ=    -0.230
+ Time step =   259 Nr iter. =  40
+    OV_0_2                         X=    611.50 DH=  -0.01523
+    OV_0_2                         X=    814.50 DQ=     0.192
+ Time step =   259 Nr iter. =  39
+    OV_0_2                         X=    611.50 DH=   0.01674
+    OV_0_2                         X=    814.50 DQ=    -0.225
+ Time step =   259 Nr iter. =  38
+    OV_0_2                         X=    611.50 DH=  -0.01387
+    OV_0_2                         X=    611.50 DQ=     0.113
+ Time step =   259 Nr iter. =  37
+    OV_0_2                         X=    611.50 DH=  -0.02827
+    OV_0_2                         X=    611.50 DQ=     0.138
+ Time step =   259 Nr iter. =  36
+    OV_0_2                         X=    611.50 DH=  -0.05501
+    OV_0_2                         X=    814.50 DQ=     0.459
+ Time step =   259 Nr iter. =  35
+    OV_0_2                         X=    611.50 DH=   0.08886
+    OV_0_2                         X=    814.50 DQ=    -0.600
+ Time step =   259 Nr iter. =  34
+    OV_0_2                         X=    611.50 DH=  -0.02193
+    OV_0_2                         X=    814.50 DQ=     0.233
+ Time step =   259 Nr iter. =  33
+    OV_0_2                         X=    611.50 DH=   0.02693
+    OV_0_2                         X=    814.50 DQ=    -0.269
+ Time step =   259 Nr iter. =  32
+    OV_0_2                         X=    611.50 DH=  -0.01696
+    OV_0_2                         X=    814.50 DQ=     0.204
+ Time step =   259 Nr iter. =  31
+    OV_0_2                         X=    611.50 DH=   0.01918
+    OV_0_2                         X=    814.50 DQ=    -0.237
+  
+ Time step =   260 Nr iter. =  50
+    OV_0_2                         X=    611.50 DH=  -0.04535
+    OV_0_2                         X=    408.50 DQ=     0.119
+ Time step =   260 Nr iter. =  49
+    OV_0_2                         X=    611.50 DH=  -0.08804
+    OV_0_2                         X=    814.50 DQ=     0.604
+ Time step =   260 Nr iter. =  48
+    OV_0_2                         X=    611.50 DH=   0.14353
+    OV_0_2                         X=    814.50 DQ=    -0.602
+ Time step =   260 Nr iter. =  47
+    OV_0_2                         X=    611.50 DH=   0.01031
+    OV_0_2                         X=    814.50 DQ=    -0.079
+ Time step =   260 Nr iter. =  46
+    OV_0_2                         X=    611.50 DH=   0.00500
+    OV_0_2                         X=    814.50 DQ=    -0.085
+ Time step =   260 Nr iter. =  45
+    OV_0_2                         X=    611.50 DH=  -0.01790
+    OV_0_2                         X=    814.50 DQ=     0.203
+ Time step =   260 Nr iter. =  44
+    OV_0_2                         X=    611.50 DH=   0.01192
+    OV_0_2                         X=    814.50 DQ=    -0.124
+ Time step =   260 Nr iter. =  43
+    OV_0_2                         X=    611.50 DH=  -0.02410
+    OV_0_2                         X=    408.50 DQ=     0.154
+ Time step =   260 Nr iter. =  42
+    OV_0_2                         X=    611.50 DH=  -0.05072
+    OV_0_2                         X=    408.50 DQ=     0.113
+ Time step =   260 Nr iter. =  41
+    OV_0_2                         X=    611.50 DH=  -0.09533
+    OV_0_2                         X=    814.50 DQ=     0.862
+ Time step =   260 Nr iter. =  40
+    OV_0_2                         X=    611.50 DH=   0.16063
+    OV_0_2                         X=    814.50 DQ=    -0.947
+ Time step =   260 Nr iter. =  39
+    OV_0_2                         X=    611.50 DH=  -0.03362
+    OV_0_2                         X=    814.50 DQ=     0.296
+ Time step =   260 Nr iter. =  38
+    OV_0_2                         X=    611.50 DH=   0.03762
+    OV_0_2                         X=    814.50 DQ=    -0.312
+ Time step =   260 Nr iter. =  37
+    OV_0_2                         X=    611.50 DH=  -0.02957
+    OV_0_2                         X=    814.50 DQ=     0.274
+ Time step =   260 Nr iter. =  36
+    OV_0_2                         X=    611.50 DH=   0.03043
+    OV_0_2                         X=    814.50 DQ=    -0.302
+ Time step =   260 Nr iter. =  35
+    OV_0_2                         X=    611.50 DH=  -0.02921
+    OV_0_2                         X=    611.50 DQ=     0.134
+ Time step =   260 Nr iter. =  34
+    OV_0_2                         X=    611.50 DH=  -0.05750
+    OV_0_2                         X=    814.50 DQ=     0.479
+ Time step =   260 Nr iter. =  33
+    OV_0_2                         X=    611.50 DH=   0.08319
+    OV_0_2                         X=    814.50 DQ=    -0.559
+ Time step =   260 Nr iter. =  32
+    OV_0_2                         X=    611.50 DH=  -0.03224
+    OV_0_2                         X=    814.50 DQ=     0.286
+ Time step =   260 Nr iter. =  31
+    OV_0_2                         X=    611.50 DH=   0.03516
+    OV_0_2                         X=    814.50 DQ=    -0.291
+  
+ Time step =   261 Nr iter. =  50
+    OV_0_2                         X=    611.50 DH=   0.04715
+    OV_0_2                         X=    814.50 DQ=    -0.427
+ Time step =   261 Nr iter. =  49
+    OV_0_2                         X=    611.50 DH=  -0.01654
+    OV_0_2                         X=    611.50 DQ=     0.126
+ Time step =   261 Nr iter. =  48
+    OV_0_2                         X=    611.50 DH=  -0.03410
+    OV_0_2                         X=    611.50 DQ=     0.150
+ Time step =   261 Nr iter. =  47
+    OV_0_2                         X=    611.50 DH=  -0.06517
+    OV_0_2                         X=    814.50 DQ=     0.575
+ Time step =   261 Nr iter. =  46
+    OV_0_2                         X=    611.50 DH=   0.11269
+    OV_0_2                         X=    814.50 DQ=    -0.785
+ Time step =   261 Nr iter. =  45
+    OV_0_2                         X=    611.50 DH=  -0.01982
+    OV_0_2                         X=    611.50 DQ=     0.136
+ Time step =   261 Nr iter. =  44
+    OV_0_2                         X=    611.50 DH=  -0.03873
+    OV_0_2                         X=    814.50 DQ=     0.366
+ Time step =   261 Nr iter. =  43
+    OV_0_2                         X=    611.50 DH=   0.06056
+    OV_0_2                         X=    814.50 DQ=    -0.516
+ Time step =   261 Nr iter. =  42
+    OV_0_2                         X=    611.50 DH=  -0.01769
+    OV_0_2                         X=    814.50 DQ=     0.135
+ Time step =   261 Nr iter. =  41
+    OV_0_2                         X=    611.50 DH=  -0.03471
+    OV_0_2                         X=    814.50 DQ=     0.335
+ Time step =   261 Nr iter. =  40
+    OV_0_2                         X=    611.50 DH=   0.05297
+    OV_0_2                         X=    814.50 DQ=    -0.445
+ Time step =   261 Nr iter. =  39
+    OV_0_2                         X=    611.50 DH=  -0.01675
+    OV_0_2                         X=    814.50 DQ=     0.213
+ Time step =   261 Nr iter. =  38
+    OV_0_2                         X=    611.50 DH=   0.02209
+    OV_0_2                         X=    814.50 DQ=    -0.289
+ Time step =   261 Nr iter. =  37
+    OV_0_2                         X=    611.50 DH=  -0.01164
+    OV_0_2                         X=    814.50 DQ=     0.119
+ Time step =   261 Nr iter. =  36
+    OV_0_2                         X=    611.50 DH=  -0.02296
+    OV_0_2                         X=    814.50 DQ=     0.256
+ Time step =   261 Nr iter. =  35
+    OV_0_2                         X=    611.50 DH=   0.03195
+    OV_0_2                         X=    814.50 DQ=    -0.351
+ Time step =   261 Nr iter. =  34
+    OV_0_2                         X=    611.50 DH=  -0.01433
+    OV_0_2                         X=    814.50 DQ=     0.129
+ Time step =   261 Nr iter. =  33
+    OV_0_2                         X=    611.50 DH=  -0.02823
+    OV_0_2                         X=    814.50 DQ=     0.291
+ Time step =   261 Nr iter. =  32
+    OV_0_2                         X=    611.50 DH=   0.04110
+    OV_0_2                         X=    814.50 DQ=    -0.378
+ Time step =   261 Nr iter. =  31
+    OV_0_2                         X=    611.50 DH=  -0.01553
+    OV_0_2                         X=    814.50 DQ=     0.205
+  

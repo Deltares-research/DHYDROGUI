@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="27f7f6d2-4512-4bb8-b9e6-c45dc963ccf8"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="SetOthersOutputSettings"
+	namespace="DHYDRO.Modules.ModelSettings">
+	</codegen>
+	<variables>
+		<var
+		id="7b32c271-2e6d-4654-a3b5-c96618f3af94"
+		name="DataSource">
+		</var>
+	</variables>
+	<recorditems>
+		<userrecorditem
+		classname="SetOthersOutputSettings"
+		enabled="True"
+		isexternaltestmethod="False"
+		methodname="Set"
+		namespace="DHYDRO.Modules.ModelSettings"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<arguments
+			id="d65b0662-13ad-4fc5-b873-8300d43a88ed">
+				<argument
+				argname="container"
+				id="f80cd092-d03f-4cf3-a35c-4d06bac54aba">
+					<argvaluetype>
+						Ranorex.Core.Repository.RepoItemInfo, Ranorex.Core, Culture=neutral
+					</argvaluetype>
+					<argvalue>
+					</argvalue>
+					<info
+					id="904571a2-081d-4298-a0fb-c4b419c1b232"
+					sourcename="RepositoryEditor">
+						<path>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Others']/list/text[@caption=$OtherGroupCaptionName]/container
+						</path>
+						<robustPath>
+						</robustPath>
+					</info>
+				</argument>
+				<argument
+				argname="dataSource"
+				id="8a87d5dd-37ef-4c44-9ade-5d8742174d63"
+				variable="DataSource">
+					<argvaluetype>
+						System.String
+					</argvaluetype>
+					<argvalue>
+						$DataSourceFilePath
+					</argvalue>
+				</argument>
+			</arguments>
+		</userrecorditem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		SetOthersOutputSettings.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>
