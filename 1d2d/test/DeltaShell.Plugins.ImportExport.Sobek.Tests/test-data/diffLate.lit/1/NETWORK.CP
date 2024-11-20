@@ -1,0 +1,16 @@
+CP_1.0
+BRCH id '1' cp 1 ct bc 
+TBLE
+3248.62164843232 87.9770931107652 <
+tble brch
+
+BRCH id '2' cp 1 ct bc 
+TBLE
+3029.86699160841 349.749188510389 <
+tble brch
+
+BRCH id '3' cp 1 ct bc 
+TBLE
+3175.46360239212 282.725770997219 <
+tble brch
+

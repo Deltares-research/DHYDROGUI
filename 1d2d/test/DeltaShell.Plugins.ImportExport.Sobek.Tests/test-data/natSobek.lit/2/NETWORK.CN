@@ -1,0 +1,218 @@
+CN_1.1
+FLBO id 'N_NDB_1' ci 'N_NDB_1' flbo
+FLBO id 'N_NDB_3' ci 'N_NDB_3' flbo
+FLBO id 'N_NDB_7' ci 'N_NDB_7' flbo
+FLBO id 'N_NDB_8' ci 'N_NDB_8' flbo
+FLBO id 'N_NDB_9' ci 'N_NDB_9' flbo
+FLBO id 'N_NDB_12' ci 'N_NDB_12' flbo
+FLBO id 'N_NDB_14' ci 'N_NDB_14' flbo
+FLBO id 'N_NDB_16' ci 'N_NDB_16' flbo
+FLBO id 'N_NDB_18' ci 'N_NDB_18' flbo
+FLBO id 'N_NDB_20' ci 'N_NDB_20' flbo
+FLBO id 'N_NDB_22' ci 'N_NDB_22' flbo
+FLBO id 'N_NDB_28' ci 'N_NDB_28' flbo
+FLBO id 'N_NDB_35' ci 'N_NDB_35' flbo
+FLBO id 'N_NDB_54' ci 'N_NDB_54' flbo
+FLBO id 'N_NDB_58' ci 'N_NDB_58' flbo
+FLBO id 'N_NDB_66' ci 'N_NDB_66' flbo
+FLBO id 'N_NDB_73' ci 'N_NDB_73' flbo
+FLBO id 'N_NDB_74' ci 'N_NDB_74' flbo
+FLBO id 'N_NDB_79' ci 'N_NDB_79' flbo
+FLBO id 'N_NDB_80' ci 'N_NDB_80' flbo
+FLBO id 'N_NDB_83' ci 'N_NDB_83' flbo
+FLBO id 'N_NDB_84' ci 'N_NDB_84' flbo
+FLBO id 'N_NDB_85' ci 'N_NDB_85' flbo
+FLBO id 'N_NDB_92' ci 'N_NDB_92' flbo
+FLBO id 'N_NDB_91' ci 'N_NDB_91' flbo
+FLBO id 'N_NDB_69' ci 'N_NDB_69' flbo
+FLBO id 'N_NDB_72' ci 'N_NDB_72' flbo
+FLBO id 'N_MS_001' ci 'N_MS_001' flbo
+FLBO id 'N_MS_013' ci 'N_MS_013' flbo
+FLBO id 'N_MS_014' ci 'N_MS_014' flbo
+FLBO id 'N_MS_018' ci 'N_MS_018' flbo
+FLBO id 'N_MS_020' ci 'N_MS_020' flbo
+FLBO id 'N_RT_001' ci 'N_RT_001' flbo
+FLBO id 'N_ARK_12' ci 'N_ARK_12' flbo
+FLBO id 'N_ARK_17' ci 'N_ARK_17' flbo
+FLBO id 'N_ARK_32' ci 'N_ARK_32' flbo
+FLBO id 'N_ARK_33' ci 'N_ARK_33' flbo
+FLBO id 'N_ARK_14' ci 'N_ARK_14' flbo
+FLBO id 'N_ARK_38' ci 'N_ARK_38' flbo
+FLBO id 'N_ARK_50' ci 'N_ARK_50' flbo
+FLBO id 'N_ARK_52' ci 'N_ARK_52' flbo
+FLBO id 'N_MAK_65' ci 'N_MAK_65' flbo
+FLBO id 'N_YSV_P_0' ci 'N_YSV_P_0' flbo
+FLBO id 'N_YSV_P_14409' ci 'N_YSV_P_14409' flbo
+FLBO id 'N_YSV_P_14411' ci 'N_YSV_P_14411' flbo
+FLBO id 'N_YSV_P_14413' ci 'N_YSV_P_14413' flbo
+FLBO id 'N_YSV_P_14415' ci 'N_YSV_P_14415' flbo
+FLBO id 'N_YSV_P_14417' ci 'N_YSV_P_14417' flbo
+FLBO id 'N_YSV_P_14419' ci 'N_YSV_P_14419' flbo
+FLBO id 'N_YSV_P_14421' ci 'N_YSV_P_14421' flbo
+FLBO id 'N_YSV_P_19191' ci 'N_YSV_P_19191' flbo
+FLBO id 'N_YSV_P_21063' ci 'N_YSV_P_21063' flbo
+FLBO id 'N_YSV_P_22227' ci 'N_YSV_P_22227' flbo
+FLBO id 'N_YSV_P_22228' ci 'N_YSV_P_22228' flbo
+FLBO id 'N_YSV_P_24536' ci 'N_YSV_P_24536' flbo
+FLBO id 'N_YSV_P_P_13' ci 'N_YSV_P_P_13' flbo
+FLBO id 'N_YSV_P_P_14' ci 'N_YSV_P_P_14' flbo
+FLBO id 'N_YSV_5576079' ci 'N_YSV_5576079' flbo
+FLBO id 'N_YSV_5622664' ci 'N_YSV_5622664' flbo
+FLBR id 'L_NDB_21639' nm 'NDB_Gouda Onttrekking' ci 'R_NDB_29' lc 3055.00000000035 flbr 
+FLBR id 'L_NDB_21637' nm 'NDB_Volkerak onttrekking' ci 'R_NDB_59' lc 1611.99999999955 flbr 
+FLBR id 'L_NDB_21640' nm 'NDB_Bernisse Ontrekking' ci 'R_NDB_84' lc 10292.0000000003 flbr 
+FLBR id 'L_MS_01' nm 'MS_Kalkmas1' ci 'R_MS_001' lc 6249.99999999979 flbr 
+FLBR id 'L_MS_02' nm 'MS_kalkmas2' ci 'R_MS_002' lc 1160.00000000033 flbr 
+FLBR id 'L_MS_03' nm 'MS_grenmas1' ci 'R_MS_003' lc 104.147158898663 flbr 
+FLBR id 'L_MS_04' nm 'MS_grenmas2' ci 'R_MS_003' lc 427.00335148291 flbr 
+FLBR id 'L_MS_132' nm 'MS_Borghar' ci 'R_MS_004' lc 499.999999999927 flbr 
+FLBR id 'L_MS_133' nm 'MS_Smeerma' ci 'R_MS_004' lc 1000.00000000013 flbr 
+FLBR id 'L_MS_131' nm 'MS_Itteren' ci 'R_MS_004' lc 3799.99999999982 flbr 
+FLBR id 'L_MS_500' nm 'MS_Hocht' ci 'R_MS_004' lc 4300.00000000014 flbr 
+FLBR id 'L_MS_130' nm 'MS_Voulwam' ci 'R_MS_004' lc 6499.99999999973 flbr 
+FLBR id 'L_MS_05' nm 'MS_grenmas3' ci 'R_MS_004' lc 6830.0000000004 flbr 
+FLBR id 'L_MS_129' nm 'MS_ad_Maas' ci 'R_MS_004' lc 8700.00000000034 flbr 
+FLBR id 'L_MS_501' nm 'MS_Maasb' ci 'R_MS_004' lc 18600.0000000002 flbr 
+FLBR id 'L_MS_128' nm 'MS_Meers' ci 'R_MS_004' lc 18600.0000000002 flbr 
+FLBR id 'L_MS_06' nm 'MS_grenmas4' ci 'R_MS_004' lc 18899.9999999997 flbr 
+FLBR id 'L_MS_502' nm 'MS_Obbic' ci 'R_MS_004' lc 26299.9999999999 flbr 
+FLBR id 'L_MS_127' nm 'MS_Grevenb' ci 'R_MS_004' lc 26900.0000000001 flbr 
+FLBR id 'L_MS_503' nm 'MS_Greve' ci 'R_MS_004' lc 29600 flbr 
+FLBR id 'L_MS_126' nm 'MS_Rooster' ci 'R_MS_004' lc 35099.9999999997 flbr 
+FLBR id 'L_MS_125' nm 'MS_Aasterb' ci 'R_MS_005' lc 3301.60297357631 flbr 
+FLBR id 'L_MS_124' nm 'MS_Ohe' ci 'R_MS_005' lc 4402.13729810127 flbr 
+FLBR id 'L_MS_504' nm 'MS_Laak' ci 'R_MS_005' lc 5502.67162262759 flbr 
+FLBR id 'L_MS_07' nm 'MS_grenmas5' ci 'R_MS_005' lc 7303.54597185023 flbr 
+FLBR id 'L_MS_08' nm 'MS_grenmas6' ci 'R_MS_005' lc 12305.9747196935 flbr 
+FLBR id 'L_MS_09' nm 'MS_julkan1' ci 'R_MS_006' lc 24616.8501725452 flbr 
+FLBR id 'L_MS_10' nm 'MS_grenmas7' ci 'R_MS_007' lc 1213.18391807565 flbr 
+FLBR id 'L_MS_11' nm 'MS_grenmas8' ci 'R_MS_008' lc 400.000000000435 flbr 
+FLBR id 'L_MS_3971' nm 'MS_kortsluiting lus Linne1' ci 'R_MS_008' lc 2824.99999999963 flbr 
+FLBR id 'L_MS_3972' nm 'MS_kortsluiting lus Linne2' ci 'R_MS_008' lc 4999.99999999997 flbr 
+FLBR id 'L_MS_12' nm 'MS_zandmas1' ci 'R_MS_008' lc 5300.0000000001 flbr 
+FLBR id 'L_MS_122' nm 'MS_Herten' ci 'R_MS_008' lc 6400.00000000032 flbr 
+FLBR id 'L_MS_13' nm 'MS_zandmas2' ci 'R_MS_008' lc 7462.99999999995 flbr 
+FLBR id 'L_MS_14' nm 'MS_zandmas3' ci 'R_MS_008' lc 11150 flbr 
+FLBR id 'L_MS_121' nm 'MS_Roermon' ci 'R_MS_008' lc 11899.9999999998 flbr 
+FLBR id 'L_MS_15' nm 'MS_lateral1' ci 'R_MS_009' lc 1138.64413895397 flbr 
+FLBR id 'L_MS_123' nm 'MS_Latkanw' ci 'R_MS_009' lc 4554.57655581573 flbr 
+FLBR id 'L_MS_120' nm 'MS_Buggenu' ci 'R_MS_010' lc 100.00000000053 flbr 
+FLBR id 'L_MS_16' nm 'MS_zandmas4' ci 'R_MS_010' lc 3300.0000000005 flbr 
+FLBR id 'L_MS_17' nm 'MS_zandmas5' ci 'R_MS_010' lc 3849.99999999978 flbr 
+FLBR id 'L_MS_119' nm 'MS_Hanssum' ci 'R_MS_010' lc 4399.99999999959 flbr 
+FLBR id 'L_MS_118' nm 'MS_Beesel' ci 'R_MS_010' lc 6599.99999999966 flbr 
+FLBR id 'L_MS_117' nm 'MS_Belfeld' ci 'R_MS_010' lc 14399.9999999998 flbr 
+FLBR id 'L_MS_116' nm 'MS_Baarlo' ci 'R_MS_010' lc 17199.9999999996 flbr 
+FLBR id 'L_MS_115' nm 'MS_Tegelen' ci 'R_MS_010' lc 20500.0000000002 flbr 
+FLBR id 'L_MS_114' nm 'MS_Ubroek' ci 'R_MS_011' lc 1000.00000000003 flbr 
+FLBR id 'L_MS_113' nm 'MS_Grubben' ci 'R_MS_011' lc 6000.00000000003 flbr 
+FLBR id 'L_MS_112' nm 'MS_Velden' ci 'R_MS_011' lc 6500.0000000006 flbr 
+FLBR id 'L_MS_18' nm 'MS_zandmas6' ci 'R_MS_011' lc 7499.99999999986 flbr 
+FLBR id 'L_MS_111' nm 'MS_Lottum' ci 'R_MS_011' lc 10899.9999999999 flbr 
+FLBR id 'L_MS_110' nm 'MS_Arcen' ci 'R_MS_011' lc 13600.0000000002 flbr 
+FLBR id 'L_MS_109' nm 'MS_Blitter' ci 'R_MS_012' lc 518.311817877967 flbr 
+FLBR id 'L_MS_108' nm 'MS_Wanssum' ci 'R_MS_013' lc 500.000000000226 flbr 
+FLBR id 'L_MS_107' nm 'MS_Well' ci 'R_MS_013' lc 1099.99999999979 flbr 
+FLBR id 'L_MS_106' nm 'MS_Bergen' ci 'R_MS_013' lc 7200.00000000007 flbr 
+FLBR id 'L_MS_19' nm 'MS_zandmas7' ci 'R_MS_013' lc 7770.00000000012 flbr 
+FLBR id 'L_MS_105' nm 'MS_nw_Berg' ci 'R_MS_013' lc 8300.00000000032 flbr 
+FLBR id 'L_MS_104' nm 'MS_Vortum' ci 'R_MS_013' lc 12099.9999999998 flbr 
+FLBR id 'L_MS_103' nm 'MS_Heijen' ci 'R_MS_013' lc 19299.9999999995 flbr 
+FLBR id 'L_MS_20' nm 'MS_zandmas8' ci 'R_MS_013' lc 21415 flbr 
+FLBR id 'L_MS_102' nm 'MS_Milsbee' ci 'R_MS_013' lc 23199.9999999997 flbr 
+FLBR id 'L_MS_101' nm 'MS_Plasmol' ci 'R_MS_013' lc 27650.0000000003 flbr 
+FLBR id 'L_MS_21' nm 'MS_zandmas9' ci 'R_MS_016' lc 16382.0000000003 flbr 
+FLBR id 'L_MS_3576' nm 'MS_kortsluiting Lithse ham1' ci 'R_MS_017' lc 1400.00000000034 flbr 
+FLBR id 'L_MS_3578' nm 'MS_kortsluiting Lithse ham2' ci 'R_MS_017' lc 3299.9999999997 flbr 
+FLBR id 'L_MS_22' nm 'MS_getymas1' ci 'R_MS_017' lc 4597.99999999995 flbr 
+FLBR id 'L_MS_23' nm 'MS_getymas2' ci 'R_MS_017' lc 7606.00000000013 flbr 
+FLBR id 'L_MS_24' nm 'MS_getymas3' ci 'R_MS_018' lc 125.000000000222 flbr 
+FLBR id 'L_MS_25' nm 'MS_Andelms1' ci 'R_MS_019' lc 250.000000000108 flbr 
+FLBR id 'L_MS_26' nm 'MS_andelms2' ci 'R_MS_019' lc 4999.9999999998 flbr 
+FLBR id 'L_MS_27' nm 'MS_getymas4' ci 'R_MS_023' lc 251.293300315365 flbr 
+FLBR id 'L_RT_01' nm 'RT_WAAL_1' ci 'R_RT_002' lc 15878.0000000005 flbr 
+FLBR id 'L_RT_02' nm 'RT_WAAL_2' ci 'R_RT_003' lc 43662.8185880613 flbr 
+FLBR id 'L_RT_03' nm 'RT_PANKAN' ci 'R_RT_004' lc 6233.9999999996 flbr 
+FLBR id 'L_RT_04' nm 'RT_NEDR_1' ci 'R_RT_005' lc 5017.18259482241 flbr 
+FLBR id 'L_RT_05' nm 'RT_NEDR_2' ci 'R_RT_005' lc 18331.4343057485 flbr 
+FLBR id 'L_RT_06' nm 'RT_LINGE1' ci 'R_RT_005' lc 23110.7548731719 flbr 
+FLBR id 'L_RT_07' nm 'RT_NEDR_3' ci 'R_RT_005' lc 48174.5878278638 flbr 
+FLBR id 'L_RT_10' nm 'RT_YSSEL1' ci 'R_RT_008' lc 8000.14133037952 flbr 
+FLBR id 'L_RT_1857' nm 'RT_Kortsl_Rhederlaag1' ci 'R_RT_008' lc 10002.6773323075 flbr 
+FLBR id 'L_RT_1858' nm 'RT_kortsl_Rhederlaag2' ci 'R_RT_008' lc 14253.8151985379 flbr 
+FLBR id 'L_RT_11' nm 'RT_YSSEL2' ci 'R_RT_008' lc 17694.7362008516 flbr 
+FLBR id 'L_RT_12' nm 'RT_OUDEYS' ci 'R_RT_008' lc 18341.909424252 flbr 
+FLBR id 'L_RT_13' nm 'RT_YSSEL3' ci 'R_RT_008' lc 29166.8068332755 flbr 
+FLBR id 'L_RT_14' nm 'RT_YSSEL4' ci 'R_RT_008' lc 34960.3575441483 flbr 
+FLBR id 'L_RT_15' nm 'RT_TWENTK' ci 'R_RT_008' lc 43280.5845491617 flbr 
+FLBR id 'L_RT_16' nm 'RT_YSSEL5' ci 'R_RT_008' lc 47760.7837263019 flbr 
+FLBR id 'L_RT_17' nm 'RT_YSSEL6' ci 'R_RT_008' lc 58869.7571715623 flbr 
+FLBR id 'L_RT_08' nm 'RT_LEK__1' ci 'R_RT_2987' lc 15069 flbr 
+FLBR id 'L_RT_09' nm 'RT_LEK__2' ci 'R_RT_2987' lc 36837.9999999997 flbr 
+FLBR id 'L_ARK_64' nm 'ARK_ow1loc00_ARK1' ci 'R_ARK_0' lc 8340.31783520938 flbr 
+FLBR id 'L_ARK_58' nm 'ARK_omlign01_kadoelen' ci 'R_ARK_9' lc 2000.00000000048 flbr 
+FLBR id 'L_ARK_80' nm 'ARK_ow2loc02_NZK1' ci 'R_ARK_10' lc 5155.77235293181 flbr 
+FLBR id 'L_ARK_59' nm 'ARK_omlign03_spaarndam' ci 'R_ARK_11' lc 3029.51672269788 flbr 
+FLBR id 'L_ARK_82' nm 'ARK_ow2loc04_havens' ci 'R_ARK_12' lc 1999 flbr 
+FLBR id 'L_ARK_5' nm 'ARK_polder05_13010' ci 'R_ARK_20' lc 1063.41916048307 flbr 
+FLBR id 'L_5679062' nm 'ARK_ow4loc07_amstel' ci 'R_ARK_23' lc 3402.44115238861 flbr 
+FLBR id 'L_ARK_13' nm 'ARK_polder13_13130' ci 'R_ARK_23' lc 6066.75985567065 flbr 
+FLBR id 'L_5680875' nm 'ARK_ow3loc00_amsterdam' ci 'R_ARK_26' lc 2498.99999999955 flbr 
+FLBR id 'L_ARK_96' nm 'ARK_ow4loc10_OudeWaver' ci 'R_ARK_28' lc 2921.4177021499 flbr 
+FLBR id 'L_ARK_6' nm 'ARK_polder06_12180' ci 'R_ARK_42' lc 5052.39196103212 flbr 
+FLBR id 'L_ARK_62' nm 'ARK_omlign07_aanvoerder' ci 'R_ARK_46' lc 4998.9999999997 flbr 
+FLBR id 'L_5679059' nm 'ARK_AWZI-Utrecht' ci 'R_ARK_48' lc 68.8741311050253 flbr 
+FLBR id 'L_ARK_112' nm 'ARK_ow5loc00_Vecht1a' ci 'R_ARK_48' lc 5475.49342287459 flbr 
+FLBR id 'L_ARK_31' nm 'ARK_polder31_11010' ci 'R_ARK_57' lc 10261.3778642955 flbr 
+FLBR id 'L_ARK_36' nm 'ARK_polder36_13230' ci 'R_ARK_58' lc 799.599761160793 flbr 
+FLBR id 'L_ARK_35' nm 'ARK_polder35_13240' ci 'R_ARK_58' lc 4264.5320595241 flbr 
+FLBR id 'L_ARK_69' nm 'ARK_ow1loc05_ARK4a' ci 'R_ARK_59' lc 4201.00000000009 flbr 
+FLBR id 'L_ARK_118' nm 'ARK_ow5loc06_Vecht3' ci 'R_ARK_62' lc 1841.00002761317 flbr 
+FLBR id 'L_MAK_4576' nm 'MAK_Neerslag-N' ci 'R_MAK_39' lc 4500.00000000013 flbr 
+FLBR id 'L_MAK_4573' nm 'MAK_Depoel' ci 'R_MAK_56' lc 200.000140839169 flbr 
+FLBR id 'L_MAK_4585' nm 'MAK_westfries-comp' ci 'R_MAK_56' lc 1000.00070419582 flbr 
+FLBR id 'L_5655900' nm 'MAK_Neerslag_GEmr' ci 'R_MAK_68' lc 4499.99999999962 flbr 
+FLBR id 'L_MAK_4569' nm 'MAK_DeBlocq' ci 'R_MAK_113' lc 5800.01048480399 flbr 
+FLBR id 'L_MAK_4570' nm 'MAK_Wortman' ci 'R_MAK_115' lc 1000.00000000051 flbr 
+FLBR id 'L_5655896' nm 'MAK_Neerslag-Z' ci 'R_MAK_125' lc 4500.00017397259 flbr 
+FLBR id 'L_MAK_4575' nm 'MAK_Schardam' ci 'R_MAK_2945' lc 2000.00499632043 flbr 
+FLBR id 'L_YSV_P_21047' nm 'YSV_Gramsb_gem' ci 'R_YSV_P_20' lc 1425.00000000023 flbr 
+FLBR id 'L_YSV_P_21048' nm 'YSV_Hardenb_gem' ci 'R_YSV_P_20' lc 5324.9999999997 flbr 
+FLBR id 'L_YSV_P_21049' nm 'YSV_Molengoot_gem' ci 'R_YSV_P_20' lc 7224.99999999988 flbr 
+FLBR id 'L_YSV_P_21050' nm 'YSV_Bruchter_bk' ci 'R_YSV_P_21' lc 1105.9999999996 flbr 
+FLBR id 'L_YSV_P_21051' nm 'YSV_Oudevaart' ci 'R_YSV_P_21' lc 5256.00000000025 flbr 
+FLBR id 'L_YSV_P_21052' nm 'YSV_Oostermaal' ci 'R_YSV_P_22' lc 260.000000000028 flbr 
+FLBR id 'L_YSV_P_21053' nm 'YSV_Hogegraven' ci 'R_YSV_P_22' lc 7759.99999999952 flbr 
+FLBR id 'L_YSV_P_21054' nm 'YSV_Leiding' ci 'R_YSV_P_24' lc 2131.99999999959 flbr 
+FLBR id 'L_YSV_P_21055' nm 'MS_Bron' ci 'R_YSV_P_24' lc 4132.00000000035 flbr 
+FLBR id 'L_YSV_P_21056' nm 'YSV_Nieuwevecht' ci 'R_YSV_P_24' lc 18731.9999999996 flbr 
+FLBR id 'L_YSV_P_120407' nm 'YSV_Westerveld' ci 'R_YSV_P_2956' lc 3597.84738659132 flbr 
+FLBR id 'L_YSV_P_120405' nm 'YSV_Streukelerzijl' ci 'R_YSV_P_2961' lc 52.5958449139645 flbr 
+FLBR id 'L_YSV_P_21058' nm 'YSV_Hasselt_afw' ci 'R_YSV_P_2961' lc 368.170914394243 flbr 
+FLBR id 'L_YSV_P_21059' nm 'YSV_Kloosterz_gem' ci 'R_YSV_P_2961' lc 3418.72991937144 flbr 
+FLBR id 'L_YSV_P_21060' nm 'YSV_Cellem_gem' ci 'R_YSV_P_2961' lc 4049.88005833142 flbr 
+FLBR id 'L_YSV_P_21061' nm 'YSV_Kostverlz_gem' ci 'R_YSV_P_2961' lc 6574.48061417434 flbr 
+FLBR id 'L_YSV_P_21062' nm 'YSV_Aremberg_gr' ci 'R_YSV_P_2962' lc 1317.11032320966 flbr 
+FLBR id 'L_YSV_P_120410' nm 'YSV_Rietberg' ci 'R_YSV_P_23395' lc 2038.48446935497 flbr 
+FLBR id 'L_YSV_P_120411' nm 'YSV_Lieder_en_M' ci 'R_YSV_P_23395' lc 6363.64382486486 flbr 
+FLBR id 'L_YSV_P_120414' nm 'YSV_Linterzijl' ci 'R_YSV_P_23396' lc 860.999999999612 flbr 
+FLBR id 'L_YSV_P_120415' nm 'YSV_Herfte' ci 'R_YSV_P_24542' lc 1117.03241503377 flbr 
+FLBR id 'L_5647058' nm 'RT_YSSEL7' ci 'R_YSV_P_62068' lc 20928.7845266454 flbr 
+FLBR id 'L_YSV_P_120418' nm 'YSV_Katerveer' ci 'R_YSV_P_62068' lc 22925.5165415297 flbr 
+FLBR id 'L_5647060' nm 'RT_YSSEL8' ci 'R_YSV_P_62068' lc 36182.8061168113 flbr 
+FLBR id 'L_5682690' nm 'YSV_Lely' ci 'R_YSV_P_P_8' lc 2000.00000000023 flbr 
+FLBR id 'L_5655902' nm 'YSV_Nrslag-YslmN' ci 'R_YSV_P_P_18' lc 6999.99999999982 flbr 
+FLBR id 'L_5682689' nm 'YSV_Hoogland' ci 'R_YSV_P_P_4' lc 21156.1543074187 flbr 
+FLBR id 'L_5682687' nm 'YSV_gem-Buma' ci 'R_YSV_P_P_1' lc 200.000000000176 flbr 
+FLBR id 'L_5682691' nm 'YSV_Vissering' ci 'R_YSV_P_P_2' lc 8090.74572344635 flbr 
+FLBR id 'L_YSV_5640242' nm 'YSV_Nrslag-YslmrZ' ci 'R_YSV_P_P_20' lc 10.0000000002773 flbr 
+FLBR id 'L_5657712' nm 'YSV_Nrslag-ZwtKp' ci 'R_YSV_5576108' lc 1000.0000000002 flbr 
+FLBR id 'L_5657710' nm 'YSV_Nrslag-ketl' ci 'R_YSV_5584882' lc 1000.00149898122 flbr 
+FLBR id 'L_5682688' nm 'YSV_Colijn+' ci 'R_YSV_5604211' lc 200.000045075805 flbr 
+FLBR id 'L_RND_3784' nm 'RND_schuitenBK' ci 'R_RND_32' lc 2500.00147768629 flbr 
+FLBR id 'L_RND_3783' nm 'RND_Hardwyk_rwzi' ci 'R_RND_36' lc 2499.99999999966 flbr 
+FLBR id 'L_RND_3774' nm 'RND_Gem-Lovink' ci 'R_RND_46' lc 1499.99999999997 flbr 
+FLBR id 'L_RND_3776' nm 'RND_Hierdensbeek' ci 'R_RND_58' lc 200.000000000055 flbr 
+FLBR id 'L_RND_3781' nm 'RND_Neerslag-Velurw' ci 'R_RND_62' lc 1200.00000000005 flbr 
+FLBR id 'L_RND_3779' nm 'RND_Kwel-veluw' ci 'R_RND_62' lc 1200.00000000005 flbr 
+FLBR id 'L_RND_3777' nm 'RND_overige-beken' ci 'R_RND_77' lc 500.000799806858 flbr 

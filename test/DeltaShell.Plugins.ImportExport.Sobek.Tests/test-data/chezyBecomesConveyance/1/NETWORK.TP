@@ -1,4 +1,0 @@
-TP_1.0
-NODE id 'Q(t)_boundary' nm 'Q(t)_boundary' px 0 py 0 node
-NODE id 'Closed end' nm 'Closed end' px 0 py 1000 node
-BRCH id '1' nm '' bn 'Q(t)_boundary' en 'Closed end' al 1000 vc_opt 1 vc_equi -1 vc_len 100 brch

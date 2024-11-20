@@ -1,0 +1,1261 @@
+@(#)Deltares, SOBEKSIM Version 4.06.057.27106, Mar 21 2013, 14:07:43
+opened file : D:\SobRu213\Programs\flow\sobeksim.lng
+general: language = 1
+closed file : D:\SobRu213\Programs\flow\sobeksim.lng
+networkoptions: pluviusnetworkinformation = 0
+steadystate: computesteadystate = 0
+simulationoptions: debug = 0
+ConvtabYzprof
+Opened file : branch.tbl
+closed file : branch.tbl
+Opened file : node.tbl
+closed file : node.tbl
+Opened file : qlat.tbl
+closed file : qlat.tbl
+Opened file : grid.tbl
+closed file : grid.tbl
+Opened file : reachdwn.tbl
+closed file : reachdwn.tbl
+Opened file : reachup.tbl
+closed file : reachup.tbl
+Opened file : structup.tbl
+closed file : structup.tbl
+Opened file : structdwn.tbl
+closed file : structdwn.tbl
+Opened file : branch.tbl
+closed file : branch.tbl
+Opened file : node.tbl
+closed file : node.tbl
+Opened file : qlat.tbl
+closed file : qlat.tbl
+Opened file : grid.tbl
+closed file : grid.tbl
+Opened file : reachdwn.tbl
+closed file : reachdwn.tbl
+Opened file : reachup.tbl
+closed file : reachup.tbl
+Opened file : structup.tbl
+closed file : structup.tbl
+Opened file : structdwn.tbl
+closed file : structdwn.tbl
+Opened file : casedesc.cmt
+closed file : casedesc.cmt
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-889 Weir, id= KST-Q-24599
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-889 Pump, id= In_AFWG_217
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1573 Pump, id= In_AFWG_229
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1573 Weir, id= KST-Q-23385
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1845 Weir, id= KST-AFWG_1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1273 Pump, id= Uit_AFWG_197
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1273 Culvert, id= KDU-Q-1272
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1266 Weir, id= KST-Q-23286
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1266 Pump, id= In_AFWG_1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-6636 Pump, id= In_AFWG_265
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-6636 =      -3.000000
+Adjacent level of link AFWG_74_s5 =      -2.000000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2116 Pump, id= In_AFWG_142
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2116 Culvert, id= KDU-Q-2118
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-P-409 Pump, id= Uit_AFWG_45
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-P-409 Pump, id= In_AFWG_185
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-P-409 Pump, id= Uit_AFWG_185
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-7062 Pump, id= Uit_AFWG_194
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-7062 Weir, id= KST-Q-24614
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5099 Culvert, id= KDU-nieuw
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5099 Pump, id= In_AFWG_29
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5099 Weir, id= KST-Q-24260
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2049 Pump, id= Uit_AFWG_181
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-AA-2 Pump, id= Uit_AFWG_20
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_07 Culvert, id= KDU-S-101
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23160 Weir, id= KST-Q-23307
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23160 Pump, id= In_AFWG_298
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-160 Culvert, id= KDU-Q-876
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-160 Pump, id= Uit_AFWG_178
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-160 Culvert, id= KDU-Q-875
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-875 Culvert, id= KDU-BA-160
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-875 =      -4.140000
+Adjacent level of link AFWG_30_s4 =      -2.900000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2115 Pump, id= In_AFWG_58
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1861 Pump, id= Uit_AFWG_288
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1861 Pump, id= Uit_AFWG_82
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1861 Pump, id= In_AFWG_82
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1861 Weir, id= KST-AFWG_283
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1861 Weir, id= KST-AFWG_58
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2026 Pump, id= In_AFWG_230
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2026 Weir, id= KST-Q-23391
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-Q-2000 =      -4.280000
+Adjacent level of link AFWG_140_s5 =      -4.100000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-2017 =      -4.300000
+Adjacent level of link AFWG_219_s4 =      -4.100000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2827 Weir, id= KST-Dam-01
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-OH-1235 Culvert, id= KDU-D-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-OH-1235 Culvert, id= KDU-OH-1236
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-Q-5303 =      -2.190000
+Adjacent level of link AFWG_314_s5 =      -2.100000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5303 Culvert, id= KDU-Q-7141
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-OH-1236 Culvert, id= KDU-OH-1235
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-OH-887 Pump, id= In_AFWG_26-2
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-7392 Culvert, id= KDU-duiker_14
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-Q-7392 =      -2.200000
+Adjacent level of link AFWG_291_s4 =      -2.000000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-7392 =      -2.200000
+Adjacent level of link AFWG_290_s4 =      -2.000000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2353 Culvert, id= KDU-Q-4811
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4019 Weir, id= KST-A-1636
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1264 Pump, id= Uit_KGM-Q-29144
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_13 Weir, id= KST-AFWG_12
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_13 Pump, id= In_AFWG_291
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_14 Pump, id= Uit_AFWG_125
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_14 Culvert, id= KDU-Q-7392
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-duiker_14 =      -2.100000
+Adjacent level of link AFWG_291_s4 =      -2.000000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_16 Pump, id= In_AFWG_211
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-Q-2056 =      -2.650000
+Adjacent level of link AFWG_298_s4 =      -2.500000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4811 Culvert, id= KDU-Q-2353
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-122 Weir, id= KST-AFWG_17-3
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-23 Pump, id= Uit_AFWG_106
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1812 Culvert, id= KDU-P-104
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1812 Culvert, id= KDU-Q-1789
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1785 Weir, id= KST-AFWG_30
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1785 Culvert, id= KDU-BA-168
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-3062 Weir, id= KST-Q-24337
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-3062 Culvert, id= KDU-B-595
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-B-595 Culvert, id= KDU-A-3062
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-168 Weir, id= KST-AFWG_54
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-168 Pump, id= In_AFWG_54
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-168 Weir, id= KST-AFWG_30
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-168 Culvert, id= KDU-Q-1785
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-6970 Weir, id= KST-Q-23609
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-6970 Weir, id= KST-Q-23435
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4988 Weir, id= KST-Q-23209
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4988 Culvert, id= KDU-A-1642
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4988 Culvert, id= KDU-A-1635
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23209 Pump, id= Uit_AFWG_111
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23209 Culvert, id= KDU-Q-8367
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23209 Culvert, id= KDU-A-1642
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1642 Inverted Siphon, id= KSY-Q-23209
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1642 Culvert, id= KDU-Q-4988
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1642 Culvert, id= KDU-A-1635
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4475 Weir, id= KST-Q-24439
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-110 Weir, id= KST-AFWG_305
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8367 Pump, id= Uit_AFWG_111
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8367 Inverted Siphon, id= KSY-Q-23209
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1635 Culvert, id= KDU-Q-4988
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1635 Culvert, id= KDU-A-1642
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-P-104 Culvert, id= KDU-Q-1812
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-P-104 Culvert, id= KDU-Q-1789
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-177 Pump, id= Uit_AFWG_270
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-117 Pump, id= In_AFWG_9
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-117 Weir, id= KST-Q-23434
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-117 Pump, id= In_AFWG_100
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-117 Pump, id= In_AFWG_102
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-109 Culvert, id= KDU-BA-102
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-109 Culvert, id= KDU-BA-103
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-109 Weir, id= KST-AFWG_17-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-102 Culvert, id= KDU-BA-109
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-102 Culvert, id= KDU-BA-103
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-103 Culvert, id= KDU-BA-109
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-103 Culvert, id= KDU-BA-102
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5217 Pump, id= Uit_AFWG_123
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-104 Pump, id= Uit_AFWG_89
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-B-828 Weir, id= KST-AFWG_15
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-B-828 Weir, id= KST-Q-24400
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-B-828 Pump, id= Uit_AFWG_124
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-B-828 Pump, id= Uit_AFWG_102
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1808 Pump, id= In_AFWG_224
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1808 Culvert, id= KDU-Q-1965
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1808 Weir, id= KST-Q-24518
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1965 Pump, id= In_AFWG_224
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1965 Culvert, id= KDU-Q-1808
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23172 Culvert, id= KDU-Q-2185
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-876 Culvert, id= KDU-BA-160
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-876 Pump, id= Uit_AFWG_178
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2185 Weir, id= KST-Q-24535
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2185 Pump, id= In_AFWG_30-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2185 Inverted Siphon, id= KSY-Q-23172
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1789 Culvert, id= KDU-Q-1812
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1789 Culvert, id= KDU-P-104
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1292 Weir, id= KST-Q-24519
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1292 Weir, id= KST-Q-24535
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1292 Pump, id= In_AFWG_30-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1292 Pump, id= In_AFWG_23
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-1292 =      -2.890000
+Adjacent level of link AFWG_23_s5 =      -2.500000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1846 Weir, id= KST-A-1845
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-6867 Pump, id= In_AFWG_122
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-6867 Pump, id= In_AFWG_123
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1845 Weir, id= KST-A-2338
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-2434 Pump, id= Uit_AFWG_90
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-2434 Pump, id= Uit_AFWG_97
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1280 Pump, id= Uit_AFWG_24
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-2432 Culvert, id= KDU-A-2433
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-2433 Culvert, id= KDU-A-2432
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-95 Pump, id= Uit_AFWG_98
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1839 Pump, id= In_AFWG_96
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1839 Pump, id= In_AFWG_89
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1840 Weir, id= KST-AA-22
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2117 Pump, id= Uit_KGM-Q-29145
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2117 Pump, id= In_AFWG_215
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-86 Weir, id= KST-AFWG_2
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-86 Pump, id= In_AFWG_19
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2086 Pump, id= In_AFWG_44
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5425 Pump, id= In_AFWG_120
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5425 Pump, id= In_AFWG_121
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1492 Pump, id= In_AFWG_244
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1492 Pump, id= Uit_AFWG_244
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2009 Pump, id= In_AFWG_44
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2057 Culvert, id= KDU-Q-1908
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2057 Pump, id= In_AFWG_15
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1494 Pump, id= Uit_AFWG_205
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1494 Pump, id= In_AFWG_192-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1790 Culvert, id= KDU-Q-2014
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1790 Weir, id= KST-Q-23388
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-93 Weir, id= KST-AA-18
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-93 Pump, id= In_AFWG_66
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-86 Weir, id= KST-AA-23
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-3083 Pump, id= In_AFWG_114
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-88 Weir, id= KST-AA-14
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-88 Weir, id= KST-AFWG_109
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-89 Weir, id= KST-AA-14
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2008 Weir, id= KGM-Q-29136-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2008 Pump, id= In_AFWG_241
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2008 Culvert, id= KDU-Q-872
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2008 Culvert, id= KDU-Q-2007
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1860 Weir, id= KGM-Q-29151-2
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1860 Inverted Siphon, id= KSY-Q-23157
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23157 Weir, id= KGM-Q-29151-3
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23157 Culvert, id= KDU-Q-1860
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-872 Pump, id= In_KGM-Q-29136
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-872 Weir, id= KGM-Q-29136-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-872 Culvert, id= KDU-Q-2008
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-872 Pump, id= In_AFWG_241
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-872 Culvert, id= KDU-Q-2007
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5602 Pump, id= Uit_AFWG_202
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-Q-5602 =      -2.510000
+Adjacent level of link AFWG_10_s5 =      -2.200000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-871 =      -2.500000
+Adjacent level of link AFWG_241_s4 =      -1.400000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2007 Weir, id= KGM-Q-29136-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2007 Culvert, id= KDU-Q-2008
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2007 Pump, id= In_AFWG_241
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2007 Culvert, id= KDU-Q-872
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-6316 Pump, id= In_AFWG_10
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-6316 Weir, id= KST-BA-18
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1908 Culvert, id= KDU-Q-2057
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-7981 Weir, id= KST-AFWG_311
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4503 Weir, id= KST-AFWG_311
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_03 Culvert, id= KDU-duiker_04
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_04 Culvert, id= KDU-duiker_03
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_04 Culvert, id= KDU-duiker_05
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_05 Culvert, id= KDU-duiker_04
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8243 Culvert, id= KDU-Q-1855
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8243 Culvert, id= KDU-Q-8252
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8243 Culvert, id= KDU-Q-8252_2
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8243 Pump, id= In_AFWG_306-2
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1855 Culvert, id= KDU-Q-8243
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1855 Culvert, id= KDU-Q-8252
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1855 Culvert, id= KDU-Q-8252_2
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1855 Pump, id= In_AFWG_7
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8262 Culvert, id= KDU-Q-4422
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8241 Culvert, id= KDU-Q-8249
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8249 Culvert, id= KDU-Q-8241
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8249 Culvert, id= KDU-Q-8253
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8280 Pump, id= In_AFWG_254
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8263 Culvert, id= KDU-Q-8261
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8253 Culvert, id= KDU-Q-8249
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8253 Culvert, id= KDU-Q-8254
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8254 Culvert, id= KDU-Q-8253
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8254 Culvert, id= KDU-Q-8242
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8242 Culvert, id= KDU-Q-8254
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8242 Culvert, id= KDU-Q-8246
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8246 Culvert, id= KDU-Q-8242
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8246 Culvert, id= KDU-Q-8250
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8250 Culvert, id= KDU-Q-8246
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8250 Culvert, id= KDU-Q-8245
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8245 Culvert, id= KDU-Q-8250
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8261 Culvert, id= KDU-Q-8263
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-8261 =      -1.800000
+Adjacent level of link AFWG_308_s4 =      -1.400000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8244 Culvert, id= KDU-Q-8251
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8251 Culvert, id= KDU-Q-8244
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1271 Culvert, id= KDU-Q-1270
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1271 Weir, id= KST-Q-23290
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1283 Culvert, id= KDU-Q-1270
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1270 Culvert, id= KDU-Q-1283
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1270 Culvert, id= KDU-Q-1271
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1332 Culvert, id= KDU-Q-1347
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1347 Culvert, id= KDU-Q-1332
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1347 Culvert, id= KDU-Q-1348
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1348 Culvert, id= KDU-Q-1347
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1348 Pump, id= In_AFWG_73
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1348 Weir, id= KST-Q-23342
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1329 Weir, id= KST-Q-23316
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1329 Culvert, id= KDU-Q-1330
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1330 Culvert, id= KDU-Q-1329
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1330 Culvert, id= KDU-Q-1331
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1282 Pump, id= In_KGM-Q-29138
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1282 Culvert, id= KDU-Q-1327
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1327 Culvert, id= KDU-Q-1282
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1327 Culvert, id= KDU-Q-2013
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2013 Culvert, id= KDU-Q-1327
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2006 Culvert, id= KDU-Q-2103
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2103 Culvert, id= KDU-Q-2006
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1331 Culvert, id= KDU-Q-1330
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4422 Culvert, id= KDU-Q-8262
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-80 Pump, id= In_AFWG_2
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-AA-87 =      -3.460000
+Adjacent level of link AFWG_64_s4 =      -3.200000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-87 Culvert, id= KDU-BA-25
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5311 Weir, id= KST-Q-23286
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5311 Pump, id= In_AFWG_1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-25 Pump, id= Uit_AFWG_8
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-25 Culvert, id= KDU-AA-87
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-83 Pump, id= Uit_AFWG_121
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8281 Pump, id= Uit_AFWG_247
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2118 Pump, id= In_AFWG_173
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2118 Culvert, id= KDU-Q-2116
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2118 Pump, id= In_AFWG_142
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-6410 Pump, id= Uit_AFWG_128
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-6410 =      -2.200000
+Adjacent level of link AFWG_21_s5 =      -1.700000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23168 Weir, id= KST-JH-051
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23168 Pump, id= In_AFWG_26-2
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1274 Weir, id= KST-AFWG_290
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1274 Pump, id= In_AFWG_84-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_10 Pump, id= In_AFWG_24
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-117 Pump, id= Uit_AFWG_101
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-117 Weir, id= KST-AFWG_17-2
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-nieuw Culvert, id= KDU-Q-5099
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2828 Weir, id= KST-Dam-01
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1975 Pump, id= In_AFWG_306-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8252 Culvert, id= KDU-Q-8243
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8252 Culvert, id= KDU-Q-1855
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8252_2 Culvert, id= KDU-Q-8243
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-8252_2 Culvert, id= KDU-Q-1855
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1284 Weir, id= KST-Q-23383
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-1846 =      -3.300000
+Adjacent level of link AFWG_286_s4 =      -2.700000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-3032 Pump, id= Uit_AFWG_171
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1272 Culvert, id= KDU-Q-1273
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1272 Pump, id= In_AFWG_84-2
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1272 Weir, id= KST-Q-23297
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-1260 =      -4.530000
+Adjacent level of link AFWG_230_s2 =      -4.500000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-1260_2 =      -4.530000
+Adjacent level of link AFWG_230_s2 =      -4.500000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1827 Pump, id= In_AFWG_90
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1827 Pump, id= In_AFWG_88
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1827 Pump, id= In_AFWG_93
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1827 Pump, id= In_AFWG_97
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-B-829 Pump, id= Uit_AFWG_88
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-B-829 =      -3.200000
+Adjacent level of link AFWG_6_s4 =      -2.300000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-B-829 Pump, id= Uit_AFWG_93
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1836 Pump, id= In_AFWG_86
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1836 Pump, id= In_AFWG_98
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1847 Pump, id= In_AFWG_32
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1847 Pump, id= In_AFWG_31
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-AA-111 =      -3.300000
+Adjacent level of link AFWG_31_s5 =      -2.950000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-111 Weir, id= KST-AFWG_32
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-AA-110 =      -3.300000
+Adjacent level of link AFWG_31_s5 =      -2.950000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-AA-110 Weir, id= KST-AFWG_32
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1632 Culvert, id= KDU-A-1633
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1633 Culvert, id= KDU-A-1632
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-duiker_11 Pump, id= Uit_AFWG_170
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4659 Culvert, id= KDU-A-1631
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1637 Weir, id= KST-A-1639
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1630 Weir, id= KST-A-1639
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1788 Weir, id= KST-Q-23293
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1788 Pump, id= In_AFWG_47-1
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-1631 Culvert, id= KDU-Q-4659
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-Q-4775 =      -2.190000
+Adjacent level of link AFWG_53_s4 =      -2.100000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-7141 Culvert, id= KDU-Q-5303
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 2 Level of structure Culvert, id= KDU-Q-7141 =      -2.190000
+Adjacent level of link AFWG_314_s5 =      -2.100000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-D-1 Weir, id= KST-D-2
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-D-1 Culvert, id= KDU-OH-1235
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1967 Pump, id= In_AFWG_155
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1967 Weir, id= KST-Q-23381
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1301 Culvert, id= KDU-Q-2113
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2113 Culvert, id= KDU-Q-1301
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2113 Culvert, id= KDU-Q-1317
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1317 Culvert, id= KDU-Q-2113
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-BA-91 =      -2.490000
+Adjacent level of link AFWG_3_s4 =      -2.400000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-91 Weir, id= KDU-BA-89
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-BA-91 Weir, id= KDU-BA_301
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5519 Pump, id= In_KGM-Q-25397
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4953 Weir, id= KST-Q-24519
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-4953 Pump, id= In_AFWG_23
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-2014 Culvert, id= KDU-Q-1790
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5760 Pump, id= In_AFWG_103
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5460 Pump, id= In_AFWG_193
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-5460 Pump, id= In_AFWG_200
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Inverted Siphon, id= KSY-Q-23194 =      -2.800000
+Adjacent level of link AFWG_5_s4 =      -1.700000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Inverted Siphon, id= KSY-Q-23194 Pump, id= In_AFWG_5
+
+Applied Automaticstruclinkbobadjustmenttreshold=       0.000000
+Link level higher than adjacent structure level, time consuming structure drying can be prevented by lowering link level
+Side 1 Level of structure Culvert, id= KDU-BA-114 =      -2.390000
+Adjacent level of link AFWG_9_s5 =      -2.200000
+Increase Automaticstruclinkbobadjustmenttreshold in sobeksim.ini to adjust adjacent linklevel automatically       0.000000
+
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1862 Pump, id= Uit_AFWG_81
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1862 Pump, id= In_AFWG_81
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1862 Pump, id= In_AFWG_28
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1862 Weir, id= KST-Q-23345
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-Q-1862 Weir, id= KST-Q-23863
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-S-100 Culvert, id= KDU-A-2237
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-2237 Culvert, id= KDU-S-100
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-A-2237 Culvert, id= KDU-S-101
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-S-101 Culvert, id= KDU-A-2237
+Adjacent structures, better keep 1 normal link in between them Culvert, id= KDU-S-101 Culvert, id= KDU-duiker_07
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 6
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 117
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 120
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 161
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 168
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 173
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 209
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 210
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 230
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 253
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 256
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 266
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 279
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 291
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 303
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 286
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 336
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 379
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 160
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 84
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 394
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 407
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 408
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 414
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 415
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 439
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 443
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 446
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 448
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 461
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 495
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 539
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 555
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 563
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 369
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 580
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 601
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 613
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 625
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 626
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 637
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 638
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 673
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 204
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 718
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 726
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 729
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 743
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 752
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 36
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 779
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 328
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 785
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 801
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 809
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 579
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 821
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 829
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 837
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 851
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 871
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 61
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 885
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 850
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 911
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 914
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 796
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 932
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 27
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 935
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 974
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 992
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 998
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 999
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1011
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1112
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1133
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1142
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1144
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1174
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1179
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1203
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1213
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1219
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1225
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1233
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1243
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1251
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1260
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1280
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1304
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 736
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 927
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1397
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1302
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1408
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1456
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1467
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1472
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1495
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1529
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1530
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1566
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1582
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1591
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1596
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1608
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1639
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1630
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1680
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 725
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 751
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1770
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1791
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1809
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1815
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1824
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1825
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1832
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1328
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 295
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 335
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1896
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1910
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1938
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1939
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1954
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1955
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1982
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1991
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1998
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2017
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2023
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2067
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2112
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2113
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2119
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1987
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2127
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1534
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2103
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2170
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2178
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2185
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2208
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2218
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2155
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2269
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2274
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2294
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2333
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2375
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2382
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2411
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2433
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2453
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2470
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2500
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2512
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2528
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2555
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2596
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2599
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2475
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2603
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 562
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2615
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2668
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2673
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2687
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2722
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2741
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2748
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2755
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2780
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2784
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2798
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2828
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2892
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2903
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2912
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2918
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 917
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2936
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2957
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2962
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2968
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2972
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2973
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2978
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3032
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3035
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2997
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3058
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3099
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3047
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3116
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 143
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3135
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3173
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 669
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3172
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3207
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3229
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 728
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3248
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3246
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3252
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3015
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3319
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 586
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3351
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3368
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3384
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3409
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1374
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3438
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 596
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3306
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3471
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3506
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3515
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3367
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3551
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3563
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3587
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3586
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3026
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3691
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3050
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 599
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3720
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3747
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2747
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3758
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3742
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3782
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3000
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2390
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3690
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3825
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3909
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3829
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3931
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3944
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3647
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3935
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3968
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3969
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3454
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3978
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 671
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3562
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4020
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3650
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1232
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 290
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2541
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 406
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4115
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4116
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4119
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2618
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4135
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4092
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4153
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3889
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2300
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4195
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4197
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4184
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3870
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4239
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1485
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4271
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4277
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2779
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3514
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3005
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3147
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4370
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3917
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1130
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1423
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4405
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4252
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4427
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4444
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3327
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4459
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4528
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2544
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4585
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 75
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2547
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3594
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4709
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 683
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4762
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3714
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4791
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2297
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4798
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4810
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4814
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4818
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4832
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4836
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2792
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4843
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4846
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4875
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4897
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4856
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 240
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4949
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4922
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4662
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4974
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 757
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 5056
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 5085
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4927
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 5095
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 5136
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1279
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4011
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 5070
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2060
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2247
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2467
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2207
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2551
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 5363
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 5383
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 5414
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1601
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2877
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2356
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3730
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2725
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 5362
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 116
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4391
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 2986
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4058
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 3655
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 353
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 5546
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1813
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 535
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1796
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 1528
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4770
+ Warning in subroutine initial
+ Extreme differences in bottomlevels of connected reaches in node 4777
+ Warning in subroutine plchst
+ Structure Weir, id= KST-Q-23293 might generate numerical oscillations due to br
+ oad crest and small storage area around the structure
+opened file : ..\work\flow_bal.out
+closed file : ..\work\flow_bal.out
+cpu computation =      35.880230
+---------------------------------
+Normal end of Sobeksim
+closed file : ..\work\sobek.log

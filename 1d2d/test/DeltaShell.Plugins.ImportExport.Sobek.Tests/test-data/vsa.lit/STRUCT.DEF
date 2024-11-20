@@ -1,0 +1,77 @@
+STDS id 'duiker_2050030' nm 'duiker_2050030' ty 10 tc 1 ll 3.67 rl 2.76 si 'duiker_2050030' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 8.66    stds
+STDS id 'stuw_205C' nm 'stuw_205C' ty 6 cl 3.2 cw 1.5 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_205BAB' nm 'stuw_205BAB' ty 6 cl 3 cw 1.5 ce 1 sc 1 rt 0    stds
+STDS id 'duiker_2050031' nm 'duiker_2050031' ty 10 tc 1 ll 2.61 rl 2.62 si 'duiker_2050031' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 4.76    stds
+STDS id 'stuw_205BAA' nm 'stuw_205BAA' ty 6 cl 2.6 cw 1.6 ce 1 sc 1 rt 0    stds
+STDS id 'duiker_2050032' nm 'duiker_2050032' ty 10 tc 1 ll 2.57 rl 2.65 si 'duiker_2050032' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 42.52    stds
+STDS id 'duiker_2050105' nm 'duiker_2050105' ty 10 tc 1 ll 1.04 rl 1.3 si 'duiker_2050105' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 28.24    stds
+STDS id 'duiker_2050033' nm 'duiker_2050033' ty 10 tc 1 ll 2.1 rl 2.22 si 'duiker_2050033' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 10.53    stds
+STDS id 'stuw_205B' nm 'stuw_205B' ty 6 cl 2.7 cw 1.98 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_204A' nm 'stuw_204A' ty 6 cl 3.3 cw 20 ce 1 sc 1 rt 0    stds
+STDS id 'duiker_2050129' nm 'duiker_2050129' ty 10 tc 1 ll 2.58 rl 2.63 si 'duiker_2050129' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 8.13    stds
+STDS id 'duiker_2050134' nm 'duiker_2050134' ty 10 tc 1 ll 2.41 rl 2.41 si 'duiker_2050134' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 10.34    stds
+STDS id 'stuw_205AI' nm 'stuw_205AI' ty 6 cl 2.2 cw 1.54 ce 1 sc 1 rt 0    stds
+STDS id 'duiker_2060040' nm 'duiker_2060040' ty 10 tc 1 ll 2.34 rl 2.33 si 'duiker_2060040' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 10.08    stds
+STDS id 'duiker_2050005' nm 'duiker_2050005' ty 10 tc 1 ll 2.46 rl 2.04 si 'duiker_2050005' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 8.27    stds
+STDS id 'duiker_2050135' nm 'duiker_2050135' ty 10 tc 1 ll 2.34 rl 2.36 si 'duiker_2050135' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 6.28    stds
+STDS id 'duiker_2050136' nm 'duiker_2050136' ty 10 tc 1 ll 2.38 rl 2.34 si 'duiker_2050136' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 26.48    stds
+STDS id 'duiker_2050137' nm 'duiker_2050137' ty 10 tc 1 ll 2.22 rl 2.22 si 'duiker_2050137' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 8.4    stds
+STDS id 'duiker_2050034' nm 'duiker_2050034' ty 10 tc 1 ll 1.39 rl 1.09 si 'duiker_2050034' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 68.46    stds
+STDS id 'pomp_205STK' nm 'pomp_205STK' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+4.5 2.4 2.2 0 0 <
+tble    stds
+STDS id 'stuw_205A' nm 'stuw_205A' ty 6 cl 2.2 cw 3 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_211B' nm 'stuw_211B' ty 6 cl 4.7 cw 8.85 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_211A' nm 'stuw_211A' ty 6 cl 4.45 cw 8.78 ce 1 sc 1 rt 0    stds
+STDS id 'duiker_2050127' nm 'duiker_2050127' ty 10 tc 1 ll 2.73 rl 2.64 si 'duiker_2050127' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 4.37    stds
+STDS id 'duiker_2050138' nm 'duiker_2050138' ty 10 tc 1 ll 2.45 rl 2.39 si 'duiker_2050138' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 5.95    stds
+STDS id 'duiker_2050139' nm 'duiker_2050139' ty 10 tc 1 ll 2.26 rl 2.36 si 'duiker_2050139' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 7.33    stds
+STDS id 'duiker_2050095' nm 'duiker_2050095' ty 10 tc 1 ll 3.23 rl 3.29 si 'duiker_2050095' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 8.21    stds
+STDS id 'duiker_2050096' nm 'duiker_2050096' ty 10 tc 1 ll 3.09 rl 3.03 si 'duiker_2050096' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 7.73    stds
+STDS id 'duiker_2050097' nm 'duiker_2050097' ty 10 tc 1 ll 2.95 rl 3.04 si 'duiker_2050097' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 28.7    stds
+STDS id 'duiker_2050099' nm 'duiker_2050099' ty 10 tc 1 ll 2.97 rl 3.01 si 'duiker_2050099' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 18.23    stds
+STDS id 'duiker_2050101' nm 'duiker_2050101' ty 10 tc 1 ll 2.87 rl 2.85 si 'duiker_2050101' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 11.01    stds
+STDS id 'duiker_2050102' nm 'duiker_2050102' ty 10 tc 1 ll 2.82 rl 2.97 si 'duiker_2050102' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 4.24    stds
+STDS id 'duiker_2050103' nm 'duiker_2050103' ty 10 tc 1 ll 2.82 rl 2.8 si 'duiker_2050103' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 10.61    stds
+STDS id 'duiker_2050104' nm 'duiker_2050104' ty 10 tc 1 ll 2.71 rl 2.77 si 'duiker_2050104' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 23.25    stds
+STDS id 'stuw_205AA' nm 'stuw_205AA' ty 6 cl 2.95 cw 1.5 ce 1 sc 1 rt 0    stds
+STDS id 'duiker_2050094' nm 'duiker_2050094' ty 10 tc 1 ll 2.94 rl 3.15 si 'duiker_2050094' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 18.48    stds
+STDS id 'duiker_2050091' nm 'duiker_2050091' ty 10 tc 1 ll 3.54 rl 3.61 si 'duiker_2050091' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 3.85    stds
+STDS id 'duiker_2050092' nm 'duiker_2050092' ty 10 tc 1 ll 3.51 rl 3.48 si 'duiker_2050092' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 7.06    stds
+STDS id 'duiker_2050093' nm 'duiker_2050093' ty 10 tc 1 ll 3.21 rl 3.33 si 'duiker_2050093' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 12.28    stds
+STDS id 'syfon_2058' nm 'syfon_2058' ty 10 tc 1 ll 3.1 rl 3.1 si 'syfon_2058' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 12    stds
+STDS id 'duiker_2070011' nm 'duiker_2070011' ty 10 tc 1 ll 3.3 rl 3.3 si 'duiker_2070011' li 0.93 lo 1 ov 0 tv 0 rt 1 dl 24.82    stds
+STDS id 'stuw_201A' nm 'stuw_201A' ty 6 cl 3.8 cw 14 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_201B' nm 'stuw_201B' ty 6 cl 4 cw 10.89 ce 1 sc 1 rt 0    stds
+STDS id 'duiker_2050076' nm 'duiker_2050076' ty 10 tc 1 ll 4.88 rl 4.7 si 'duiker_2050076' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 9.07    stds
+STDS id 'stuw_205AG' nm 'stuw_205AG' ty 6 cl 4.7 cw 2 ce 1 sc 1 rt 0    stds
+STDS id 'duiker_2050082' nm 'duiker_2050082' ty 10 tc 1 ll 4.31 rl 4.19 si 'duiker_2050082' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 20.39    stds
+STDS id 'duiker_2050084' nm 'duiker_2050084' ty 10 tc 1 ll 4.06 rl 4.07 si 'duiker_2050084' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 16.52    stds
+STDS id 'duiker_2050085' nm 'duiker_2050085' ty 10 tc 1 ll 3.94 rl 4.15 si 'duiker_2050085' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 8.26    stds
+STDS id 'duiker_2050086' nm 'duiker_2050086' ty 10 tc 1 ll 3.79 rl 3.93 si 'duiker_2050086' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 4.33    stds
+STDS id 'duiker_2050087' nm 'duiker_2050087' ty 10 tc 1 ll 3.77 rl 3.89 si 'duiker_2050087' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 4.27    stds
+STDS id 'duiker_2050088' nm 'duiker_2050088' ty 10 tc 1 ll 3.76 rl 3.68 si 'duiker_2050088' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 8.3    stds
+STDS id 'duiker_2050090' nm 'duiker_2050090' ty 10 tc 1 ll 3.05 rl 3.16 si 'duiker_2050090' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 6.45    stds
+STDS id 'duiker_2070001' nm 'duiker_2070001' ty 10 tc 1 ll 4.67 rl 4.61 si 'duiker_2070001' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 9.34    stds
+STDS id 'duiker_2070002' nm 'duiker_2070002' ty 10 tc 1 ll 4.55 rl 4.38 si 'duiker_2070002' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 9.41    stds
+STDS id 'duiker_2070003' nm 'duiker_2070003' ty 10 tc 1 ll 4.03 rl 4.09 si 'duiker_2070003' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 9.27    stds
+STDS id 'duiker_2070004' nm 'duiker_2070004' ty 10 tc 1 ll 4.02 rl 4.19 si 'duiker_2070004' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 10.31    stds
+STDS id 'duiker_2070005' nm 'duiker_2070005' ty 10 tc 1 ll 4.18 rl 4.17 si 'duiker_2070005' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 9.27    stds
+STDS id 'duiker_2070006' nm 'duiker_2070006' ty 10 tc 1 ll 3.78 rl 3.95 si 'duiker_2070006' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 10.39    stds
+STDS id 'duiker_2070007' nm 'duiker_2070007' ty 10 tc 1 ll 4.03 rl 3.87 si 'duiker_2070007' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 9.39    stds
+STDS id 'duiker_2070008' nm 'duiker_2070008' ty 10 tc 1 ll 4.07 rl 3.97 si 'duiker_2070008' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 9.36    stds
+STDS id 'duiker_2070009' nm 'duiker_2070009' ty 10 tc 1 ll 4.09 rl 4.05 si 'duiker_2070009' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 9.2    stds
+STDS id 'duiker_2070010' nm 'duiker_2070010' ty 10 tc 1 ll 3.96 rl 3.96 si 'duiker_2070010' li 0.93 lo 1 ov 0 tv 0 rt 0 dl 47.5    stds
+STDS id 'stuw_BS01-07' nm 'stuw_BS01-07' ty 6 cl 5.85 cw 4 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_BS01-08' nm 'stuw_BS01-08' ty 6 cl 4.68 cw 4.55 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_BS86-03' nm 'stuw_BS86-03' ty 6 cl 4.49 cw 6.22 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_DO_1-2' nm 'stuw_DO 1-2' ty 6 cl 5.3 cw 6 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_DO_1-3' nm 'stuw_DO 1-3' ty 6 cl 3.1 cw 15 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_DO_207-1' nm 'stuw_DO 207-1' ty 6 cl 5.4 cw 16.8 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_ES1-1' nm 'stuw_ES1-1' ty 6 cl 6.1 cw 11 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_ES1-2' nm 'stuw_ES1-2' ty 6 cl 4.18 cw 11 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_ES1-3' nm 'stuw_ES1-3' ty 6 cl 1.77 cw 12 ce 1 sc 1 rt 0    stds
+STDS id 'stuw_ES1-4' nm 'stuw_ES1-4' ty 6 cl 1.51 cw 12 ce 1 sc 1 rt 0    stds
+STDS id 'Crevecoeur' nm 'Crevecoeur' ty 7 cl 0 cw 23 gh 10 mu 1 sc 1 rt 1 mp 0 9999 mn 0 0    stds
+STDS id 'stuw_299_vughterstuw' nm 'universal weir' ty 11 cl 0 si 'stuw_299_vughterstuw' ce 0.93 sv 0.667 rt 0    stds

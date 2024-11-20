@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.DrawingShape" Collapsed="true">
+    <Position X="13" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAIAAABgAAAAAAAAAIAEAAAIIAAAAIIAIAAAAAAAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\DrawingShape.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.InternalConnectionShape" Collapsed="true">
+    <Position X="15" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAQAAAAAAAAAAAAAAAAAQCAAAQAI=</HashCode>
+      <FileName>Forms\SewerFeatureViews\InternalConnectionShape.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.CompartmentShape" Collapsed="true">
+    <Position X="10.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAgAAAAAAYAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\CompartmentShape.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.PipeShape" Collapsed="true">
+    <Position X="13" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAEAAABgAAAAAAABAAAEAAAAoAAIAAAAAAAAAAAAE=</HashCode>
+      <FileName>Forms\SewerFeatureViews\PipeShape.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.PumpShape" Collapsed="true">
+    <Position X="15" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AApAAAAAAgAAAAAAAAAAAACAAgIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\PumpShape.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.WeirShape" Collapsed="true">
+    <Position X="13" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQBAAAAAAgAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\WeirShape.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.OrificeShape" Collapsed="true">
+    <Position X="17" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAoAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\OrificeShape.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.IDrawingShape" Collapsed="true">
+    <Position X="13" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAIAAABgAAAAAAAAAIAEAAAIIAAAAIIAIAAAAAAAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\IDrawingShape.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

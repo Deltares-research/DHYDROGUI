@@ -1,0 +1,11 @@
+BBB2.2
+*
+* Configuratie file
+* Filename voor:
+* 1. Knoop data
+* 2. Tak data
+* 3. Lateraal data
+*
+'\SBK21121\Delta_M.lit\work\3b_nod.tp'
+'\SBK21121\Delta_M.lit\work\3b_link.tp'
+'\SBK21121\Delta_M.lit\work\3bRunoff.tp'

@@ -1,0 +1,4 @@
+ALFA id '1'  nm 'Default (1)' af 100 0 0 0 0.3 0.05 lv 0 0 0 alfa
+ERNS id '1'  nm 'Default (1)' cvi 666.67 cvo 0 0 7.143 6666.67 cvs 0.2 lv 0 0 0.86 erns
+ERNS id '2'  nm 'GFE1021' cvi 392 cvo 0 0 4 65.4 cvs 0.01 lv 0 0 0.88 erns
+ALFA id '2'  nm 'DeZH' af 5 0 0 2.55 0.0028 0.028 lv 0 0 0.88 alfa

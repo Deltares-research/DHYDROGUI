@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <!-- Shortcut to FM Manuals -->
-  <Shortcut Id="DFlowFMTechnicalReferenceShortcut" Name="!(loc.FMReferenceManualName)" Target="[BINDIR]D-Flow_FM_Technical_Reference_Manual.pdf" WorkingDirectory="BINDIR"/>
-  <Shortcut Id="DFlowFMUserManualShortcut" Name="!(loc.FMUserManualName)" Target="[BINDIR]D-Flow_FM_User_Manual.pdf" WorkingDirectory="BINDIR"/>
-  <Shortcut Id="DFlowFMUserManual1D2DShortcut" Name="!(loc.FMUserManualName1D2D)" Target="[BINDIR]D-Flow_FM_User_Manual_1D2D.pdf" WorkingDirectory="BINDIR"/>
-</Include>

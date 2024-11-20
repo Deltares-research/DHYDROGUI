@@ -1,5 +1,0 @@
-DWA id 'Default_DWA' nm 'Default_DWA' do 1 wc 10 wd 120 wh 1.5 1.5 1.5 1.5 1.5 3 4 5 6 6.5 7.5 8.5 7.5 6.5 6 5 5 5 4 3.5 3 2.5 2 2 dwa
-DWA id '1' nm '1' do 1 wc 0 wd 120 wh 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 dwa
-DWA id 'P01_Default_DWA' nm 'P01_Default_DWA' do 1 wc 10 wd 120 wh 1.5 1.5 1.5 1.5 1.5 3 4 5 6 6.5 7.5 8.5 7.5 6.5 6 5 5 5 4 3.5 3 2.5 2 2 dwa
-DWA id 'P01_1' nm 'P01_1' do 1 wc 0 wd 120 wh 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 dwa
-DWA id '2' nm 'Default (2)' do 1 wc 0 wd 120 wh 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 dwa

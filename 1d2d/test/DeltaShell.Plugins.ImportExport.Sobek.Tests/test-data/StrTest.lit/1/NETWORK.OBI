@@ -1,0 +1,26 @@
+OBI1.0
+OBID id '1' ci 'SBK_BOUNDARY' obid
+OBID id '4' ci 'SBK_GRIDPOINT' obid
+OBID id '3' ci 'SBK_RIVERWEIR' obid
+OBID id '5' ci 'SBK_GRIDPOINT' obid
+OBID id '7' ci 'SBK_GRIDPOINT' obid
+OBID id '8' ci 'SBK_GRIDPOINT' obid
+OBID id '10' ci 'SBK_GRIDPOINT' obid
+OBID id '9' ci 'SBK_RIVERADVANCEDWEIR' obid
+OBID id '11' ci 'SBK_GRIDPOINT' obid
+OBID id '13' ci 'SBK_GRIDPOINT' obid
+OBID id '12' ci 'SBK_GENERALSTRUC' obid
+OBID id '14' ci 'SBK_GRIDPOINT' obid
+OBID id '16' ci 'SBK_GRIDPOINT' obid
+OBID id '15' ci 'SBK_RIVERPUMP' obid
+OBID id '17' ci 'SBK_GRIDPOINT' obid
+OBID id '19' ci 'SBK_GRIDPOINT' obid
+OBID id '18' ci 'SBK_DATABASESTRUCTURE' obid
+OBID id '20' ci 'SBK_GRIDPOINT' obid
+OBID id '21' ci 'SBK_WEIR' obid
+OBID id '22' ci 'SBK_ORIFICE' obid
+OBID id '23' ci 'SBK_PUMP' obid
+OBID id '24' ci 'SBK_CULVERT' obid
+OBID id '25' ci 'SBK_UNIWEIR' obid
+OBID id '26' ci 'SBK_BRIDGE' obid
+OBID id '2' ci 'SBK_BOUNDARY' obid

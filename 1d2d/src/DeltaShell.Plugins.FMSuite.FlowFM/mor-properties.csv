@@ -1,0 +1,111 @@
+#,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+GUIGroups,(order determines order of appearance),,,,,,,,,,,,,,
+Morphology,Morphology,,,,,,,,,,,,,,
+Boundary,Boundary,,,,,,,,,,,,,,
+Numerics,Numerics,,,,,,,,,,,,,,
+Output,Output,,,,,,,,,,,,,,
+Underlayer,Underlayer,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+MorGroups,(order determines order in written mor file),,,,,,,,,,,,,,
+MorphologyFileInformation,,,,,,,,,,,,,,,
+Morphology,,,,,,,,,,,,,,,
+Boundary,,,,,,,,,,,,,,,
+Numerics,,,,,,,,,,,,,,,
+Output,,,,,,,,,,,,,,,
+Underlayer,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+MorGroup,MorName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MorOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description
+#,,,,,,,,,,,,,,,
+# overall:,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+MorphologyFileInformation,FileCreatedBy,Morphology,,,String,,,,TRUE,,,,,,
+MorphologyFileInformation,FileCreationDate,Morphology,,,String,,,,TRUE,,,,,,
+MorphologyFileInformation,FileVersion,Morphology,,,String,,,,TRUE,,,,,,
+Morphology,MorFac,Morphology,,MorFac,Double,0,,,FALSE,,,,,,morphological scale factor constant or file with time-dependent values
+Morphology,MorStt,Morphology,,MorStt,Double,0,,,FALSE,,,,,,time interval in minutes after the start of the simulation after which morphological changes will be calculated
+Morphology,Thresh,Morphology,,Thresh,Double,0,,,FALSE,,,,,,threshold sediment thickness for reducing sediment exchange [m]
+Morphology,BedUpd,Morphology,,BedUpd,0|1,0,,,FALSE,,,,,,update bed level during flow run
+Morphology,CmpUpd,Morphology,,CmpUpd,0|1,0,,,FALSE,,,,,,update bed composition during flow run
+Morphology,NeglectEntrainment,Morphology,,NeglectEntrainment,0|1,0,,,FALSE,,,,,,"compute bed level changes from suspended sediment transport rates instead of from the entrainment and deposition terms, neglect the entrainment of suspended sediment in the mass balance"
+Morphology,NeuBcSand,Morphology,,NeuBcSand,0|1,0,,,FALSE,,,,,,Neumann boundary condition for non-cohesive suspended sediment concentrations at inflow boundaries
+Morphology,NeuBcMud,Morphology,,NeuBcMud,0|1,0,,,FALSE,,,,,,Neumann boundary condition for cohesive suspended sediment concentrations at inflow boundaries
+Morphology,DensIn,Morphology,,DensIn,0|1,0,,,FALSE,,,,,,include effect of sediment on density gradient
+Morphology,AksFac,Morphology,,AksFac,Double,0,,,FALSE,,,,,,Van Rijn?s reference height = AKSFAC * KS 
+Morphology,RWave,Morphology,,RWave,Double,0,,,FALSE,,,,,,"multiplication factor estimated ripple height, wave related roughness = RWAVE * estimated ripple height. NOTE: estimated ripple height now fixed at 0.025 m."
+Morphology,Sus,Morphology,,Sus,Double,0,,,FALSE,,,,,,current-related suspended sediment transport factor
+Morphology,Bed,Morphology,,Bed,Double,0,,,FALSE,,,,,,current-related bedload transport factor
+Morphology,SusW,Morphology,,SusW,Double,0,,,FALSE,,,,,,wave-related suspended sediment transport factor
+Morphology,BedW,Morphology,,BedW,Double,0,,,FALSE,,,,,,wave-related bedload sediment transport factor 
+Morphology,SedThr,Morphology,,SedThr,Double,0,,,FALSE,,,,,,minimum depth for sediment calculations
+Morphology,ThetSD,Morphology,,ThetSD,Double,0,,,FALSE,,,,,,global / maximum dry cell erosion factor
+Morphology,HMaxTH,Morphology,,HMaxTH,Double,0,,,FALSE,,,,,,maximum depth for variable THETSD
+Morphology,FWFac,Morphology,,FWFac,Double,0,,,FALSE,,,,,,tuning parameter for wave streaming
+Morphology,EpsPar,Morphology,,EpsPar,0|1,0,,,FALSE,,,,,,"Only for waves in combination with k-epsilon turbulence model, Van Rijn?s parabolic mixing coefficient"
+Morphology,IopKCW,Morphology,,IopKCW,Double,0,,,FALSE,,,,,,option for ks and kw
+Morphology,RDC,Morphology,,RDC,Double,0,,,FALSE,,,,,,current related roughness ks
+Morphology,RDW,Morphology,,RDW,Double,0,,,FALSE,,,,,,wave related roughness kw
+Morphology,UpdInf,Morphology,,UpdInf,0|1,0,,,FALSE,,,,,,update bed levels at inflow boundaries
+Morphology,Multi,Morphology,,Multi,0|1,0,,,FALSE,,,,,,run multiple morphological simulations in parallel and continuously merge the morphological developments
+Morphology,DzMax,Morphology,,DzMax,Double,0,,,FALSE,,,,,,maximum bed level change per time step expressed as percentage of water depth
+Morphology,CaMax,Morphology,,CaMax,Double,0,,,FALSE,,,,,,maximum equilibrium sediment concentration in Van Rijn formula
+Morphology,OldMudFrac,Morphology,,OldMudFrac,0|1,0,,,FALSE,,,,,,if true do not include the fractional reduction factor in the mud entrainment term
+Morphology,IHidExp,Morphology,,IHidExp:no hiding and exposure|Egiazaroff formulation|Ashida & Michiue formulation|Parker et al. formulation|Wu Wang & Jia formulation,1|2|3|4|5,1,,,FALSE,,,,,,hiding and exposure formulation number in the range 1 to 5) If the simulation includes a mud fraction only 1 is allowed. 1 no hiding and exposure 2 Egiazaroff formulation 3 Ashida & Michiue formulation 4 Parker et al. formulation 5 Wu Wang & Jia formulation ASKLHE hiding and exposure parameter for formulation 4 MWWJHE hiding and exposure parameter for formulation 5 Espir effect of spiral flow on bedload transport
+Morphology,ASKLHE,Morphology,,ASKLHE,Double,0,,,FALSE,,,,,,hiding and exposure parameter for formulation 4
+Morphology,MWWJHE,Morphology,,MWWJHE,Double,0,,,FALSE,,,,,,hiding and exposure parameter for formulation 5
+Morphology,Espir,Morphology,,Espir,Double,0,,,FALSE,,,,,,effect of spiral flow on bedload transport
+Morphology,ISlope,Morphology,,ISlope:no bed slope|Bagnold formulation|Koch & Flokstra formulation|Parker & Andrews formulation,1|2|3|4,1,,,FALSE,,,,,,bed slope formulation (1 integer in the range 1 to 4) 1 no bed slope 2 Bagnold formulation 3 Koch & Flokstra formulation 4 Parker & Andrews formulation
+Morphology,AlfaBs,Morphology,,AlfaBs,Double,0,,,FALSE,,,,,,longitudinal bed gradient factor for bedload transport used by all formulations except formulation 1
+Morphology,AlfaBn,Morphology,,AlfaBn,Double,0,,,FALSE,,,,,,transverse bed gradient factor for bedload transport for formulation 2
+Morphology,Ashld,Morphology,,Ashld,Double,0,,,FALSE,,,,,,multiplicative factor Ash for bed slope formulation 3
+Morphology,Bshld,Morphology,,Bshld,Double,0,,,FALSE,,,,,,power Bsh for bed slope formulation 3 
+Morphology,Cshld,Morphology,,Cshld,Double,0,,,FALSE,,,,,,power Csh for bed slope formulation 3 
+Morphology,Dshld,Morphology,,Dshld,Double,0,,,FALSE,,,,,,power Dsh for bed slope formulation 3 
+Morphology,CoulFri,Morphology,,CoulFri,Double,0,,,FALSE,,,,,,Coulomb friction for bed slope formulation 4
+Morphology,FlFdRat,Morphology,,FlFdRat,Double,0,,,FALSE,,,,,,Lift/drag force ratio for bed slope formulation 4
+Morphology,ThetaCr,Morphology,,ThetaCr,Double,0,,,FALSE,,,,,,Critical shear stress for bed slope formulation 4
+Morphology,BcFil,Morphology,,BcFil,FileName,,,,TRUE,,,,,,file containing morphological boundary conditions
+Numerics,UpwindBedload,Numerics,,UpwindBedload,0|1,1,,,FALSE,,,,,,use upwind bedload (true default) or central bedload (false) 
+Numerics,LaterallyAveragedBedload,Numerics,,LaterallyAveragedBedload,0|1,0,,,FALSE,,,,,,smoothed bedload transport rates. Default false.
+Numerics,MaximumWaterdepth,Numerics,,MaximumWaterdepth,0|1,0,0,,FALSE,,,,,,use locally maximum water depth to compute characteristic velocity for sediment transport at cell centre. Default false.
+Output,VelocAtZeta,Output,,VelocAtZeta,0|1,0,,,FALSE,,,,,,characteristic velocity vector at cell centres
+Output,VelocMagAtZeta,Output,,VelocMagAtZeta,0|1,0,,,FALSE,,,,,,velocity magnitude at cell centres
+Output,VelocZAtZeta,Output,,VelocZAtZeta,0|1,0,,,FALSE,,,,,,height of characteristic velocity at cell centres
+Output,ShearVeloc,Output,,ShearVeloc,0|1,0,,,FALSE,,,,,,shear velocity u_*
+Output,BedTranspDueToCurrentsAtZeta,Output,,BedTranspDueToCurrentsAtZeta,0|1,0,,,FALSE,,,,,,bedload transport due to currents at cell centres
+Output,BedTranspDueToCurrentsAtFlux,Output,,BedTranspDueToCurrentsAtFlux,0|1,0,,,FALSE,,,,,,bedload transport due to currents at staggered cell faces
+Output,BedTranspDueToWavesAtZeta,Output,,BedTranspDueToWavesAtZeta,0|1,0,,,FALSE,,,,,,bedload transport due to waves at cell centres
+Output,BedTranspDueToWavesAtFlux,Output,,BedTranspDueToWavesAtFlux,0|1,0,,,FALSE,,,,,,bedload transport due to waves at staggered cell faces
+Output,SuspTranspDueToWavesAtZeta,Output,,SuspTranspDueToWavesAtZeta,0|1,0,,,FALSE,,,,,,suspended load transport due to waves at cell centres
+Output,SuspTranspDueToWavesAtFlux,Output,,SuspTranspDueToWavesAtFlux,0|1,0,,,FALSE,,,,,,suspended load transport due to waves at staggered cell faces
+Output,NearBedTranspCorrAtFlux,Output,,NearBedTranspCorrAtFlux,0|1,0,,,FALSE,,,,,,near bed corrective transport at staggered cell faces
+Output,SourceSinkTerms,Output,,SourceSinkTerms,0|1,0,,,FALSE,,,,,,source and sink terms
+Output,Bedslope,Output,,Bedslope,0|1,0,,,FALSE,,,,,,bed slope vector
+Output,Taurat,Output,,Taurat,0|1,0,,,FALSE,,,,,,shear stress ratio
+Output,Bedforms,Output,,Bedforms,0|1,0,,,FALSE,,,,,,bed form roughnesses
+Output,Dm,Output,,Dm,0|1,0,,,FALSE,,,,,,arithmetic mean sediment diameter
+Output,Dg,Output,,Dg,0|1,0,,,FALSE,,,,,,geometric mean sediment diameter
+Output,Frac,Output,,Frac,0|1,0,,,FALSE,,,,,,sediment fraction in top layer
+Output,MudFrac,Output,,MudFrac,0|1,0,,,FALSE,,,,,,mud fraction in top layer
+Output,FixFac,Output,,FixFac,0|1,0,,,FALSE,,,,,,non-erodible layer reduction factor
+Output,HidExp,Output,,HidExp,0|1,0,,,FALSE,,,,,,hiding and exposure factor
+Output,Percentiles,Output,,Percentiles,String,,,,FALSE,,,,,,percentiles of characteric sediment diameter to be written to the map file (default: 10 50 and 90)
+Output,TranspType,Output,,TranspType:kg/s/m|m3 bed material/s/m|m3 stone/s/m,0|1|2,2,,,FALSE,,,,,,sediment transport unit (1 integer in the range 0 to 2): 0 kg/s/m 1 m3 bed material/s/m 2 m3 stone/s/m (default option)
+Output,AverageAtEachOutputTime,Output,,AverageAtEachOutputTime,0|1,0,,,FALSE,,,,,,cumulative average of sediment transport rates at each map output
+Underlayer,IUnderLyr,Underlayer,,IUnderLyr:one well mixed layer|multiple layers,1|2,1,,,FALSE,,,,,,stratigraphy schematisation model (either 1 or 2) 1 one well mixed layer 2 multiple layers 
+Underlayer,MxNULyr,Underlayer,,MxNULyr,Integer,1,,,FALSE,,,,,,maximum number of underlayers (excluding transport and base layers) in case IUnderLyr=2
+Underlayer,TTLForm,Underlayer,,TTLForm:constant user defined|proportional to water depth|proportional to bedform height,1|2|3,1,,,FALSE,,,,,,transport layer thickness formulation in case IUnder- Lyr=2 (1 integer in the range 1 to 3) 1 constant user-defined 2 proportional to water depth 3 proportional to bedform height 
+Underlayer,ThTrLyr,Underlayer,,ThTrLyr,String,,,,FALSE,,,,,,thickness of transport layer in case of TTLForm=1 uniform or file <*.ttl> with spatially varying values at cell centres
+Underlayer,TTLAlpha,Underlayer,,TTLAlpha,Double,0,,,FALSE,,,,,,proportionality constant in case of TTLForm=2 or 3
+Underlayer,TTLMin,Underlayer,,TTLMin,Double,0,,,FALSE,,,,,,minimum thickness in case of TTLForm=2 or 3
+Underlayer,ThUnLyr,Underlayer,,ThUnLyr,Double,0,,,FALSE,,,,,,characteristic maximum thickness of stratigraphy layers in case IUnderLyr=2
+Underlayer,UpdBaseLyr,Underlayer,,UpdBaseLyr:composition and thickness computed|composition constant  thickness computed|composition copied from layer above and thickness computed|composition and thickness constant,1|2|3|4,1,,,FALSE,,,,,,update option for composition and thickness of base layer (1 integer in the range 1 to 4) 1 composition and thickness computed 2 composition constant  thickness computed 3 composition copied from layer above and thickness computed 4 composition and thickness constant
+Underlayer,IniComp,Underlayer,,IniComp,String,,,,FALSE,,,,,,file containing initial bed composition usage of this keyword overrules the IniSedThick values given in the sed file
+#,,,,,,,,,,,,,,,
+# per boundary:,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+Boundary,Name,Boundary,,,String,,,,FALSE,,,,,,name of boundary as specified in BND file
+Boundary,IBedCond,Boundary,,Bedload or level boundary condition:no bed level constraint|bed level fixed|depth specified as function of time|depth change specified as function of time|bedload transport rate prescribed|bedload transport rate prescribed,0|1|2|3|4|5,0,,,FALSE,,,,,,bedload or bed level boundary condition 0 no bed level constraint 1 bed level fixed 2 depth specified as function of time 3 depth change specified as function of time 4 bedload transport rate prescribed (volume rate of bed material) 5 bedload transport rate prescribed (volume rate of stone)
+Boundary,ICmpCond,Boundary,,Bed composition boundary condition:no bed composition constraint|composition constant|mass fractions specified as function of time|volume fractions specified as function of time,0|1|2|3,0,,,FALSE,,,,,,bed composition boundary condition 0 no bed composition constraint 1 composition constant 2 mass fractions specified as function of time 3 volume fractions specified as function of time

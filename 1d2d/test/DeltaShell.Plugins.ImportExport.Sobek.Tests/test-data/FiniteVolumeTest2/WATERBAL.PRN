@@ -1,0 +1,33 @@
+Start processing at time:       0.00 (days)
+Stop  processing at time:       3.99 (days)
+
+WL | Delft Hydraulics SOBEK-WaterBal, v2.00.04                                  
+
+
+Increase of volume:       0.05 *1000 m³ 
+
+
+Overview of inflows and outflows for boundary types:
+
+TYPE                                       Inflows  Outflows
+                                         *1000 m³  *1000 m³ 
+
+Boundary Flow                               345.60   -518.35
+Lateral inflow                              172.80      0.00
+
+TOTAL:                                      518.40   -518.35
+
+
+
+Overview of inflows and outflows for individual boundaries:
+
+BOUNDARY                                   Inflows  Outflows
+                                         *1000 m³  *1000 m³ 
+
+1                                           345.60      0.00
+8                                             0.00   -518.35
+L1                                          172.80      0.00
+
+TOTAL:                                      518.40   -518.35
+
+

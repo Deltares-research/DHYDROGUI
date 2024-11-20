@@ -1,0 +1,29 @@
+CRDS id 'Round 300 mm' nm 'Round 300 mm' ty 4 bl 0 rd  .15               crds
+CRDS id 'Round 400 mm' nm 'Round 400 mm' ty 4 bl 0 rd  .2               crds
+CRDS id 'PVC 200 mm' nm 'PVC 200 mm' ty 4 bl 0 rd  .0941               crds
+CRDS id 'Round 500 mm' nm 'Round 500 mm' ty 4 bl 0 rd  .25               crds
+CRDS id '1' nm 'Egg-Shape 400 mm/ 600' ty 6 bl 0 bo .4               crds
+CRDS id '8' nm 'Egg-Shape 500 mm/ 750' ty 6 bl 0 bo .5               crds
+CRDS id '2' nm 'Egg-Shape 300 mm/ 450' ty 6 bl 0 bo .3               crds
+CRDS id 'PVC 160 mm' nm 'PVC 160 mm' ty 4 bl 0 rd  .0753               crds
+CRDS id 'PVC 500 mm' nm 'PVC 500 mm' ty 4 bl 0 rd  .2353               crds
+CRDS id 'Round 250 mm' nm 'Round 250 mm' ty 4 bl 0 rd  .125               crds
+CRDS id 'Round 1000 mm' nm 'Round 1000 mm' ty 4 bl 0 rd  .5               crds
+CRDS id 'Round 600 mm' nm 'Round 600 mm' ty 4 bl 0 rd  .3               crds
+CRDS id 'PVC 315 mm' nm 'PVC 315 mm' ty 4 bl 0 rd  .14825               crds
+CRDS id 'PVC 250 mm' nm 'PVC 250 mm' ty 4 bl 0 rd  .11765               crds
+CRDS id '9' nm 'r_Rectangle 4,2.5' ty 0 wm 4 w1 0 w2 0 lt lw
+TBLE
+0  4  4 <
+2.5  4  4 <
+2.5001  .0001  .0001 <
+tble                crds
+CRDS id 'Round 900 mm' nm 'Round 900 mm' ty 4 bl 0 rd  .45               crds
+CRDS id 'Round 700 mm' nm 'Round 700 mm' ty 4 bl 0 rd  .35               crds
+CRDS id 'Round 880 mm' nm 'Round 800 mm' ty 4 bl 0 rd  .4               crds
+CRDS id 'PVC 400 mm' nm 'PVC 400 mm' ty 4 bl 0 rd  .18825               crds
+CRDS id '5' nm 'PVC 300 mm' ty 4 bl 0 rd  .1412               crds
+CRDS id 'Round 100 mm' nm 'Round 100 mm' ty 4 bl 0 rd  .05               crds
+CRDS id 'P02_Round 300 mm' nm 'P02_Round 300 mm' ty 4 bl 0 rd  .15             crds
+CRDS id 'P02_PVC 200 mm' nm 'P02_PVC 200 mm' ty 4 bl 0 rd  .0941             crds
+CRDS id '10' nm 'Default (10)' ty 1 bl 0 bw 10 bs 2 aw 20 sw 0  gl 0 gu 0 crds

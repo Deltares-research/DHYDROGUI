@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <!-- This version is wix specific -->
+    <ProductVersion>3.5</ProductVersion>
+    <!-- This is our release version -->
+    <ReleaseVersion>4.17.0</ReleaseVersion>
+    <!-- Distribution Specific settings -->
+    <ProjectGuid>{1dd62dbb-f7d3-40be-8063-b7b80cec8b9f}</ProjectGuid>
+    <MyProductCode>{$([System.Guid]::NewGuid())}</MyProductCode>
+    <MyExtras>{$([System.Guid]::NewGuid())}</MyExtras>
+    <MyPluginComponents>{$([System.Guid]::NewGuid())}</MyPluginComponents>
+    <MyAdditionalFilesComponents>{$([System.Guid]::NewGuid())}</MyAdditionalFilesComponents>
+    <UtilitiesMenuShortcutsGUID>{$([System.Guid]::NewGuid())}</UtilitiesMenuShortcutsGUID>
+    <ManualsMenuDSUMShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuDSUMShortcutGUID>
+    <ManualsMenuShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuShortcutGUID>
+    <ProgramGroupMenuDir_ComponentGUID>{$([System.Guid]::NewGuid())}</ProgramGroupMenuDir_ComponentGUID>
+    <UninstallShortcutComponentGUID>{$([System.Guid]::NewGuid())}</UninstallShortcutComponentGUID>
+    <DeltaShellGuiExeConfigGUID>{$([System.Guid]::NewGuid())}</DeltaShellGuiExeConfigGUID>
+    <PluginApplicationIconGUID>{$([System.Guid]::NewGuid())}</PluginApplicationIconGUID>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputType>Package</OutputType>
+    <CabinetCachePath>$(OutputPath)cabcache\</CabinetCachePath>
+    <ReuseCabinetCache>True</ReuseCabinetCache>
+    <SuppressValidation>True</SuppressValidation>
+    <RunWixToolsOutOfProc Condition=" '$(PROCESSOR_ARCHITECTURE)'!='x86' ">true</RunWixToolsOutOfProc>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\FM\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;</DefineConstants>
+    <SuppressIces>ICE57</SuppressIces>
+    <OutputName>Installer</OutputName>
+    <!-- $(BUILD_NUMBER) is an TC environment variable: https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Server+Build+Properties -->
+    <Cultures Condition="'$(BUILD_NUMBER)' != '' ">fm,en-US;rws,en-US;fmo,en-US</Cultures>
+    <Cultures Condition="'$(BUILD_NUMBER)' == '' ">fm,en-US</Cultures>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\FM\$(Configuration)\</IntermediateOutputPath>
+    <SuppressIces>ICE57</SuppressIces>
+    <OutputName>Installer</OutputName>
+    <Cultures Condition="'$(BUILD_NUMBER)' != '' ">fm,en-US;rws,en-US;fmo,en-US</Cultures>
+    <Cultures Condition="'$(BUILD_NUMBER)' == '' ">fm,en-US</Cultures>
+  </PropertyGroup>
+  <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);MyProductCode=$(MyProductCode);MyExtras=$(MyExtras);MyPluginComponents=$(MyPluginComponents);MyAdditionalFilesComponents=$(MyAdditionalFilesComponents);UtilitiesMenuShortcutsGUID=$(UtilitiesMenuShortcutsGUID);ManualsMenuDSUMShortcutGUID=$(ManualsMenuDSUMShortcutGUID);ManualsMenuShortcutGUID=$(ManualsMenuShortcutGUID);ProgramGroupMenuDir_ComponentGUID=$(ProgramGroupMenuDir_ComponentGUID);UninstallShortcutComponentGUID=$(UninstallShortcutComponentGUID);DeltaShellGuiExeConfigGUID=$(DeltaShellGuiExeConfigGUID);PluginApplicationIconGUID=$(PluginApplicationIconGUID)</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="..\Dimr\Manuals\DIMRManuals.wxi">
+      <Link>Manuals\DIMRManuals.wxi</Link>
+    </Content>
+    <Content Include="..\Dimr\Manuals\DIMRManualShortcuts.wxi">
+      <Link>Manuals\DIMRManualShortcuts.wxi</Link>
+    </Content>
+    <Content Include="..\DotNetFramework4Check.wxi">
+      <Link>DotNetFramework4Check.wxi</Link>
+    </Content>
+    <Content Include="..\OSVersionCheck.wxi">
+      <Link>OSVersionCheck.wxi</Link>
+    </Content>
+    <Content Include="..\RealTimeControl\Manuals\RTCManuals.wxi">
+      <Link>Manuals\RTCManuals.wxi</Link>
+    </Content>
+    <Content Include="..\RealTimeControl\Manuals\RTCManualShortcuts.wxi">
+      <Link>Manuals\RTCManualShortcuts.wxi</Link>
+    </Content>
+    <Content Include="..\Sobek\Manuals\RainfallRunoffManuals.wxi">
+      <Link>Manuals\RainfallRunoffManuals.wxi</Link>
+    </Content>
+    <Content Include="..\Sobek\Manuals\RainfallRunoffManualShortcuts.wxi">
+      <Link>Manuals\RainfallRunoffManualShortcuts.wxi</Link>
+    </Content>
+    <Content Include="ConsoleConfigXml.wxi" />
+    <Content Include="D-Hydro_Manuals\D-Flow_FM_Technical_Reference_Manual.pdf" />
+    <Content Include="D-Hydro_Manuals\D-Flow_FM_User_Manual.pdf" />
+    <Content Include="D-Hydro_Manuals\D-Flow_FM_User_Manual_1D2D.pdf" />
+    <Content Include="D-Hydro_Manuals\RGFGRID_User_Manual.pdf" />
+    <Content Include="D-Hydro_Resources\License.rtf" />
+    <Content Include="D-Hydro_Resources\setup_banner.jpg" />
+    <Content Include="D-Hydro_Resources\setup_start.jpg" />
+    <Content Include="D-Hydro_Resources\splash_screen.jpg" />
+    <Content Include="D-Hydro_Resources\start_page_background.jpg" />
+    <Content Include="D-Hydro_Resources\Welcome.htm" />
+    <Content Include="Delft3D FM HMWQ_Manuals\D-Flow_FM_Technical_Reference_Manual.pdf" />
+    <Content Include="Delft3D FM HMWQ_Manuals\D-Flow_FM_User_Manual.pdf" />
+    <Content Include="Delft3D FM HMWQ_Manuals\RGFGRID_User_Manual.pdf" />
+    <Content Include="Delft3D FM HMWQ_Resources\License.rtf" />
+    <Content Include="Delft3D FM HMWQ_Resources\setup_banner.jpg" />
+    <Content Include="Delft3D FM HMWQ_Resources\setup_start.jpg" />
+    <Content Include="Delft3D FM HMWQ_Resources\splash_screen.jpg" />
+    <Content Include="Delft3D FM HMWQ_Resources\start_page_background.jpg" />
+    <Content Include="Delft3D FM HMWQ_Resources\Welcome.htm" />
+    <Content Include="DeltaShell_Customizations.wxi" />
+    <Content Include="DeltaShell_FeatureContent.wxi" />
+    <Content Include="Extras.wxi" />
+    <Content Include="Features.wxi" />
+    <Content Include="GuiConfigXml.wxi" />
+    <Content Include="Manuals.wxi" />
+    <Content Include="ManualShortcuts.wxi" />
+    <Content Include="Manuals\RGFGridManuals.wxi" />
+    <Content Include="Manuals\RGFGridManualShortcuts.wxi" />
+    <Content Include="Manuals\FMManuals.wxi" />
+    <Content Include="Manuals\FMManualShortcuts.wxi" />
+    <Content Include="Plugins.wxi" />
+    <Content Include="Resources\FM.ico" />
+    <Content Include="Resources\FM.png" />
+    <Content Include="Resources\WindowLayout_normal.en-US.xml" />
+    <Content Include="UtilityShortcuts.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WixUI\FM_SetupTypeDialog.wxs" />
+    <Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
+    <Compile Include="Product.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixToolPath)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixToolPath)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixNetFxExtension">
+      <HintPath>$(WixToolPath)\WixNetFxExtension.dll</HintPath>
+      <Name>WixNetFxExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="D-Hydro_Manuals\" />
+    <Folder Include="D-Hydro_Resources\" />
+    <Folder Include="Delft3D FM HMWQ_Manuals\" />
+    <Folder Include="Delft3D FM HMWQ_Resources\" />
+    <Folder Include="WixUI" />
+    <Folder Include="Manuals\" />
+    <Folder Include="Localization" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Dimr\Localization\DIMRNames.wxl">
+      <Link>Localization\DIMRNames.wxl</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\RealTimeControl\Localization\RTCNames.wxl">
+      <Link>Localization\RTCNames.wxl</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Sobek\Localization\SobekNames.wxl">
+      <Link>Localization\SobekNames.wxl</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Localization\fm.wxl" />
+    <EmbeddedResource Include="Localization\FMNames.wxl" />
+    <EmbeddedResource Include="Localization\open.wxl" />
+    <EmbeddedResource Include="Localization\rws.wxl" />
+    <EmbeddedResource Include="WixUIVariables.wxl" />
+  </ItemGroup>
+  <Import Project="..\FM\FM.properties" />
+  <Import Project="..\Harvest\CreateZipFromMSI.targets" />
+  <Import Project="..\Harvest\GenerateHTMLBaseFile.targets" />
+  <Import Project="..\Harvest\RunSystemTests.targets" />
+  <Import Project="..\Harvest\RenameMSI.targets" />
+  <ItemGroup>
+    <Folder Include="Harvested\" />
+    <Compile Include="..\HarvestedDeltaShellFiles.wxs">
+      <Link>Harvested\HarvestedDeltaShellFiles</Link>
+    </Compile>
+    <Content Include="..\Harvest\HarvestDefines.wxi">
+      <Link>Harvested\HarvestDefines.wxi</Link>
+    </Content>
+    <Content Include="..\Harvest\HarvestedFilesTransform.xsl">
+      <Link>Harvested\HarvestedFilesTransform.xsl</Link>
+    </Content>
+    <Compile Include="..\HarvestedPluginsFiles.wxs">
+      <Link>Harvested\HarvestedPluginsFiles</Link>
+    </Compile>
+    <Content Include="..\Harvest\HarvestedFilesStandardTransform.xsl">
+      <Link>Harvested\HarvestedFilesStandardTransform.xsl</Link>
+    </Content>
+    <Content Include="..\Harvest\Harvest.targets">
+      <Link>Harvested\Harvest.targets</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DefaultDeltaresDialogs\DefaultDeltaresDialogs.wixproj">
+      <Name>DefaultDeltaresDialogs</Name>
+      <Project>{f30c1a46-d283-484e-aabe-ef52f9168e08}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\Harvest\Harvest.targets" />
+  <PropertyGroup>
+    <BuildDependsOn>
+      HarvestDeltaShellFilesTarget;
+      HarvestPluginsFilesTarget;
+      $(BuildDependsOn);
+    </BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
+</Project>

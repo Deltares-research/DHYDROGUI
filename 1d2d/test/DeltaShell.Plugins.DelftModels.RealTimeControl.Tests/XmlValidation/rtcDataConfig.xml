@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rtcDataConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews ..\..\xsd\rtcDataConfig.xsd">
+  <importSeries>
+    <timeSeries id="Maxau_QIn">
+      <OpenMIExchangeItem>
+        <elementId>Maxau</elementId>
+        <quantityId>Discharge</quantityId>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="Moder_HIn">
+      <OpenMIExchangeItem>
+        <elementId>Moder</elementId>
+        <quantityId>Water level</quantityId>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="Iffezheim_HIn">
+      <OpenMIExchangeItem>
+        <elementId>Iffezheim</elementId>
+        <quantityId>Water level</quantityId>
+      </OpenMIExchangeItem>
+    </timeSeries>
+  </importSeries>
+  <exportSeries>
+    <CSVTimeSeriesFile />
+    <timeSeries id="Moder_QOut">
+      <OpenMIExchangeItem>
+        <elementId>Moder</elementId>
+        <quantityId>Discharge</quantityId>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="Moder_STotband" />
+    <timeSeries id="Moder_SFuellung" />
+    <timeSeries id="Moder_SEntleerung" />
+    <timeSeries id="Iffezheim_HSP" />
+    <timeSeries id="Iffezheim_SOut">
+      <OpenMIExchangeItem>
+        <elementId>Iffezheim</elementId>
+        <quantityId>Crest level</quantityId>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="Iffezheim_KI" />
+    <timeSeries id="Gambsheim_HSP" />
+    <timeSeries id="Gambsheim_SOut">
+      <OpenMIExchangeItem>
+        <elementId>Gambsheim</elementId>
+        <quantityId>Crest level</quantityId>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="Gambsheim_KI" />
+  </exportSeries>
+</rtcDataConfig>

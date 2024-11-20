@@ -1,0 +1,5 @@
+event.*   \Sobek210\fixed\default.bui
+evapor.*  \Sobek210\fixed\3b\evapor.gem
+wind.*    \Sobek210\fixed\default.wdc
+delwaq.*  \Sobek210\fixed\default.qsc
+wq_wind.* \Sobek210\fixed\default.qwc

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <?include Manuals\FMManuals.wxi?>
-  <?include Manuals\RGFGridManuals.wxi?>
-  <?include ..\RealTimeControl\Manuals\RTCManuals.wxi?>
-  <?include ..\Sobek\Manuals\RainfallRunoffManuals.wxi?>
-  <?include ..\Dimr\Manuals\DIMRManuals.wxi?>
-</Include>

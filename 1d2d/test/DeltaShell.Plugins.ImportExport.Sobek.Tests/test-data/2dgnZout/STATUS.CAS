@@ -1,0 +1,27 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=0
+ImportFrom=SOBEK_river
+ImportDate=22/08/2011 14:50:22
+Case Name=Herman_dispmx045-disptie10k
+SuftableHasRun=-1
+QuantityResultsPresent=0
+UserId=Quanduo Gao
+UserName=gao_q
+ComputerName=WL01370
+[Previous OutputFiles]
+..\work\calcpnt.his=-1
+..\work\reachseg.his=-1
+..\work\qlat.his=-1
+..\work\struc.his=-1
+..\work\flowanal.his=-1
+..\work\calcdim.his=-1
+..\work\reachdim.his=-1
+..\work\strucdim.his=-1
+..\work\controll.his=-1
+..\work\triggers.his=-1
+..\work\qwb.his=-1
+..\work\simulate.rep=-1
+..\work\sobek.log=-1
+..\work\indicat.flw=-1

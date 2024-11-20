@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.SewerConnectionVisualization"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             mc:Ignorable="d">
+    <UserControl.DataContext>
+        <local:SewerConnectionVisualizationViewModel x:Name="ViewModel" />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <LinearGradientBrush x:Key="CompartmentBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Offset="0" Color="WhiteSmoke" />
+            <GradientStop Offset="1" Color="LightGray" />
+        </LinearGradientBrush>
+    </UserControl.Resources>
+    <Grid x:Name="ViewGrid"
+          SizeChanged="ViewGrid_OnSizeChanged ">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Canvas x:Name="DrawingCanvas">
+            <Polygon Fill="#FFFFFBAE"
+                     Points="{Binding PipePolygonPoints}">
+                <Polygon.ToolTip>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Pipe: " />
+                        <TextBlock Text="{Binding SewerConnection.Name}" />
+                    </StackPanel>
+                </Polygon.ToolTip>
+            </Polygon>
+            <Polyline Points="{Binding PipeTopPoints}"
+                      Stroke="Black"
+                      StrokeThickness="2" />
+            <Polyline Points="{Binding PipeBottomPoints}"
+                      Stroke="Black"
+                      StrokeThickness="2" />
+
+            <Polygon Fill="{StaticResource CompartmentBrush}"
+                     Points="{Binding SourceCompartmentPoints}"
+                     ToolTip="{Binding SewerConnection.SourceCompartment.Name}" />
+            <TextBlock x:Name="SourceBottom"
+                       Margin="0,0,0,3"
+                       Text="{Binding SewerConnection.SourceCompartment.BottomLevel, StringFormat={}{0:G3} m}" />
+            <TextBlock x:Name="SourceSurface"
+                       Margin="0,0,0,3"
+                       Text="{Binding SewerConnection.SourceCompartment.SurfaceLevel, StringFormat={}{0:G3} m}" />
+
+            <Polygon Fill="{DynamicResource CompartmentBrush}"
+                     Points="{Binding TargetCompartmentPoints}"
+                     ToolTip="{Binding SewerConnection.TargetCompartment.Name}" />
+            <TextBlock x:Name="TargetBottom"
+                       Margin="0,0,0,3"
+                       Text="{Binding SewerConnection.TargetCompartment.BottomLevel, StringFormat={}{0:G3} m}" />
+            <TextBlock x:Name="TargetSurface"
+                       Margin="0,0,0,3"
+                       Text="{Binding SewerConnection.TargetCompartment.SurfaceLevel, StringFormat={}{0:G3} m}" />
+            <Polyline Points="{Binding TopLevelPoints}"
+                      Stroke="Green"
+                      StrokeThickness="2" />
+        </Canvas>
+    </Grid>
+</UserControl>

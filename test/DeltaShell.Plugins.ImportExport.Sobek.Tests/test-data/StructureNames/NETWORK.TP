@@ -1,4 +1,0 @@
-TP_1.0
-NODE id 'cn1' nm 'ConNode1' px 254994.414919025 py 471330.006904955 node
-NODE id 'cn2' nm 'ConNode2' px 257127.656244996 py 472351.113527613 node
-BRCH id '1' nm '' bn 'cn1' en 'cn2' al 2365.03219632767 vc_opt 0 vc_equi -1 vc_len 100 brch

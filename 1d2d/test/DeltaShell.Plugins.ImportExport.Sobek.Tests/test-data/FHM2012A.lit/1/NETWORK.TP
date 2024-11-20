@@ -1,0 +1,393 @@
+TP_1.0
+NODE id 'dki310_23' nm '' px 230835.78396487 py 773070.959172971 node
+NODE id 'dki39_34' nm '' px 238631.390631693 py 813628.874983375 node
+NODE id 'dki310177' nm '' px 247546.778847877 py 815857.98214614 node
+NODE id 'dki310_76' nm '' px 247885.61782707 py 797959.942383672 node
+NODE id 'dki39_15' nm '' px 230435.484368666 py 820527.625002392 node
+NODE id 'dki39_26' nm '' px 234415.781902816 py 817597.363774193 node
+NODE id 'dki31072' nm '' px 237627.09183432 py 766387.573661907 node
+NODE id '15' nm '' px 234294.022225168 py 814649.409974123 node
+NODE id 'dki31043' nm '' px 214762.445061305 py 818076.77530996 node
+NODE id '5' nm '' px 237144.499162866 py 766531.318568618 node
+NODE id 'dki310178' nm '' px 227517.81375126 py 818281.20297076 node
+NODE id 'dki31099' nm '' px 228227.61122725 py 818273.6405796 node
+NODE id 'dki310124' nm '' px 233996.839164864 py 801104.83273902 node
+NODE id 'dki310151' nm '' px 242241.990149038 py 795435.47277028 node
+NODE id 'dki310156' nm '' px 247114.700670919 py 801401.455916077 node
+NODE id 'dki31084' nm '' px 244982.062011049 py 812141.912376301 node
+NODE id 'dki310114' nm '' px 231224.23842469 py 791404.562927451 node
+NODE id 'dki310184' nm '' px 227206.218572123 py 815223.57426254 node
+NODE id 'dki3108' nm '' px 246325.400522631 py 800231.503616632 node
+NODE id 'dki310_46' nm '' px 227424.001109803 py 819416.74774747 node
+NODE id '1' nm '' px 228858.900667481 py 819050.150557496 node
+NODE id 'p_dki310298' nm '' px 230745.603746634 py 809312.725355377 node
+NODE id 'p_dki310302' nm '' px 230915.53969485 py 818164.053280907 node
+NODE id 'dki39_47' nm '' px 231828.81809359 py 818080.69201979 node
+NODE id 'p_dki310301' nm '' px 229492.472472362 py 818890.478820017 node
+NODE id 'dki31048' nm '' px 236239.34731936 py 814041.072525911 node
+NODE id '3' nm '' px 235047.612658512 py 816457.927645133 node
+NODE id 'J_1' nm '0' px 231673.03125 py 821591.5625 node
+NODE id 'a_10' nm '0' px 233357.625 py 820183.625 node
+NODE id 'a_6' nm '0' px 234407.203125 py 819187.5625 node
+NODE id 'a_5' nm '0' px 234365.828125 py 820759.6875 node
+NODE id 'dki39_23' nm '' px 233954.327112574 py 817407.333814575 node
+NODE id 'a_7' nm '0' px 232153.765625 py 820849.6875 node
+NODE id 'ANK CIL1' nm '' px 237013.533059167 py 820120.13138983 node
+NODE id 'a_8' nm '0' px 234067.296875 py 820941.4375 node
+NODE id 'IST_1' nm '' px 236697.66577601 py 817611.92499344 node
+NODE id 'a_4' nm '0' px 235219.765625 py 821094.75 node
+NODE id 'a_9' nm '0' px 234300.390892094 py 822541.151443161 node
+NODE id 'BIDARA2' nm '' px 232452.333734265 py 820808.367905111 node
+NODE id 'a_3' nm '0' px 234010.21875 py 821557.5 node
+NODE id 'a_2' nm '0' px 234230.078125 py 822454.9375 node
+NODE id 'a_1' nm '0' px 233787.3125 py 822371.375 node
+NODE id 'N_Sen_16_1' nm '' px 236401.513388 py 822135.6331639 node
+NODE id 'b_2' nm 'juction kali item dengan sungai sentiong lower hulu' px 239718.796875 py 819414 node
+NODE id 'N_Sen_35_3' nm '' px 239077.42 py 818504.67 node
+NODE id 'f2' nm '0' px 235491.140625 py 815116.4375 node
+NODE id 'PLT_RESV' nm 'PLUIT_RESERVOIR' px 233119.097759197 py 823694.720560421 node
+NODE id 'Resv_01' nm 'Melati_Reservoir' px 235149.821764674 py 814586.575104375 node
+NODE id '26' nm '' px 224729.225783369 py 816156.069175207 node
+NODE id '10' nm '' px 221118.366254826 py 818904.422131249 node
+NODE id 'KP31a' nm '' px 230736.640841051 py 801706.348084991 node
+NODE id 'CU2a' nm '' px 238057.997444714 py 801524.639008409 node
+NODE id 'bb68c' nm '' px 248028.39476655 py 808511.130923653 node
+NODE id 'STR1a' nm '' px 244873.286498285 py 807854.519221463 node
+NODE id '27' nm '' px 230169.115265537 py 807888.804706933 node
+NODE id '29' nm '' px 231582.220866792 py 807572.610086932 node
+NODE id 'MGSpill_1' nm '' px 238628.942275446 py 813626.988315274 node
+NODE id 'MGSpill_6' nm '' px 238632.388473012 py 813630.288254059 node
+NODE id '14' nm '' px 237137.209510429 py 766531.405404357 node
+NODE id '73' nm '' px 250419.745871177 py 825493.916873774 node
+NODE id 'MGSpill_2' nm '' px 238616.118875175 py 813617.106787509 node
+NODE id '96' nm '' px 236452.508297846 py 813993.119035059 node
+NODE id '184' nm '' px 236073.417265696 py 814077.144494859 node
+NODE id '78' nm '' px 235584.005543382 py 814189.279031677 node
+NODE id '4' nm '' px 235119.195965297 py 814296.225358914 node
+NODE id 'dki310128' nm '' px 234431.119919179 py 814518.75358672 node
+NODE id '105' nm '' px 234279.422109509 py 814664.105976271 node
+NODE id '187' nm '' px 234325.837566422 py 816168.469027167 node
+NODE id 'dki39_25' nm '' px 233853.479334192 py 817341.047381339 node
+NODE id '193' nm '' px 233490.504180832 py 817838.302947768 node
+NODE id 'dki31096' nm '' px 230397.754027879 py 822830.49339031 node
+NODE id 'dki310169' nm '' px 248768.822261266 py 824774.82044956 node
+NODE id 'MUKA1' nm '' px 231901.261162626 py 820791.353290504 node
+NODE id 'EBC_UP' nm '' px 241837.033614735 py 811226.168572997 node
+NODE id '120' nm '' px 246306.125987933 py 822167.755854251 node
+NODE id '121' nm '' px 248273.771648 py 824448.860602971 node
+NODE id '199' nm '' px 230244.701959752 py 820187.06086321 node
+NODE id '211' nm '' px 230662.451127657 py 821867.320659921 node
+NODE id 'MGSpill_7' nm '' px 238636.000237705 py 813635.40369783 node
+NODE id '155' nm '' px 237256.095632832 py 819183.729170706 node
+NODE id '205' nm '' px 232366.33886868 py 819286.334071258 node
+NODE id '115' nm '' px 231443.844413958 py 822459.263233417 node
+NODE id '242' nm '' px 235537.754024397 py 818076.48775719 node
+NODE id '106' nm '' px 235187.619968685 py 820532.02741697 node
+NODE id '69' nm '' px 234287.089742615 py 822576.611721237 node
+NODE id '165' nm '' px 236581.313616589 py 822164.068545082 node
+NODE id '45' nm '' px 239737.213798728 py 819404.398771058 node
+NODE id '109' nm '' px 241040.661551217 py 818928.291235103 node
+NODE id '220' nm '' px 239724.746247742 py 820073.552963882 node
+NODE id 'b_1' nm 'junction ancol storage dengan sungai ancol' px 239183.671875 py 822688.9375 node
+NODE id '37' nm '' px 232970.286165934 py 824190.586085984 node
+NODE id '144' nm '' px 230994.81123147 py 818023.090103229 node
+NODE id 'EBC_conn_3' nm '' px 251724.62209974 py 814661.312680135 node
+NODE id 'EBC_conn_2' nm '' px 247088.536628977 py 811326.008673887 node
+NODE id 'EBC_conn_1' nm '' px 243150.805314179 py 811172.273502137 node
+NODE id 'dki310148' nm '' px 243790.910916165 py 813075.49481241 node
+NODE id '238' nm '' px 242267.072253608 py 818101.269776656 node
+NODE id 'dki31088' nm '' px 242230.742250321 py 818600.942546 node
+NODE id '231' nm '' px 242783.162103624 py 819498.565896131 node
+NODE id '223' nm '' px 243823.534228008 py 823227.910581485 node
+NODE id '108' nm '' px 227967.765948363 py 822783.436832149 node
+NODE id '41' nm 'AREA UNKNOWN THEREFORE ESTIMATED' px 228405.909925166 py 822792.67847377 node
+NODE id '6' nm '' px 234764.691457545 py 785047.78897033 node
+NODE id '110' nm '' px 231732.558649785 py 822819.180469771 node
+NODE id '194' nm '' px 233163.045454589 py 817787.191093221 node
+NODE id '245' nm '' px 235828.537780193 py 817777.381956949 node
+NODE id '146' nm '' px 231620.768249487 py 822761.925876472 node
+NODE id '226' nm '' px 240813.987248638 py 820089.939663527 node
+NODE id '203' nm '' px 240469.831492521 py 823365.794165823 node
+NODE id '7' nm '' px 233922.552402733 py 820916.347504016 node
+NODE id '74' nm '' px 250788.090444191 py 826211.679840071 node
+NODE id '182' nm '' px 229639.738436663 py 824719.954756214 node
+NODE id 'dki310_54' nm '' px 229658.23111005 py 825176.045845205 node
+NODE id 'dki310_102' nm '' px 248628.491333973 py 825797.76029565 node
+NODE id '79' nm '' px 236541.948160481 py 822459.621709369 node
+NODE id 'N_MuK_1_3' nm '' px 231526.118475488 py 824569.441869098 node
+NODE id '234' nm '' px 231084.159362649 py 817939.067108326 node
+NODE id '2_6' nm '' px 232913.609725759 py 824379.441619201 node
+NODE id '95' nm '' px 236488.072604136 py 813870.864498855 node
+NODE id '125' nm '' px 236428.996511468 py 813895.35087068 node
+NODE id '183' nm '' px 236042.707760035 py 813921.392395748 node
+NODE id '129' nm '' px 236051.377428879 py 813993.538886788 node
+NODE id '186' nm '' px 234138.494577201 py 816192.845112524 node
+NODE id '200' nm '' px 230246.408232296 py 820095.081701615 node
+NODE id '206' nm '' px 232447.13014402 py 819127.514111566 node
+NODE id '134' nm '' px 232423.513959311 py 819204.760589174 node
+NODE id '212' nm '' px 230873.794623127 py 821708.614131584 node
+NODE id '119' nm '' px 230816.836553191 py 821785.639885186 node
+NODE id '181' nm '' px 229792.768622305 py 824672.737040034 node
+NODE id '98' nm '' px 229730.289674356 py 824698.031074119 node
+NODE id '209' nm '' px 240734.412656818 py 821994.029760719 node
+NODE id 'WadukSunterUtara' nm '' px 240610.385995134 py 822637.066313358 node
+NODE id '222' nm '' px 244890.900146523 py 822756.476310494 node
+NODE id '140' nm '' px 244596.118122779 py 822906.399343982 node
+NODE id '189' nm '' px 240327.48058774 py 820082.620586738 node
+NODE id '229' nm '' px 243500.005262024 py 819306.666444222 node
+NODE id '138' nm '' px 243514.044971126 py 819481.976567732 node
+NODE id '237' nm '' px 242140.333509368 py 818000.648812362 node
+NODE id '142' nm '' px 242224.909990787 py 818006.276170105 node
+NODE id '99' nm '' px 225042.507275022 py 824493.905452442 node
+NODE id '100' nm '' px 225673.373488986 py 826159.453198131 node
+NODE id '101' nm '' px 235429.451610764 py 813878.971935217 node
+NODE id '107' nm '' px 228485.847360308 py 822759.536983842 node
+NODE id 'PompaTuguUtara' nm '5.00000e-001' px 245537.553702862 py 821975.113023193 node
+NODE id 'DonBosco' nm '4.00000e+000' px 245733.39373487 py 821077.482687425 node
+NODE id '116' nm '' px 235121.280989518 py 820488.97556686 node
+NODE id '12' nm '' px 241034.588522571 py 818798.592501593 node
+NODE id '127' nm '' px 234170.307056833 py 814671.637843685 node
+NODE id '25' nm '' px 246330.465536308 py 824183.536487077 node
+NODE id '113' nm '' px 232032.482891843 py 818000.523913907 node
+NODE id 'dR_1_128' nm '' px 236527.774590831 py 822561.01804906 node
+NODE id '152' nm '' px 234159.867344854 py 823192.656294294 node
+NODE id 'dki310_45' nm '' px 227804.307655906 py 825424.898001686 node
+NODE id '136' nm '' px 230393.441815641 py 820130.667303926 node
+NODE id '150' nm '' px 233930.843138695 py 823179.188832499 node
+NODE id '149' nm '' px 234033.591983195 py 823182.432151082 node
+NODE id '151' nm '' px 237151.208238693 py 819157.473789394 node
+NODE id 'N_Sen_1_5' nm '' px 240392.285564234 py 824444.477633767 node
+NODE id 'N_CGS_1_1' nm '' px 236434.330509346 py 823127.930265462 node
+NODE id '16' nm '' px 246748.026696092 py 815944.044482528 node
+NODE id 'dki310_65' nm '' px 245003.919393504 py 824585.375921197 node
+NODE id 'EBC_31' nm '' px 247289.948692242 py 811324.610534017 node
+NODE id 'EBC_32' nm '' px 247479.834288588 py 811327.043765551 node
+NODE id '89_37' nm '' px 252249.727982205 py 816450.541757288 node
+NODE id '89_39' nm '' px 252255.582627133 py 816626.156554953 node
+NODE id '89_77' nm '' px 251926.631098202 py 824445.991783727 node
+NODE id '89_79' nm '' px 251922.670356942 py 824601.29507498 node
+NODE id 'N_Plu_0_18' nm '' px 234120.715757541 py 823805.211773842 node
+NODE id 'EBC_DWN' nm '' px 251958.423067715 py 826661.29736922 node
+NODE id 'a_N_Plu_0_20' nm '' px 232856.933285584 py 824568.297152417 node
+BRCH id 'dki310_12' nm 'Angke - CKF' bn 'dki310_23' en '26' al 77635.3764143404 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'dki310_37' nm 'WBC - Ciliwung' bn 'dki39_34' en 'MGSpill_1' al 3.09094885681371 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'dki310_66' nm 'Cakung FW - Cakung' bn 'dki310177' en 'dki310169' al 9335.69017125754 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'dki39_8' nm 'SAL. TUBAGUS ANGKE' bn 'dki39_15' en 'MUKA1' al 1516.55101246293 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'dki39_14' nm 'KALI DURI' bn 'dki39_26' en 'dki39_23' al 513.146160220569 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '5' nm '' bn 'dki31072' en '5' al 518.378156258486 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '19' nm '' bn '15' en '3' al 2583.39943975218 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'dki31022' nm 'Mookervart' bn 'dki31043' en '10' al 6551.81552066182 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'dki31035' nm 'Ciluar' bn '5' en '6' al 27476.8568553422 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'dki31055' nm 'Lower Angke' bn 'dki310178' en 'dki31099' al 790.189285810391 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'dki31056' nm 'Lower Angke' bn 'dki31099' en '1' al 1160.70225995433 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'dki31082' nm 'Krukut' bn 'dki310124' en 'dki310128' al 17519.6488285651 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'dki310101' nm 'Cipinang - Cibubur' bn 'dki310151' en 'EBC_UP' al 25800.9864503109 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id 'dki310105' nm 'Buaran - Jatikramat' bn 'dki310156' en 'bb68c' al 10001.0034999026 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'dki310121' nm 'Old Cakung' bn 'dki31084' en '16' al 4482.24234606512 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'dki310133' nm 'Pesanggrahan' bn 'dki310114' en 'KP31a' al 21141.9320636562 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'dki310136' nm 'Sepak - Meruya' bn 'dki310184' en 'dki310178' al 3270.16710256222 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '22' nm '' bn 'dki3108' en 'STR1a' al 13326.6674699933 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'dki39_28' nm 'MOOKERVART-CENGKARENG DRAIN-KALI ANGKE' bn 'dki310_46' en '1' al 1500.67260317329 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '24' nm '' bn '1' en 'p_dki310301' al 663.995871118455 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'p_dki310250' nm 'Sekretaris' bn 'p_dki310298' en 'p_dki310302' al 9844.03551172733 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id 'p_dki310252' nm 'Grogol - Sekretaris' bn 'p_dki310302' en 'p_dki310301' al 1780.36936736598 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'p_dki310253' nm 'Grogol - Sekretaris' bn 'dki39_47' en 'p_dki310302' al 951.68195812674 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '25' nm '' bn 'p_dki310301' en '199' al 1516.72166139843 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '26' nm '' bn 'dki39_15' en '211' al 1486.94530086406 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'p1_37' nm '' bn 'dki31048' en 'f2' al 1399.96491953215 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '30' nm '' bn '3' en 'dki39_26' al 1497.18187079452 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'dR_1' nm 'ciliwung-sahari/ciliwung-sahari' bn 'dki39_34' en 'MGSpill_6' al 1.73003506448135 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'aR_2' nm 'grogol/upper' bn 'dki39_47' en '205' al 1514.9420796606 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'aR_3' nm 'grogol/lower' bn 'J_1' en '115' al 970.117707506508 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_1' nm 'krukut cabang ci/krukut cabang ci' bn '3' en 'a_6' al 3507.40157853122 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_2' nm 'cibubur/cibubur' bn 'a_10' en '7' al 1301.45968784411 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_3' nm 'cideng bawah/cideng bawah  2' bn 'dki39_26' en 'a_6' al 1724.90827947367 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_4' nm 'cideng bawah/cideng bawah 1' bn 'a_6' en 'a_5' al 1620.25845294886 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_5' nm 'cideng bawah 4/cideng bawah 4' bn 'a_5' en 'a_8' al 482.167968431233 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_6' nm 'duri/upper' bn 'dki39_23' en 'a_10' al 2970.15234687134 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_7' nm 'duri/bawah' bn 'a_10' en 'a_7' al 1757.06648926367 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_8' nm 'kali angke/kali angke' bn 'a_7' en 'BIDARA2' al 307.51461375615 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_9' nm 'anak ciliwung 3/anak ciliwung 3' bn 'ANK CIL1' en 'a_4' al 3569.01323239693 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_10' nm 'cideng bawah 3/cideng bawah 3' bn 'a_8' en 'a_3' al 619.560490206988 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_11' nm 'cil.gajah mada/cil.gajah mada' bn 'IST_1' en '242' al 1546.8104284968 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_12' nm 'sungai besar/sungai besar' bn 'a_5' en 'a_2' al 1910.91482471756 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_13' nm 'anak ciliwung 2/anak ciliwung 2' bn 'a_4' en 'a_9' al 1967.26892907632 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_14' nm 'anal ciliwung 1/anal ciliwung 1' bn 'a_9' en 'a_2' al 119.729550786139 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_15' nm 'bandengan/bandengan' bn 'BIDARA2' en 'a_3' al 2200.02439669724 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_16' nm 'cideng bawah 2/cideng bawah 2' bn 'a_3' en 'a_1' al 846.573233211 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_17' nm 'kali pakin/kali pakin' bn 'a_2' en 'a_1' al 452.016042949146 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_18' nm 'pasar ikan/pasar ikan' bn 'a_9' en '69' al 37.8728385348457 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_19' nm 'duri/lower' bn 'a_7' en 'J_1' al 895.734866681625 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'bR_20' nm 'cideng bawah 1/cideng bawah 1' bn 'a_1' en 'PLT_RESV' al 1571.13599014919 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'cR_1' nm 'ancol storage/ancol storage' bn 'N_Sen_16_1' en '165' al 182.126098136694 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'cR_2' nm 'kali item/kali item' bn 'dki31088' en '109' al 1365.56607387468 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'cR_3' nm 'sentiong/sentiong upper' bn 'N_Sen_35_3' en 'b_2' al 1224.88106492606 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'cR_4' nm 'sentiong/sentiong lower' bn 'b_2' en '220' al 960.295870237514 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'eR_1' nm 'surabaya/surabaya' bn 'dki39_34' en 'f2' al 3867.90665800236 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'eR_6' nm 'melati/lower' bn 'f2' en 'Resv_01' al 823.511594507491 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '1' nm '' bn 'f2' en '3' al 1835.71626485081 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '2' nm '' bn 'PLT_RESV' en '37' al 517.713733381063 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '3' nm '' bn 'Resv_01' en '4' al 291.960466975502 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '4' nm '' bn '26' en 'dki310178' al 6290.59042982741 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '6' nm '' bn '10' en 'dki310_46' al 6513.97000172792 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '7' nm '' bn 'KP31a' en '27' al 11894.5226879411 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '8' nm '' bn 'CU2a' en 'dki39_34' al 28192.004815645 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '9' nm '' bn 'dki310_76' en 'EBC_conn_3' al 20777.827662605 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id '10' nm '' bn 'bb68c' en 'EBC_conn_2' al 3597.31462270173 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '11' nm '' bn 'STR1a' en 'EBC_conn_1' al 5519.15727272737 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '12' nm '' bn '27' en 'dki310178' al 17706.2189611621 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '13' nm '' bn '29' en 'dki39_47' al 13471.5875034268 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '14' nm '' bn '29' en '27' al 1448.04919737412 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '15' nm '' bn 'MGSpill_1' en 'MGSpill_2' al 17.1873275797449 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '16' nm '' bn 'MGSpill_6' en 'MGSpill_7' al 7.8909240235979 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '17' nm '' bn 'MGSpill_1' en 'MGSpill_2' al 16.8341485032558 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '18' nm '' bn 'MGSpill_6' en 'MGSpill_7' al 9.49173066598242 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '20' nm '' bn 'MGSpill_6' en 'MGSpill_7' al 7.16484640908092 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '21' nm '' bn '14' en '6' al 28973.3125562134 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id '23' nm '' bn '5' en '14' al 8.29232679076578 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '28' nm '' bn '5' en '14' al 10.6853298004183 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '29' nm '' bn '5' en '14' al 9.1067280932394 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '31' nm '' bn '5' en '14' al 8.1652227243899 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '32' nm '' bn '5' en '14' al 7.78942209514716 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '33' nm '' bn '5' en '14' al 7.42743399012739 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '34' nm '' bn '5' en '14' al 7.66229351313487 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '35' nm '' bn '5' en '14' al 7.31631814646294 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '36' nm '' bn '5' en '14' al 7.39956452631437 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '37' nm '' bn '5' en '14' al 7.32884448743261 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '38' nm '' bn '5' en '14' al 7.29238038695949 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '39' nm '' bn '73' en '74' al 806.759815717366 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '27' nm '' bn '95' en '125' al 63.949723455558 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '40' nm '' bn '183' en '129' al 72.6655305301027 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '41' nm '' bn '186' en '187' al 188.922177490265 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '42' nm '' bn '194' en '193' al 331.423654960949 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '43' nm '' bn '200' en '199' al 91.9949864596575 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '44' nm '' bn '206' en '134' al 80.7758781014805 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '45' nm '' bn '212' en '119' al 95.7976432319144 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '46' nm '' bn '181' en '98' al 67.404800252901 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '47' nm '' bn '209' en 'WadukSunterUtara' al 654.888250649335 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '48' nm '' bn '222' en '140' al 330.716430636835 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '49' nm '' bn '226' en '189' al 486.5617124102 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '50' nm '' bn '229' en '138' al 175.871409947095 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '51' nm '' bn '237' en '142' al 84.7634848526824 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '52' nm '' bn '234' en '144' al 122.649713483686 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '53' nm '' bn '245' en '242' al 417.156412359415 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '54' nm '' bn 'WadukSunterUtara' en '203' al 742.158912338077 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '55' nm '' bn '189' en '220' al 602.802543455596 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '56' nm '' bn '99' en '100' al 1930.31541668226 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '57' nm '' bn '101' en '78' al 346.666139392616 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '58' nm '' bn '107' en '41' al 86.5352638618643 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '59' nm '' bn '110' en '146' al 125.599291608953 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '60' nm '' bn 'PompaTuguUtara' en '120' al 792.34753595704 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '61' nm '' bn 'DonBosco' en '120' al 1231.55097823814 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '62' nm '' bn '116' en '106' al 79.0842712223411 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '63' nm '' bn '12' en '109' al 129.840837762763 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '64' nm '' bn '127' en '105' al 109.37469427262 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '65' nm '' bn '25' en '121' al 1961.33513969819 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '66' nm '' bn '113' en 'dki39_47' al 218.875021983548 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '67' nm '' bn '98' en '182' al 93.1674539974576 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '68' nm '' bn '119' en '211' al 174.661411246302 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '69' nm '' bn '125' en '96' al 100.555547159787 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '70' nm '' bn '129' en '184' al 86.4618534839786 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '71' nm '' bn '134' en '205' al 99.6153801776879 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '72' nm '' bn '136' en '200' al 151.278583160693 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '73' nm '' bn '138' en '231' al 731.071112699963 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '74' nm '' bn '140' en '223' al 836.812613611833 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '75' nm '' bn '142' en '238' al 103.929984564888 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '76' nm '' bn '144' en 'p_dki310302' al 161.723820073632 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '77' nm '' bn '146' en '115' al 350.580545780145 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '78' nm '' bn '150' en '149' al 102.800020240826 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '79' nm '' bn '149' en '152' al 126.688594855846 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '80' nm '' bn '151' en '155' al 108.123588994638 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '81' nm '' bn '41' en '108' al 438.241431574752 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '82' nm '' bn '165' en 'b_1' al 2660.35229934995 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '83' nm '' bn '16' en 'dki310177' al 838.609878980102 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'EBC' nm 'EBC' bn 'EBC_UP' en 'EBC_conn_1' al 1358.50723258464 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '84' nm '' bn 'EBC_conn_2' en 'dki310177' al 5205.73758990846 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '85' nm '' bn 'EBC_conn_3' en 'dki310177' al 6024.13480195732 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '86' nm '' bn 'EBC_conn_1' en 'dki310148' al 2436.35635734001 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '87' nm '' bn 'EBC_UP' en 'dki310148' al 4251.23809889825 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '88' nm '' bn 'EBC_31' en 'EBC_32' al 196.797297522033 vc_opt 1 vc_equi -1 vc_len 200 brch
+BRCH id '89' nm '' bn 'EBC_32' en 'EBC_conn_3' al 5731.70207002936 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '90' nm '' bn 'EBC_31' en 'EBC_32' al 192.927657465912 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '91' nm '' bn 'EBC_31' en 'EBC_32' al 210.64592060053 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '92' nm '' bn 'EBC_31' en 'EBC_32' al 206.720632685082 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '93' nm '' bn '89_39' en '89_77' al 7843.87349018304 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '94' nm '' bn '89_37' en '89_39' al 241.077268547852 vc_opt 1 vc_equi -1 vc_len 200 brch
+BRCH id '95' nm '' bn '89_37' en '89_39' al 188.787145519203 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '96' nm '' bn '89_37' en '89_39' al 234.079969151774 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '97' nm '' bn '89_37' en '89_39' al 191.571946850159 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '98' nm '' bn '89_37' en '89_39' al 175.712361620134 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '99' nm '' bn '89_79' en 'EBC_DWN' al 2062.32429307442 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '100' nm '' bn '89_77' en '89_79' al 178.11336740671 vc_opt 1 vc_equi -1 vc_len 200 brch
+BRCH id '101' nm '' bn '89_77' en '89_79' al 175.800041963061 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '102' nm '' bn '89_77' en '89_79' al 231.870603009276 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '103' nm '' bn '89_77' en '89_79' al 207.701255516245 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '104' nm '' bn '89_77' en '89_79' al 155.353788963634 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '105' nm '' bn '69' en '152' al 630.888486415631 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '106' nm '' bn '69' en 'a_9' al 41.566809933607 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '107' nm '' bn 'dR_1_128' en 'N_CGS_1_1' al 574.585631095585 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '108' nm '' bn '79' en 'dR_1_128' al 106.686050592728 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '109' nm '' bn 'dR_1_128' en '79' al 135.556247869863 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '114' nm '' bn '79' en 'dR_1_128' al 112.630429615489 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '115' nm '' bn '79' en 'dR_1_128' al 106.992352578672 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '116' nm '' bn '79' en 'dR_1_128' al 115.535082312324 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '117' nm '' bn '79' en 'dR_1_128' al 102.382165338329 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '110' nm '' bn 'dki39_23' en 'dki39_25' al 123.314605322966 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '111' nm '' bn '37' en '2_6' al 212.380976857788 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '112' nm '' bn '37' en '2_6' al 223.466148990898 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '113' nm '' bn '45' en 'b_2' al 21.1973014439721 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '118' nm '' bn '6' en 'CU2a' al 32437.0365343624 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id '119' nm '' bn 'EBC_conn_3' en '89_37' al 1915.16041429571 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '120' nm '' bn 'EBC_conn_2' en 'EBC_31' al 201.420504349189 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '121' nm '' bn 'EBC_conn_1' en 'EBC_conn_2' al 3958.13695544128 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '122' nm '' bn 'dki310148' en '238' al 7413.08918041756 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '123' nm '' bn '16' en '120' al 6718.66560480469 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '124' nm '' bn '121' en 'dki310169' al 643.52191170307 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '125' nm '' bn 'dki310169' en 'dki310_102' al 1041.25402215832 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '126' nm '' bn '120' en '121' al 3830.67367877057 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '127' nm '' bn '223' en 'dki310_65' al 2322.89675046538 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '128' nm '' bn '203' en 'N_Sen_1_5' al 1086.97649547134 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '129' nm '' bn 'b_1' en '203' al 1495.44987979224 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '130' nm '' bn '165' en '79' al 298.201585350295 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '131' nm '' bn '2_6' en 'a_N_Plu_0_20' al 197.176649979708 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '132' nm '' bn '37' en '2_6' al 197.176649980608 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '133' nm '' bn '182' en 'dki310_54' al 478.624417498346 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '134' nm '' bn '108' en 'dki310_45' al 2659.53348977945 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '135' nm '' bn 'dki310_46' en '108' al 3489.63734676575 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '136' nm '' bn 'dki310178' en 'dki310_46' al 1155.16178728402 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '137' nm '' bn 'dki31096' en '182' al 2549.74195690788 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '138' nm '' bn '211' en 'dki31096' al 1001.58451455582 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '139' nm '' bn '199' en 'dki39_15' al 391.229403866578 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '140' nm '' bn '115' en 'N_MuK_1_3' al 2320.02679837905 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '141' nm '' bn '152' en 'N_Plu_0_18' al 614.017905067583 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '142' nm '' bn 'BIDARA2' en '7' al 1476.49697576954 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '143' nm '' bn 'MUKA1' en 'J_1' al 976.259631375543 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '144' nm '' bn '205' en 'MUKA1' al 1856.64985827377 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '145' nm '' bn '7' en 'a_8' al 146.902927643822 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '146' nm '' bn '106' en 'a_4' al 621.131752909012 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '147' nm '' bn 'ANK CIL1' en '165' al 2101.95850635478 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '148' nm '' bn '155' en 'ANK CIL1' al 968.384311151086 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '149' nm '' bn 'IST_1' en '155' al 2089.14593134358 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '150' nm '' bn '242' en '106' al 2669.3628126717 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '151' nm '' bn '193' en 'dki31096' al 5944.54056426017 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '152' nm '' bn 'dki39_23' en 'dki39_25' al 120.799132499035 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '153' nm '' bn 'dki39_25' en '193' al 618.616477232911 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '154' nm '' bn '187' en 'dki39_25' al 1305.97157878854 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '155' nm '' bn '220' en 'b_1' al 2826.90877841786 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '156' nm '' bn '45' en 'b_2' al 21.0877552990394 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '157' nm '' bn '109' en '45' al 1428.85145996057 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '158' nm '' bn '231' en '223' al 3903.95871261203 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '159' nm '' bn 'dki31088' en '231' al 1055.69737188735 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '160' nm '' bn '238' en 'dki31088' al 607.509333544678 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '161' nm '' bn 'MGSpill_1' en 'MGSpill_2' al 16.1890143455398 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '162' nm '' bn 'MGSpill_6' en 'MGSpill_7' al 6.26199721910563 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '163' nm '' bn 'MGSpill_7' en 'IST_1' al 7898.45782652934 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '164' nm '' bn 'MGSpill_2' en '96' al 2270.35088225354 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '165' nm '' bn '4' en 'dki310128' al 741.501334945464 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '166' nm '' bn '78' en '4' al 477.084641427114 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '167' nm '' bn '184' en '78' al 502.12658859885 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '168' nm '' bn 'dki31048' en '184' al 169.812198821731 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '169' nm '' bn '96' en 'dki31048' al 218.573572034517 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '170' nm '' bn 'dki310128' en '15' al 192.455840377095 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '171' nm '' bn '105' en '187' al 1543.81243131051 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '172' nm '' bn '15' en '105' al 21.0892086245163 vc_opt 1 vc_equi -1 vc_len 100 brch

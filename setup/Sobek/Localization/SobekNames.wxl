@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
-  <String Id="RRFeatureName">D-Rainfall Runoff</String>
-  <String Id="RRFeatureDescription">Allows to simulate lumped rainfall runoff models, such as Sacramento, HBV and Polder concept.</String>
-  <String Id="RRUserManualName">D-Rainfall Runoff User Manual</String>
-  <String Id="RRReferenceManualName">D-Rainfall Runoff Technical Reference Manual</String>
-  
-</WixLocalization>

@@ -1,2 +1,0 @@
-NWRW id 'node1' sl 2.3 ar 0 1 2 3 4 5 6 7 8 9 10 11 np 123 dw 'First dryweather flow' ms '' nwrw
-NWRW id 'node2' sl 4.5 ar 0 1 2 3 4 5 6 7 8 9 10 11 np 123 dw 'First dryweather flow' np2 456 dw2 'Second dryweather flow' ms 'meteostation node2' na 2 aa 12345 54321 nwrw

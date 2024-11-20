@@ -1,0 +1,16 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=12
+NumberOfLocations=4
+T0=2005.12.30  0: 0: 0
+TimeStepUnit=Second
+TimeStepMultiplyer=3600
+ 
+[Location Descriptions]
+3=1022
+4=1021
+ 

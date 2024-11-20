@@ -1,0 +1,77 @@
+ST_1.0
+STRU id '57' nm '' ci '2' lc 7394.63217847965 stru
+STRU id '242' nm '' ci '2' lc 12024.4389481486 stru
+STRU id '243' nm '' ci '2' lc 15623.6239804457 stru
+STRU id '59' nm '' ci '3' lc 6640.96407723901 stru
+STRU id '60' nm '' ci '3' lc 8746.90157958715 stru
+STRU id '69' nm '' ci '10' lc 6390.3512135013 stru
+STCM id '106' nm '' ci '10' lc 11981.6857830556 stcm
+STRU id '104' nm '' ci '10' lc 14640.6420428302 stru
+STRU id '65' nm '' ci '10' lc 16353.1903734403 stru
+STCM id '105' nm '' ci '10' lc 24177.9695146433 stcm
+STRU id 'l_12' nm '' ci '11' lc 119.645998679405 stru 
+STRU id 'l_13' nm '' ci '12' lc 103.82390139076 stru 
+STRU id 'l_14' nm '' ci '13' lc 103.493490133429 stru 
+STRU id '79' nm '' ci '19' lc 122.033918953049 stru
+STRU id 'l_60' nm '' ci '46' lc 145.190170577931 stru 
+STRU id 'l_61' nm '' ci '47' lc 1696.68196974597 stru 
+STRU id 'l_71' nm '' ci '52' lc 1067.66618213985 stru 
+STRU id '260' nm '' ci '53' lc 1173.85221505792 stru
+STRU id '261' nm '' ci '53' lc 3099.40615289019 stru
+STCM id '170' nm '' ci '58' lc 2044.55953554068 stcm
+STCM id '174' nm '' ci '60' lc 1521.76000661058 stcm
+STCM id '172' nm '' ci '60' lc 3968.23131004781 stcm
+STRU id '181' nm '' ci '61' lc 2556.02291219758 stru
+STRU id '180' nm '' ci '62' lc 1634.63394519682 stru
+STRU id '179' nm '' ci '63' lc 1424.60939757757 stru
+STRU id '123' nm '' ci '65' lc 977.703699761845 stru
+STRU id '131' nm '' ci '65' lc 2688.94985901514 stru
+STRU id '158' nm '' ci '65' lc 3666.1241894393 stru
+STRU id '140' nm '' ci '65' lc 4277.71837113032 stru
+STRU id '151' nm '' ci '65' lc 5173.68207790959 stru
+STRU id '125' nm '' ci '66' lc 1222.18693407753 stru
+STRU id '145' nm '' ci '66' lc 2079.59697834484 stru
+STRU id '164' nm '' ci '66' lc 2773.10916952829 stru
+STRU id '136' nm '' ci '66' lc 3545.28170403152 stru
+STRU id '153' nm '' ci '66' lc 4197.11473554023 stru
+STRU id '142' nm '' ci '67' lc 1262.29983385245 stru
+STRU id '161' nm '' ci '67' lc 1916.30900366258 stru
+STRU id '133' nm '' ci '67' lc 3060.20015629409 stru
+STRU id '155' nm '' ci '67' lc 3994.24561616919 stru
+STRU id '127' nm '' ci '67' lc 5299.76437764567 stru
+STRU id '121' nm '' ci '68' lc 1015.67051899686 stru
+STRU id '148' nm '' ci '68' lc 1754.15956257795 stru
+STRU id '129' nm '' ci '68' lc 2448.0699599677 stru
+STRU id '167' nm '' ci '68' lc 3266.03044928655 stru
+STRU id '138' nm '' ci '68' lc 4122.75807680893 stru
+STRU id 'l_157' nm '' ci '71' lc 75.7238403674536 stru 
+STRU id 'l_158' nm '' ci '72' lc 96.1847510823916 stru 
+STRU id 'l_159' nm '' ci '73' lc 96.553405178119 stru 
+STRU id 'l_160' nm '' ci '74' lc 2202.53108019501 stru 
+STRU id 'l_161' nm '' ci '75' lc 1383.11295810588 stru 
+STRU id '207' nm '' ci '76' lc 2591.91655084435 stru
+STRU id '208' nm '' ci '84' lc 2669.59220948396 stru
+STRU id '219' nm '' ci '90' lc 1392.02205391044 stru
+STRU id '220' nm 'Waal Nijmegen' ci '90' lc 2514.16286900425 stru
+STRU id '221' nm '' ci '91' lc 1044.23409261194 stru
+STRU id '222' nm '' ci '91' lc 2165.81885875203 stru
+STRU id 'l_181' nm '' ci '92' lc 1568.00810489216 stru 
+STRU id 'l_182' nm '' ci '93' lc 1721.69352640648 stru 
+STRU id 'l_183' nm '' ci '94' lc 1258.28749069875 stru 
+STRU id 'l_184' nm '' ci '95' lc 1318.51401805355 stru 
+STRU id 'l_185' nm '' ci '96' lc 1240.02742652385 stru 
+STRU id 'l_186' nm '' ci '97' lc 1121.75158197947 stru 
+STRU id 'l_187' nm '' ci '98' lc 1351.72007022805 stru 
+STRU id 'l_188' nm '' ci '99' lc 1535.68920428874 stru 
+STRU id 'l_189' nm '' ci '100' lc 1448.30155359833 stru 
+STRU id 'l_190' nm '' ci '101' lc 1446.91467072669 stru 
+STRU id 'l_191' nm '' ci '102' lc 1354.14097582549 stru 
+STRU id 'l_192' nm '' ci '103' lc 1549.52152774451 stru 
+STRU id 'l_193' nm '' ci '104' lc 1244.99695251022 stru 
+STRU id 'l_194' nm '' ci '105' lc 1316.24147906383 stru 
+STRU id 'l_195' nm '' ci '112' lc 1220.72804112486 stru 
+STRU id 'l_196' nm '' ci '113' lc 1201.42988687811 stru 
+D2ST id '71' nm '' ci '-1' lc 0 px 558372.495871113 py 643256.651012289 d2st
+D2ST id '95' nm '' ci '-1' lc 0 px 558588.224282294 py 643472.149911077 d2st
+D2ST id '206' nm '' ci '-1' lc 0 px 558807.112823592 py 643360.89209299 d2st
+D2ST id '215' nm '' ci '-1' lc 0 px 582321.46612083 py 641238.781662772 d2st

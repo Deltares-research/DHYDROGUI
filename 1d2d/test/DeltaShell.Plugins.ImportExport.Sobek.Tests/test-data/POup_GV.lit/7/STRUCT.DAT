@@ -1,0 +1,134 @@
+STRU id 'P_Anza_30425' nm '' dd 'P_Anza_30425' stru
+STRU id 'P_Belbo_cassa_55540' nm '' dd 'P_Belbo_cassa_55540' stru
+STRU id 'S_belbo_restituzione1_84' nm '' dd 'S_belbo_restituzione1_84' stru
+STRU id 'S_belbo_restituzione2_85' nm '' dd 'S_belbo_restituzione2_85' stru
+STRU id 'S_Buthier_monte_43' nm 'p.Buthier' dd '99' stru
+STRU id 'S_Canale Cavour_69' nm 'Canale_Cavour' dd '111' ca 1 cj 'S_Canale Cavour_69' stru
+STRU id 'S_Canale Cimeno_68' nm 'Canale_Cimeno' dd '112' ca 1 cj 'S_Canale Cimeno_68' stru
+STRU id 'S_Canale Naviglio_66' nm 'Naviglio' dd '107' stru
+STRU id 'S_Canale San Mauro_67' nm 'Canale_San Mauro' dd '113' ca 1 cj 'S_Canale San Mauro_67' stru
+STRU id 'S_Cervo_15' nm 'CE_MAN65 weir' dd 'S_Cervo_15' stru
+STRU id 'S_Deriv_canal_grande_70' nm 'deriv_canalgrande' dd '116' ca 1 cj 'S_Deriv_canal_grande_70' stru
+STRU id 'S_Deriv_Villoresi_71' nm 'deriv_villoresi' dd '115' ca 1 cj 'S_Deriv_Villoresi_71' stru
+STRU id 'S_Dora di Valgrisenche_44' nm 'Valsavaranche' dd '93' stru
+STRU id 'S_Gabiet_62' nm 'Gabiet' dd '101' stru
+STRU id '11' nm '' dd '##2' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id '14' nm '' dd '##3' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id '24' nm '' dd '##4' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id '30' nm '' dd '##5' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id '27' nm '' dd '##6' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id '33' nm '' dd '##7' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id '36' nm '' dd '##8' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id '39' nm '' dd '##9' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id 'S_Ovesca_72' nm '' dd 'S_Ovesca_72' stru
+STRU id 'P_Ovesca_2370' nm '' dd 'P_Ovesca_2370' stru
+STRU id 'S_Po_34' nm 'pza. vittorio' dd 'S_Po_34' stru
+STRU id 'S_Prelievo Aosta Buthier_45' nm 'Aosta Buthier' dd '97' ca 1 cj 'S_Prelievo Aosta Buthier_45' stru
+STRU id 'S_Prelievo Artanavaz_65' nm 'Atanavaz' dd '117' ca 1 cj 'S_Prelievo Artanavaz_65' stru
+STRU id 'S_Prelievo Aymavilles_46' nm 'Grand Evya' dd '88' ca 1 cj 'S_Prelievo Aymavilles_46' stru
+STRU id 'S_Prelievo Chatellar_48' nm 'Sarre' dd '96' ca 1 cj 'S_Prelievo Chatellar_48' stru
+STRU id 'S_Prelievo Epinel_49' nm 'La Nuova' dd '94' ca 1 cj 'S_Prelievo Epinel_49' stru
+STRU id 'S_Prelievo Gabiet_63' nm 'Diga Gabiet' dd '102' ca 1 cj 'S_Prelievo Gabiet_63' stru
+STRU id 'S_Prelievo Gressoney_50' nm 'Bielciuken' dd '103' ca 1 cj 'S_Prelievo Gressoney_50' stru
+STRU id 'S_Prelievo La Salle_51' nm 'La Salle' dd '83' ca 1 cj 'S_Prelievo La Salle_51' stru
+STRU id 'S_Prelievo La Salle_52' nm 'Rilascio Aymavilles' dd '85' ca 1 cj 'S_Prelievo La Salle_52' stru
+STRU id 'S_Prelievo Lys 2_53' nm 'Lys 2' dd '104' ca 1 cj 'S_Prelievo Lys 2_53' stru
+STRU id 'S_Prelievo Mecosse_54' nm 'Mecosse' dd '86' ca 1 cj 'S_Prelievo Mecosse_54' stru
+STRU id 'S_Prelievo Montjovet_55' nm 'Montjovet Dora' dd '105' ca 1 cj 'S_Prelievo Montjovet_55' stru
+STRU id 'S_Prelievo Place Moulin_56' nm 'Diga Place Moulin' dd '98' ca 1 cj 'S_Prelievo Place Moulin_56' stru
+STRU id 'S_Prelievo Rhemes_57' nm 'Soressamont' dd '90' ca 1 cj 'S_Prelievo Rhemes_57' stru
+STRU id 'S_Prelievo Savara_58' nm 'Fenille' dd '91' ca 1 cj 'S_Prelievo Savara_58' stru
+STRU id 'S_Prelievo Surpian Dora_59' nm 'Surpian Dora' dd '100' ca 1 cj 'S_Prelievo Surpian Dora_59' stru
+STRU id 'S_Prelievo Valgrisanche_60' nm 'Ponte Canale' dd '89' ca 1 cj 'S_Prelievo Valgrisanche_60' stru
+STRU id 'S_Prelievo Valpelline_64' nm 'Buthier' dd '118' ca 1 cj 'S_Prelievo Valpelline_64' stru
+STRU id 'S_Rilascio Viering_61' nm 'Viering Rilascio Dora' dd '106' ca 1 cj 'S_Rilascio Viering_61' stru
+STRU id 'P_sessera_158' nm '' dd 'P_sessera_158' stru
+STRU id 'P_Strona di Mosso_72' nm '' dd 'P_Strona di Mosso_72' stru
+STRU id 'P_Strona di Mosso_76' nm '' dd 'P_Strona di Mosso_76' stru
+STRU id 'S_Terdoppio_0' nm 'partitore lat' dd 'S_Terdoppio_0' stru
+STRU id '109' nm '' dd '109' stru
+STRU id 'S_Ticino_42' nm 'Miorina' dd '119' ca 1 cj 'S_Ticino_42' stru
+STRU id 'S_Varaita_38' nm 'varto_weir' dd 'S_Varaita_38' stru
+STRU id 'S_Vermenagna_86' nm 'Robilante' dd 'S_Vermenagna_86' stru
+STRU id 'S_Vobbia_41' nm '' dd 'S_Vobbia_41' stru
+STRU id '4' nm 'CE_MAN65_culvert' dd '4' stru
+STRU id '53' nm '' dd '53' stru
+STRU id '58' nm '' dd '58' stru
+STRU id '62' nm '' dd '62' stru
+STRU id '66' nm '' dd '66' stru
+STRU id '70' nm '' dd '70' stru
+STRU id '74' nm '' dd '74' stru
+STRU id '78' nm '' dd '78' stru
+STRU id '82' nm '' dd '82' stru
+STRU id 'P_Agogna_48474' nm '' dd 'P_Agogna_48474' stru
+STRU id 'S_STAFFORA_1' nm '103' dd 'S_STAFFORA_1' stru
+STRU id 'S_STAFFORA_73' nm '123' dd 'S_STAFFORA_73' stru
+STRU id 'S_STAFFORA_74' nm '128' dd 'S_STAFFORA_74' stru
+STRU id 'S_Scrivia_40' nm 'weir 11' dd 'S_Scrivia_40' stru
+STRU id 'S_malone_2' nm 'WeirA11' dd 'S_malone_2' stru
+STRU id 'S_malone_3' nm 'WeirA09' dd 'S_malone_3' stru
+STRU id 'S_malone_4' nm 'WeirA04' dd 'S_malone_4' stru
+STRU id 'S_malone_5' nm 'WeirD6' dd 'S_malone_5' stru
+STRU id 'S_sesia_16' nm 'SS_MAN106' dd 'S_sesia_16' stru
+STRU id 'S_sesia_17' nm 'SS_MAN38.1' dd 'S_sesia_17' stru
+STRU id 'S_Cervo_81' nm 'CE_MAN2' dd 'S_Cervo_81' stru
+STRU id 'S_Cervo_80' nm 'CE_MAN16.1' dd 'S_Cervo_80' stru
+STRU id 'S_Cervo_25' nm 'CE_MAN33.1' dd 'S_Cervo_25' stru
+STRU id 'S_Cervo_21' nm 'CE_MAN59.1' dd 'S_Cervo_21' stru
+STRU id 'S_Cervo_22' nm 'CEBR0047' dd 'S_Cervo_22' stru
+STRU id 'S_Cervo_23' nm 'CE_MAN54.1' dd 'S_Cervo_23' stru
+STRU id 'S_Cervo_24' nm 'CE_MAN52' dd 'S_Cervo_24' stru
+STRU id 'S_Cervo_18' nm 'CEBR0060' dd 'S_Cervo_18' stru
+STRU id 'S_Cervo_26' nm 'CE_MAN43.1' dd 'S_Cervo_26' stru
+STRU id 'S_Cervo_79' nm 'CE_MAN40' dd 'S_Cervo_79' stru
+STRU id 'S_Elvo_19' nm 'TR45' dd 'S_Elvo_19' stru
+STRU id 'S_Elvo_20' nm 'BR60' dd 'S_Elvo_20' stru
+STRU id 'S_Elvo_82' nm 'ELCA' dd 'S_Elvo_82' stru
+STRU id 'S_Elvo_83' nm 'EL_MAN12' dd 'S_Elvo_83' stru
+STRU id 'P_sesia_122060' nm '' dd 'P_sesia_122060' stru
+STRU id 'P_PELLICE_50340.2' nm '' dd 'P_PELLICE_50340.2' stru
+STRU id 'S_Varaita_88' nm '' dd 'S_Varaita_88' stru
+STRU id 'S_Maira_87' nm '' dd 'S_Maira_87' stru
+STRU id 'P_Maira_95563' nm '' dd 'P_Maira_95563' stru
+STRU id 'P_Stura di Lanzo_33112' nm '' dd 'P_Stura di Lanzo_33112' stru
+STRU id 'P_Stura di Lanzo_60570' nm '' dd 'P_Stura di Lanzo_60570' stru
+STRU id 'S_D_RIPARIA_39' nm 'w_susa' dd 'S_D_RIPARIA_39' stru
+STRU id 'S_Sangone_37' nm 'soglia27-28' dd 'S_Sangone_37' stru
+STRU id 'P_Tanaro_131736.1' nm '' dd 'P_Tanaro_131736.1' stru
+STRU id 'P_Tanaro_134161.2' nm '' dd 'P_Tanaro_134161.2' stru
+STRU id 'S_Tanaro_33' nm '26_n' dd 'S_Tanaro_33' stru
+STRU id 'P_Pesio_43276' nm '' dd 'P_Pesio_43276' stru
+STRU id 'S_Tanaro_31' nm '27_n Traversa di Clavesana' dd 'S_Tanaro_31' stru
+STRU id 'P_Tanaro_71007.91' nm '' dd 'P_Tanaro_71007.91' stru
+STRU id 'P_Tanaro_76060.72' nm '' dd 'P_Tanaro_76060.72' stru
+STRU id 'P_Tanaro_77036.17' nm '' dd 'P_Tanaro_77036.17' stru
+STRU id 'S_Tanaro_32' nm '28_n Briglia Bastià Mondovì' dd 'S_Tanaro_32' stru
+STRU id 'P_Tanaro_152108.1' nm '' dd 'P_Tanaro_152108.1' stru
+STRU id 'S_ORBA_29' nm 'left' dd 'S_ORBA_29' stru
+STRU id 'S_ORBA_28' nm 'basaluzzo' dd 'S_ORBA_28' stru
+STRU id 'P_Bormida_131993' nm '' dd 'P_Bormida_131993' stru
+STRU id 'P_Bormida_136458' nm '' dd 'P_Bormida_136458' stru
+STRU id 'S_Tanaro_30' nm '21_n' dd 'S_Tanaro_30' stru
+STRU id 'P_Tanaro_205242' nm '' dd 'P_Tanaro_205242' stru
+STRU id 'P_Bormida_180061.1' nm '' dd 'P_Bormida_180061.1' stru
+STRU id 'S_ORBA_27' nm 'weir' dd 'S_ORBA_27' stru
+STRU id 'P_Bormida_148570' nm '' dd 'P_Bormida_148570' stru
+STRU id 'S_DoraBaltea_13' nm 'jump103-2' dd 'S_DoraBaltea_13' stru
+STRU id 'S_DoraBaltea_14' nm 'Montjovet' dd 'S_DoraBaltea_14' stru
+STRU id 'S_DoraBaltea_76' nm '59-2A' dd 'S_DoraBaltea_76' stru
+STRU id 'S_DoraBaltea_12' nm '55-1A_WEIR' dd 'S_DoraBaltea_12' stru
+STRU id 'S_DoraBaltea_11' nm 'UEI' dd 'S_DoraBaltea_11' stru
+STRU id 'S_DoraBaltea_78' nm 'Dbata' dd 'S_DoraBaltea_78' stru
+STRU id 'S_DoraBaltea_8' nm 'Mazzè' dd 'S_DoraBaltea_8' stru
+STRU id 'S_DoraBaltea_9' nm 'DePretis' dd 'S_DoraBaltea_9' stru
+STRU id 'S_DoraBaltea_6' nm 'Traversa Farini' dd 'S_DoraBaltea_6' stru
+STRU id 'S_DoraBaltea_7' nm 'c.Cavour' dd 'S_DoraBaltea_7' stru
+STRU id 'S_DoraBaltea_77' nm 'Dbave' dd 'S_DoraBaltea_77' stru
+STRU id 'P_DoraBaltea_111461' nm '' dd 'P_DoraBaltea_111461' stru
+STRU id 'S_DoraBaltea_75' nm '37.3A(Ponte Vecchio Ivrea)' dd 'S_DoraBaltea_75' stru
+STRU id 'S_DoraBaltea_10' nm 'Naviglio Ivrea' dd 'S_DoraBaltea_10' stru
+STRU id 'S_Po_35' nm 'canale lanza' dd 'S_Po_35' stru
+STRU id 'S_Po_36' nm 'ferrovie' dd 'S_Po_36' stru
+STRU id 'P_Ticino_66249.1' nm '' dd 'P_Ticino_66249.1' stru
+STRU id '90' nm '' dd '##11' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id 'S_Prelievo Beauregard_47' nm 'Diga Beauregard' dd '92' ca 1 cj 'S_Prelievo Beauregard_47' stru

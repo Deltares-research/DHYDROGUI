@@ -1,0 +1,14 @@
+ALFA id '1'  nm 'Default (1)' af 100 0 0 0 0.3 0.05 lv 0 0 0 alfa
+ALFA id '2'  nm 'Standaard' af 100 0 0 0.3 1E-20 0.05 lv 0 0 1 alfa
+ERNS id '1'  nm 'Standaard-E' cvi 100 cvo 0 0 50 1E+20 cvs 1 lv 0 0 1 erns
+ALFA id '3'  nm '3-lagen' af 100 20 1 0.3 1E-20 0.05 lv 0.2 0.8 1 alfa
+ERNS id '2'  nm 'E-3layers' cvi 100 cvo 50 50 50 1E+20 cvs 1 lv 0.8 0.9 1 erns
+ERNS id '3'  nm 'E_88cm' cvi 100 cvo 0 0 50 1E+20 cvs 1 lv 0 0 0.88 erns
+ERNS id '4'  nm 'E_80cm' cvi 100 cvo 0 0 50 1E+20 cvs 1 lv 0 0 0.8 erns
+ERNS id '5'  nm 'E_48cm' cvi 100 cvo 0 0 50 1E+20 cvs 1 lv 0 0 0.48 erns
+ERNS id '6'  nm 'E_40cm' cvi 100 cvo 0 0 50 1E+20 cvs 1 lv 0 0 0.4 erns
+ERNS id '7'  nm 'E_20cm' cvi 100 cvo 0 0 50 1E+20 cvs 1 lv 0 0 0.2 erns
+ERNS id '8'  nm 'E_0cm' cvi 100 cvo 0 0 50 1E+20 cvs 1 lv 0 0 0 erns
+ERNS id '9'  nm 'Standard-Ernst' cvi 100 cvo 0 0 50 1E+20 cvs 1 lv 0 0 1 erns
+ERNS id '10'  nm 'Standard-Ernst2' cvi 1000 cvo 0 0 50 500 cvs 1 lv 0 0 1 erns
+ERNS id '11'  nm 'Standard-Ernst3' cvi 0.001 cvo 0 0 50 0.001 cvs 0.0001 lv 0 0 1 erns

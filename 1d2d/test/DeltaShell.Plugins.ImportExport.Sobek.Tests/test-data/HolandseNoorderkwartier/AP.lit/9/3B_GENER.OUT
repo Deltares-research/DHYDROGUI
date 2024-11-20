@@ -1,0 +1,1472 @@
+ Run datum (DD-MM-YY) and time:  2-10-2013  11:26
+
+ Summary of common data    
+ ===============================
+
+ Case name                                     
+ Number of nodes             1426   4785.78 ha
+ Number of links             1116
+ Number of paved areas        271    358.80 ha
+ Number of unpaved areas      573   4426.97 ha
+ Number of greenhouse-areas     0      0.00 ha
+           with basins                 0.00 ha
+ Number of open water nodes     0      0.00 ha
+ Number of structures           0
+ Number of boundaries         581
+ Number of NWRW nodes           0      0.00 ha
+ Number of Sacramento nodes     0      0.00 ha
+ Number of RR Runoff nodes      0      0.00 ha
+ Number of Cells                0      0.00 ha
+
+ Number of events               1
+ Timestepsize    (s)          300
+
+
+
+
+ Summary input data paved area          
+
+ Node identification     Node    Surface    Surf. max storage    max.storage  Capacity  
+                         name                         street      sewer       sewerpump  
+                                   (ha)      (m NAP)    (mm)       (mm)         (m3/s)   
+===========================================================================================
+AFWG_31_pu           Peilgebied       0.855     -0.96      1.00      0.00     0.000
+AFWG_221_pu          Peilgebied       0.632     -1.53      1.00      0.00     0.000
+AFWG_289_pu          Peilgebied       0.595     -0.41      1.00      0.00     0.000
+AFWG_129_pu          Peilgebied       2.357     -1.54      1.00      0.00     0.000
+AFWG_25_pu           Peilgebied       1.349      0.02      1.00      0.00     0.000
+AFWG_63_pu           Peilgebied       2.072     -0.01      1.00      0.00     0.000
+AFWG_111_pu          Peilafwijkin     0.017     -1.07      1.00      0.00     0.000
+AFWG_307_pu          Peilgebied       4.301     -0.20      1.00      0.00     0.000
+AFWG_46_pu           Peilgebied       1.446     -2.49      1.00      0.00     0.000
+AFWG_30_pu           Peilgebied       1.363     -1.42      1.00      0.00     0.000
+AFWG_104_pu          Peilafwijkin     0.028     -2.42      1.00      0.00     0.000
+AFWG_48_pu           Peilgebied       8.123     -0.65      1.00      7.00     0.016
+AFWG_41_pu           Peilgebied       0.733     -1.95      1.00      0.00     0.000
+AFWG_282_pu          Peilgebied       2.116     -0.80      1.00      0.00     0.000
+AFWG_204_pu          Peilafwijkin     0.849     -0.21      1.00      0.00     0.000
+AFWG_286_pu          Peilgebied       2.372     -0.86      1.00      0.00     0.000
+AFWG_211_pu          Peilafwijkin     0.223     -0.38      1.00      0.00     0.000
+AFWG_134_pu          Peilgebied       0.726     -1.69      1.00      0.00     0.000
+AFWG_298_pu          Peilgebied       1.806     -0.77      1.00      0.00     0.000
+AFWG_58_pu           Peilgebied       0.482      0.41      1.00      0.00     0.000
+AFWG_145_pu          Peilafwijkin     1.806     -0.28      1.00      0.00     0.000
+AFWG_181_pu          Peilafwijkin     0.082     -0.71      1.00      0.00     0.000
+AFWG_255_pu          Peilafwijkin     0.760     -0.07      1.00      0.00     0.000
+AFWG_45_pu           Peilafwijkin     0.323     -0.37      1.00      0.00     0.000
+AFWG_11_pu           Peilgebied       0.005     -0.77      1.00      0.00     0.000
+AFWG_192_pu          Peilgebied       3.184     -0.24      1.00      0.00     0.000
+AFWG_151_pu          Peilafwijkin     1.929     -0.35      1.00      0.00     0.000
+AFWG_144_pu          Peilafwijkin     0.049     -0.33      1.00      0.00     0.000
+AFWG_294_pu          Peilgebied       2.126      0.20      1.00      0.00     0.000
+AFWG_169_pu          Peilafwijkin     0.784     -0.18      1.00      0.00     0.000
+AFWG_21_pu           Peilgebied       0.403     -0.01      1.00      0.00     0.000
+AFWG_67_pu           Peilgebied       3.308     -0.06      1.00      0.00     0.000
+AFWG_92_pu           Peilafwijkin     1.938     -0.18      1.00      0.00     0.000
+AFWG_85_pu           Peilafwijkin     0.064     -0.64      1.00      0.00     0.000
+AFWG_99_pu           Peilafwijkin     0.086     -1.08      1.00      0.00     0.000
+AFWG_156_pu          Peilafwijkin     0.056     -0.15      1.00      0.00     0.000
+AFWG_44_pu           Peilgebied       4.458     -0.42      1.00      7.00     0.010
+AFWG_154_pu          Peilgebied       0.192     -2.19      1.00      0.00     0.000
+AFWG_1_pu            Peilgebied       2.648     -0.75      1.00      0.00     0.000
+AFWG_53_pu           Peilgebied      14.345     -0.63      1.00      7.00     0.028
+AFWG_231_pu          Peilgebied       0.144     -2.25      1.00      0.00     0.000
+AFWG_271_pu          Peilafwijkin     0.462     -0.02      1.00      0.00     0.000
+AFWG_281_pu          Peilgebied       0.827     -0.05      1.00      0.00     0.000
+AFWG_240_pu          Peilafwijkin     0.052     -1.44      1.00      0.00     0.000
+AFWG_152_pu          Peilafwijkin     0.049     -0.22      1.00      0.00     0.000
+AFWG_291_pu          Peilgebied       0.488     -0.48      1.00      0.00     0.000
+AFWG_33_pu           Peilgebied       0.448     -1.19      1.00      0.00     0.000
+AFWG_119_pu          Peilafwijkin     0.129     -0.96      1.00      0.00     0.000
+AFWG_39_pu           Peilgebied       1.118     -1.29      1.00      0.00     0.000
+AFWG_207_pu          Peilafwijkin     1.750     -0.12      1.00      0.00     0.000
+AFWG_227_pu          Peilgebied       0.501     -2.28      1.00      0.00     0.000
+AFWG_171_pu          Peilafwijkin     0.859     -0.33      1.00      0.00     0.000
+AFWG_14_pu           Peilgebied       0.751     -0.05      1.00      0.00     0.000
+AFWG_50_pu           Peilgebied       0.629     -0.53      1.00      0.00     0.000
+AFWG_232_pu          Peilgebied       0.460     -2.15      1.00      0.00     0.000
+AFWG_141_pu          Peilafwijkin     0.121     -0.22      1.00      0.00     0.000
+AFWG_217_pu          Peilgebied       1.004     -1.70      1.00      0.00     0.000
+AFWG_116_pu          Peilafwijkin     1.229     -0.14      1.00      0.00     0.000
+AFWG_117_pu          Peilafwijkin     1.107     -0.13      1.00      0.00     0.000
+AFWG_8_pu            Peilgebied       0.218     -0.84      1.00      0.00     0.000
+AFWG_9_pu            Peilgebied       0.005     -1.14      1.00      0.00     0.000
+AFWG_241_pu          Peilgebied       9.118     -0.08      1.00      0.00     0.000
+AFWG_302_pu          Peilgebied       0.671     -1.44      1.00      0.00     0.000
+AFWG_260_pu          Peilafwijkin     0.100     -0.03      1.00      0.00     0.000
+AFWG_195_pu          Peilafwijkin     0.017     -0.35      1.00      0.00     0.000
+AFWG_246_pu          Peilafwijkin     0.481     -0.36      1.00      0.00     0.000
+AFWG_6_pu            Peilgebied       0.215     -0.89      1.00      0.00     0.000
+AFWG_135_pu          Peilgebied       1.034     -2.07      1.00      0.00     0.000
+AFWG_224_pu          Peilgebied       2.721     -2.14      1.00      0.00     0.000
+AFWG_170_pu          Peilafwijkin     0.004     -0.43      1.00      0.00     0.000
+AFWG_194_pu          Peilafwijkin     0.471     -0.79      1.00      0.00     0.000
+AFWG_214_pu          Peilgebied       0.914     -2.29      1.00      0.00     0.000
+AFWG_136_pu          Peilgebied       0.546     -2.25      1.00      0.00     0.000
+AFWG_71_pu           Peilgebied       2.498      0.06      1.00      0.00     0.000
+AFWG_36_pu           Peilgebied       2.052      0.20      1.00      0.00     0.000
+AFWG_218_pu          Peilgebied       0.632     -1.83      1.00      0.00     0.000
+AFWG_130_pu          Peilgebied       1.153     -1.73      1.00      0.00     0.000
+AFWG_258_pu          Peilafwijkin     1.729     -0.07      1.00      0.00     0.000
+AFWG_83_pu           Peilgebied       0.997     -0.69      1.00      0.00     0.000
+AFWG_206_pu          Peilafwijkin     0.007     -0.21      1.00      0.00     0.000
+AFWG_311_pu          Peilgebied       4.023     -0.09      1.00      0.00     0.000
+AFWG_55_pu           Peilgebied       1.408     -1.35      1.00      7.00     0.003
+AFWG_105_pu          Peilafwijkin     0.255     -2.58      1.00      0.00     0.000
+AFWG_306_pu          Peilgebied       0.913     -0.07      1.00      0.00     0.000
+AFWG_18_pu           Peilgebied       0.723     -0.75      1.00      0.00     0.000
+AFWG_69_pu           Peilafwijkin     1.453     -0.04      1.00      0.00     0.000
+AFWG_300_pu          Peilgebied      14.047     -0.66      1.00      7.00     0.027
+AFWG_61_pu           Peilgebied       2.116     -0.89      1.00      0.00     0.000
+AFWG_109_pu          Peilafwijkin     0.163     -0.26      1.00      0.00     0.000
+AFWG_98_pu           Peilafwijkin     0.068     -0.82      1.00      0.00     0.000
+AFWG_87_pu           Peilafwijkin     0.318     -0.24      1.00      0.00     0.000
+AFWG_114_pu          Peilafwijkin     0.765      0.01      1.00      0.00     0.000
+AFWG_34_pu           Peilgebied       0.620     -0.03      1.00      0.00     0.000
+AFWG_27_pu           Peilgebied       0.715     -1.63      1.00      0.00     0.000
+AFWG_155_pu          Peilgebied       1.300     -1.90      1.00      0.00     0.000
+AFWG_296_pu          Peilgebied      14.239     -0.86      1.00      7.00     0.028
+AFWG_127_pu          Peilgebied       0.768     -1.68      1.00      0.00     0.000
+AFWG_236_pu          Peilafwijkin     0.306     -0.50      1.00      0.00     0.000
+AFWG_37_pu           Peilgebied       1.888     -0.29      1.00      0.00     0.000
+AFWG_90_pu           Peilafwijkin     0.193     -0.82      1.00      0.00     0.000
+AFWG_185_pu          Peilafwijkin     0.336     -0.28      1.00      0.00     0.000
+AFWG_164_pu          Peilgebied       3.610     -1.56      1.00      0.00     0.000
+AFWG_303_pu          Peilgebied       0.197     -1.60      1.00      0.00     0.000
+AFWG_118_pu          Peilafwijkin     0.730     -0.16      1.00      0.00     0.000
+AFWG_52_pu           Peilgebied       3.037     -0.21      1.00      0.00     0.000
+AFWG_143_pu          Peilafwijkin     0.026     -0.28      1.00      0.00     0.000
+AFWG_24_pu           Peilafwijkin     0.077     -0.29      1.00      0.00     0.000
+AFWG_159_pu          Peilgebied       0.580     -2.21      1.00      0.00     0.000
+AFWG_26_pu           Peilgebied       2.402     -0.33      1.00      0.00     0.000
+AFWG_272_pu          Peilgebied       3.776      0.21      1.00      0.00     0.000
+AFWG_150_pu          Peilafwijkin     2.507     -0.26      1.00      0.00     0.000
+AFWG_265_pu          Peilafwijkin     0.287     -0.75      1.00      0.00     0.000
+AFWG_80_pu           Peilgebied       1.643     -1.07      1.00      7.00     0.003
+AFWG_264_pu          Peilafwijkin     0.656     -0.02      1.00      0.00     0.000
+AFWG_64_pu           Peilgebied       0.080     -1.98      1.00      0.00     0.000
+AFWG_238_pu          Peilafwijkin     0.961     -2.16      1.00      0.00     0.000
+AFWG_93_pu           Peilafwijkin     0.059     -0.85      1.00      0.00     0.000
+AFWG_100_pu          Peilafwijkin     0.066     -1.09      1.00      0.00     0.000
+AFWG_239_pu          Peilafwijkin     0.004     -1.41      1.00      0.00     0.000
+AFWG_233_pu          Peilgebied       1.498     -1.35      1.00      0.00     0.000
+AFWG_29_pu           Peilgebied       0.976      0.54      1.00      7.00     0.002
+AFWG_205_pu          Peilafwijkin     0.430     -0.19      1.00      0.00     0.000
+AFWG_308_pu          Peilgebied       1.834     -0.07      1.00      0.00     0.000
+AFWG_292_pu          Peilgebied       2.590      0.08      1.00      0.00     0.000
+AFWG_235_pu          Peilafwijkin     0.141     -0.46      1.00      0.00     0.000
+AFWG_250_pu          Peilafwijkin     0.217     -0.09      1.00      0.00     0.000
+AFWG_49_pu           Peilgebied       0.305     -0.48      1.00      0.00     0.000
+AFWG_60_pu           Peilgebied       6.034     -1.46      1.00      0.00     0.000
+AFWG_244_pu          Peilafwijkin     0.802     -0.14      1.00      0.00     0.000
+AFWG_57_pu           Peilafwijkin     0.051     -0.41      1.00      0.00     0.000
+AFWG_287_pu          Peilgebied       0.484     -0.89      1.00      0.00     0.000
+AFWG_42_pu           Peilgebied       0.236     -2.00      1.00      0.00     0.000
+AFWG_197_pu          Peilafwijkin     0.101     -0.45      1.00      0.00     0.000
+AFWG_166_pu          Peilgebied       1.991     -2.07      1.00      0.00     0.000
+AFWG_259_pu          Peilafwijkin     2.418     -0.06      1.00      0.00     0.000
+AFWG_4_pu            Peilgebied       0.225     -1.05      1.00      0.00     0.000
+AFWG_188_pu          Peilafwijkin     0.015     -0.17      1.00      0.00     0.000
+AFWG_278_pu          Peilgebied       0.938     -0.01      1.00      0.00     0.000
+AFWG_126_pu          Peilafwijkin     0.002     -0.24      1.00      0.00     0.000
+AFWG_279_pu          Peilgebied       5.426      0.02      1.00      0.00     0.000
+AFWG_108_pu          Peilafwijkin     0.002     -0.59      1.00      0.00     0.000
+AFWG_222_pu          Peilgebied       0.468     -1.70      1.00      0.00     0.000
+AFWG_193_pu          Peilafwijkin     0.271     -0.59      1.00      0.00     0.000
+AFWG_177_pu          Peilafwijkin     0.002     -0.47      1.00      0.00     0.000
+AFWG_212_pu          Peilgebied       1.501     -1.96      1.00      0.00     0.000
+AFWG_248_pu          Peilafwijkin     0.639     -0.19      1.00      0.00     0.000
+AFWG_187_pu          Peilafwijkin     0.002     -0.80      1.00      0.00     0.000
+AFWG_19_pu           Peilgebied       0.490     -0.86      1.00      0.00     0.000
+AFWG_23_pu           Peilgebied       0.618     -0.91      1.00      0.00     0.000
+AFWG_256_pu          Peilafwijkin     2.572     -0.04      1.00      0.00     0.000
+AFWG_243_pu          Peilafwijkin     0.452     -0.09      1.00      0.00     0.000
+AFWG_88_pu           Peilafwijkin     0.058     -0.78      1.00      0.00     0.000
+AFWG_139_pu          Peilgebied       0.512     -2.17      1.00      0.00     0.000
+AFWG_153_pu          Peilafwijkin     0.523     -0.15      1.00      0.00     0.000
+AFWG_253_pu          Peilafwijkin     1.538     -0.24      1.00      0.00     0.000
+AFWG_94_pu           Peilafwijkin     0.117     -0.18      1.00      0.00     0.000
+AFWG_110_pu          Peilafwijkin     0.173     -0.71      1.00      0.00     0.000
+AFWG_228_pu          Peilgebied       0.340     -1.75      1.00      0.00     0.000
+AFWG_149_pu          Peilgebied       3.148     -1.54      1.00      0.00     0.000
+AFWG_32_pu           Peilgebied       0.626     -0.52      1.00      0.00     0.000
+AFWG_208_pu          Peilafwijkin     0.348     -0.26      1.00      0.00     0.000
+AFWG_247_pu          Peilafwijkin     0.180     -0.29      1.00      0.00     0.000
+AFWG_172_pu          Peilafwijkin     0.008     -0.37      1.00      0.00     0.000
+AFWG_273_pu          Peilgebied       2.121      0.01      1.00      0.00     0.000
+AFWG_73_pu           Peilgebied       3.098      0.06      1.00      0.00     0.000
+AFWG_225_pu          Peilgebied       0.626     -2.02      1.00      0.00     0.000
+AFWG_196_pu          Peilafwijkin     0.103     -0.44      1.00      0.00     0.000
+AFWG_215_pu          Peilgebied       0.664     -2.61      1.00      0.00     0.000
+AFWG_252_pu          Peilafwijkin     1.679     -0.15      1.00      0.00     0.000
+AFWG_168_pu          Peilafwijkin     0.384     -0.27      1.00      0.00     0.000
+AFWG_262_pu          Peilafwijkin     0.315      0.02      1.00      0.00     0.000
+AFWG_138_pu          Peilgebied       0.593     -2.75      1.00      0.00     0.000
+AFWG_201_pu          Peilafwijkin     0.020     -0.56      1.00      0.00     0.000
+AFWG_12_pu           Peilgebied       5.273      0.06      1.00      0.00     0.000
+AFWG_277_pu          Peilgebied      16.270      0.14      1.00      7.00     0.032
+AFWG_148_pu          Peilgebied       1.676     -1.89      1.00      0.00     0.000
+AFWG_107_pu          Peilafwijkin     0.176     -0.27      1.00      0.00     0.000
+AFWG_160_pu          Peilgebied       0.051     -2.25      1.00      0.00     0.000
+AFWG_270_pu          Peilafwijkin     0.146     -0.38      1.00      0.00     0.000
+AFWG_158_pu          Peilafwijkin     0.371     -0.06      1.00      0.00     0.000
+AFWG_230_pu          Peilgebied       1.405     -2.26      1.00      0.00     0.000
+AFWG_229_pu          Peilgebied       0.522     -1.83      1.00      0.00     0.000
+AFWG_3_pu            Peilgebied       0.556     -0.75      1.00      0.00     0.000
+AFWG_2_pu            Peilgebied       0.863     -0.84      1.00      0.00     0.000
+AFWG_124_pu          Peilafwijkin     0.058     -1.00      1.00      0.00     0.000
+AFWG_17_pu           Peilgebied       1.437     -1.10      1.00      0.00     0.000
+AFWG_62_pu           Peilgebied       3.791     -0.01      1.00      0.00     0.000
+AFWG_22_pu           Peilafwijkin     0.260     -0.16      1.00      0.00     0.000
+AFWG_115_pu          Peilafwijkin     0.040     -0.22      1.00      0.00     0.000
+AFWG_285_pu          Peilgebied       0.905     -0.87      1.00      0.00     0.000
+AFWG_251_pu          Peilafwijkin     0.039     -0.16      1.00      0.00     0.000
+AFWG_261_pu          Peilafwijkin     3.578     -0.06      1.00      0.00     0.000
+AFWG_79_pu           Peilgebied       1.632      0.07      1.00      0.00     0.000
+AFWG_297_pu          Peilgebied       4.672     -0.74      1.00      7.00     0.010
+AFWG_186_pu          Peilafwijkin     1.100     -0.53      1.00      0.00     0.000
+AFWG_132_pu          Peilgebied       0.953     -1.94      1.00      0.00     0.000
+AFWG_131_pu          Peilafwijkin     0.019     -0.16      1.00      0.00     0.000
+AFWG_146_pu          Peilafwijkin     0.369     -0.32      1.00      0.00     0.000
+AFWG_91_pu           Peilafwijkin     0.088     -0.09      1.00      0.00     0.000
+AFWG_81_pu           Peilafwijkin     2.558     -0.58      1.00      0.00     0.000
+AFWG_268_pu          Peilafwijkin     0.330     -0.46      1.00      0.00     0.000
+AFWG_147_pu          Peilgebied       0.903     -1.74      1.00      0.00     0.000
+AFWG_254_pu          Peilafwijkin     0.165     -0.03      1.00      0.00     0.000
+AFWG_293_pu          Peilgebied       2.295      0.06      1.00      0.00     0.000
+AFWG_128_pu          Peilafwijkin     0.018     -0.25      1.00      0.00     0.000
+AFWG_276_pu          Peilgebied       5.369      0.02      1.00      7.00     0.010
+AFWG_157_pu          Peilafwijkin     0.323     -0.20      1.00      0.00     0.000
+AFWG_165_pu          Peilgebied       0.871     -1.35      1.00      0.00     0.000
+AFWG_84_pu           Peilgebied       0.326     -0.72      1.00      0.00     0.000
+AFWG_175_pu          Peilafwijkin     0.043     -0.27      1.00      0.00     0.000
+AFWG_51_pu           Peilafwijkin     0.120     -0.34      1.00      0.00     0.000
+AFWG_290_pu          Peilgebied       0.321     -0.67      1.00      0.00     0.000
+AFWG_301_pu          Peilgebied       1.319     -1.35      1.00      0.00     0.000
+AFWG_295_pu          Peilgebied       1.456      0.20      1.00      0.00     0.000
+AFWG_309_pu          Peilgebied       1.776     -0.06      1.00      0.00     0.000
+AFWG_78_pu           Peilgebied       1.835     -0.63      1.00      0.00     0.000
+AFWG_106_pu          Peilafwijkin     0.691     -0.34      1.00      0.00     0.000
+AFWG_15_pu           Peilgebied       0.307     -0.99      1.00      0.00     0.000
+AFWG_288_pu          Peilgebied       0.045     -1.35      1.00      0.00     0.000
+AFWG_113_pu          Peilafwijkin     0.014     -0.13      1.00      0.00     0.000
+AFWG_16_pu           Peilgebied       1.304      0.04      1.00      0.00     0.000
+AFWG_180_pu          Peilafwijkin     1.070     -0.50      1.00      0.00     0.000
+AFWG_28_pu           Peilgebied       5.820     -0.70      1.00      7.00     0.011
+AFWG_43_pu           Peilgebied       1.080     -1.65      1.00      0.00     0.000
+AFWG_223_pu          Peilgebied       0.725     -2.09      1.00      0.00     0.000
+AFWG_275_pu          Peilgebied       2.902      0.00      1.00      0.00     0.000
+AFWG_133_pu          Peilgebied       1.069     -1.32      1.00      0.00     0.000
+AFWG_249_pu          Peilafwijkin     0.055     -0.22      1.00      0.00     0.000
+AFWG_263_pu          Peilafwijkin     0.475      0.05      1.00      0.00     0.000
+AFWG_245_pu          Peilafwijkin     0.944     -0.29      1.00      0.00     0.000
+AFWG_70_pu           Peilgebied       1.498      0.09      1.00      0.00     0.000
+AFWG_102_pu          Peilafwijkin     0.058     -1.13      1.00      0.00     0.000
+AFWG_313_pu          Peilgebied       0.008      0.24      1.00      0.00     0.000
+AFWG_89_pu           Peilafwijkin     0.067     -0.87      1.00      0.00     0.000
+AFWG_213_pu          Peilgebied       0.839     -1.69      1.00      0.00     0.000
+AFWG_203_pu          Peilafwijkin     0.174     -0.13      1.00      0.00     0.000
+AFWG_103_pu          Peilafwijkin     0.047     -0.84      1.00      0.00     0.000
+AFWG_5_pu            Peilgebied       2.659     -0.33      1.00      0.00     0.000
+AFWG_137_pu          Peilgebied       0.720     -2.50      1.00      0.00     0.000
+AFWG_220_pu          Peilgebied       1.163     -2.38      1.00      0.00     0.000
+AFWG_257_pu          Peilafwijkin     1.038     -0.04      1.00      0.00     0.000
+AFWG_242_pu          Peilafwijkin     0.422      0.02      1.00      0.00     0.000
+AFWG_284_pu          Peilgebied       0.852     -0.76      1.00      0.00     0.000
+AFWG_140_pu          Peilgebied       1.899     -2.08      1.00      0.00     0.000
+AFWG_162_pu          Peilgebied       0.049     -1.89      1.00      0.00     0.000
+AFWG_121_pu          Peilafwijkin     0.257     -0.81      1.00      0.00     0.000
+AFWG_35_pu           Peilgebied       0.775     -0.58      1.00      0.00     0.000
+AFWG_310_pu          Peilgebied       3.105     -0.03      1.00      0.00     0.000
+AFWG_47_pu           Peilgebied       2.218     -0.40      1.00      0.00     0.000
+AFWG_305_pu          Peilgebied       0.092     -1.57      1.00      0.00     0.000
+AFWG_237_pu          Peilafwijkin     0.286     -0.30      1.00      0.00     0.000
+AFWG_38_pu           Peilgebied       0.404     -0.98      1.00      0.00     0.000
+AFWG_209_pu          Peilafwijkin     0.812     -0.14      1.00      0.00     0.000
+AFWG_178_pu          Peilafwijkin     0.143     -0.75      1.00      0.00     0.000
+AFWG_299_pu          Peilgebied       6.591     -0.58      1.00      7.00     0.013
+AFWG_184_pu          Peilafwijkin     0.096     -0.40      1.00      0.00     0.000
+AFWG_167_pu          Peilgebied       0.773     -1.75      1.00      0.00     0.000
+AFWG_219_pu          Peilgebied       0.798     -2.15      1.00      0.00     0.000
+AFWG_125_pu          Peilafwijkin     0.058     -0.41      1.00      0.00     0.000
+AFWG_40_pu           Peilgebied       1.505     -1.72      1.00      0.00     0.000
+AFWG_7_pu            Peilgebied       0.905     -0.06      1.00      0.00     0.000
+AFWG_97_pu           Peilafwijkin     0.141     -0.87      1.00      0.00     0.000
+AFWG_95_pu           Peilafwijkin     1.249     -0.28      1.00      0.00     0.000
+AFWG_274_pu          Peilgebied       4.255      0.12      1.00      7.00     0.009
+AFWG_283_pu          Peilgebied       0.584     -0.65      1.00      0.00     0.000
+AFWG_314_pu          Peilgebied       7.856     -0.78      1.00      7.00     0.015
+AFWG_226_pu          Peilgebied       0.148     -2.25      1.00      0.00     0.000
+AFWG_216_pu          Peilgebied       0.568     -1.10      1.00      0.00     0.000
+AFWG_74_pu           Peilgebied       0.571     -0.44      1.00      0.00     0.000
+AFWG_280_pu          Peilgebied       2.873      0.00      1.00      0.00     0.000
+AFWG_76_pu           Peilafwijkin     0.549     -0.33      1.00      0.00     0.000
+
+
+ Summary input data unpaved area          
+
+ Node identification    Node   Surface   Surf.Level max.storage Drainage     Infiltration Alfa-factors    Storagecoefficient
+                        name                       on land      depth        velocity     land  soil   (based on ref.level summer)
+                                  (ha)     (m NAP)    (mm)      (m NAP)      (mm/hour)      (1/day)       (mm)
+======================================================================================================================================
+AFWG_155_uu          Peilgebied       1.703     -1.90      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_264_ur          Peilafwijkin    10.388     -0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_189_ur          Peilafwijkin     2.663     -0.85      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_277_ur          Peilgebied       0.130      0.14      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_71_ur           Peilgebied       3.748      0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_298_ur          Peilgebied      10.142     -0.77      5.00     -2.00     20.00      0.00      0.00    0.0596
+AFWG_187_ur          Peilafwijkin     3.995     -0.80      5.00     -2.00     20.00      0.00      0.00    0.0586
+AFWG_169_uu          Peilafwijkin     0.083     -0.18      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_131_ur          Peilafwijkin     5.812     -0.16      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_128_uu          Peilafwijkin     0.024     -0.25      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_51_uu           Peilafwijkin     0.228     -0.34      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_271_uu          Peilafwijkin     0.306     -0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_110_uu          Peilafwijkin     0.024     -0.71      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_197_ur          Peilafwijkin     4.558     -0.45      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_134_ur          Peilgebied      38.640     -1.69      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_24_ur           Peilafwijkin     9.263     -0.29      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_300_ur          Peilgebied       1.198     -0.66      5.00     -2.00     20.00      0.00      0.00    0.0632
+AFWG_306_ur          Peilgebied       9.583     -0.07      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_74_uu           Peilgebied       1.125     -0.44      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_279_ur          Peilgebied      31.323      0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_259_ur          Peilafwijkin    10.389     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_226_uu          Peilgebied       0.127     -2.25      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_5_uu            Peilgebied       4.627     -0.33      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_105_uu          Peilafwijkin     0.060     -2.58      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_38_uu           Peilgebied       2.282     -0.98      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_197_uu          Peilafwijkin     0.159     -0.45      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_161_uu          Peilgebied       1.899     -1.86      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_206_ur          Peilafwijkin     6.838     -0.21      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_199_uu          Peilafwijkin     0.070     -0.59      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_224_ur          Peilgebied      22.494     -2.14      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_283_ur          Peilgebied      15.528     -0.65      5.00     -2.00     20.00      0.00      0.00    0.0635
+AFWG_103_ur          Peilafwijkin    14.299     -0.84      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_109_uu          Peilafwijkin     0.440     -0.26      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_26_uu           Peilgebied       3.380     -0.33      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_241_uu          Peilgebied       8.113     -0.08      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_251_uu          Peilafwijkin     0.094     -0.16      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_180_uu          Peilafwijkin     2.027     -0.50      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_291_ur          Peilgebied       0.489     -0.48      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_159_ur          Peilgebied       2.352     -2.21      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_307_uu          Peilgebied       3.941     -0.20      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_177_uu          Peilafwijkin     0.004     -0.47      5.00     -2.00     20.00      0.00      0.00    0.1208
+AFWG_26_ur           Peilgebied       4.064     -0.33      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_236_ur          Peilafwijkin     1.600     -0.50      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_223_uu          Peilgebied       0.003     -2.09      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_287_ur          Peilgebied       6.364     -0.89      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_156_ur          Peilafwijkin    17.295     -0.15      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_288_ur          Peilgebied       2.163     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0362
+AFWG_194_uu          Peilafwijkin     2.581     -0.79      5.00     -2.00     20.00      0.00      0.00    0.0589
+AFWG_245_uu          Peilafwijkin     0.567     -0.29      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_143_ur          Peilafwijkin    10.511     -0.28      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_70_uu           Peilgebied       0.835      0.09      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_207_ur          Peilafwijkin     4.345     -0.12      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_43_ur           Peilgebied      41.079     -1.65      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_223_ur          Peilgebied      14.630     -2.09      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_50_ur           Peilgebied       0.556     -0.53      5.00     -2.00     20.00      0.00      0.00    0.0675
+AFWG_148_uu          Peilgebied       0.217     -1.89      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_245_ur          Peilafwijkin    16.169     -0.29      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_70_ur           Peilgebied       0.788      0.09      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_233_uu          Peilgebied       1.904     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_213_uu          Peilgebied       0.290     -1.69      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_37_uu           Peilgebied       3.530     -0.29      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_121_ur          Peilafwijkin    11.750     -0.81      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_52_ur           Peilgebied      26.676     -0.21      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_168_uu          Peilafwijkin     2.541     -0.27      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_311_ur          Peilgebied       5.056     -0.09      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_127_ur          Peilgebied      32.113     -1.68      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_213_ur          Peilgebied      42.211     -1.69      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_256_uu          Peilafwijkin     6.526     -0.04      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_252_ur          Peilafwijkin    19.179     -0.15      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_58_ur           Peilgebied       0.510      0.41      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_147_ur          Peilgebied      34.379     -1.74      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_181_ur          Peilafwijkin     4.388     -0.71      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_257_uu          Peilafwijkin     1.763     -0.04      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_267_ur          Peilafwijkin     9.261     -0.51      5.00     -2.00     20.00      0.00      0.00    0.0682
+AFWG_6_ur            Peilgebied       1.044     -0.89      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_125_ur          Peilafwijkin    10.441     -0.41      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_49_ur           Peilgebied       9.733     -0.48      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_195_ur          Peilafwijkin     4.983     -0.35      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_16_ur           Peilgebied       1.894      0.04      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_9_ur            Peilgebied       0.259     -1.14      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_206_uu          Peilafwijkin     0.021     -0.21      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_171_uu          Peilafwijkin     0.931     -0.33      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_137_uu          Peilgebied       5.529     -2.50      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_299_ur          Peilgebied       0.578     -0.58      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_35_uu           Peilgebied       0.705     -0.58      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_165_ur          Peilgebied       8.832     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0734
+AFWG_310_uu          Peilgebied       7.168     -0.03      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_98_ur           Peilafwijkin     8.260     -0.82      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_89_ur           Peilafwijkin     4.884     -0.87      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_214_ur          Peilgebied      32.064     -2.29      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_46_uu           Peilgebied       1.078     -2.49      5.00     -2.00     20.00      0.00      0.00    0.0049
+AFWG_275_uu          Peilgebied       2.003      0.00      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_8_ur            Peilgebied      14.178     -0.84      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_187_uu          Peilafwijkin     0.005     -0.80      5.00     -2.00     20.00      0.00      0.00    0.0586
+AFWG_204_ur          Peilafwijkin    20.684     -0.21      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_310_ur          Peilgebied       8.766     -0.03      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_312_uu          Peilgebied      11.780     -1.54      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_254_ur          Peilafwijkin     0.820     -0.03      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_225_uu          Peilgebied       4.747     -2.02      5.00     -2.00     20.00      0.00      0.00    0.0063
+AFWG_305_uu          Peilgebied       2.288     -1.57      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_221_ur          Peilgebied      34.008     -1.53      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_258_ur          Peilafwijkin    18.760     -0.07      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_139_uu          Peilgebied       0.939     -2.17      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_229_ur          Peilgebied      17.201     -1.83      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_308_ur          Peilgebied      11.987     -0.07      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_243_ur          Peilafwijkin    20.001     -0.09      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_134_uu          Peilgebied       0.645     -1.69      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_40_uu           Peilgebied       1.219     -1.72      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_12_ur           Peilgebied       6.563      0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_149_ur          Peilgebied      25.494     -1.54      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_165_uu          Peilgebied       4.407     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0734
+AFWG_95_uu           Peilafwijkin     1.934     -0.28      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_295_uu          Peilgebied       2.302      0.20      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_36_ur           Peilgebied      23.881      0.20      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_27_uu           Peilgebied       0.344     -1.63      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_283_uu          Peilgebied       1.097     -0.65      5.00     -2.00     20.00      0.00      0.00    0.0635
+AFWG_120_ur          Peilafwijkin    13.561     -0.80      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_236_uu          Peilafwijkin     1.279     -0.50      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_104_uu          Peilafwijkin     0.635     -2.42      5.00     -2.00     20.00      0.00      0.00    0.0049
+AFWG_100_ur          Peilafwijkin     4.625     -1.09      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_274_ur          Peilgebied       3.203      0.12      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_167_uu          Peilgebied       0.620     -1.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_83_ur           Peilgebied      24.168     -0.69      5.00     -2.00     20.00      0.00      0.00    0.0622
+AFWG_302_uu          Peilgebied       1.226     -1.44      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_111_uu          Peilafwijkin     1.229     -1.07      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_184_uu          Peilafwijkin     0.291     -0.40      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_164_uu          Peilgebied       6.284     -1.56      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_280_uu          Peilgebied       1.281      0.00      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_202_uu          Peilafwijkin     0.253     -0.49      5.00     -2.00     20.00      0.00      0.00    0.1208
+AFWG_35_ur           Peilgebied       0.212     -0.58      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_201_ur          Peilafwijkin     2.189     -0.56      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_52_uu           Peilgebied       2.133     -0.21      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_69_uu           Peilafwijkin     0.818     -0.04      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_31_uu           Peilgebied       1.091     -0.96      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_132_ur          Peilgebied      42.828     -1.94      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_50_uu           Peilgebied       0.458     -0.53      5.00     -2.00     20.00      0.00      0.00    0.0675
+AFWG_96_ur           Peilafwijkin     5.395     -0.88      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_296_ur          Peilgebied       0.050     -0.86      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_274_uu          Peilgebied       4.945      0.12      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_25_uu           Peilgebied       3.062      0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_34_uu           Peilgebied       9.944     -0.03      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_263_ur          Peilafwijkin     9.749      0.05      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_23_ur           Peilgebied       0.118     -0.91      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_174_uu          Peilafwijkin     0.996     -0.36      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_1_ur            Peilgebied       8.252     -0.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_129_ur          Peilgebied      33.698     -1.54      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_234_ur          Peilafwijkin     9.002     -0.38      5.00     -2.00     20.00      0.00      0.00    0.1208
+AFWG_180_ur          Peilafwijkin    24.370     -0.50      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_289_ur          Peilgebied       1.859     -0.41      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_6_uu            Peilgebied       0.108     -0.89      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_76_ur           Peilafwijkin    12.350     -0.33      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_20_uu           Peilafwijkin     0.118     -1.09      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_149_uu          Peilgebied       8.054     -1.54      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_109_ur          Peilafwijkin     4.554     -0.26      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_293_ur          Peilgebied      10.522      0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_9_uu            Peilgebied       0.006     -1.14      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_304_uu          Peilgebied       1.910     -1.52      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_63_uu           Peilgebied      14.477     -0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_279_uu          Peilgebied       3.848      0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_272_ur          Peilgebied       3.180      0.21      5.00     -2.00     20.00      0.00      0.00    0.1208
+AFWG_80_uu           Peilgebied       3.352     -1.07      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_48_uu           Peilgebied       9.366     -0.65      5.00     -2.00     20.00      0.00      0.00    0.0635
+AFWG_150_ur          Peilafwijkin    14.827     -0.26      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_264_uu          Peilafwijkin     0.649     -0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_25_ur           Peilgebied       1.681      0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_133_ur          Peilgebied      40.088     -1.32      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_302_ur          Peilgebied      17.185     -1.44      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_267_uu          Peilafwijkin     2.971     -0.51      5.00     -2.00     20.00      0.00      0.00    0.0682
+AFWG_48_ur           Peilgebied       0.945     -0.65      5.00     -2.00     20.00      0.00      0.00    0.0635
+AFWG_131_uu          Peilafwijkin     0.028     -0.16      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_286_uu          Peilgebied       5.892     -0.86      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_221_uu          Peilgebied       0.682     -1.53      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_204_uu          Peilafwijkin     0.432     -0.21      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_295_ur          Peilgebied      21.224      0.20      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_243_uu          Peilafwijkin     1.882     -0.09      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_101_ur          Peilafwijkin     4.359     -1.12      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_73_uu           Peilgebied       1.707      0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_200_ur          Peilafwijkin    11.354     -0.41      5.00     -2.00     20.00      0.00      0.00    0.1208
+AFWG_162_uu          Peilgebied       9.063     -1.89      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_146_uu          Peilafwijkin     0.533     -0.32      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_247_ur          Peilafwijkin    10.859     -0.29      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_256_ur          Peilafwijkin    21.576     -0.04      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_112_ur          Peilafwijkin     9.783     -0.94      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_64_ur           Peilgebied       0.231     -1.98      5.00     -2.00     20.00      0.00      0.00    0.0046
+AFWG_141_ur          Peilafwijkin     8.047     -0.22      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_255_uu          Peilafwijkin     0.641     -0.07      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_139_ur          Peilgebied      28.714     -2.17      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_138_ur          Peilgebied      40.101     -2.75      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_163_ur          Peilgebied       0.747     -2.61      5.00     -2.00     20.00      0.00      0.00    0.0049
+AFWG_88_ur           Peilafwijkin    13.918     -0.78      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_106_ur          Peilafwijkin    15.112     -0.34      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_211_uu          Peilafwijkin     1.277     -0.38      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_144_ur          Peilafwijkin     9.608     -0.33      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_57_ur           Peilafwijkin    18.004     -0.41      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_172_uu          Peilafwijkin     0.023     -0.37      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_67_uu           Peilgebied       2.033     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_92_uu           Peilafwijkin     1.623     -0.18      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_136_ur          Peilgebied      18.237     -2.25      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_85_uu           Peilafwijkin     0.033     -0.64      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_99_uu           Peilafwijkin     0.069     -1.08      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_21_ur           Peilgebied       0.182     -0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_235_uu          Peilafwijkin     0.239     -0.46      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_278_ur          Peilgebied      17.601     -0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_85_ur           Peilafwijkin     9.528     -0.64      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_53_uu           Peilgebied      10.996     -0.63      5.00     -2.00     20.00      0.00      0.00    0.1509
+AFWG_179_ur          Peilafwijkin     4.539     -0.53      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_53_ur           Peilgebied       0.191     -0.63      5.00     -2.00     20.00      0.00      0.00    0.1509
+AFWG_140_ur          Peilgebied      30.766     -2.08      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_4_ur            Peilgebied       1.010     -1.05      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_291_uu          Peilgebied       0.392     -0.48      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_46_ur           Peilgebied      41.965     -2.49      5.00     -2.00     20.00      0.00      0.00    0.0049
+AFWG_105_ur          Peilafwijkin    21.520     -2.58      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_33_uu           Peilgebied       0.829     -1.19      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_263_uu          Peilafwijkin     1.128      0.05      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_39_uu           Peilgebied       3.952     -1.29      5.00     -2.00     20.00      0.00      0.00    0.0390
+AFWG_240_ur          Peilafwijkin    33.285     -1.44      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_158_uu          Peilafwijkin     0.505     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_129_uu          Peilgebied       4.745     -1.54      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_87_uu           Peilafwijkin     0.515     -0.24      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_93_ur           Peilafwijkin     4.257     -0.85      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_207_uu          Peilafwijkin     0.382     -0.12      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_39_ur           Peilgebied       0.639     -1.29      5.00     -2.00     20.00      0.00      0.00    0.0390
+AFWG_227_uu          Peilgebied      16.502     -2.28      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_219_uu          Peilgebied       0.879     -2.15      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_216_uu          Peilgebied       1.181     -1.10      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_232_uu          Peilgebied       0.548     -2.15      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_107_ur          Peilafwijkin     4.555     -0.27      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_217_uu          Peilgebied       5.775     -1.70      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_170_uu          Peilafwijkin     0.013     -0.43      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_76_uu           Peilafwijkin     0.482     -0.33      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_54_uu           Peilgebied       7.742     -2.19      5.00     -2.00     20.00      0.00      0.00    0.0074
+AFWG_219_ur          Peilgebied      20.729     -2.15      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_116_ur          Peilafwijkin    18.613     -0.14      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_232_ur          Peilgebied      19.508     -2.15      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_198_ur          Peilafwijkin     3.024     -0.78      5.00     -2.00     20.00      0.00      0.00    0.0593
+AFWG_113_uu          Peilafwijkin     0.040     -0.13      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_119_ur          Peilafwijkin     3.719     -0.96      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_14_uu           Peilgebied       1.601     -0.05      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_155_ur          Peilgebied      37.298     -1.90      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_260_uu          Peilafwijkin     0.041     -0.03      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_272_uu          Peilgebied      14.030      0.21      5.00     -2.00     20.00      0.00      0.00    0.1208
+AFWG_174_ur          Peilafwijkin     6.073     -0.36      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_23_uu           Peilgebied       1.347     -0.91      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_241_ur          Peilgebied      15.349     -0.08      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_195_uu          Peilafwijkin     0.022     -0.35      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_246_uu          Peilafwijkin     0.614     -0.36      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_292_ur          Peilgebied      28.518      0.08      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_260_ur          Peilafwijkin    18.020     -0.03      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_224_uu          Peilgebied      10.177     -2.14      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_148_ur          Peilgebied      38.796     -1.89      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_203_ur          Peilafwijkin    18.698     -0.13      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_2_ur            Peilgebied       0.323     -0.84      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_145_ur          Peilafwijkin    26.716     -0.28      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_208_ur          Peilafwijkin     5.897     -0.26      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_12_uu           Peilgebied       9.311      0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_10_ur           Peilgebied       0.792     -0.52      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_22_ur           Peilafwijkin    17.320     -0.16      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_146_ur          Peilafwijkin     2.115     -0.32      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_242_uu          Peilafwijkin     1.156      0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_233_ur          Peilgebied      19.441     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_151_uu          Peilafwijkin     3.217     -0.35      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_142_ur          Peilafwijkin     8.024     -0.18      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_308_uu          Peilgebied       0.953     -0.07      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_183_ur          Peilafwijkin     7.130     -0.68      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_227_ur          Peilgebied       0.525     -2.28      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_253_ur          Peilafwijkin    14.313     -0.24      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_71_uu           Peilgebied       1.952      0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_214_uu          Peilgebied       1.843     -2.29      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_83_uu           Peilgebied       1.067     -0.69      5.00     -2.00     20.00      0.00      0.00    0.0622
+AFWG_314_uu          Peilgebied       7.881     -0.78      5.00     -2.00     20.00      0.00      0.00    0.0593
+AFWG_90_ur           Peilafwijkin    14.053     -0.82      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_64_uu           Peilgebied       2.614     -1.98      5.00     -2.00     20.00      0.00      0.00    0.0046
+AFWG_36_uu           Peilgebied       2.561      0.20      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_270_ur          Peilafwijkin     2.459     -0.38      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_246_ur          Peilafwijkin     3.134     -0.36      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_123_ur          Peilafwijkin     7.234     -0.87      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_45_ur           Peilafwijkin     8.622     -0.37      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_138_uu          Peilgebied       6.269     -2.75      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_237_ur          Peilafwijkin     7.872     -0.30      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_268_ur          Peilafwijkin     2.991     -0.46      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_311_uu          Peilgebied       3.549     -0.09      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_144_uu          Peilafwijkin     0.072     -0.33      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_51_ur           Peilafwijkin     1.504     -0.34      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_24_uu           Peilafwijkin     0.231     -0.29      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_82_ur           Peilafwijkin     6.925     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0362
+AFWG_217_ur          Peilgebied      32.781     -1.70      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_278_uu          Peilgebied       0.407     -0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_300_uu          Peilgebied      12.017     -0.66      5.00     -2.00     20.00      0.00      0.00    0.0632
+AFWG_215_ur          Peilgebied      22.508     -2.61      5.00     -2.00     20.00      0.00      0.00    0.0049
+AFWG_73_ur           Peilgebied       1.468      0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_153_uu          Peilafwijkin     5.795     -0.15      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_188_uu          Peilafwijkin     0.076     -0.17      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_33_ur           Peilgebied       0.378     -1.19      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_79_uu           Peilgebied       4.261      0.07      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_182_ur          Peilafwijkin     4.393     -0.69      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_97_ur           Peilafwijkin     3.072     -0.87      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_61_uu           Peilgebied       6.880     -0.89      5.00     -2.00     20.00      0.00      0.00    0.0553
+AFWG_106_uu          Peilafwijkin     2.386     -0.34      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_118_ur          Peilafwijkin    14.648     -0.16      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_98_uu           Peilafwijkin     0.150     -0.82      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_163_uu          Peilgebied       0.724     -2.61      5.00     -2.00     20.00      0.00      0.00    0.0049
+AFWG_44_uu           Peilgebied       8.720     -0.42      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_269_ur          Peilafwijkin     9.246     -0.37      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_96_uu           Peilafwijkin     0.078     -0.88      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_61_ur           Peilgebied       4.256     -0.89      5.00     -2.00     20.00      0.00      0.00    0.0553
+AFWG_157_ur          Peilafwijkin     9.193     -0.20      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_151_ur          Peilafwijkin    10.026     -0.35      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_152_ur          Peilafwijkin     4.734     -0.22      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_108_ur          Peilafwijkin     4.735     -0.59      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_28_ur           Peilgebied       0.770     -0.70      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_284_uu          Peilgebied       0.885     -0.76      5.00     -2.00     20.00      0.00      0.00    0.0599
+AFWG_118_uu          Peilafwijkin     0.599     -0.16      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_296_uu          Peilgebied      14.818     -0.86      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_10_uu           Peilgebied       0.172     -0.52      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_230_ur          Peilgebied      25.260     -2.26      5.00     -2.00     20.00      0.00      0.00    0.0063
+AFWG_275_ur          Peilgebied      20.039      0.00      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_17_ur           Peilgebied       0.792     -1.10      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_284_ur          Peilgebied      18.605     -0.76      5.00     -2.00     20.00      0.00      0.00    0.0599
+AFWG_188_ur          Peilafwijkin     4.664     -0.17      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_273_ur          Peilgebied      11.665      0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_7_ur            Peilgebied       1.500     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_114_ur          Peilafwijkin     4.301      0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_114_uu          Peilafwijkin     5.549      0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_178_uu          Peilafwijkin     0.010     -0.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_185_uu          Peilafwijkin     0.792     -0.28      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_62_ur           Peilgebied      35.031     -0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_184_ur          Peilafwijkin     1.766     -0.40      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_173_uu          Peilafwijkin     0.177     -0.25      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_268_uu          Peilafwijkin     0.268     -0.46      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_292_uu          Peilgebied       4.461      0.08      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_99_ur           Peilafwijkin     4.294     -1.08      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_41_uu           Peilgebied      21.163     -1.95      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_303_uu          Peilgebied       0.661     -1.60      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_115_uu          Peilafwijkin     0.119     -0.22      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_185_ur          Peilafwijkin    11.347     -0.28      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_266_ur          Peilafwijkin     4.813     -0.56      5.00     -2.00     20.00      0.00      0.00    0.0665
+AFWG_160_ur          Peilgebied       2.954     -2.25      5.00     -2.00     20.00      0.00      0.00    0.0094
+AFWG_154_ur          Peilgebied      19.639     -2.19      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_132_uu          Peilgebied       1.707     -1.94      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_130_ur          Peilgebied      43.435     -1.73      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_157_uu          Peilafwijkin     0.200     -0.20      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_15_ur           Peilgebied      29.642     -0.99      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_208_uu          Peilafwijkin     0.081     -0.26      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_290_ur          Peilgebied       2.433     -0.67      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_276_ur          Peilgebied       9.247      0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_237_uu          Peilafwijkin     0.580     -0.30      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_297_ur          Peilgebied       1.515     -0.74      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_178_ur          Peilafwijkin     4.610     -0.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_15_uu           Peilgebied       1.077     -0.99      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_38_ur           Peilgebied       0.405     -0.98      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_167_ur          Peilgebied      41.577     -1.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_170_ur          Peilafwijkin    15.071     -0.43      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_238_uu          Peilafwijkin     0.742     -2.16      5.00     -2.00     20.00      0.00      0.00    0.0094
+AFWG_169_ur          Peilafwijkin    16.735     -0.18      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_265_uu          Peilafwijkin     4.097     -0.75      5.00     -2.00     20.00      0.00      0.00    0.0602
+AFWG_190_ur          Peilafwijkin     4.426     -0.37      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_124_ur          Peilafwijkin     4.493     -1.00      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_125_uu          Peilafwijkin     0.077     -0.41      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_156_uu          Peilafwijkin     0.012     -0.15      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_66_ur           Peilgebied       0.010     -1.83      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_186_ur          Peilafwijkin    12.387     -0.53      5.00     -2.00     20.00      0.00      0.00    0.0675
+AFWG_281_uu          Peilgebied       0.577     -0.05      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_43_uu           Peilgebied       4.259     -1.65      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_265_ur          Peilafwijkin     4.429     -0.75      5.00     -2.00     20.00      0.00      0.00    0.0602
+AFWG_80_ur           Peilgebied       1.438     -1.07      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_196_uu          Peilafwijkin     0.068     -0.44      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_258_uu          Peilafwijkin     2.395     -0.07      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_126_ur          Peilafwijkin     8.968     -0.24      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_240_uu          Peilafwijkin     0.279     -1.44      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_313_ur          Peilgebied      21.498      0.24      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_29_uu           Peilgebied       1.247      0.54      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_62_uu           Peilgebied       2.421     -0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_205_uu          Peilafwijkin     0.405     -0.19      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_11_ur           Peilgebied       0.489     -0.77      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_60_ur           Peilgebied       6.975     -1.46      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_220_ur          Peilgebied      37.897     -2.38      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_166_uu          Peilgebied       6.512     -2.07      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_153_ur          Peilafwijkin    20.471     -0.15      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_29_ur           Peilgebied       0.168      0.54      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_205_ur          Peilafwijkin     6.343     -0.19      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_250_uu          Peilafwijkin     0.176     -0.09      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_116_uu          Peilafwijkin     0.923     -0.14      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_66_uu           Peilgebied       2.416     -1.83      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_250_ur          Peilafwijkin    14.974     -0.09      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_122_ur          Peilafwijkin     9.526     -0.93      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_193_ur          Peilafwijkin     5.315     -0.59      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_162_ur          Peilgebied       2.793     -1.89      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_161_ur          Peilgebied       6.632     -1.86      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_65_uu           Peilgebied       2.925     -1.84      5.00     -2.00     20.00      0.00      0.00    0.0081
+AFWG_244_uu          Peilafwijkin     0.368     -0.14      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_57_uu           Peilafwijkin     1.843     -0.41      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_282_ur          Peilgebied      14.721     -0.80      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_301_ur          Peilgebied       2.406     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_222_ur          Peilgebied      24.814     -1.70      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_234_uu          Peilafwijkin     0.714     -0.38      5.00     -2.00     20.00      0.00      0.00    0.1208
+AFWG_259_uu          Peilafwijkin     0.838     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_28_uu           Peilgebied       8.045     -0.70      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_244_ur          Peilafwijkin     2.974     -0.14      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_218_ur          Peilgebied      34.078     -1.83      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_309_ur          Peilgebied      14.858     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_175_ur          Peilafwijkin     9.642     -0.27      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_225_ur          Peilgebied      24.569     -2.02      5.00     -2.00     20.00      0.00      0.00    0.0063
+AFWG_21_uu           Peilgebied       0.219     -0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_281_ur          Peilgebied      37.910     -0.05      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_222_uu          Peilgebied       0.388     -1.70      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_136_uu          Peilgebied       3.330     -2.25      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_111_ur          Peilafwijkin     7.550     -1.07      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_313_uu          Peilgebied       0.023      0.24      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_193_uu          Peilafwijkin     0.224     -0.59      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_230_uu          Peilgebied       6.921     -2.26      5.00     -2.00     20.00      0.00      0.00    0.0063
+AFWG_251_ur          Peilafwijkin     4.284     -0.16      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_238_ur          Peilafwijkin    13.359     -2.16      5.00     -2.00     20.00      0.00      0.00    0.0094
+AFWG_212_uu          Peilgebied       2.892     -1.96      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_192_ur          Peilgebied      19.032     -0.24      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_211_ur          Peilafwijkin     8.658     -0.38      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_5_ur            Peilgebied       3.919     -0.33      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_69_ur           Peilafwijkin    15.857     -0.04      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_196_ur          Peilafwijkin     4.160     -0.44      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_19_uu           Peilgebied       0.553     -0.86      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_1_uu            Peilgebied       6.463     -0.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_55_uu           Peilgebied       1.890     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_67_ur           Peilgebied      27.435     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_13_ur           Peilgebied       0.949     -0.17      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_86_uu           Peilafwijkin     9.064     -0.22      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_212_ur          Peilgebied      41.472     -1.96      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_60_uu           Peilgebied      11.293     -1.46      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_199_ur          Peilafwijkin     6.425     -0.59      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_210_uu          Peilafwijkin     5.194     -2.34      5.00     -2.00     20.00      0.00      0.00    0.0074
+AFWG_7_uu            Peilgebied       1.634     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_68_ur           Peilafwijkin    19.421     -2.21      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_218_uu          Peilgebied       0.619     -1.83      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_86_ur           Peilafwijkin     0.090     -0.22      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_44_ur           Peilgebied      16.012     -0.42      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_235_ur          Peilafwijkin     1.457     -0.46      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_290_uu          Peilgebied       1.673     -0.67      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_22_uu           Peilafwijkin     0.456     -0.16      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_294_uu          Peilgebied       5.331      0.20      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_104_ur          Peilafwijkin     3.914     -2.42      5.00     -2.00     20.00      0.00      0.00    0.0049
+AFWG_115_ur          Peilafwijkin     8.939     -0.22      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_173_ur          Peilafwijkin    19.356     -0.25      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_145_uu          Peilafwijkin     5.813     -0.28      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_261_ur          Peilafwijkin    30.082     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_79_ur           Peilgebied      16.635      0.07      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_41_ur           Peilgebied      13.308     -1.95      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_249_ur          Peilafwijkin     8.290     -0.22      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_30_uu           Peilgebied       2.949     -1.42      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_47_uu           Peilgebied       3.373     -0.40      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_49_uu           Peilgebied       0.135     -0.48      5.00     -2.00     20.00      0.00      0.00    0.0366
+AFWG_87_ur           Peilafwijkin    10.976     -0.24      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_168_ur          Peilafwijkin    14.800     -0.27      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_257_ur          Peilafwijkin    11.224     -0.04      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_34_ur           Peilgebied       1.145     -0.03      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_94_ur           Peilafwijkin     9.748     -0.18      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_303_ur          Peilgebied      18.412     -1.60      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_228_uu          Peilgebied       2.846     -1.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_299_uu          Peilgebied       7.694     -0.58      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_4_uu            Peilgebied       0.468     -1.05      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_78_uu           Peilgebied       0.682     -0.63      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_192_uu          Peilgebied       2.980     -0.24      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_194_ur          Peilafwijkin     0.028     -0.79      5.00     -2.00     20.00      0.00      0.00    0.0589
+AFWG_261_uu          Peilafwijkin     4.119     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_186_uu          Peilafwijkin     1.153     -0.53      5.00     -2.00     20.00      0.00      0.00    0.0675
+AFWG_228_ur          Peilgebied      29.519     -1.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_143_uu          Peilafwijkin     1.087     -0.28      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_247_uu          Peilafwijkin     0.162     -0.29      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_154_uu          Peilgebied       0.057     -2.19      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_294_ur          Peilgebied      15.393      0.20      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_135_uu          Peilgebied       4.023     -2.07      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_242_ur          Peilafwijkin     9.255      0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_289_uu          Peilgebied       3.432     -0.41      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_280_ur          Peilgebied      32.910      0.00      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_202_ur          Peilafwijkin    10.252     -0.49      5.00     -2.00     20.00      0.00      0.00    0.1208
+AFWG_209_ur          Peilafwijkin    16.550     -0.14      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_107_uu          Peilafwijkin     3.836     -0.27      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_273_uu          Peilgebied       2.611      0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_171_ur          Peilafwijkin    21.015     -0.33      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_282_uu          Peilgebied       4.926     -0.80      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_301_uu          Peilgebied       6.391     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_239_ur          Peilafwijkin     9.228     -1.41      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_215_uu          Peilgebied       0.693     -2.61      5.00     -2.00     20.00      0.00      0.00    0.0049
+AFWG_95_ur           Peilafwijkin    15.816     -0.28      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_126_uu          Peilafwijkin     1.323     -0.24      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_40_ur           Peilgebied      44.489     -1.72      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_160_uu          Peilgebied       0.779     -2.25      5.00     -2.00     20.00      0.00      0.00    0.0094
+AFWG_84_ur           Peilgebied       4.202     -0.72      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_164_ur          Peilgebied       1.418     -1.56      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_309_uu          Peilgebied       1.529     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_102_uu          Peilafwijkin     2.169     -1.13      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_262_ur          Peilafwijkin    10.948      0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_152_uu          Peilafwijkin     0.030     -0.22      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_16_uu           Peilgebied       0.723      0.04      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_248_ur          Peilafwijkin    26.630     -0.19      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_14_ur           Peilgebied       0.363     -0.05      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_201_uu          Peilafwijkin     4.338     -0.56      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_177_ur          Peilafwijkin     6.596     -0.47      5.00     -2.00     20.00      0.00      0.00    0.1208
+AFWG_113_ur          Peilafwijkin    13.873     -0.13      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_20_ur           Peilafwijkin     2.834     -1.09      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_150_uu          Peilafwijkin     3.411     -0.26      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_74_ur           Peilgebied       0.090     -0.44      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_27_ur           Peilgebied      29.055     -1.63      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_253_uu          Peilafwijkin     0.930     -0.24      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_226_ur          Peilgebied       6.594     -2.25      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_32_ur           Peilgebied       0.361     -0.52      5.00     -2.00     20.00      0.00      0.00    0.0678
+AFWG_298_uu          Peilgebied       3.494     -0.77      5.00     -2.00     20.00      0.00      0.00    0.0596
+AFWG_58_uu           Peilgebied       5.434      0.41      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_30_ur           Peilgebied       1.012     -1.42      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_18_uu           Peilgebied       0.766     -0.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_229_uu          Peilgebied       1.678     -1.83      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_270_uu          Peilafwijkin     1.965     -0.38      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_216_ur          Peilgebied      40.865     -1.10      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_288_uu          Peilgebied       1.912     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0362
+AFWG_102_ur          Peilafwijkin     2.594     -1.13      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_127_uu          Peilgebied       4.933     -1.68      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_159_uu          Peilgebied       2.345     -2.21      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_19_ur           Peilgebied       1.543     -0.86      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_287_uu          Peilgebied       0.960     -0.89      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_117_ur          Peilafwijkin    14.107     -0.13      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_135_ur          Peilgebied      38.514     -2.07      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_130_uu          Peilgebied       0.606     -1.73      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_13_uu           Peilgebied       0.017     -0.17      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_203_uu          Peilafwijkin     0.036     -0.13      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_117_uu          Peilafwijkin     3.979     -0.13      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_17_uu           Peilgebied       2.909     -1.10      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_3_uu            Peilgebied       0.253     -0.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_2_uu            Peilgebied       0.911     -0.84      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_133_uu          Peilgebied       1.754     -1.32      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_110_ur          Peilafwijkin     8.811     -0.71      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_147_uu          Peilgebied       4.025     -1.74      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_31_ur           Peilgebied       1.864     -0.96      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_128_ur          Peilafwijkin     4.750     -0.25      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_3_ur            Peilgebied       0.687     -0.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_249_uu          Peilafwijkin     0.066     -0.22      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_82_uu           Peilafwijkin     0.167     -1.35      5.00     -2.00     20.00      0.00      0.00    0.0362
+AFWG_191_ur          Peilafwijkin     4.279     -0.53      5.00     -2.00     20.00      0.00      0.00    0.0675
+AFWG_248_uu          Peilafwijkin     0.730     -0.19      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_306_uu          Peilgebied       2.112     -0.07      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_297_uu          Peilgebied      19.701     -0.74      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_42_ur           Peilgebied      29.660     -2.00      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_32_uu           Peilgebied       0.461     -0.52      5.00     -2.00     20.00      0.00      0.00    0.0678
+AFWG_285_uu          Peilgebied       4.095     -0.87      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_220_uu          Peilgebied       8.422     -2.38      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_255_ur          Peilafwijkin    15.423     -0.07      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_47_ur           Peilgebied      34.485     -0.40      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_101_uu          Peilafwijkin     0.098     -1.12      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_271_ur          Peilafwijkin     7.621     -0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_84_uu           Peilgebied       0.810     -0.72      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_285_ur          Peilgebied      17.722     -0.87      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_175_uu          Peilafwijkin     0.198     -0.27      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_176_ur          Peilafwijkin     5.982     -0.28      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_231_ur          Peilgebied      19.906     -2.25      5.00     -2.00     20.00      0.00      0.00    0.0094
+AFWG_137_ur          Peilgebied      27.836     -2.50      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_45_uu           Peilafwijkin     0.523     -0.37      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_200_uu          Peilafwijkin     0.026     -0.41      5.00     -2.00     20.00      0.00      0.00    0.1208
+AFWG_166_ur          Peilgebied      20.678     -2.07      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_276_uu          Peilgebied      13.156      0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_91_uu           Peilafwijkin     0.093     -0.09      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_172_ur          Peilafwijkin     3.890     -0.37      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_81_uu           Peilafwijkin    14.492     -0.58      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_277_uu          Peilgebied      12.893      0.14      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_18_ur           Peilgebied       1.145     -0.75      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_252_uu          Peilafwijkin     2.848     -0.15      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_63_ur           Peilgebied       1.903     -0.01      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_158_ur          Peilafwijkin     4.951     -0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_307_ur          Peilgebied       3.389     -0.20      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_262_uu          Peilafwijkin     3.627      0.02      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_91_ur           Peilafwijkin     9.116     -0.09      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_92_ur           Peilafwijkin    16.707     -0.18      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_254_uu          Peilafwijkin     9.438     -0.03      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_81_ur           Peilafwijkin     1.156     -0.58      5.00     -2.00     20.00      0.00      0.00    0.0500
+AFWG_293_uu          Peilgebied       5.469      0.06      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_209_uu          Peilafwijkin     3.008     -0.14      5.00     -2.00     20.00      0.00      0.00    0.0685
+AFWG_140_uu          Peilgebied       2.589     -2.08      5.00     -2.00     20.00      0.00      0.00    0.0025
+AFWG_286_ur          Peilgebied      15.533     -0.86      5.00     -2.00     20.00      0.00      0.00    0.0500
+
+
+ Summary input data boundaries      
+
+ Node identification   Node    Init.level variable  serie
+                       name      (m NAP)   (1=yes)   number
+================================================================
+ov_AFWG_82                          -2.000        0        0
+vh_AFWG_49                          -2.000        0        0
+vh_AFWG_84                          -2.000        0        0
+ov_AFWG_84                          -2.000        0        0
+vh_AFWG_232                         -2.000        0        0
+ov_AFWG_232                         -2.000        0        0
+vh_AFWG_265                         -2.000        0        0
+ov_AFWG_265                         -2.000        0        0
+vh_AFWG_220                         -2.000        0        0
+ov_AFWG_220                         -2.000        0        0
+vh_AFWG_231                         -2.000        0        0
+ov_AFWG_231                         -2.000        0        0
+vh_AFWG_197                         -2.000        0        0
+ov_AFWG_197                         -2.000        0        0
+vh_AFWG_1                           -2.000        0        0
+ov_AFWG_1                           -2.000        0        0
+vh_AFWG_167                         -2.000        0        0
+ov_AFWG_167                         -2.000        0        0
+vh_AFWG_170                         -2.000        0        0
+ov_AFWG_170                         -2.000        0        0
+vh_AFWG_217                         -2.000        0        0
+ov_AFWG_217                         -2.000        0        0
+vh_AFWG_132                         -2.000        0        0
+ov_AFWG_132                         -2.000        0        0
+vh_AFWG_129                         -2.000        0        0
+ov_AFWG_129                         -2.000        0        0
+vh_AFWG_45                          -2.000        0        0
+ov_AFWG_45                          -2.000        0        0
+vh_AFWG_141                         -2.000        0        0
+ov_AFWG_141                         -2.000        0        0
+vh_AFWG_194                         -2.000        0        0
+ov_AFWG_194                         -2.000        0        0
+vh_AFWG_12                          -2.000        0        0
+ov_AFWG_12                          -2.000        0        0
+vh_AFWG_284                         -2.000        0        0
+ov_AFWG_284                         -2.000        0        0
+vh_AFWG_60                          -2.000        0        0
+ov_AFWG_60                          -2.000        0        0
+vh_AFWG_48                          -2.000        0        0
+ov_AFWG_48                          -2.000        0        0
+ov_AFWG_20                          -2.000        0        0
+vh_AFWG_32                          -2.000        0        0
+ov_AFWG_32                          -2.000        0        0
+ov_AFWG_112                         -2.000        0        0
+ov_AFWG_183                         -2.000        0        0
+vh_AFWG_111                         -2.000        0        0
+ov_AFWG_111                         -2.000        0        0
+vh_AFWG_181                         -2.000        0        0
+ov_AFWG_181                         -2.000        0        0
+ov_AFWG_142                         -2.000        0        0
+vh_AFWG_294                         -2.000        0        0
+ov_AFWG_294                         -2.000        0        0
+vh_AFWG_211                         -2.000        0        0
+ov_AFWG_211                         -2.000        0        0
+vh_AFWG_185                         -2.000        0        0
+ov_AFWG_185                         -2.000        0        0
+vh_AFWG_95                          -2.000        0        0
+ov_AFWG_95                          -2.000        0        0
+vh_AFWG_7                           -2.000        0        0
+ov_AFWG_7                           -2.000        0        0
+vh_AFWG_177                         -2.000        0        0
+ov_AFWG_177                         -2.000        0        0
+vh_AFWG_300                         -2.000        0        0
+ov_AFWG_300                         -2.000        0        0
+vh_AFWG_223                         -2.000        0        0
+ov_AFWG_223                         -2.000        0        0
+vh_AFWG_126                         -2.000        0        0
+ov_AFWG_126                         -2.000        0        0
+vh_AFWG_144                         -2.000        0        0
+ov_AFWG_144                         -2.000        0        0
+vh_AFWG_125                         -2.000        0        0
+ov_AFWG_125                         -2.000        0        0
+ov_AFWG_174                         -2.000        0        0
+vh_AFWG_195                         -2.000        0        0
+ov_AFWG_195                         -2.000        0        0
+vh_AFWG_106                         -2.000        0        0
+ov_AFWG_106                         -2.000        0        0
+vh_AFWG_128                         -2.000        0        0
+ov_AFWG_128                         -2.000        0        0
+vh_AFWG_188                         -2.000        0        0
+ov_AFWG_188                         -2.000        0        0
+vh_AFWG_283                         -2.000        0        0
+ov_AFWG_283                         -2.000        0        0
+vh_AFWG_287                         -2.000        0        0
+ov_AFWG_287                         -2.000        0        0
+vh_AFWG_288                         -2.000        0        0
+ov_AFWG_288                         -2.000        0        0
+vh_AFWG_127                         -2.000        0        0
+ov_AFWG_127                         -2.000        0        0
+vh_AFWG_135                         -2.000        0        0
+ov_AFWG_135                         -2.000        0        0
+vh_AFWG_230                         -2.000        0        0
+ov_AFWG_230                         -2.000        0        0
+vh_AFWG_148                         -2.000        0        0
+ov_AFWG_148                         -2.000        0        0
+vh_AFWG_140                         -2.000        0        0
+ov_AFWG_140                         -2.000        0        0
+ov_AFWG_234                         -2.000        0        0
+vh_AFWG_133                         -2.000        0        0
+ov_AFWG_133                         -2.000        0        0
+vh_AFWG_43                          -2.000        0        0
+ov_AFWG_43                          -2.000        0        0
+vh_AFWG_40                          -2.000        0        0
+ov_AFWG_40                          -2.000        0        0
+vh_AFWG_22                          -2.000        0        0
+ov_AFWG_22                          -2.000        0        0
+vh_AFWG_237                         -2.000        0        0
+ov_AFWG_237                         -2.000        0        0
+vh_AFWG_131                         -2.000        0        0
+ov_AFWG_131                         -2.000        0        0
+vh_AFWG_298                         -2.000        0        0
+ov_AFWG_298                         -2.000        0        0
+vh_AFWG_175                         -2.000        0        0
+ov_AFWG_175                         -2.000        0        0
+vh_AFWG_55                          -2.000        0        0
+ov_AFWG_55                          -2.000        0        0
+vh_AFWG_301                         -2.000        0        0
+ov_AFWG_301                         -2.000        0        0
+vh_AFWG_110                         -2.000        0        0
+ov_AFWG_110                         -2.000        0        0
+vh_AFWG_153                         -2.000        0        0
+ov_AFWG_153                         -2.000        0        0
+vh_AFWG_213                         -2.000        0        0
+ov_AFWG_213                         -2.000        0        0
+vh_AFWG_290                         -2.000        0        0
+ov_AFWG_290                         -2.000        0        0
+vh_AFWG_227                         -2.000        0        0
+ov_AFWG_227                         -2.000        0        0
+ov_AFWG_54                          -2.000        0        0
+ov_AFWG_312                         -2.000        0        0
+vh_AFWG_165                         -2.000        0        0
+ov_AFWG_165                         -2.000        0        0
+vh_AFWG_214                         -2.000        0        0
+ov_AFWG_214                         -2.000        0        0
+vh_AFWG_169                         -2.000        0        0
+ov_AFWG_169                         -2.000        0        0
+ov_AFWG_269                         -2.000        0        0
+vh_AFWG_30                          -2.000        0        0
+ov_AFWG_30                          -2.000        0        0
+vh_AFWG_154                         -2.000        0        0
+ov_AFWG_154                         -2.000        0        0
+vh_AFWG_171                         -2.000        0        0
+ov_AFWG_171                         -2.000        0        0
+vh_AFWG_168                         -2.000        0        0
+ov_AFWG_168                         -2.000        0        0
+vh_AFWG_221                         -2.000        0        0
+ov_AFWG_221                         -2.000        0        0
+vh_AFWG_41                          -2.000        0        0
+ov_AFWG_41                          -2.000        0        0
+vh_AFWG_25                          -2.000        0        0
+ov_AFWG_25                          -2.000        0        0
+vh_AFWG_24                          -2.000        0        0
+ov_AFWG_24                          -2.000        0        0
+ov_AFWG_122                         -2.000        0        0
+ov_AFWG_123                         -2.000        0        0
+vh_AFWG_19                          -2.000        0        0
+ov_AFWG_19                          -2.000        0        0
+vh_AFWG_160                         -2.000        0        0
+ov_AFWG_160                         -2.000        0        0
+vh_AFWG_113                         -2.000        0        0
+ov_AFWG_113                         -2.000        0        0
+ov_AFWG_176                         -2.000        0        0
+vh_AFWG_291                         -2.000        0        0
+ov_AFWG_291                         -2.000        0        0
+vh_AFWG_90                          -2.000        0        0
+ov_AFWG_90                          -2.000        0        0
+vh_AFWG_46                          -2.000        0        0
+ov_AFWG_46                          -2.000        0        0
+vh_AFWG_130                         -2.000        0        0
+ov_AFWG_130                         -2.000        0        0
+vh_AFWG_215                         -2.000        0        0
+ov_AFWG_215                         -2.000        0        0
+vh_AFWG_93                          -2.000        0        0
+ov_AFWG_93                          -2.000        0        0
+vh_AFWG_116                         -2.000        0        0
+ov_AFWG_116                         -2.000        0        0
+vh_AFWG_180                         -2.000        0        0
+ov_AFWG_180                         -2.000        0        0
+ov_AFWG_161                         -2.000        0        0
+vh_AFWG_272                         -2.000        0        0
+ov_AFWG_272                         -2.000        0        0
+vh_AFWG_162                         -2.000        0        0
+ov_AFWG_162                         -2.000        0        0
+vh_AFWG_52                          -2.000        0        0
+ov_AFWG_52                          -2.000        0        0
+vh_AFWG_61                          -2.000        0        0
+ov_AFWG_61                          -2.000        0        0
+vh_AFWG_81                          -2.000        0        0
+ov_AFWG_81                          -2.000        0        0
+vh_AFWG_76                          -2.000        0        0
+ov_AFWG_76                          -2.000        0        0
+vh_AFWG_270                         -2.000        0        0
+ov_AFWG_270                         -2.000        0        0
+vh_AFWG_114                         -2.000        0        0
+ov_AFWG_114                         -2.000        0        0
+vh_AFWG_118                         -2.000        0        0
+ov_AFWG_118                         -2.000        0        0
+vh_AFWG_92                          -2.000        0        0
+ov_AFWG_92                          -2.000        0        0
+vh_AFWG_193                         -2.000        0        0
+ov_AFWG_193                         -2.000        0        0
+ov_AFWG_202                         -2.000        0        0
+vh_AFWG_184                         -2.000        0        0
+ov_AFWG_184                         -2.000        0        0
+vh_AFWG_271                         -2.000        0        0
+ov_AFWG_271                         -2.000        0        0
+vh_AFWG_94                          -2.000        0        0
+ov_AFWG_94                          -2.000        0        0
+vh_AFWG_246                         -2.000        0        0
+ov_AFWG_246                         -2.000        0        0
+vh_AFWG_91                          -2.000        0        0
+ov_AFWG_91                          -2.000        0        0
+vh_AFWG_302                         -2.000        0        0
+ov_AFWG_302                         -2.000        0        0
+vh_AFWG_38                          -2.000        0        0
+ov_AFWG_38                          -2.000        0        0
+vh_AFWG_37                          -2.000        0        0
+ov_AFWG_37                          -2.000        0        0
+vh_AFWG_107                         -2.000        0        0
+ov_AFWG_107                         -2.000        0        0
+vh_AFWG_245                         -2.000        0        0
+ov_AFWG_245                         -2.000        0        0
+vh_AFWG_209                         -2.000        0        0
+ov_AFWG_209                         -2.000        0        0
+vh_AFWG_276                         -2.000        0        0
+ov_AFWG_276                         -2.000        0        0
+vh_AFWG_249                         -2.000        0        0
+ov_AFWG_249                         -2.000        0        0
+vh_AFWG_248                         -2.000        0        0
+ov_AFWG_248                         -2.000        0        0
+vh_AFWG_62                          -2.000        0        0
+ov_AFWG_62                          -2.000        0        0
+vh_AFWG_253                         -2.000        0        0
+ov_AFWG_253                         -2.000        0        0
+vh_AFWG_79                          -2.000        0        0
+ov_AFWG_79                          -2.000        0        0
+vh_AFWG_274                         -2.000        0        0
+ov_AFWG_274                         -2.000        0        0
+vh_AFWG_278                         -2.000        0        0
+ov_AFWG_278                         -2.000        0        0
+vh_AFWG_279                         -2.000        0        0
+ov_AFWG_279                         -2.000        0        0
+vh_AFWG_69                          -2.000        0        0
+ov_AFWG_69                          -2.000        0        0
+vh_AFWG_258                         -2.000        0        0
+ov_AFWG_258                         -2.000        0        0
+vh_AFWG_252                         -2.000        0        0
+ov_AFWG_252                         -2.000        0        0
+vh_AFWG_295                         -2.000        0        0
+ov_AFWG_295                         -2.000        0        0
+vh_AFWG_292                         -2.000        0        0
+ov_AFWG_292                         -2.000        0        0
+vh_AFWG_192                         -2.000        0        0
+ov_AFWG_192                         -2.000        0        0
+vh_AFWG_203                         -2.000        0        0
+ov_AFWG_203                         -2.000        0        0
+vh_AFWG_306                         -2.000        0        0
+ov_AFWG_306                         -2.000        0        0
+vh_AFWG_307                         -2.000        0        0
+ov_AFWG_307                         -2.000        0        0
+vh_AFWG_21                          -2.000        0        0
+ov_AFWG_21                          -2.000        0        0
+ov_AFWG_191                         -2.000        0        0
+vh_AFWG_36                          -2.000        0        0
+ov_AFWG_36                          -2.000        0        0
+vh_AFWG_71                          -2.000        0        0
+ov_AFWG_71                          -2.000        0        0
+vh_AFWG_310                         -2.000        0        0
+ov_AFWG_310                         -2.000        0        0
+vh_AFWG_313                         -2.000        0        0
+ov_AFWG_313                         -2.000        0        0
+vh_AFWG_260                         -2.000        0        0
+ov_AFWG_260                         -2.000        0        0
+ov_AFWG_182                         -2.000        0        0
+vh_AFWG_178                         -2.000        0        0
+ov_AFWG_178                         -2.000        0        0
+vh_AFWG_35                          -2.000        0        0
+ov_AFWG_35                          -2.000        0        0
+vh_AFWG_239                         -2.000        0        0
+ov_AFWG_239                         -2.000        0        0
+vh_AFWG_78                          -2.000        0        0
+ov_AFWG_78                          -2.000        0        0
+vh_AFWG_11                          -2.000        0        0
+ov_AFWG_11                          -2.000        0        0
+vh_AFWG_15                          -2.000        0        0
+ov_AFWG_15                          -2.000        0        0
+vh_AFWG_2                           -2.000        0        0
+ov_AFWG_2                           -2.000        0        0
+vh_AFWG_3                           -2.000        0        0
+ov_AFWG_3                           -2.000        0        0
+vh_AFWG_5                           -2.000        0        0
+ov_AFWG_5                           -2.000        0        0
+vh_AFWG_64                          -2.000        0        0
+ov_AFWG_64                          -2.000        0        0
+ov_AFWG_10                          -2.000        0        0
+vh_AFWG_6                           -2.000        0        0
+ov_AFWG_6                           -2.000        0        0
+vh_AFWG_104                         -2.000        0        0
+ov_AFWG_104                         -2.000        0        0
+vh_AFWG_85                          -2.000        0        0
+ov_AFWG_85                          -2.000        0        0
+vh_AFWG_187                         -2.000        0        0
+ov_AFWG_187                         -2.000        0        0
+vh_AFWG_305                         -2.000        0        0
+ov_AFWG_305                         -2.000        0        0
+vh_AFWG_159                         -2.000        0        0
+ov_AFWG_159                         -2.000        0        0
+ov_AFWG_163                         -2.000        0        0
+vh_AFWG_164                         -2.000        0        0
+ov_AFWG_164                         -2.000        0        0
+vh_AFWG_277                         -2.000        0        0
+ov_AFWG_277                         -2.000        0        0
+ov_AFWG_65                          -2.000        0        0
+vh_AFWG_314                         -2.000        0        0
+ov_AFWG_314                         -2.000        0        0
+vh_AFWG_8                           -2.000        0        0
+ov_AFWG_8                           -2.000        0        0
+vh_AFWG_219                         -2.000        0        0
+ov_AFWG_219                         -2.000        0        0
+vh_AFWG_222                         -2.000        0        0
+ov_AFWG_222                         -2.000        0        0
+vh_AFWG_240                         -2.000        0        0
+ov_AFWG_240                         -2.000        0        0
+vh_AFWG_39                          -2.000        0        0
+ov_AFWG_39                          -2.000        0        0
+vh_AFWG_226                         -2.000        0        0
+ov_AFWG_226                         -2.000        0        0
+vh_AFWG_228                         -2.000        0        0
+ov_AFWG_228                         -2.000        0        0
+vh_AFWG_109                         -2.000        0        0
+ov_AFWG_109                         -2.000        0        0
+ov_AFWG_210                         -2.000        0        0
+ov_AFWG_66                          -2.000        0        0
+vh_AFWG_296                         -2.000        0        0
+ov_AFWG_296                         -2.000        0        0
+vh_AFWG_29                          -2.000        0        0
+ov_AFWG_29                          -2.000        0        0
+vh_AFWG_4                           -2.000        0        0
+ov_AFWG_4                           -2.000        0        0
+vh_AFWG_282                         -2.000        0        0
+ov_AFWG_282                         -2.000        0        0
+vh_AFWG_206                         -2.000        0        0
+ov_AFWG_206                         -2.000        0        0
+vh_AFWG_205                         -2.000        0        0
+ov_AFWG_205                         -2.000        0        0
+vh_AFWG_243                         -2.000        0        0
+ov_AFWG_243                         -2.000        0        0
+vh_AFWG_263                         -2.000        0        0
+ov_AFWG_263                         -2.000        0        0
+vh_AFWG_254                         -2.000        0        0
+ov_AFWG_254                         -2.000        0        0
+vh_AFWG_103                         -2.000        0        0
+ov_AFWG_103                         -2.000        0        0
+vh_AFWG_201                         -2.000        0        0
+ov_AFWG_201                         -2.000        0        0
+vh_AFWG_108                         -2.000        0        0
+ov_AFWG_108                         -2.000        0        0
+vh_AFWG_238                         -2.000        0        0
+ov_AFWG_238                         -2.000        0        0
+vh_AFWG_115                         -2.000        0        0
+ov_AFWG_115                         -2.000        0        0
+vh_AFWG_242                         -2.000        0        0
+ov_AFWG_242                         -2.000        0        0
+vh_AFWG_152                         -2.000        0        0
+ov_AFWG_152                         -2.000        0        0
+vh_AFWG_158                         -2.000        0        0
+ov_AFWG_158                         -2.000        0        0
+vh_AFWG_143                         -2.000        0        0
+ov_AFWG_143                         -2.000        0        0
+vh_AFWG_121                         -2.000        0        0
+ov_AFWG_121                         -2.000        0        0
+ov_AFWG_120                         -2.000        0        0
+vh_AFWG_172                         -2.000        0        0
+ov_AFWG_172                         -2.000        0        0
+vh_AFWG_124                         -2.000        0        0
+ov_AFWG_124                         -2.000        0        0
+vh_AFWG_119                         -2.000        0        0
+ov_AFWG_119                         -2.000        0        0
+vh_AFWG_207                         -2.000        0        0
+ov_AFWG_207                         -2.000        0        0
+vh_AFWG_311                         -2.000        0        0
+ov_AFWG_311                         -2.000        0        0
+vh_AFWG_87                          -2.000        0        0
+ov_AFWG_87                          -2.000        0        0
+vh_AFWG_80                          -2.000        0        0
+ov_AFWG_80                          -2.000        0        0
+vh_AFWG_33                          -2.000        0        0
+ov_AFWG_33                          -2.000        0        0
+vh_AFWG_74                          -2.000        0        0
+ov_AFWG_74                          -2.000        0        0
+vh_AFWG_53                          -2.000        0        0
+ov_AFWG_53                          -2.000        0        0
+vh_AFWG_44                          -2.000        0        0
+ov_AFWG_44                          -2.000        0        0
+vh_AFWG_23                          -2.000        0        0
+ov_AFWG_23                          -2.000        0        0
+vh_AFWG_27                          -2.000        0        0
+ov_AFWG_27                          -2.000        0        0
+vh_AFWG_233                         -2.000        0        0
+ov_AFWG_233                         -2.000        0        0
+vh_AFWG_117                         -2.000        0        0
+ov_AFWG_117                         -2.000        0        0
+vh_AFWG_145                         -2.000        0        0
+ov_AFWG_145                         -2.000        0        0
+vh_AFWG_224                         -2.000        0        0
+ov_AFWG_224                         -2.000        0        0
+vh_AFWG_151                         -2.000        0        0
+ov_AFWG_151                         -2.000        0        0
+vh_AFWG_150                         -2.000        0        0
+ov_AFWG_150                         -2.000        0        0
+vh_AFWG_308                         -2.000        0        0
+ov_AFWG_308                         -2.000        0        0
+vh_AFWG_262                         -2.000        0        0
+ov_AFWG_262                         -2.000        0        0
+ov_AFWG_190                         -2.000        0        0
+vh_AFWG_289                         -2.000        0        0
+ov_AFWG_289                         -2.000        0        0
+vh_AFWG_26                          -2.000        0        0
+ov_AFWG_26                          -2.000        0        0
+vh_AFWG_50                          -2.000        0        0
+ov_AFWG_50                          -2.000        0        0
+vh_AFWG_100                         -2.000        0        0
+ov_AFWG_100                         -2.000        0        0
+vh_AFWG_102                         -2.000        0        0
+ov_AFWG_102                         -2.000        0        0
+vh_AFWG_18                          -2.000        0        0
+ov_AFWG_18                          -2.000        0        0
+vh_AFWG_257                         -2.000        0        0
+ov_AFWG_257                         -2.000        0        0
+vh_AFWG_73                          -2.000        0        0
+ov_AFWG_73                          -2.000        0        0
+ov_AFWG_101                         -2.000        0        0
+ov_AFWG_13                          -2.000        0        0
+vh_AFWG_14                          -2.000        0        0
+ov_AFWG_14                          -2.000        0        0
+vh_AFWG_137                         -2.000        0        0
+ov_AFWG_137                         -2.000        0        0
+vh_AFWG_216                         -2.000        0        0
+ov_AFWG_216                         -2.000        0        0
+vh_AFWG_134                         -2.000        0        0
+ov_AFWG_134                         -2.000        0        0
+vh_AFWG_285                         -2.000        0        0
+ov_AFWG_285                         -2.000        0        0
+vh_AFWG_229                         -2.000        0        0
+ov_AFWG_229                         -2.000        0        0
+vh_AFWG_16                          -2.000        0        0
+ov_AFWG_16                          -2.000        0        0
+vh_AFWG_259                         -2.000        0        0
+ov_AFWG_259                         -2.000        0        0
+vh_AFWG_247                         -2.000        0        0
+ov_AFWG_247                         -2.000        0        0
+vh_AFWG_42                          -2.000        0        0
+ov_AFWG_42                          -2.000        0        0
+vh_AFWG_139                         -2.000        0        0
+ov_AFWG_139                         -2.000        0        0
+ov_AFWG_49                          -2.000        0        0
+vh_AFWG_146                         -2.000        0        0
+ov_AFWG_146                         -2.000        0        0
+vh_AFWG_17                          -2.000        0        0
+ov_AFWG_17                          -2.000        0        0
+vh_AFWG_28                          -2.000        0        0
+ov_AFWG_28                          -2.000        0        0
+vh_AFWG_58                          -2.000        0        0
+ov_AFWG_58                          -2.000        0        0
+vh_AFWG_147                         -2.000        0        0
+ov_AFWG_147                         -2.000        0        0
+vh_AFWG_34                          -2.000        0        0
+ov_AFWG_34                          -2.000        0        0
+vh_AFWG_286                         -2.000        0        0
+ov_AFWG_286                         -2.000        0        0
+vh_AFWG_138                         -2.000        0        0
+ov_AFWG_138                         -2.000        0        0
+vh_AFWG_196                         -2.000        0        0
+ov_AFWG_196                         -2.000        0        0
+vh_AFWG_51                          -2.000        0        0
+ov_AFWG_51                          -2.000        0        0
+vh_AFWG_157                         -2.000        0        0
+ov_AFWG_157                         -2.000        0        0
+vh_AFWG_99                          -2.000        0        0
+ov_AFWG_99                          -2.000        0        0
+vh_AFWG_208                         -2.000        0        0
+ov_AFWG_208                         -2.000        0        0
+vh_AFWG_218                         -2.000        0        0
+ov_AFWG_218                         -2.000        0        0
+vh_AFWG_57                          -2.000        0        0
+ov_AFWG_57                          -2.000        0        0
+vh_AFWG_88                          -2.000        0        0
+ov_AFWG_88                          -2.000        0        0
+vh_AFWG_97                          -2.000        0        0
+ov_AFWG_97                          -2.000        0        0
+ov_AFWG_86                          -2.000        0        0
+vh_AFWG_98                          -2.000        0        0
+ov_AFWG_98                          -2.000        0        0
+ov_AFWG_96                          -2.000        0        0
+vh_AFWG_89                          -2.000        0        0
+ov_AFWG_89                          -2.000        0        0
+ov_AFWG_199                         -2.000        0        0
+vh_AFWG_31                          -2.000        0        0
+ov_AFWG_31                          -2.000        0        0
+vh_AFWG_268                         -2.000        0        0
+ov_AFWG_268                         -2.000        0        0
+ov_AFWG_189                         -2.000        0        0
+ov_AFWG_267                         -2.000        0        0
+vh_AFWG_204                         -2.000        0        0
+ov_AFWG_204                         -2.000        0        0
+vh_AFWG_149                         -2.000        0        0
+ov_AFWG_149                         -2.000        0        0
+ov_AFWG_198                         -2.000        0        0
+vh_AFWG_105                         -2.000        0        0
+ov_AFWG_105                         -2.000        0        0
+ov_AFWG_173                         -2.000        0        0
+vh_AFWG_47                          -2.000        0        0
+ov_AFWG_47                          -2.000        0        0
+vh_AFWG_212                         -2.000        0        0
+ov_AFWG_212                         -2.000        0        0
+vh_AFWG_225                         -2.000        0        0
+ov_AFWG_225                         -2.000        0        0
+vh_AFWG_299                         -2.000        0        0
+ov_AFWG_299                         -2.000        0        0
+vh_AFWG_186                         -2.000        0        0
+ov_AFWG_186                         -2.000        0        0
+vh_AFWG_63                          -2.000        0        0
+ov_AFWG_63                          -2.000        0        0
+vh_AFWG_155                         -2.000        0        0
+ov_AFWG_155                         -2.000        0        0
+vh_AFWG_297                         -2.000        0        0
+ov_AFWG_297                         -2.000        0        0
+vh_AFWG_156                         -2.000        0        0
+ov_AFWG_156                         -2.000        0        0
+vh_AFWG_166                         -2.000        0        0
+ov_AFWG_166                         -2.000        0        0
+vh_AFWG_136                         -2.000        0        0
+ov_AFWG_136                         -2.000        0        0
+ov_AFWG_68                          -2.000        0        0
+ov_AFWG_200                         -2.000        0        0
+vh_AFWG_244                         -2.000        0        0
+ov_AFWG_244                         -2.000        0        0
+vh_AFWG_303                         -2.000        0        0
+ov_AFWG_303                         -2.000        0        0
+vh_AFWG_264                         -2.000        0        0
+ov_AFWG_264                         -2.000        0        0
+ov_AFWG_304                         -2.000        0        0
+vh_AFWG_70                          -2.000        0        0
+ov_AFWG_70                          -2.000        0        0
+vh_AFWG_241                         -2.000        0        0
+ov_AFWG_241                         -2.000        0        0
+vh_AFWG_250                         -2.000        0        0
+ov_AFWG_250                         -2.000        0        0
+vh_AFWG_251                         -2.000        0        0
+ov_AFWG_251                         -2.000        0        0
+vh_AFWG_255                         -2.000        0        0
+ov_AFWG_255                         -2.000        0        0
+vh_AFWG_256                         -2.000        0        0
+ov_AFWG_256                         -2.000        0        0
+vh_AFWG_281                         -2.000        0        0
+ov_AFWG_281                         -2.000        0        0
+vh_AFWG_261                         -2.000        0        0
+ov_AFWG_261                         -2.000        0        0
+vh_AFWG_309                         -2.000        0        0
+ov_AFWG_309                         -2.000        0        0
+vh_AFWG_236                         -2.000        0        0
+ov_AFWG_236                         -2.000        0        0
+vh_AFWG_235                         -2.000        0        0
+ov_AFWG_235                         -2.000        0        0
+vh_AFWG_83                          -2.000        0        0
+ov_AFWG_83                          -2.000        0        0
+ov_AFWG_266                         -2.000        0        0
+ov_AFWG_179                         -2.000        0        0
+vh_AFWG_9                           -2.000        0        0
+ov_AFWG_9                           -2.000        0        0
+vh_AFWG_293                         -2.000        0        0
+ov_AFWG_293                         -2.000        0        0
+vh_AFWG_280                         -2.000        0        0
+ov_AFWG_280                         -2.000        0        0
+vh_AFWG_273                         -2.000        0        0
+ov_AFWG_273                         -2.000        0        0
+vh_AFWG_275                         -2.000        0        0
+ov_AFWG_275                         -2.000        0        0
+vh_AFWG_67                          -2.000        0        0
+ov_AFWG_67                          -2.000        0        0
+bnd_Anna Paulowna    bnd_Anna Pau    0.000        0        0

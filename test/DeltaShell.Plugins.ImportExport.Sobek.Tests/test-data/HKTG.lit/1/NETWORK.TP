@@ -1,4 +1,0 @@
-TP_1.0
-NODE id 'N_0' nm 'begin01' px 84000 py 452000 node
-NODE id 'N_1' nm 'end01' px 89000 py 452000 node
-BRCH id 'R_3' nm 'flume01' bn 'N_0' en 'N_1' al 5000 vc_opt 1 vc_equi -1 vc_len 100 brch

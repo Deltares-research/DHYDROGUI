@@ -1,0 +1,288 @@
+STDS id '024365' ty 6 cl 5.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '24405' ty 7 cl 6.81 cw 2 gh 16.81 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0             stds
+STDS id '014210' ty 6 cl 5.8 cw 10 ce 1 sc 1 rt 0                 stds
+STDS id 'GM4-OOA0035-000-c' nm '' ty 6 cl 99 cw 5 ce 1 sc 1 rt 0        stds
+STDS id '24104' nm '' ty 9 dn -1 rt cr 0 1 0 ct lt 1
+TBLE
+1.5 5.25 5.15 0 0 <
+3 5.35 5.25 0 0 <
+tble        stds
+STDS id '024364' ty 6 cl 5.4 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id 'GM3-00A001-000-ff' nm '' ty 6 cl 99 cw 5 ce 1 sc 1 rt 0        stds
+STDS id '024255-corrupt' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1.083333 5.1 5 0 0 <
+2.166667 5.35 5.15 0 0 <
+tble        stds
+STDS id '024361' ty 6 cl 6.6 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024360' ty 6 cl 6.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024362' ty 6 cl 7.4 cw 15 ce 1 sc 1 rt 0                 stds
+STDS id '024254' ty 6 cl 5.4 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '014982' ty 6 cl 3.5 cw 1.67 ce 1 sc 1 rt 0                 stds
+STDS id '024297' ty 6 cl 3.5 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024306' ty 6 cl 3.05 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024296' ty 6 cl 2.95 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id 'stuw_dukenburg' ty 6 cl 6 cw 2.4 ce 1 sc 1 rt 0                 stds
+STDS id '024359' ty 6 cl 5.9 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '24099' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+ 8.333334E-02 -9 -10 0 0 <
+tble stds
+STDS id '024386' ty 6 cl 5.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id 'Bijsterhuizen_stuw' ty 6 cl 100 cw 1 ce 1 sc 1 rt 0                 stds
+STDS id '024301' ty 6 cl 3.25 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024302' ty 6 cl 3.5 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024367' nm '' ty 6 cl 5 cw 5 ce 1 sc 1 rt 0       stds
+STDS id '012723' ty 6 cl 3.3 cw 1 ce 1 sc 1 rt 0                 stds
+STDS id '024304' ty 6 cl 3.7 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024401' ty 6 cl 5.45 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '24403' ty 7 cl 6.81 cw 2.5 gh 16.81 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0             stds
+STDS id 'Zwanestraat' ty 6 cl 6.9 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024383' ty 6 cl 5.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024298' ty 6 cl 3.1 cw 1.68 ce 1 sc 1 rt 0                 stds
+STDS id '24108' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+3.916667 5 4.85 0 0 <
+7.833333 5.005 4.96 0 0 <
+11.75 5.04 5.01 0 0 <
+tble        stds
+STDS id '024307' ty 6 cl 3.7 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id 'GM2-10A0002-000-a_stuw' nm '' ty 6 cl 99 cw 5 ce 1 sc 1 rt 0        stds
+STDS id '024368' ty 6 cl 5.6 cw 15 ce 1 sc 1 rt 0                 stds
+STDS id 'Bijsterhuizen_klein' ty 6 cl 5.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id 'GM2-30A0007-000-A' nm '' ty 6 cl 5.75 cw 1.1 ce 1 sc 1 rt 0 stds
+STDS id '015007' ty 6 cl 3.45 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024250' ty 6 cl 5.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024353' ty 6 cl 3.1 cw 1.68 ce 1 sc 1 rt 0                 stds
+STDS id '024260' ty 6 cl 4.7 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024262' ty 6 cl 4.7 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024252' ty 6 cl 5.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024249' ty 6 cl 5.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024313' ty 6 cl 3.25 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024372' ty 6 cl 5 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024248' ty 6 cl 5.25 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024264' ty 6 cl 4.7 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024311' ty 6 cl 3.7 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024310' ty 6 cl 2.53 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024375' nm '' ty 6 cl 5.75 cw 6 ce 1 sc 1 rt 0 stds
+STDS id '024247' ty 6 cl 4.75 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024374' nm '' ty 6 cl 5.75 cw 3 ce 1 sc 1 rt 0 stds
+STDS id '024376' nm '' ty 6 cl 5.45 cw 3 ce 1 sc 1 rt 0 stds
+STDS id '024357' ty 6 cl 6.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024263' ty 6 cl 4.25 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024352' ty 6 cl 3 cw 2.4 ce 1 sc 1 rt 0                 stds
+STDS id '015015' ty 6 cl 3.45 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024318' ty 6 cl 4 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '24406' ty 7 cl 3.6 cw 2.67 gh 13.6 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0             stds
+STDS id '024245' ty 6 cl 5.15 cw 15 ce 1 sc 1 rt 0                 stds
+STDS id '024244' ty 6 cl 5.35 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024265' ty 6 cl 4.25 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024166' ty 6 cl 6.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024168' ty 6 cl 6.8 cw 15 ce 1 sc 1 rt 0                 stds
+STDS id '024317' ty 6 cl 4 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024266' ty 6 cl 4.25 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024172' ty 6 cl 5.25 cw 0.96 ce 1 sc 1 rt 0                 stds
+STDS id '024373' nm '' ty 6 cl 5.45 cw 5 ce 1 sc 1 rt 0        stds
+STDS id '024267' ty 6 cl 4.7 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id 'GM2-10A0018-00-C' ty 6 cl 5 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024165' ty 6 cl 6.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024171' ty 6 cl 5.1 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024169' ty 6 cl 5.1 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024394' ty 6 cl 3.63 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024268' ty 6 cl 4.7 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024174' ty 6 cl 5.6 cw 0.48 ce 1 sc 1 rt 0                 stds
+STDS id '024170' ty 6 cl 4.85 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024316' ty 6 cl 2.75 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024159' ty 6 cl 7.25 cw 15 ce 1 sc 1 rt 0                 stds
+STDS id '024167' ty 6 cl 6.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024349' ty 6 cl 3.4 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024350' ty 6 cl 3.4 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id 'inlaat_mb' ty 7 cl 6.01 cw 2 gh 16.01 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0             stds
+STDS id '024320' ty 6 cl 2.5 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '015215' ty 6 cl 5.25 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id 'SI_GM1-10A0034-000-ZZ' ty 6 cl 2.5 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024355' ty 6 cl 2.5 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024164' ty 6 cl 5.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024351' ty 6 cl 3.75 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024377' ty 6 cl 5.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id 'dicht2' nm '' ty 6 cl 3.45 cw 5 ce 1 sc 1 rt 0        stds
+STDS id 'overstort' ty 6 cl 6.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024319' ty 6 cl 4 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024284' ty 6 cl 4.6 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024269' ty 6 cl 4.7 cw 0.8 ce 1 sc 1 rt 0                 stds
+STDS id '024371' ty 6 cl 5.4 cw 15 ce 1 sc 1 rt 0                 stds
+STDS id '015078' ty 6 cl 3.6 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024285' ty 6 cl 4.25 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id '024163' ty 6 cl 6.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024339' ty 6 cl 4.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024178' ty 6 cl 5.6 cw 0.48 ce 1 sc 1 rt 0                 stds
+STDS id 'GM2-40A0002-000-f' ty 6 cl 7.1 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024246' ty 6 cl -0.1 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024342' ty 6 cl 3.4 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024162' ty 6 cl 6.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024161' ty 6 cl 6.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024340' ty 6 cl 3.3 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id 'dicht1' ty 6 cl 99 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '013547' ty 6 cl 5.35 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id 'Stuw_Goudwerf' ty 6 cl 6.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024177' ty 6 cl 5.2 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024160' ty 6 cl 7.1 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '015080' ty 6 cl 4 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024282' ty 6 cl 4.7 cw 0.8 ce 1 sc 1 rt 0                 stds
+STDS id '024345' ty 6 cl 3.4 cw 2.15 ce 1 sc 1 rt 0                 stds
+STDS id '024369' ty 6 cl 6.35 cw 15 ce 1 sc 1 rt 0                 stds
+STDS id '024283' ty 6 cl 4.6 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id '024341' ty 6 cl 3.75 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024181' ty 6 cl 5.1 cw 2.25 ce 1 sc 1 rt 0                 stds
+STDS id '015248' ty 6 cl 5.25 cw 0.48 ce 1 sc 1 rt 0                 stds
+STDS id '024347' ty 6 cl 3.75 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id 'WEI00001_Q' ty 6 cl 99 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '012925' ty 6 cl 4.7 cw 0.8 ce 1 sc 1 rt 0                 stds
+STDS id '024370' nm '' ty 6 cl 4.2 cw 5 ce 1 sc 1 rt 0 stds
+STDS id '024239' ty 6 cl 5.35 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024183' ty 6 cl 4.7 cw 2 ce 1 sc 1 rt 0                 stds
+STDS id '024182' ty 6 cl 4.65 cw 2.16 ce 1 sc 1 rt 0                 stds
+STDS id '024348' ty 6 cl 3.3 cw 1.68 ce 1 sc 1 rt 0                 stds
+STDS id '024366' ty 6 cl 6.15 cw 1.45 ce 1 sc 1 rt 0                 stds
+STDS id '024356' ty 6 cl 4 cw 0.96 ce 1 sc 1 rt 0                 stds
+STDS id '024240' ty 6 cl 5.8 cw 1.45 ce 1 sc 1 rt 0                 stds
+STDS id '024191' ty 6 cl 5.2 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '012389' ty 6 cl 3.3 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024155' ty 6 cl 6.6 cw 1.45 ce 1 sc 1 rt 0                 stds
+STDS id '024156' nm '' ty 6 cl 6.2 cw 5 ce 1 sc 1 rt 0 stds
+STDS id '024158' nm '' ty 6 cl 7 cw 5 ce 1 sc 1 rt 0        stds
+STDS id '024321' ty 6 cl 3.75 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024346' ty 6 cl 3.75 cw 2.15 ce 1 sc 1 rt 0                 stds
+STDS id '012372' ty 6 cl 3.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024257' ty 6 cl 4.25 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024258' ty 6 cl 4.6 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024187' ty 6 cl 5.25 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024241' ty 6 cl 5.8 cw 0.8 ce 1 sc 1 rt 0                 stds
+STDS id '024238' ty 6 cl 3 cw 5.35 ce 1 sc 1 rt 0                 stds
+STDS id '024186' ty 6 cl 4.85 cw 0.45 ce 1 sc 1 rt 0                 stds
+STDS id '024157' ty 6 cl 6.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024188' ty 6 cl 4.85 cw 1.45 ce 1 sc 1 rt 0                 stds
+STDS id '024184' ty 6 cl 4.7 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024256' ty 6 cl 4.25 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024152' ty 6 cl 6.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024193' ty 6 cl 3.5 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '015044' ty 6 cl 4 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024324' ty 6 cl 3.35 cw 0.73 ce 1 sc 1 rt 0                 stds
+STDS id '024190' ty 6 cl 4.3 cw 1.91 ce 1 sc 1 rt 0                 stds
+STDS id 'GM2-20-Schoenaker_stuw' ty 6 cl 6.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024221' ty 6 cl 4.7 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id '024275' ty 6 cl 4.6 cw 0.48 ce 1 sc 1 rt 0                 stds
+STDS id '024234' ty 6 cl 6.15 cw 1.45 ce 1 sc 1 rt 0                 stds
+STDS id '24105' nm '' ty 9 dn -2 rt cr 0 1 0 ct lt 1
+TBLE
+0.333 6.35 6.25 9 10 <
+tble stds
+STDS id '024217' ty 6 cl 5.1 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024220' ty 6 cl 4.8 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id '024237' ty 6 cl 5.35 cw 1.45 ce 1 sc 1 rt 0                 stds
+STDS id '024380' ty 6 cl 1.9 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024235' ty 6 cl 5.75 cw 1.45 ce 1 sc 1 rt 0                 stds
+STDS id '024236' ty 6 cl 5.45 cw 1.45 ce 1 sc 1 rt 0                 stds
+STDS id '024281' ty 6 cl 4.25 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id '024331' ty 6 cl 4.25 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '24409' nm '' ty 6 cl 4.6 cw 2 ce 1 sc 1 rt 0        stds
+STDS id '012310' ty 6 cl 4.6 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024151' ty 6 cl 6.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '013314' ty 6 cl 4.7 cw 1.45 ce 1 sc 1 rt 0                 stds
+STDS id '024233' ty 6 cl 6.65 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id '024334' ty 6 cl 3.9 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024154' nm '' ty 6 cl 8 cw 5 ce 1 sc 1 rt 0        stds
+STDS id '024219' ty 6 cl 5.1 cw 0.48 ce 1 sc 1 rt 0                 stds
+STDS id '024218' ty 6 cl 3.79 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024153' ty 6 cl 6.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024329' ty 6 cl 4.85 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id '015063' ty 6 cl 3.9 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id '015188' ty 6 cl 4.7 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024214' ty 6 cl 6.2 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '24107' nm '' ty 9 dn 2 pu 2 rt cr 0 1 0 ct lt 1
+TBLE
+0.5 4.35 4.25 9 10 <
+tble stds
+STDS id '024335' ty 6 cl 4 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024216' ty 6 cl 4.14 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024280' ty 6 cl 3.65 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024215' ty 6 cl 5.35 cw 1.47 ce 1 sc 1 rt 0                 stds
+STDS id '024332' ty 6 cl 3 cw 1.91 ce 1 sc 1 rt 0                 stds
+STDS id '024232' ty 6 cl 7.25 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id 'Bobbert' ty 6 cl 4.46 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024276' ty 6 cl 5.1 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024224' ty 6 cl 5.75 cw 1.45 ce 1 sc 1 rt 0                 stds
+STDS id 'W.A.-brug' ty 6 cl 4.1 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024212' ty 6 cl 5.35 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id '014946' ty 6 cl 4 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '168' nm '' ty 6 cl 99 cw 2 ce 1 sc 1 rt 0       stds
+STDS id '014953' ty 6 cl 4.6 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024290' ty 6 cl 4.6 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024200' ty 6 cl 5.1 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024270' ty 6 cl 4.07 cw 1.8 ce 1 sc 1 rt 0                 stds
+STDS id '024230' ty 6 cl 7.25 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id 'Gashuisje_Rieben' ty 6 cl 4.1 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024228' ty 6 cl 6.15 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id '024199' ty 6 cl 5.1 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id '024229' ty 6 cl 6.65 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id '024208' ty 6 cl 6.2 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024231' ty 6 cl 6.65 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024223' ty 6 cl 5.75 cw 1.15 ce 1 sc 1 rt 0                 stds
+STDS id '024393' ty 6 cl 3.81 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024211' ty 6 cl 5.75 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id '024225' ty 6 cl 6.15 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id '024289' ty 6 cl 4.95 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024207' ty 6 cl 5.8 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id '024201' ty 6 cl 5.25 cw 0.48 ce 1 sc 1 rt 0                 stds
+STDS id '024203' ty 6 cl 4.51 cw 0.48 ce 1 sc 1 rt 0                 stds
+STDS id '013164' ty 6 cl 5.1 cw 0.48 ce 1 sc 1 rt 0                 stds
+STDS id '024209' ty 6 cl 5.8 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id '024227' ty 6 cl 6.65 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id '024210' ty 6 cl 5.8 cw 0.9 ce 1 sc 1 rt 0                 stds
+STDS id '024198' ty 6 cl 5.5 cw 1.43 ce 1 sc 1 rt 0                 stds
+STDS id '024202' ty 6 cl 5.65 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024204' ty 6 cl 5.65 cw 1 ce 1 sc 1 rt 0                 stds
+STDS id '015304' ty 6 cl 6.2 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id 'Heemstraweg' ty 6 cl 5.45 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024205' ty 6 cl 6.2 cw 0.95 ce 1 sc 1 rt 0                 stds
+STDS id '024197' ty 6 cl 5.5 cw 0.48 ce 1 sc 1 rt 0                 stds
+STDS id '024291' ty 6 cl 4.26 cw 0.45 ce 1 sc 1 rt 0                 stds
+STDS id '024271' ty 6 cl 4.36 cw 0.47 ce 1 sc 1 rt 0                 stds
+STDS id '024196' ty 6 cl 5.65 cw 0.48 ce 1 sc 1 rt 0                 stds
+STDS id '024194' nm '' ty 6 cl 99 cw 2 ce 1 sc 1 rt 0       stds
+STDS id '24410' nm '' ty 7 cl 5.2 cw 2 gh 5.4 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0       stds
+STDS id '024253' ty 6 cl 5.2 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024179' ty 6 cl 99 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '024379' ty 6 cl 5.3 cw 5 ce 1 sc 1 rt 0                 stds
+STDS id '10' nm '' ty 6 cl 7.1 cw 2 ce 1 sc 1 rt 0        stds
+STDS id '24106' nm '' ty 9 dn -2 rt cr 0 1 0 ct lt 1
+TBLE
+0.5 5.32 5.18 9 10 <
+tble stds
+STDS id '110' nm '' ty 6 cl 5.7 cw 2 ce 1 sc 1 rt 0        stds
+STDS id '175' nm '' ty 9 dn 2 rt cr 0 1 0 ct lt 1
+TBLE
+0.75 0.8 0.6 9 10 <
+tble stds
+STDS id '214' nm '' ty 9 dn -2 rt cr 0 1 0 ct lt 1
+TBLE
+0.2 0.8 0.6 6.9 7 <
+tble       stds
+STDS id '24407' ty 7 cl 2.91 cw 1.6 gh 12.91 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0             stds
+STDS id '24098' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+5.5 2.6 2.5 0 0 <
+11 2.65 2.55 0 0 <
+16.5 2.7 2.6 0 0 <
+tble      stds
+STDS id '229' nm '' ty 6 cl 0.7 cw 4 ce 1 sc 1 rt 0    stds
+STDS id '255' nm '' ty 6 cl 10 cw 4 ce 1 sc 1 rt 0    stds
+STDS id '024378' nm '' ty 6 cl 5.45 cw 2 ce 1 sc 1 rt 0 stds
+STDS id '24105_b' nm '' ty 9 dn 2 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.8 0.6 9 10 <
+tble stds
+STDS id '24106_b' nm '' ty 9 dn 2 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.8 0.6 9 10 <
+tble stds

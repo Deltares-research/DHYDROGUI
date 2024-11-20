@@ -1,0 +1,13 @@
+ Run datum (DD-MM-YY) and time: 2- 3-2012  14:30
+
+ Case name                                     
+
+
+
+ Maxima per event
+
+ Event   Start     Node identification   Node           Maximum_flow  
+  nr  year-mon-day                       name               [m3/s]
+===========================================================================
+   1 2005 Dec  30   cnGFE1022                                   1.288
+   1 2005 Dec  30   cnGFE1021                                   1.894

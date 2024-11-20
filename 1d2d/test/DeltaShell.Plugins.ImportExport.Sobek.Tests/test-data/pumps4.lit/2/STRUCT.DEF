@@ -1,0 +1,41 @@
+STDS id '9' nm '' ty 9 dn 1 pu 2 rt cr 2
+TBLE
+-4 0.5 <
+-3 0.7 <
+-2 0.85 <
+-1 0.95 <
+0 1 <
+tble ct lt 1
+TBLE
+50 6 2 0 0 <
+tble stds
+STDS id '##1' nm 'Pump01' ty 3 dn 2 rt cr 0 1 0 ct lt 1 PDIN 0 0 '' pdin
+TBLE
+25 0 0 3.5 4.5 <
+tble stds
+STDS id '10' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.8 0.6 0 0 <
+tble  stds
+STDS id '11' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.8 0.6 0 0 <
+tble  stds
+STDS id '12' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.8 0.6 0 0 <
+tble  stds
+STDS id '13' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.8 0.6 0 0 <
+tble  stds
+STDS id '14' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.8 0.6 0 0 <
+tble  stds
+STDS id '15' nm '' ty 9 dn 3 rt cr 0 1 0 ct lt 1
+TBLE
+ 5 5 2 2 4 <
+ 10 6 2.5 1.9 3.9 <
+ 50 8 3 1.8 3.8 <
+tble stds

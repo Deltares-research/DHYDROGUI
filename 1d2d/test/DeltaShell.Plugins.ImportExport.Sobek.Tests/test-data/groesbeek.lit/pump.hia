@@ -1,0 +1,20 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=Deltares, DELFTIO Version 1.09.00.6403, Aug 03 2016, 15:15:02
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=7
+NumberOfLocations=3
+T0=1995.01.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+1=Suction-Side Level (m AD)
+2=Delivery-Side Level (m AD)
+4=Actual Pump Stage (-)
+7=Pump Discharge (m3/s)
+ 
+[Long Locations]
+ 

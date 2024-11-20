@@ -1,0 +1,95 @@
+CN_1.1
+FLBO id 'TH5' ci 'TH5' flbo
+FLBO id 'SH2' ci 'SH2' flbo
+FLBO id '14_1' ci '14_1' flbo
+FLBO id 'TunnelKeelungMJH58' ci 'TunnelKeelungMJH58' flbo
+FLNX id 'TH10' nm '' ci 'TH10' flnx
+FLNX id 'TH6' nm '' ci 'TH6' flnx
+FLNX id 'TH11' nm '' ci 'TH11' flnx
+FLBX id 'TH61' nm '' ci 'TH421' lc 1346.72484411749 flbx 
+FLNX id 'TH51' nm '' ci 'TH51' flnx 
+FLNX id 'TH111' nm '' ci 'TH111' flnx
+FLNX id 'TH113' nm '' ci 'TH113' flnx 
+FLNX id 'TH160' nm '' ci 'TH160' flnx
+FLBX id '2' nm '' ci 'TH618' lc 745.321748571081 flbx 
+FLBX id 'TH58' nm '' ci 'TH618' lc 2726.2256921811 flbx 
+FLBR id '11' nm '' ci 'TH618' lc 3881.87318905512 flbr 
+FLNX id 'TH127' nm '' ci 'TH127' flnx
+FLBX id 'TH47' nm '' ci 'TH665' lc 1560.37562430898 flbx 
+FLNX id 'TH147' nm '' ci 'TH147' flnx
+FLNX id 'TH149' nm '' ci 'TH149' flnx 
+FLNX id 'TH156' nm '' ci 'TH156' flnx 
+FLNX id 'TH157' nm '' ci 'TH157' flnx
+FLNX id 'TH161' nm '' ci 'TH161' flnx
+FLNX id 'TH187' nm '' ci 'TH187' flnx
+FLNX id 'TH167' nm '' ci 'TH167' flnx 
+FLNX id 'TH168' nm '' ci 'TH168' flnx
+FLNX id 'TH179' nm '' ci 'TH179' flnx
+FLNX id 'TH181' nm '' ci 'TH181' flnx
+FLNX id 'TH184' nm '' ci 'TH184' flnx
+FLNX id 'TH188' nm '' ci 'TH188' flnx
+FLBX id '92' nm '' ci 'TH813' lc 2165.42886337766 flbx 
+FLNX id 'HS04' nm 'Jensan' ci 'HS04' flnx
+FLNX id 'TH206' nm '' ci 'TH206' flnx
+FLNX id 'TH221' nm '' ci 'TH221' flnx
+FLBX id 'TH59' nm '' ci 'TH416' lc 3399.17439094733 flbx 
+FLNX id 'TH243' nm '' ci 'TH243' flnx
+FLNX id 'TH245' nm '' ci 'TH245' flnx 
+FLNX id 'TH247' nm '' ci 'TH247' flnx 
+FLNX id '18' nm '' ci '18' flnx
+FLBX id '20' nm '' ci '391' lc 434.561739039616 flbx 
+FLBX id '21' nm '' ci '391' lc 1107.93089361153 flbx 
+FLNX id '22' nm '' ci '22' flnx
+FLNX id '29' nm '' ci '29' flnx 
+FLNX id '60' nm '' ci '60' flnx
+FLNX id '242' nm '' ci '242' flnx
+FLNX id '42' nm '' ci '42' flnx 
+FLNX id '57' nm '' ci '57' flnx
+FLNX id '74' nm '' ci '74' flnx
+FLBX id '19' nm '' ci '498' lc 908.99039548767 flbx 
+FLNX id '237' nm '' ci '237' flnx
+FLBX id '6' nm '' ci '504' lc 882.125954360831 flbx 
+FLNX id '70' nm '' ci '70' flnx 
+FLNX id '71' nm '' ci '71' flnx
+FLBX id '17' nm '' ci '500' lc 1224.37621243644 flbx 
+FLNX id '88' nm '' ci '88' flnx
+FLBX id '13' nm '' ci '522' lc 1340.56404122877 flbx 
+FLBX id '15' nm '' ci '522' lc 1852.14474740743 flbx 
+FLNX id '91' nm '' ci '91' flnx 
+FLNX id '7' nm '' ci '7' flnx 
+FLBX id '82' nm '' ci '4' lc 926.049122022053 flbx 
+FLNX id 'NS3' nm '«n¶Õ·Ë' ci 'NS3' flnx 
+FLNX id 'NS6' nm '' ci 'NS6' flnx 
+FLNX id 'NS7' nm '' ci 'NS7' flnx
+FLNX id 'NS9' nm '' ci 'NS9' flnx
+FLNX id 'NSSD262' nm '' ci 'NSSD262' flnx 
+FLBX id '24' nm '' ci 'NS10' lc 4366.95046394603 flbx 
+FLNX id 'NS22' nm '' ci 'NS22' flnx 
+FLNX id 'NS18' nm '' ci 'NS18' flnx
+FLNX id 'NSSD271' nm '' ci 'NSSD271' flnx
+FLNX id 'NS24' nm '' ci 'NS24' flnx
+FLNX id 'NS12' nm '' ci 'NS12' flnx
+FLNX id 'FEIFT098' nm '»B»A¤ô®w' ci 'FEIFT098' flnx
+FLNX id 'FEI9' nm '»B»A¤ô®w' ci 'FEI9' flnx
+FLNX id 'FEI17' nm '' ci 'FEI17' flnx
+FLNX id 'FEIFT060' nm '»B»A¤ô®w' ci 'FEIFT060' flnx
+FLNX id 'FEI4' nm '³½¶e³½±U·Ë' ci 'FEI4' flnx
+FLNX id 'FEIFT085' nm '¥_¶Õ·Ë' ci 'FEIFT085' flnx
+FLNX id 'FEIFT136' nm '»B»A¤ô®w' ci 'FEIFT136' flnx
+FLNX id 'FEI51' nm 'ª÷¥Ê¼d·Ë' ci 'FEI51' flnx
+FLBX id '23' nm '' ci 'SH1' lc 758.320414882198 flbx 
+FLBX id '14' nm '' ci 'SH1' lc 2257.52362442996 flbx 
+FLBX id '12' nm '' ci 'SH1' lc 4041.05433454631 flbx 
+FLBX id '9' nm '' ci 'SH1' lc 6474.19499596029 flbx 
+FLNX id 'SH3' nm '' ci 'SH3' flnx 
+FLBX id '8' nm '' ci 'SH2' lc 1589.41884948282 flbx 
+FLBX id '5' nm '' ci 'SH2' lc 2440.02149910696 flbx 
+FLBX id '3' nm '' ci 'SH2' lc 6754.23882604822 flbx 
+FLNX id 'SH4' nm '' ci 'SH4' flnx
+FLBX id '36' nm '' ci '5' lc 1221.69112305787 flbx 
+FLBX id '35' nm '' ci '5' lc 3114.21533441823 flbx 
+FLNX id 'TN75' nm '°ò¶©ªe' ci 'TN75' flnx 
+FLNX id 'TNKL099' nm '' ci 'TNKL099' flnx
+FLNX id 'TNKL094' nm '' ci 'TNKL094' flnx
+FLBX id '87' nm '' ci '7' lc 1381.34237803205 flbx 
+FLBX id '34' nm '' ci '24' lc 3578.1921446569 flbx 

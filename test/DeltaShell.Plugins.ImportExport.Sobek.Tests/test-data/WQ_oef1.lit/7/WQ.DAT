@@ -1,8 +1,0 @@
- 1   ; file option for initial values in this file
- 2   ; default option
-6*1.0 ; scale factors for substances, fixed at 1.0
-;* active substances:  NH4 CBOD5 CBOD5_2 OXY Continuity
- 1 0 1 5.5 1 ; initial values of active substances
-;* passive substances:  SOD
- 0 ; initial values of passive substances
- 0 ; number of overrides

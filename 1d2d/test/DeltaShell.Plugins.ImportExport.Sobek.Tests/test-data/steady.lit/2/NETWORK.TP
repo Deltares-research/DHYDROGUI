@@ -1,0 +1,24 @@
+TP_1.0
+NODE id 'N_001' nm 'LobithMSW' px 204322 py 429166 node
+NODE id 'N_002' nm 'PankopMSW' px 200215 py 431638 node
+NODE id 'N_003' nm 'TielwlMSW' px 159990 py 433341 node
+NODE id 'N_005' nm 'YsselkMSW' px 193800 py 440465 node
+NODE id 'N_006' nm 'km_929Lek' px 151711 py 441369 node
+NODE id 'N_007' nm 'km_937_36' px 137273 py 445176 node
+NODE id 'N_009' nm 'Olst__MSW' px 203839 py 484051 node
+NODE id 'N_010' nm 'Ketdiebps' px 186015 py 510556 node
+NODE id 'N_011' nm 'eindketdi' px 181491 py 510735 node
+NODE id 'N_012' nm 'eindkatdi' px 185348 py 511029 node
+NODE id 'N_004' nm 'WerkenMSW' px 120525 py 425551 node
+NODE id 'N_008' nm 'KrilekMSW' px 102828 py 433732 node
+BRCH id 'R_001' nm 'Bovenryn' bn 'N_001' en 'N_002' al 4841.79598614617 brch
+BRCH id 'R_002' nm 'Waal___1' bn 'N_002' en 'N_003' al 45719.0000000003 brch
+BRCH id 'R_003' nm 'Waal___2' bn 'N_003' en 'N_004' al 46761.8766890275 brch
+BRCH id 'R_004' nm 'Pankanaa' bn 'N_002' en 'N_005' al 11347.0000000001 brch
+BRCH id 'R_005' nm 'Nederryn' bn 'N_005' en 'N_006' al 48670.3846275924 brch
+BRCH id 'R_006' nm 'Lek____1' bn 'N_006' en 'N_007' al 18594.0970429739 brch
+BRCH id 'R_007' nm 'Lek____2' bn 'N_007' en 'N_008' al 40685.1422161537 brch
+BRCH id 'R_008' nm 'Yssel__1' bn 'N_005' en 'N_009' al 69209.5247299686 brch
+BRCH id 'R_009' nm 'Yssel__2' bn 'N_009' en 'N_010' al 44671.3191894675 brch
+BRCH id 'R_010' nm 'Keteldie' bn 'N_010' en 'N_011' al 4540.3995519489 brch
+BRCH id 'R_011' nm 'Kattedie' bn 'N_010' en 'N_012' al 881.999999999961 brch

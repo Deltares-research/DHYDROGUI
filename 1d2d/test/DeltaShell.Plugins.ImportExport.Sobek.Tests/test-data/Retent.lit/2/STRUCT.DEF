@@ -1,0 +1,23 @@
+STDS id '##2' nm 'Pump retention' ty 3 dn 1 rt cr 0 0.5 0 ct lt 1 PDIN 0 0 '' pdin
+TBLE
+5 1 0 0 0 <
+tble stds
+STDS id '##1' nm 'Weir retention' ty 0 cl 2 cw 2 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0  pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble stds

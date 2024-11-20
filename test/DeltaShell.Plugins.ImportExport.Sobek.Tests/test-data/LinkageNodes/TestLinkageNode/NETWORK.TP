@@ -1,7 +1,0 @@
-TP_1.0
-NODE id '1' nm '' px 119818.949884745 py 435928.948959474 node
-NODE id '2' nm '' px 176720.439499845 py 483999.980065717 node
-NODE id '3' nm '' px 192138.907653613 py 437029.812267251 node
-BRCH id '1' nm '' bn '1' en '2' al 74488.9491940564 vc_opt 0 vc_equi -1 vc_len 1000 brch
-BRCH id '2' nm '' bn '4' en '3' al 48750.7769395804 vc_opt 0 vc_equi -1 vc_len 1000 brch
-NDLK id '4' nm '' px 149866.820259498 py 461313.734511341 ci '1' lc 39335.2494789623 ndlk

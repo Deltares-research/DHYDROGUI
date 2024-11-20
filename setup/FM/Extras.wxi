@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <Component Id="FMExtras" Guid="$(var.MyExtras)">
-    <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedFMExtras" Type="integer" Value="1"/>
-    <File Id="splash_screen" Source='!(loc.Delft3DPackageName)_Resources\splash_screen.jpg' />
-  </Component>
-</Include>

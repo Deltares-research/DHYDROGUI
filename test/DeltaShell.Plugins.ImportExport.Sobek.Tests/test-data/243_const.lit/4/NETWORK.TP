@@ -1,4 +1,0 @@
-TP_1.0
-NODE id 'Up_Bnd_Cul_1' nm '' px -200500 py 500000 node
-NODE id 'Dwn_Bnd_Cul_1' nm '' px -200000 py 500000 node
-BRCH id '1' nm '' bn 'Up_Bnd_Cul_1' en 'Dwn_Bnd_Cul_1' al 500 vc_opt 1 vc_equi -1 vc_len 100 brch

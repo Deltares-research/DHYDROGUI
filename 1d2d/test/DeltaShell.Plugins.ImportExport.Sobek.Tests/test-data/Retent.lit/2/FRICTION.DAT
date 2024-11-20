@@ -1,0 +1,85 @@
+GLFR st 0 dd 1.65 s1 0.0474 s2 0.55 p1 -6 p2 2.75 p3 5.5 p4 -4.125 p5 -0.2 p6 2.447 a1 0.0005 a2 6e-005 ra 1
+BDFR id '0' ci '0' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 bdfr glfr
+BDFR id '2' ci '2' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003           bdfr
+STFR id 'brug_1' ci 'brug_1' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 30 0 sr cp 0 30 stfr
+STFR id 'brug_11' ci 'brug_11' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_10' ci 'brug_10' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_9' ci 'brug_9' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 30 0 sr cp 0 30 stfr
+STFR id 'brug_8' ci 'brug_8' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 30 0 sr cp 0 30 stfr
+STFR id 'brug_7' ci 'brug_7' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 30 0 sr cp 0 30 stfr
+STFR id 'brug_5' ci 'brug_5' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_4' ci 'brug_4' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_3' ci 'brug_3' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_18' ci 'brug_18' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 30 0 sr cp 0 30 stfr
+STFR id 'brug_17' ci 'brug_17' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_15' ci 'brug_15' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_14' ci 'brug_14' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_13' ci 'brug_13' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_39' ci 'brug_39' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 30 0 sr cp 0 30 stfr
+STFR id 'brug_38' ci 'brug_38' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_37' ci 'brug_37' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 30 0 sr cp 0 30 stfr
+STFR id 'brug_35' ci 'brug_35' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 30 0 sr cp 0 30 stfr
+STFR id 'brug_27' ci 'brug_27' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_26' ci 'brug_26' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 30 0 sr cp 0 30 stfr
+STFR id 'brug_25' ci 'brug_25' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_24' ci 'brug_24' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_23' ci 'brug_23' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_22' ci 'brug_22' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_21' ci 'brug_21' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_20' ci 'brug_20' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 30 0 sr cp 0 30 stfr
+STFR id 'brug_19' ci 'brug_19' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
+STFR id 'brug_12' ci 'brug_12' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_44' ci 'brug_44' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_43' ci 'brug_43' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_42' ci 'brug_42' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_41' ci 'brug_41' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_40' ci 'brug_40' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_47' ci 'brug_47' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_46' ci 'brug_46' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_45' ci 'brug_45' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_34' ci 'brug_34' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_33' ci 'brug_33' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_32' ci 'brug_32' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_31' ci 'brug_31' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_30' ci 'brug_30' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_29' ci 'brug_29' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+STFR id 'brug_28' ci 'brug_28' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
+CRFR id 'prof_D20060515-DP-295' nm 'Friction' cs 'prof_D20060515-DP-295'
+lt ys
+TBLE
+-14.43 14.14 <
+tble
+ft ys
+TBLE
+3 30 <
+tble
+fr ys
+TBLE
+3 30 <
+tble crfr
+CRFR id '11' nm 'Friction' cs '11'
+lt ys
+TBLE
+0 18.04 <
+tble
+ft ys
+TBLE
+3 30 <
+tble
+fr ys
+TBLE
+3 30 <
+tble crfr
+CRFR id 'prof_D20061011-DP-145' nm 'Friction' cs 'prof_D20061011-DP-145'
+lt ys
+TBLE
+-15.24 10.13 <
+tble
+ft ys
+TBLE
+3 30 <
+tble
+fr ys
+TBLE
+3 30 <
+tble crfr

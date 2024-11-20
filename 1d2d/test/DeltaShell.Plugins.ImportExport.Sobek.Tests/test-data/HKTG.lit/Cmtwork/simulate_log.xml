@@ -1,0 +1,96 @@
+<?xml version="1.0" standalone="no"?>
+<SIMULATION_REPORT ThisXMLDocVersion="01.01.00">
+	<SYSINFO>
+		<Hostname>"l00137"</Hostname>
+		<ProcessorType>"'Processor Type = '586'; Level = '6'; Revision = '5898'; Inferred name = 'Intel Pentium 2'"</ProcessorType>
+		<PROCESSOR_ARCHITECTURE_FromDOS>"x86"</PROCESSOR_ARCHITECTURE_FromDOS>
+		<PROCESSOR_IDENTIFIER_FromDOS>"x86 Family 6 Model 23 Stepping 10, GenuineIntel"</PROCESSOR_IDENTIFIER_FromDOS>
+		<PROCESSOR_LEVEL_FromDOS>"6"</PROCESSOR_LEVEL_FromDOS>
+		<TotalMemoryFreeInMB>"1,920.25"</TotalMemoryFreeInMB>
+		<TotalMemoryRAMinMB>"2,048.00"</TotalMemoryRAMinMB>
+		<TotalDiskMemFree>"1,198.30"</TotalDiskMemFree>
+		<TEMPDIR_FromDOS>"e:\Temp"</TEMPDIR_FromDOS>
+		<TMPDIR_FromDOS>"e:\Temp"</TMPDIR_FromDOS>
+		<OSVersion>"OS_WINDOWS_XP"</OSVersion>
+		<CurrentUser>"hummel"</CurrentUser>
+		<ThousandSpecifier>","</ThousandSpecifier>
+		<DecimalSpecifier>"."</DecimalSpecifier>
+		<NumberFormat>"###,###.######"</NumberFormat>
+		<TimeFormat>"H:mm:ss"</TimeFormat>
+		<DateFormat>"d-M-yyyy"</DateFormat>
+		<SysLanguageName>"English (United States)"</SysLanguageName>
+		<WindowsDirFromDOS>"C:\WINDOWS"</WindowsDirFromDOS>
+		<FLEXlm_LM_LICENSE_FILE_FromDOS>";C:\Program Files\DS_Flex;"</FLEXlm_LM_LICENSE_FILE_FromDOS>
+		<FLEXlm_DWLDELFT_LICENSE_FILE_FromDOS>";C:\Program Files\DS_Flex;"</FLEXlm_DWLDELFT_LICENSE_FILE_FromDOS>
+		<FLEXlm_LMWLDELFT_LICENSE_FILE_FromDOS>";C:\Program Files\DS_Flex;"</FLEXlm_LMWLDELFT_LICENSE_FILE_FromDOS>
+		<FLEXlm_LM_LICENSE_FILE_FromREG>";C:\Program Files\DS_Flex;"</FLEXlm_LM_LICENSE_FILE_FromREG>
+		<FLEXlm_DWLDELFT_LICENSE_FILE_FromREG>";C:\Program Files\DS_Flex;"</FLEXlm_DWLDELFT_LICENSE_FILE_FromREG>
+		<FLEXlm_LMWLDELFT_LICENSE_FILE_FromREG>";C:\Program Files\DS_Flex;"</FLEXlm_LMWLDELFT_LICENSE_FILE_FromREG>
+		<SOBEK_CurrentVersion_FromREG>"Error in fGetRegistryValue. Error getting registry value for key: 
+-2147483646\SOFTWARE\WL | delft hydraulics\Sobek For value name: CurrentVersion
+Cause: Cannot access key (RO)."</SOBEK_CurrentVersion_FromREG>
+		<SOBEK_InstallType_FromREG>"Error in fGetRegistryValue. Error getting registry value for key: 
+-2147483646\SOFTWARE\WL | delft hydraulics\Sobek For value name: InstallType
+Cause: Cannot access key (RO)."</SOBEK_InstallType_FromREG>
+		<SOBEK_ModelPath_FromREG>"Error in fGetRegistryValue. Error getting registry value for key: 
+-2147483646\SOFTWARE\WL | delft hydraulics\Sobek For value name: ModelPath
+Cause: Cannot access key (RO)."</SOBEK_ModelPath_FromREG>
+		<SOBEK_Path_FromREG>"Error in fGetRegistryValue. Error getting registry value for key: 
+-2147483646\SOFTWARE\WL | delft hydraulics\Sobek For value name: Path
+Cause: Cannot access key (RO)."</SOBEK_Path_FromREG>
+		<SOBEK_Product_Line_FromREG>"Error in fGetRegistryValue. Error getting registry value for key: 
+-2147483646\SOFTWARE\WL | delft hydraulics\Sobek For value name: Product Line
+Cause: Cannot access key (RO)."</SOBEK_Product_Line_FromREG>
+		<SOBEK_ProgramsPath_FromREG>"Error in fGetRegistryValue. Error getting registry value for key: 
+-2147483646\SOFTWARE\WL | delft hydraulics\Sobek For value name: ProgramsPath
+Cause: Cannot access key (RO)."</SOBEK_ProgramsPath_FromREG>
+		<SOBEK_UNCReferencePath_FromREG>"Error in fGetRegistryValue. Error getting registry value for key: 
+-2147483646\SOFTWARE\WL | delft hydraulics\Sobek For value name: UNCReferencePath
+Cause: Cannot access key (RO)."</SOBEK_UNCReferencePath_FromREG>
+	</SYSINFO>
+	<Simulation_Properties>
+		<SimulateExe App.Path="D:\Sb213_14\Programs" Version="2.12.0031" App.EXE="simulate" FileDate="2012-01-11T16:48:36" FileLen="720896"/>
+		<Summary SimStart="2012-06-28T16:13:26" Succesfull="true" SimStop="2012-06-28T16:13:33" SimTime_Seconds="7" SimTime_ISO="P0Y0M0DT0H0M7S"/>
+	<DebugInfo CmdLine="simulate.ini" IniFileName="D:\SB213_14\HKTG.lit\CMTWORK\simulate.ini" CaseName="HvP River Weir met Lateral FlowOnly" CmtDir="D:\SB213_14\HKTG.lit\CMTWORK" ReturnCodeFile="pluvius1.rtn" IniFileVersion="3.3" ReportFile="..\WORK\Simulate.rep" HelpFile="D:\Sb213_14\Programs\help\sobek_um.pdf" WorkingDirectory="..\work\" DataFile="..\work\settings.dat" DataFileVersion="3.3" Do_MakeCrl_Start="2012-06-28T16:13:26"/>
+		<WriteReturnCode>
+			<Message SequenceNumber="1" Time="2012-06-28T16:13:26" Msg="An unhandled exception occurred. " Fatal="false"/>
+			<Message SequenceNumber="2" Time="2012-06-28T16:13:33" Msg="Simulation finished succesfully  " Fatal="false"/>
+		</WriteReturnCode>
+		<PreProcessing StartTime="2012-06-28T16:13:27" NrOfModules="1" WriteSobeksimIni="OK" AnyQuantityParallel="false" UsePrevQuantResults="false" SkipPreProcessing="false" GenerateDependancyFile="false" StopTime="2012-06-28T16:13:30">
+			<Versions SobekVersion="Sobek Advanced Version 2.13.000.14a" ProjectVersion="Sobek Advanced Version 2.13.000.14a"/>
+			<ActiveModules SOBEK_RR="false" SOBEK_CF="true" SOBEK_RF="true" SOBEK_1DMOR="false" SOBEK_SF="false" SOBEK_RTC="false" SOBEK_WLM="false" SOBEK_WQ="false" SOBEK_2DWQ="false" SOBEK_GW="false" SOBEK_FLS="false" SOBEK_3DFLOW="false" SOBEK_3DWQ="false" QuantQualParallel="false"/>
+			<ComputationPeriod FlowSettings_PeriodFromEvent="false" FlowSettings_PeriodFromRR="false" BBBSettings_PeriodFromEvent="true" Period.NrOfEvents="1" Period.TimeStep="1" Period.NrOfTimeSteps="172800" Period.StartTime="2011-01-01T00:00:00" Period.StopTime="2011-01-03T00:00:00"/>
+			<TimeStep Flow="60" Do_MakeCrl_End="2012-06-28T16:13:27" MeteoEventFile="\SB213_14\FIXED\DEFAULT.BUI" GetSimulationTasks="2012-06-28T16:13:27" Initialise="OK" EndTimeInitialise="2012-06-28T16:13:27"/>
+			<Module SequenceNumber="1" ModuleID="CF/SF" NrFilesToKill="12" NrFilesToCopy="0" NrOfTasks="3" FilesToMove="0">
+				<KillFile SequenceNumber="1" FileName="sobek.?d?"/>
+				<KillFile SequenceNumber="2" FileName="signal.*"/>
+				<KillFile SequenceNumber="3" FileName="done.*"/>
+				<KillFile SequenceNumber="4" FileName="crashed.*"/>
+				<KillFile SequenceNumber="5" FileName="parsen.msg"/>
+				<KillFile SequenceNumber="6" FileName="parsen.dmp"/>
+				<KillFile SequenceNumber="7" FileName="..\work\sobek.log"/>
+				<KillFile SequenceNumber="8" FileName="..\work\struc*.hi?"/>
+				<KillFile SequenceNumber="9" FileName="..\work\reach*.hi?"/>
+				<KillFile SequenceNumber="10" FileName="..\work\nodes*.hi?"/>
+				<KillFile SequenceNumber="11" FileName="..\work\Sbk_Rtc.Hi?"/>
+				<KillFile SequenceNumber="12" FileName="..\work\RTC_Sbk.Hi?"/>
+				<CopyFile SequenceNumber="1" FileName="D:\Sb213_14\Programs\Flow\fixed\sobeksim.ini ..\work\sobeksim.ini"/>
+				<CopyFile SequenceNumber="2" FileName="D:\Sb213_14\Programs\remote\task1.pif  task1.pif"/>
+				<CopyFile SequenceNumber="3" FileName="D:\Sb213_14\Programs\remote\task2.pif  task2.pif"/>
+				<CopyFile SequenceNumber="4" FileName="D:\Sb213_14\Programs\flow\parsen.ini parsen.ini"/>
+				<Run SequenceNumber="1" RunID="" Caption="" StartTime="2012-06-28T16:13:27" IsRemote="false" CmdLine="D:\Sb213_14\Programs\vervng32.exe CaseDesc.cmt PLUVIUS1 D:\Sb213_14\Programs\flow\parsen.fnm parsen.fnm ..\DescProt.cmt" WindowStyle="2" RtnFile="pluvius1.rtn" Workdir="" LogFile="" ProgressFile="" StopTime="2012-06-28T16:13:28" RtnCode="0" RtnMsg=""/>
+				<Run SequenceNumber="2" RunID="" Caption="" StartTime="2012-06-28T16:13:28" IsRemote="false" CmdLine="D:\Sb213_14\Programs\flow\parsen.exe parsen.fnm" WindowStyle="2" RtnFile="parsen.rtn" Workdir="" LogFile="parsen.dmp" ProgressFile="" StopTime="2012-06-28T16:13:29" RtnCode="0" RtnMsg=""/>
+				<Run SequenceNumber="3" RunID="" Caption="" StartTime="2012-06-28T16:13:29" IsRemote="false" CmdLine="D:\Sb213_14\Programs\vervng32.exe CaseDesc.cmt PLUVIUS1 D:\Sb213_14\Programs\suf_sim.fnm suftable.fnm ..\DescProt.cmt" WindowStyle="2" RtnFile="pluvius1.rtn" Workdir="" LogFile="" ProgressFile="" StopTime="2012-06-28T16:13:30" RtnCode="0" RtnMsg=""/>
+				<MoveFile SequenceNumber="1" NrOfTasks="1"/>
+			</Module>
+		</PreProcessing>
+		<Simulation StartTime="2012-06-28T16:13:30" NrOfRuns="1" StopTime="2012-06-28T16:13:32">
+			<Run SequenceNumber="1" RunID="" Caption="Flow Module" StartTime="2012-06-28T16:13:30" IsRemote="false" CmdLine="D:\Sb213_14\Programs\flow\delftflow.exe D:\Sb213_14\Programs\flow\sobeksim.fnm outputfile SOBEK" WindowStyle="1" RtnFile="sobek.rtn" Workdir="" LogFile="..\work\sobek.log" ProgressFile="sobeksim_progress.txt" StopTime="2012-06-28T16:13:32" RtnCode="0" RtnMsg=""/>
+		</Simulation>
+		<PostProcessing StartTime="2012-06-28T16:13:32" NrOfModules="1" StopTime="2012-06-28T16:13:33">
+			<Module SequenceNumber="1" ModuleID="CF/SF" SkipTask="false" NrFilesToKill="0">
+				<Run SequenceNumber="1" RunID="" Caption="" StartTime="2012-06-28T16:13:32" IsRemote="false" CmdLine="D:\Sb213_14\Programs\suftable.exe suftable.fnm" WindowStyle="2" RtnFile="suftable.rtn" Workdir="" LogFile="" ProgressFile="" StopTime="2012-06-28T16:13:33" RtnCode="0" RtnMsg=""/>
+			</Module>
+		</PostProcessing>
+	</Simulation_Properties>
+</SIMULATION_REPORT>

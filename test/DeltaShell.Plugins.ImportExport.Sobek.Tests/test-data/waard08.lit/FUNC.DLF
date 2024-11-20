@@ -1,4 +1,0 @@
-DLF1.0
-[User Defined Output]
-FILE "@calcpnt.his" LAYER "" TYPE node HISLOC 2 VAR 5 DLFACTION 'stat_maximum' = Freeboard, maximum
-FILE "@calcpnt.his" LAYER "" TYPE node HISLOC 2 VAR 5 DLFACTION 'stat_maximum' = Freeboard, maximum

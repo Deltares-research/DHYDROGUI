@@ -1,0 +1,15 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=0
+ImportFrom=FromScratch
+ImportDate=28-3-2013 14:58:42
+Case Name=Default
+[Previous OutputFiles]
+..\work\3blinks.his=-1
+..\work\sacrmnto.his=-1
+..\work\3bareas.his=-1
+..\work\rrbalans.his=-1
+..\work\simulate.rep=-1
+..\work\sobek_3b.log=-1
+..\work\3B_GENER.OUT=-1

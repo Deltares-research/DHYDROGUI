@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <Shortcut Id="DRTCUserManualShortcut" Name="!(loc.RTCUserManualName)" Target="[BINDIR]D-Real_Time_Control_User_Manual.pdf" WorkingDirectory="BINDIR"/>
-</Include>

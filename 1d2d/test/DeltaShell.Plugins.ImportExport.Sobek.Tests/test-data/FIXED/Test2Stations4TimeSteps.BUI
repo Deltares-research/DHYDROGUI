@@ -1,0 +1,23 @@
+*Name of this file: \Sobek212\FIXED\Tholen_2.BUI
+*Date and time of construction: 27-06-2011   12:04:25
+*Enige algemene wenken:
+*Gebruik de default dataset (1) of de volledige reeks (0) voor overige invoer
+1
+*Aantal stations
+ 2
+*Namen van stations
+'Aap'
+'Noot'
+*Aantal gebeurtenissen (omdat het 1 bui betreft is dit altijd 1)
+*en het aantal seconden per waarnemingstijdstap
+ 1  3600 
+*Elke commentaarregel wordt begonnen met een * (asteriks).
+*Eerste record bevat startdatum en -tijd, lengte van de gebeurtenis in dd hh mm ss
+*Het format is: yyyymmdd:hhmmss:ddhhmmss
+*Daarna voor elk station de neerslag in mm per tijdstap.
+ 2009 12 29 10 0 0 0 4 0 0
+  1.1  11.11 
+  2.2  22.22 
+  3.3  33.33 
+  4.4  44.44 
+  

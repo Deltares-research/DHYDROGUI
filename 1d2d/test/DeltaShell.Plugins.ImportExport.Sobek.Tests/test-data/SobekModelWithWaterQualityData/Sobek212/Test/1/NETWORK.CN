@@ -1,0 +1,10 @@
+CN_1.1
+FLBO id 'N1' ci 'N1' flbo
+FLBO id 'N2' ci 'N2' flbo
+FLBO id 'N2a' ci 'N2a' flbo
+FLBO id 'N4' ci 'N4' flbo
+FLBR id 'LS1' nm 'LateralSource1' ci '1' lc 368.089888978055 flbr 
+FLBR id 'LS2' nm 'LateralSource2' ci '2' lc 355.591480904288 flbr 
+FLDI id 'l_3' ci '3' fldi 
+FLBR id 'LS3' nm 'LateralSource3' ci '4' lc 264.274891655822 flbr 
+FLNO id 'LN2' nm 'LonelyNode2' ci 'LN2' flno 
