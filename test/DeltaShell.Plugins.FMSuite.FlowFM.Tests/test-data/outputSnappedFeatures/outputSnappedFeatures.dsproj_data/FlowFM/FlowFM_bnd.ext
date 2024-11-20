@@ -1,6 +1,0 @@
-
-[boundary]
-quantity=1d2dbnd
-locationfile=Embankment01_bnk.pliz
-OpenBoundaryTolerance=5.0000000e-001
-forcingfile=REALTIME

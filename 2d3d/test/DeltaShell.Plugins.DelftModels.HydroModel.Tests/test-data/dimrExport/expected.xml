@@ -1,0 +1,76 @@
+<dimrConfig xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr http://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
+  <documentation>
+    <fileVersion>1.2</fileVersion>
+    <createdBy>Deltares, Coupling Team</createdBy>
+    <creationDate></creationDate>
+  </documentation>
+  <!--<control>
+          The <control> specifies the workflow of the deltaresHydro executable.
+          It indicates which components are started in which order. If the data
+          transfer is to be arranged by the main program "d_hydro", then a coupler
+          should be included.
+          The main <control> block is a sequential block; this means that each
+          component is initialized, time stepped, and finalized before the next
+          component starts.
+      <parallel>
+          Within a <parallel> tag the components are started
+          concurrently (if the mpi process ids listed per component don't overlap)
+          or executed synchronously in sequence (first all initialize, then time
+          stepping, and to conclude all finalization calls).
+      <start>
+          A <parallel> block contains exactly one <start/> component, defining the
+          start and end time of the simulation. This is the component inside
+          the <parallel> block with the smallest time step. All other
+          components must be defined with a <startGroup>.
+      <startGroup>
+          A <startGroup> should be used if a component (possibly including couplers)
+          should only be executed at a subset of simulation time steps.
+
+      For each component/coupler there will be a corresponding component/coupler
+      specification block defined below.-->
+  <control>
+    <parallel>
+      <startGroup>
+        <time>0 3600 172800</time>
+        <coupler name="mocked1d2dCoupler_to_mockedRTCModel" />
+        <start name="My RTCModel" />
+        <coupler name="mockedRTCModel_to_mocked1d2dCoupler" />
+      </startGroup>
+      <start name="1d2dCoupler" />
+    </parallel>
+  </control>
+  <component name="My RTCModel">
+    <library></library>
+    <workingDir></workingDir>
+    <inputFile></inputFile>
+  </component>
+  <component name="1d2dCoupler">
+    <library></library>
+    <workingDir></workingDir>
+    <inputFile></inputFile>
+  </component>
+  <coupler name="mockedRTCModel_to_mocked1d2dCoupler">
+    <sourceComponent>My RTCModel</sourceComponent>
+    <targetComponent>1d2dCoupler</targetComponent>
+    <item>
+      <sourceName>RTC_F1D_output_dataitem</sourceName>
+      <targetName>My F1dModel/f1d_data_input_item</targetName>
+    </item>
+    <item>
+      <sourceName>RTC_FM_output_dataitem</sourceName>
+      <targetName>My FMModel/fm_data_input_item</targetName>
+    </item>
+  </coupler>
+  <coupler name="mocked1d2dCoupler_to_mockedRTCModel">
+    <sourceComponent>1d2dCoupler</sourceComponent>
+    <targetComponent>My RTCModel</targetComponent>
+    <item>
+      <sourceName>My F1dModel/f1d_data_output_item</sourceName>
+      <targetName>RTC_F1D_input_dataitem</targetName>
+    </item>
+    <item>
+      <sourceName>My FMModel/fm_data_output_item</sourceName>
+      <targetName>RTC_FM_input_dataitem</targetName>
+    </item>
+  </coupler>
+</dimrConfig>

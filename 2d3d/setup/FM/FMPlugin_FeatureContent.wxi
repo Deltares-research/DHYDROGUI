@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <ComponentRef Id="FMSuiteCommon"/>
+  <ComponentRef Id="FMSuiteCommonGui"/>
+  <ComponentRef Id="NetworkEditorPlugin"/>
+  
+  <ComponentRef Id="NGHS.IO"/>
+
+  <ComponentRef Id="Dimr"/>
+
+  <ComponentRef Id="FMPlugin"/>
+  <!--<ComponentRef Id="fm_scripts_examples_files"/>-->
+  <ComponentRef Id="fm_scripts_libraries_files"/>
+  
+  <!-- Wanted to add this to a separate feature with conditions, but couldn't manage to get it to work.-->
+  <ComponentRef Id="HydroModelPlugin"/>
+  
+  <ComponentRef Id="FM_CsvFiles"/> 
+  <ComponentRef Id="FM_toolboxes"/> 
+
+  <Feature Id="FM_x64_Feature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <ComponentGroupRef Id="RGFGridLibs"/>
+    <ComponentRef Id="FM_rgfgrid_manuals_x64"/>
+  </Feature>
+  
+</Include>

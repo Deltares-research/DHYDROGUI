@@ -1,6 +1,0 @@
-
-[boundary]
-quantity=tracerbndtracer
-locationfile=Boundary01.pli
-forcingfile=tracer.bc
-return_time=0.0000000e+000

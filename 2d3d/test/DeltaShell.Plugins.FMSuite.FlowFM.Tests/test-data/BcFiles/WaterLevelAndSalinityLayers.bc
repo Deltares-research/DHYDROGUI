@@ -1,0 +1,19 @@
+[forcing]
+name                = pli1_0001
+function            = timeseries
+timeInterpolation   = linear
+vertPositionType    = bed-surface
+Unknown property    = any value
+vertInterpolation   = linear
+quantity            = time 
+unit                = minutes since 2013-01-01
+quantity            = waterlevelbnd     
+unit                = m 
+quantity            = salinitybnd
+unit                = ppt
+vertPositionIndex   = 1     
+quantity            = salinitybnd
+unit                = ppt
+vertPositionIndex   = 2     
+0   0.5 22  0
+1440    0.65    30  0

@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor.BoundaryDescriptionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:enums="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums"
+             xmlns:components="clr-namespace:DeltaShell.NGHS.Common.Gui.Components;assembly=DeltaShell.NGHS.Common.Gui"
+             xmlns:converters="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
+             mc:Ignorable="d"
+             d:DesignHeight="150" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
+
+            <DataTemplate x:Key="EnumLabeledComboBoxTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="ForcingTypes"
+                                MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="enums:ForcingViewType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="SpatialDefinitions"
+                                MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="enums:SpatialDefinitionViewType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <GroupBox Header="Settings">
+        <StackPanel Margin="10">
+            <components:LabeledValueBoxRow Label="Name:"
+                                        ValueContent="{Binding Path=Name}" />
+            <components:LabeledComboBoxRow Label="Forcing Type:"
+                                        SelectedItem="{Binding Path=ForcingType}"
+                                        ItemsSource="{Binding Source={StaticResource ForcingTypes}}"
+                                        ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
+            <components:LabeledComboBoxRow Label="Spatial Definition:"
+                                        SelectedItem="{Binding Path=SpatialDefinition}"
+                                        ItemsSource="{Binding Source={StaticResource SpatialDefinitions}}"
+                                        ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
+
+        </StackPanel>
+    </GroupBox>
+</UserControl>

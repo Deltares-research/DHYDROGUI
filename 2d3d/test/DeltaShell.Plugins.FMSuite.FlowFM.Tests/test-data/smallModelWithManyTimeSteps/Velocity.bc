@@ -1,0 +1,24 @@
+[forcing]
+name                            = r01_001_0001
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = minutes
+quantity                        = velocitybnd amplitude
+unit                            = m/s
+quantity                        = velocitybnd phase
+unit                            = deg
+0    0  0
+720  1  -90
+
+[forcing]
+name                            = r01_001_0002
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = minutes
+quantity                        = velocitybnd amplitude
+unit                            = m/s
+quantity                        = velocitybnd phase
+unit                            = deg
+0    0  0
+720  1  -90
+

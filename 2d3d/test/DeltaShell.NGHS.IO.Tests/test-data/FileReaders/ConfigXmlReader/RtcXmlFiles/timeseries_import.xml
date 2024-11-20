@@ -1,0 +1,996 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TimeSeries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.wldelft.nl/fews/PI" xsi:schemaLocation="http://www.wldelft.nl/fews/PI D:\sluis_pa\Documents\WORK\Export%20files\rtc\pi_timeseries.xsd" version="1.2">
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Maeslantkering/timeseries drempel width</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="360" />
+    <event date="1991-01-09" time="00:00:00" value="360" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Maeslantkering/timeseries schuif width</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="0" />
+    <event date="1991-01-09" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Maeslantkering/timeseries overstort width</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="0" />
+    <event date="1991-01-09" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Maeslantkering/timeseries schuif crest</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5" />
+    <event date="1991-01-09" time="00:00:00" value="-5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Maeslantkering/timeseries overstort crest</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="17" />
+    <event date="1991-01-09" time="00:00:00" value="17" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Hartelkering/timeseries breed onder</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-09" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Hartelkering/timeseries smal onder</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-09" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Hartelkering/hartel smal over</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-09" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Hartelkering/hartel breed over</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-09" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HollandscheIJsselkering/HYK_timeseries</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-09" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HollandscheIJsselkering/HYK_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-04-29" time="00:00:00" />
+      <endDate date="1998-04-29" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-04-29" time="00:00:00" value="1" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HollandscheIJsselkering/Kenteringsluiting</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-09" time="00:00:00" value="1" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Volkerakdam/Volkerak_over_crest</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="3.5" />
+    <event date="1991-01-09" time="00:00:00" value="3.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>Volkerakdam/Volkerak_schuiven_gate</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-4.25" />
+    <event date="1991-01-09" time="00:00:00" value="-4.25" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_01/HVSL_01</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_01/HVSL_01_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_01/HVSL_01_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_02/HVSL_02</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_02/HVSL_02_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_02/HVSL_02_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_03/HVSL_03</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_03/HVSL_03_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_03/HVSL_03_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_04/HVSL_04</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_04/HVSL_04_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_04/HVSL_04_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_05/HVSL_05</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_05/HVSL_05_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_05/HVSL_05_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_06/HVSL_06</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_06/HVSL_06_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_06/HVSL_06_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_07/HVSL_07</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_07/HVSL_07_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_07/HVSL_07_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_08/HVSL_08</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_08/HVSL_08_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_08/HVSL_08_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_09/HVSL_09</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_09/HVSL_09_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_09/HVSL_09_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_10/HVSL_10</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_10/HVSL_10_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_10/HVSL_10_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_11/HVSL_11</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_11/HVSL_11_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_11/HVSL_11_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_12/HVSL_12</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_12/HVSL_12_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_12/HVSL_12_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_13/HVSL_13</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_13/HVSL_13_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_13/HVSL_13_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_14/HVSL_14</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_14/HVSL_14_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_14/HVSL_14_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_15/HVSL_15</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_15/HVSL_15_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_15/HVSL_15_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_16/HVSL_16</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_16/HVSL_16_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_16/HVSL_16_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_17/HVSL_17</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="4.5641811494916" />
+    <event date="1991-01-09" time="00:00:00" value="4.5641811494916" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_17/HVSL_17_sluithoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-05" time="03:20:00" value="-5.5" />
+    <event date="1991-01-09" time="00:00:00" value="-5.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>HVSL_17/HVSL_17_switch</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1998-08-01" time="00:00:00" />
+      <endDate date="1998-08-01" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1998-08-01" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>KrommeNolkering/Open the gate</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-09" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>KrommeNolkering/Close the gate</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-09" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>KrommeNolkering/SwitchMethods</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="1" divider="1" />
+      <startDate date="1991-01-05" time="03:20:00" />
+      <endDate date="1991-01-09" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="1991-01-09" time="00:00:00" value="1" />
+  </series>
+</TimeSeries>

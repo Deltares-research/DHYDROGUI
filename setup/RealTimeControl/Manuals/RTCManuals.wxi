@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <!-- RTC -->
-  <File Id="DRTC_User_Manual.pdf" Source="$(var.ProjectDir)\..\RealTimeControl\!(loc.Delft3DPackageName)_Manuals\D-Real_Time_Control_User_Manual.pdf"/>
-</Include>

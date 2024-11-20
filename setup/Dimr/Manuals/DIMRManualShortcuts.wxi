@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <Shortcut Id="DIMR_Reference_Manual_Shortcut" Name="!(loc.DIMRReferenceManualName)" Target="[BINDIR]DIMR_Technical_Reference_Manual.pdf" WorkingDirectory="BINDIR"/> 
-  <Shortcut Id="DIMR_User_Manual_Shortcut" Name="!(loc.DIMRUserManualName)" Target="[BINDIR]DIMR_User_Manual.pdf" WorkingDirectory="BINDIR"/> 
-</Include>

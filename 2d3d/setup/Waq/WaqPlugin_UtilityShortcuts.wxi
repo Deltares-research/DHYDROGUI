@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <Shortcut Id="plctExeShortcut" Name="PLCT" Target="[INSTALLDIR]plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plct\bin\PLCT.exe" Arguments="-inifile ..\plct_eco.ini" WorkingDirectory="PersonalFolder"/>
+  <Shortcut Id="plctUserManualShortcut" Name="!(loc.PLCTUserManualName)" Target="[BINDIR]D-Water_Quality_PLCT_User_Manual.pdf" WorkingDirectory="BINDIR"/>
+  <Shortcut Id="plctTechnicalRefManualShortcut" Name="!(loc.PLCTTechnicalRefManualName)" Target="[BINDIR]D-Water_Quality_PLCT_User_Manual.pdf" WorkingDirectory="BINDIR"/>
+  <Shortcut Id="plctLibraryTablesManualShortcut" Name="!(loc.PLCTLibraryTablesManualName)" Target="[BINDIR]D-Water_Quality_Processes_Library_Tables.pdf" WorkingDirectory="BINDIR"/>
+
+
+  <Shortcut Id="didoExeShortcut" Name="DIDO" Target="[INSTALLDIR]plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plugins-qt\x64\dido.cmd" WorkingDirectory="PersonalFolder">
+    <Icon SourceFile="$(var.SolutionDir)bin\$(var.Configuration)\plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plugins-qt\x64\icons\dido_icon.ico" Id="dido_icon"/>
+  </Shortcut>
+  <Shortcut Id="didoManualShortcut" Name="!(loc.DidoUserManualName)" Target="[BINDIR]D-Water_Quality_DIDO_User_Manual.pdf" WorkingDirectory="BINDIR"/>
+
+  <Shortcut Id="dPartShortcut" Name="D-Particle Tracking" Target="[INSTALLDIR]plugins\DeltaShell.Dimr\kernels\x64\bin\dshell_run_delpar.bat" WorkingDirectory="BINDIR"/>
+  <Shortcut Id="dPartManualShortcut" Name="!(loc.dPartManualName)" Target="[BINDIR]D-Particle_Tracking_User_Manual.pdf" WorkingDirectory="BINDIR"/>
+</Include>

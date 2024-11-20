@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<SerializableStatesInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <OutStates>
-    <StateInfo>
-      <Name>TestModel: 2001-01-02 00:00:00</Name>
-      <ZipPath>D:\sluis_pa\Documents\test_dir\run_with_save_and_custom_output\TestProject.dsproj_data\state_TestModel_2001-01-02_00-00-00-3f09e1fa-d6a0-456c-af93-3623586c5ebc.zip</ZipPath>
-    </StateInfo>
-  </OutStates>
-</SerializableStatesInfo>

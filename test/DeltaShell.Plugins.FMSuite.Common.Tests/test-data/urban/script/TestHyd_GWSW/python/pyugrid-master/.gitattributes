@@ -1,9 +1,0 @@
-* text=auto
-*.py text
-*.html text
-*.png binary
-*.txt text
-*.csv text
-*.md text
-*.bat text
-*.nc binary

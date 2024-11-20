@@ -1,0 +1,22 @@
+# for testing
+[model]
+Program                           = D-Flow FM
+Version                           = 1.2.63.64757M
+GuiVersion                        = 1.6.0.0
+AutoStart                         = 0
+
+[geometry]
+WaterLevIni                       = 0
+Bedlevuni                         = -5
+Bedslope                          = 0
+BedlevType                        = 3
+
+[numerics]
+CFLWaveFrac                       = 0.1
+AdvecType                         = 3
+
+[physics]
+UnifFrictCoef                     = 0.023
+
+[group_A]
+parameterA                        = A

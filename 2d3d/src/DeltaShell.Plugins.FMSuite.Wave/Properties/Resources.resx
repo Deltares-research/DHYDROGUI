@@ -1,0 +1,398 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="wave" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\wave.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WavePropertiesValidator_Validate_Waves_Model_Properties" xml:space="preserve">
+    <value>Waves Model Properties</value>
+  </data>
+  <data name="WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_" xml:space="preserve">
+    <value>Wind speed should be greater than zero when the option of quadruplets is activated.</value>
+  </data>
+  <data name="WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale" xml:space="preserve">
+    <value>The time step can not be greater than the time interval.</value>
+  </data>
+  <data name="WavePropertiesValidator_ValidateDivisor" xml:space="preserve">
+    <value>The time step should be a divisor of the time interval.</value>
+  </data>
+  <data name="WavePropertiesValidator_ValidateTimeStep" xml:space="preserve">
+    <value>The time step should be a whole number.</value>
+  </data>
+  <data name="WavePropertiesValidator_ValidateTScale" xml:space="preserve">
+    <value>The time interval should be a whole number.</value>
+  </data>
+  <data name="WavePropertiesValidator_ValidateWindSpeedAndQuadruple_Domain___0_" xml:space="preserve">
+    <value>Domain: {0}</value>
+  </data>
+  <data name="WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_false_when_using_Spherical_Coordinate_Systems_" xml:space="preserve">
+    <value>WaveSetup should be false when using Spherical Coordinate Systems.</value>
+  </data>
+  <data name="WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_" xml:space="preserve">
+    <value>With WaveSetup set to True parallel runs will fail, normal runs with lakes will produce unreliable values.</value>
+  </data>
+  <data name="WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian" xml:space="preserve">
+    <value>All the grids Coordinate System should be the same, either Spherical or Cartesian</value>
+  </data>
+  <data name="WaveModel_OnOuterDomainPropertyChanged_The_model_coordinates_do_not_appear_to_be_in___0____as_they_fall_outside_the_expected_range_of_values_for_this_system__Please_verify_the_selected_coordinate_system_is_the_system_the_coordinates_were_measured_in__Continuing_could_lead_to_the_map_visualization_failing_and_unexpected_behaviour_of_spatial_operations__1__1_Grid_coordinates_are_incompatible_with_current_model_coordinate_system" xml:space="preserve">
+    <value>The model coordinates do not appear to be in '{0}',. Please select a grid with the appropriate coordinate system. Continuing could lead to the map visualization failing and unexpected behaviour of spatial operations {1}{1}Grid coordinates are incompatible with current model coordinate system</value>
+  </data>
+  <data name="WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_" xml:space="preserve">
+    <value>Grid is set in project but doesn't contain a coordinate system. The model has co-ordinate system {0}, setting grid to this co-oordinate system type.</value>
+  </data>
+  <data name="WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_isn_t_the_same_coordinate_system_as_our_model__The_model_has_co_ordinate_system__0___the_grid_has__1___Setting_the_model_to_the_grid_co_ordinate_system_type__1__" xml:space="preserve">
+    <value>Grid is set in project but isn't the same coordinate system as our model. The model has co-ordinate system {0}, the grid has {1}. Setting the model to the grid co-ordinate system type {1}.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Waves_Model_Boundaries" xml:space="preserve">
+    <value>Waves Model Boundaries</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Boundary_condition_contains_internal_geometry_points" xml:space="preserve">
+    <value>Boundary condition contains internal geometry points. These points will be discarded upon saving, exporting or running</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Boundary_does_not_contain_a_boundary_condition" xml:space="preserve">
+    <value>Boundary does not contain a boundary condition</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_data" xml:space="preserve">
+    <value>Boundary does not contain any valid boundary data.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Boundary_condition_contains_unactivated_support_points" xml:space="preserve">
+    <value>Boundary condition contains unactivated support points. These points will be discarded upon saving, exporting or running</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Time_points_are_not_synchronized_on_boundary__0__" xml:space="preserve">
+    <value>Time points are not synchronized on boundary: {0}</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Parameter_Height_must_be_greater_than_0_and_smaller_or_equal_to_25_" xml:space="preserve">
+    <value>Parameter "Height" must be greater than 0 and smaller or equal to 25.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Parameter_Period_must_be_a_value_within_the_range_" xml:space="preserve">
+    <value>Parameter "Period" must be a value within the range 0,1 - 20.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Parameter_Spreading__must_be_a_value_within_the_range_1_800" xml:space="preserve">
+    <value>Parameter "Spreading" must be a value within the range 1 - 800 when Directional Spreading type is equal to Power.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Parameter_Spreading_must_be_a_value_within_the_range_2_180" xml:space="preserve">
+    <value>Parameter "Spreading" must be a value within the range 2 - 180 when Directional Spreading type is equal to Degrees.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Values_in_column_Hs_in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
+    <value>Values in column "Hs" in the time series table must be greater than 0 and smaller than or equal to 25.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Values_in_column_Tp_in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
+    <value>Values in column "Tp" in the time series table must be within the range 0,1 - 20.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Values_in_column_Direction_in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
+    <value>Values in column "Dir" in the time series table must be within the range -360 - 360.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_1_800" xml:space="preserve">
+    <value>Values in column "Spreading" in the time series table must be within the range 1 - 800 when Directional Spreading type is equal to Power.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_2_180" xml:space="preserve">
+    <value>Values in column "Spreading" in the time series table must be within the range 2 - 180 when Directional Spreading type is equal to Degrees.</value>
+  </data>
+  <data name="WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_" xml:space="preserve">
+    <value>Option "Write Tables" is selected but there are no Observation Points in your model.</value>
+  </data>
+  <data name="WaveTimePointValidator_Validate_No_time_points_defined" xml:space="preserve">
+    <value>No time points defined</value>
+  </data>
+  <data name="WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time" xml:space="preserve">
+    <value>Model start time precedes reference time</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Parameter_Direction_must_be_a_value_within_the_range_360_360_" xml:space="preserve">
+    <value>Parameter "Direction" must be a value within the range -360 - 360.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1_10_" xml:space="preserve">
+    <value>Peak Enhancement Factor must be a value within the range 1 - 10.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_of__0__" xml:space="preserve">
+    <value>Model start time does not precede any of the time points of '{0}'</value>
+  </data>
+  <data name="WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file" xml:space="preserve">
+    <value>Coupled wave model must use COM-file</value>
+  </data>
+  <data name="WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_write_COM_file" xml:space="preserve">
+    <value>Stand-alone wave model cannot write COM-file</value>
+  </data>
+  <data name="WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_" xml:space="preserve">
+    <value>The coupling time step must be positive.</value>
+  </data>
+  <data name="WaveCouplingValidator_ValidateModelTimeSettings_start_time_must_be_smaller_than_stop_time_" xml:space="preserve">
+    <value>The coupling period must be positive.</value>
+  </data>
+  <data name="WaveIniCategoryConverter_CreateBoundaryConditionCategory_No_data_points_found_for_boundary___0____" xml:space="preserve">
+    <value>No data points found for boundary '{0}', saved boundary will default to Uniform spatial definition type</value>
+  </data>
+  <data name="WaveCouplingValidator_Validate_Communications_file___0___does_not_exist_" xml:space="preserve">
+    <value>Communications file '{0}' does not exist.</value>
+  </data>
+  <data name="WaveModel_ReadSwanDiagFile_Error_reading_log_file__0__1_" xml:space="preserve">
+    <value>Error reading log file: {0}, {1}</value>
+  </data>
+  <data name="WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__" xml:space="preserve">
+    <value>Could not find log file: {0}</value>
+  </data>
+  <data name="WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__" xml:space="preserve">
+    <value>Could not find output (WAVM) file: {0}</value>
+  </data>
+  <data name="MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_there_is_no_grid_detected" xml:space="preserve">
+    <value>Boundaries cannot be imported, because there is no grid detected.</value>
+  </data>
+  <data name="MdwFile_SaveTo_exporting_the_D_Waves_model" xml:space="preserve">
+    <value>exporting the D-Waves model</value>
+  </data>
+  <data name="MdwFile_Load_loading_the_D_Waves_model" xml:space="preserve">
+    <value>loading the D-Waves model</value>
+  </data>
+  <data name="WaveBoundaryConverter_Support_point_outside_geometry_point_will_be_skipped" xml:space="preserve">
+    <value>Boundary '{0}' contains a support point at distance {1}, which is located outside the geometry. This support point will not be imported.</value>
+  </data>
+  <data name="WaveBoundaryConverter_Converting_boundary_this_may_lead_to_unexpected_results" xml:space="preserve">
+    <value>Converting boundary '{0}', from {1} to {2}, this may lead to unexpected results, please inspect your boundaries.</value>
+  </data>
+  <data name="WaveBoundaryConverter_Boundary_is_defined_in_a_clockwise_fashion_and_will_be_converted" xml:space="preserve">
+    <value>Boundary '{0}' is defined in a clockwise fashion. This boundary will be converted to a counter-clockwise, any support points distances will be adjusted accordingly. This may lead to unexpected results, please inspect your support points.</value>
+  </data>
+  <data name="SnapBoundariesToNewGrid_HandleBoundary_Boundary__0__could_not_snap_to_the_new_grid__begin_and_or_end_point_problematic___Please_inspect_your_boundaries_" xml:space="preserve">
+    <value>Boundary {0} could not snap to the new grid (begin and or end point problematic). Please inspect your boundaries.</value>
+  </data>
+  <data name="SnapBoundariesToNewGrid_HandleBoundary_Boundary__0__could_not_snap_to_the_new_grid__Please_inspect_your_boundaries_" xml:space="preserve">
+    <value>Boundary {0} could not snap to the new grid. Please inspect your boundaries.</value>
+  </data>
+  <data name="SnapBoundariesToNewGrid_HandleBoundary_Support_point_at_distance__0__does_no_longer_fit_on_the_snapped_Boundary__1___Removed__Please_inspect_your_support_points" xml:space="preserve">
+    <value>Support point at distance {0} does no longer fit on the snapped Boundary {1}; Removed. Please inspect your support points</value>
+  </data>
+  <data name="MdwFile_Parsing_error_in_file__0__can_not_convert__1__to_double_property__2__has_default__3__" xml:space="preserve">
+    <value>Parsing error in file '{0}'. Can't convert '{1}' to a double. The property '{2}' has been given the default value '{3}'.</value>
+  </data>
+  <data name="MdwFile_Obstacle_polyline_file__0__does_not_exist" xml:space="preserve">
+    <value>Obstacle polyline file {0} does not exist</value>
+  </data>
+  <data name="MdwFile_Obstacle_polyline_file__0__does_not_contain_geometry__1__" xml:space="preserve">
+    <value>Obstacle polyline file {0} does not contain geometry for obstacle {1}, skipping</value>
+  </data>
+  <data name="MdwFile_Obstacle_polyline_file__0__contain_invalid_geometry__1__" xml:space="preserve">
+    <value>Obstacle polyline file {0} contain invalid geometry for obstacle {1}, skipping</value>
+  </data>
+  <data name="MdwFile_Invalid_number_of_meteo_files_specified_for_single_domain" xml:space="preserve">
+    <value>Invalid number of meteo files specified for single domain; meteo data set to default</value>
+  </data>
+  <data name="MdwFile_Multiple_spider_web_files_specified_for_single_domain" xml:space="preserve">
+    <value>Multiple spider web files specified for single domain; meteo data set to default</value>
+  </data>
+  <data name="MdwFile_In_the_MDW_file_the_property__0__is_missing__Based_on_property__1__the_default_value_is_set" xml:space="preserve">
+    <value>In the MDW file the property {0} is missing. Based on property {1} the default value is set</value>
+  </data>
+  <data name="MdwFile_Could_not_find_meteo_file_for__0__" xml:space="preserve">
+    <value>Could not find meteo file for '{0}'</value>
+  </data>
+  <data name="IniFileMigrateBehaviour_HandleMigration_Migrating__0_" xml:space="preserve">
+    <value>Migrating {0}</value>
+  </data>
+  <data name="FileMigrateBehaviour_HandleNotExists_The_file_associated_with_property__0____1__at__2___does_not_exist_and_thus_is_not_migrated_" xml:space="preserve">
+    <value>The file associated with property {0}, {1} at {2}, does not exist and thus is not migrated.</value>
+  </data>
+  <data name="WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_Migrating_remaining_files_of___0___to_1_2_0_0" xml:space="preserve">
+    <value>Migrating remaining files of '{0}' to 1.2.0.0</value>
+  </data>
+  <data name="WaveDirectoryStructureMigrationHelper_MigrateMdw_Migrating___0___to_1_2_0_0" xml:space="preserve">
+    <value>Migrating '{0}' to 1.2.0.0</value>
+  </data>
+  <data name="WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_The_following_files_are_assumed_to_be_output_and_moved_to_the_new_output_folder___0_" xml:space="preserve">
+    <value>The following files are assumed to be output and moved to the new output folder: {0}</value>
+  </data>
+  <data name="WaveModel110LegacyLoader_OnAfterInitialize_Provided_entity_is_not_a__0_" xml:space="preserve">
+    <value>Provided entity is not a {0}</value>
+  </data>
+  <data name="WaveModel110LegacyLoader_OnAfterInitialize_Could_not_determine_dsproj_location_from_database_connection___0_" xml:space="preserve">
+    <value>Could not determine dsproj location from database connection: {0}</value>
+  </data>
+  <data name="WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_been_broken_" xml:space="preserve">
+    <value>The link with {0} has been broken.</value>
+  </data>
+  <data name="WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_in__0__" xml:space="preserve">
+    <value>Unlinking existing wavm.nc files in {0}:</value>
+  </data>
+  <data name="BcwFile_WriteBoundaryData_No_values_given_for__0__" xml:space="preserve">
+    <value>No values given for {0}.</value>
+  </data>
+  <data name="BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_model_for_more_information_" xml:space="preserve">
+    <value>While saving the following error was thrown: {0}, validate the model for more information.</value>
+  </data>
+  <data name="WaveBoundariesValidator_Validate_FilePath_cannot_be_empty" xml:space="preserve">
+    <value>Forcing Type "Spectrum based (From file)" has been selected but no file has been added.</value>
+  </data>
+  <data name="WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected" xml:space="preserve">
+    <value>No spectrum file has been selected.</value>
+  </data>
+  <data name="WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__0__at__1__does_not_exist_" xml:space="preserve">
+    <value>The specified {0} at {1} does not exist.</value>
+  </data>
+  <data name="WaveModel_Connect_model_output" xml:space="preserve">
+    <value>Connecting of the model output</value>
+  </data>
+  <data name="WaveModel_Saving_of_the_model_output" xml:space="preserve">
+    <value>Saving of the model output</value>
+  </data>
+  <data name="WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_output_instead_" xml:space="preserve">
+    <value>The directory at {0} does not exist, disconnecting output instead.</value>
+  </data>
+  <data name="WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__" xml:space="preserve">
+    <value>Could not read file: {0} due to {1}.</value>
+  </data>
+  <data name="WaveModel_CopyRunDataTo_The_output_source_path__0__does_not_exist__skipping_copying_output_data_" xml:space="preserve">
+    <value>The output source path {0} does not exist, skipping copying output data.</value>
+  </data>
+  <data name="WaveModel_CopyRunDataTo_No__mdw_path_could_be_found_in__0___skipping_copying_output_data_" xml:space="preserve">
+    <value>No .mdw path could be found in {0}, skipping copying output data.</value>
+  </data>
+  <data name="WaveDirectoryStructureMigrationHelper_MigrateFileStructure_ErrorMigrateFileStructure" xml:space="preserve">
+    <value>An error occurred during the migration of one of the D-Waves models in this project, most likely due to two or more models sharing the same name within the project.
+Please reboot the application and create a new project and import the models individually with the corresponding importers to ensure everything is in a valid state.</value>
+  </data>
+  <data name="DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_file_provided" xml:space="preserve">
+    <value>Use custom wind file option is switched on but no file has been selected.</value>
+  </data>
+  <data name="DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_file_does_not_exist" xml:space="preserve">
+    <value>The provided custom wind file does not exist.</value>
+  </data>
+  <data name="DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_no_file_provided" xml:space="preserve">
+    <value>Use spider web file option is switched on but no file has been selected.</value>
+  </data>
+  <data name="DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_selected_file_does_not_exist" xml:space="preserve">
+    <value>The provided spider web file does not exist.</value>
+  </data>
+  <data name="DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_x_component_file_provided" xml:space="preserve">
+    <value>Use custom wind file option is switched on but no x-component file has been selected.</value>
+  </data>
+  <data name="DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_x_component_file_does_not_exist" xml:space="preserve">
+    <value>The provided x-component file does not exist.</value>
+  </data>
+  <data name="DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_y_component_file_provided" xml:space="preserve">
+    <value>Use custom wind file option is switched on but no y-component file has been selected.</value>
+  </data>
+  <data name="DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_y_component_file_does_not_exist" xml:space="preserve">
+    <value>The provided y-component file does not exist.</value>
+  </data>
+  <data name="Wave_Domain_specific_settings" xml:space="preserve">
+    <value>Domain specific settings</value>
+  </data>
+  <data name="WaveOutputParametersValidator_Validate_Enabling__Use_NetCDF_single_precision__might_lead_to_unexpected_behavior_when_inspecting_the_NetCDF_model_output_data_" xml:space="preserve">
+    <value>Enabling 'Use NetCDF single precision' might lead to unexpected behavior when inspecting the netCDF model output data.</value>
+  </data>
+</root>

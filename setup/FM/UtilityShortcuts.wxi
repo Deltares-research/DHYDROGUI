@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <Shortcut Id="rgfGridShortcut" Name="RGFGrid" Target="[INSTALLDIR]plugins\DeltaShell.Plugins.FMSuite.Common.Gui\plugins-qt\x64\rgfgrid.cmd" WorkingDirectory="RGFGridLibDir">
-    <Icon SourceFile="$(var.SolutionDir)bin\$(var.Configuration)\Plugins\DeltaShell.Plugins.FMSuite.Common.Gui\plugins-qt\x64\icons\rgfgrid_icon.ico" Id="rgfgrid_icon"/>
-  </Shortcut>
-  <Shortcut Id="dimrScriptFolder" Name="DimrScripts" Target="[INSTALLDIR]plugins\DeltaShell.Dimr\kernels\x64\bin\"/>
-</Include>

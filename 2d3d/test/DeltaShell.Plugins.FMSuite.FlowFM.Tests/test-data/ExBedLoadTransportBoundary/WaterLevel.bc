@@ -1,0 +1,14 @@
+[forcing]
+name                            = Boundary01_0001
+function                        = timeseries
+timeInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2001-01-01 00:00:00
+quantity                        = waterlevelbnd
+unit                            = m
+0      2
+21600  0
+43200  1
+64800  0
+86400  2
+

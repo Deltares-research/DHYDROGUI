@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcToolsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews D:\sluis_pa\Documents\WORK\TestModel\dimr_export\rtc\rtcToolsConfig.xsd">
+  <general>
+    <description>RTC Model DeltaShell</description>
+    <poolRoutingScheme>Theta</poolRoutingScheme>
+    <theta>0.5</theta>
+  </general>
+  <rules>
+    <rule>
+      <unitDelay id="relative_time_rule_unitDelay">
+        <input>
+          <x>[Output]parameter/quantity</x>
+        </input>
+        <output>
+          <y>[Output]parameter/quantity</y>
+        </output>
+      </unitDelay>
+    </rule>
+    <rule>
+      <timeAbsolute id="control_group/time_rule">
+        <input>
+          <x>[TimeRule]control_group/time_rule</x>
+        </input>
+        <output>
+          <y>[Output]parameter/quantity</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeRelative id="control_group/relative_time_rule">
+        <mode>RETAINVALUEWHENINACTIVE</mode>
+        <valueOption>RELATIVE</valueOption>
+        <maximumPeriod>3</maximumPeriod>
+        <controlTable>
+          <record time="1" value="2" />
+          <record time="60" value="4" />
+          <record time="3600" value="16" />
+          <record time="86400" value="256" />
+          <record time="86401" value="256" />
+        </controlTable>
+        <input>
+          <y>[Output]parameter/quantity[AsInputFor]relative_time_rule</y>
+        </input>
+        <output>
+          <y>[Output]parameter/quantity</y>
+          <timeActive>[RelativeTimeRule]control_group/relative_time_rule</timeActive>
+        </output>
+      </timeRelative>
+    </rule>
+  </rules>
+  <triggers>
+    <trigger>
+      <standard id="control_group/time_condition">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]control_group/time_condition</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>control_group/time_rule</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="control_group/standard_condition">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]parameter/quantity</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>5</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>control_group/relative_time_rule</ruleReference>
+                </trigger>
+              </true>
+              <output>
+                <status>[StandardCondition][Status]control_group/standard_condition</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]control_group/time_condition</status>
+        </output>
+      </standard>
+    </trigger>
+  </triggers>
+</rtcToolsConfig>
