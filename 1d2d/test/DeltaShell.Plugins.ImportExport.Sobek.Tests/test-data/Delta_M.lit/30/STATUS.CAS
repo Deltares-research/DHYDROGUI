@@ -1,0 +1,36 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=-1
+ImportFrom=SOBEK_river
+ImportDate=14-10-2005 16:50:06
+Case Name=P: Gem-jaar: Katse Heule + Meer Graas, reductie randen Bur=0, BD4, Pflux2 res
+QuantityResultsPresent=-1
+UserId=Erwin Meijers
+UserName=meijers
+ComputerName=WL06663
+[Previous OutputFiles]
+..\work\calcpnt.his=-1
+..\work\reachseg.his=-1
+..\work\qlat.his=-1
+..\work\struc.his=-1
+..\work\qwb.his=-1
+..\work\flowanal.his=-1
+..\work\calcdim.his=-1
+..\work\reachdim.his=-1
+..\work\strucdim.his=-1
+..\work\simulate.rep=-1
+..\work\sobek.log=-1
+..\work\indicat.flw=-1
+..\work\reachvol.his=-1
+..\work\reachflw.his=-1
+..\work\delwaq.map=-1
+..\work\wqbou20.his=-1
+..\work\waterbal.prn=-1
+..\work\delwaq.his=-1
+..\work\wqbal.his=-1
+..\work\wqbal.prn=-1
+..\work\wqint.lst=-1
+..\work\delwaq.lst=-1
+..\work\delwaq.lsp=-1
+..\work\delwaq.mon=-1

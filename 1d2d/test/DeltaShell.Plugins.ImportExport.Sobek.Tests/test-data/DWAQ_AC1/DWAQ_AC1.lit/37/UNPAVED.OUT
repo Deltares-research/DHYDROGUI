@@ -1,0 +1,12 @@
+ Run datum (DD-MM-YY) and time: 7-12-2012  14:20
+
+ Case name                                     
+
+
+
+ Maxima per event
+
+ Event   Start     Node identification   Node      Groundwaterlevel    Surf_runoff    Disch_soil    Rainfall   Acceptable  gw   GWL on surface  Cum.Exc.Threshold GWL
+  nr  year-mon-day                       name            [m]NAP         [m3/s]          [m3/s]        [m3/s]       NAP          [hour]
+===================================================================================================================================================================
+   1 2010 Jan   1   5                                           0.500        0.076        0.009        0.083        1.500           12               0.000

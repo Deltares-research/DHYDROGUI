@@ -1,0 +1,255 @@
+[General]
+language=0
+hlp3bedit0=D:\Sb213_14\Programs\help\sobek_um.pdf
+hlp3bedit1=D:\Sb213_14\Programs\help\sobek_um.pdf
+Settingsfile=\SB213_14\HKTG.LIT\WORK\SETTINGS.DAT
+Settingsini=D:\Sb213_14\Programs\settings.ini
+UnitIni=D:\Sb213_14\Programs\3b\3bedit.ini
+
+[3B Ascii Layer definition]
+Model=Delft3B
+version=2.0
+type=Sobek-Delft_3B
+format=WL
+config=vhg/ovh/kas/ow/bnd/plv/pmp/ove/ond/Man/qh/
+; number of layers are related to the model
+; for example Layer1 corresponds always to the model node type1
+NrofLayers=16
+Layer0=RR-Topography layer
+Layer1=RR-Paved area layer
+Layer2=RR-Unpaved area layer
+Layer3=RR-Greenhouse layer
+Layer4=RR-Open water layer
+Layer5=RR-Structure layer
+Layer6=RR-Boundary layer
+Layer7=RR-NWRW layer
+Layer8=RR-Control layer
+Layer9=RR-Industry layer
+Layer10=RR-WWTP layer
+Layer11=RR-Sacramento layer
+Layer12=RR-Routing layer
+Layer13=RR-External Runoff layer
+Layer14=RR-HBV layer
+Layer15=RR-SCS layer
+Layer16=RR-NAM layer
+UseFormat=0
+
+[RR-Topography layer]
+NrOfFiles=4
+config=net/cpt/dat/brdat
+net=\SB213_14\HKTG.LIT\WORK\NETWORK.TP
+cpt=\SB213_14\HKTG.LIT\WORK\NETWORK.CP
+dat=\SB213_14\HKTG.LIT\WORK\3B_NOD.TP
+brdat=\SB213_14\HKTG.LIT\WORK\3B_LINK.TP
+rfdat=\SB213_14\HKTG.LIT\WORK\3BRUNOFF.TP
+
+[RR-Paved area layer]
+NrOfFiles=4
+mainfile=dat
+connectionfile=sd-sto,dw-dwa,qc-tab
+; here the connection to the files are mentioned
+;
+dat=\SB213_14\HKTG.LIT\WORK\PAVED.3B
+; search token in dat
+TokenDAT=PAVE
+sto=\SB213_14\HKTG.LIT\WORK\PAVED.STO
+TokenSTO=STDF
+dwa=\SB213_14\HKTG.LIT\WORK\PAVED.DWA
+TokenDWA=DWA
+tab=\SB213_14\HKTG.LIT\WORK\PAVED.TBL
+TokenTAB=QC_T
+
+[RR-Unpaved area layer]
+NrOfFiles=9
+config=dat/sto/alf/inf/sep/tab/obc/ocf/sct
+mainfile=dat
+connectionfile=sd-sto,ad-alf,sp-sep,ic-inf,ig-tab,su-sct
+dat=\SB213_14\HKTG.LIT\WORK\UNPAVED.3B
+TokenDAT=UNPV
+sto=\SB213_14\HKTG.LIT\WORK\UNPAVED.STO
+TokenSTO=STDF
+alf=\SB213_14\HKTG.LIT\WORK\UNPAVED.ALF
+TokenALF=ALFA
+inf=\SB213_14\HKTG.LIT\WORK\UNPAVED.INF
+TokenINF=INFC
+sep=\SB213_14\HKTG.LIT\WORK\UNPAVED.SEP
+TokenSEP=SEEP
+tab=\SB213_14\HKTG.LIT\WORK\UNPAVED.TBL
+TokenTAB=IG_T
+sct=\SB213_14\HKTG.LIT\WORK\UNPAVED.TBL
+TokenSCT=SC_T
+obc=\Sb213_14\fixed\3b\bergcoef
+obcap=\Sb213_14\fixed\3b\bergcoef.cap
+ocf=\Sb213_14\fixed\3b\cropfact
+TokenH0Tab=H0_T
+
+[RR-Greenhouse layer]
+NrOfFiles=7
+config=dat/dak/sil/tab/kk/ki/kg
+mainfile=dat
+connectionfile=sd-dak,si-sil
+dat=\SB213_14\HKTG.LIT\WORK\GREENHSE.3B
+TokenDAT=GRHS
+dak=\SB213_14\HKTG.LIT\WORK\GREENHSE.RF
+TokenDAK=STDF
+sil=\SB213_14\HKTG.LIT\WORK\GREENHSE.SIL
+TokenSIL=SILO
+tab=\SB213_14\HKTG.LIT\WORK\GREENHSE.TBL
+kk=\Sb213_14\fixed\3b\kasklass
+ki=\Sb213_14\fixed\3b\kasinit
+kg=\Sb213_14\fixed\3b\kasgebr
+
+[RR-Open water layer]
+NrOfFiles=4
+config=dat/sep/tab/ocf
+mainfile=dat
+connectionfile=sp-sep,tl-tab
+dat=\SB213_14\HKTG.LIT\WORK\OPENWATE.3B
+TokenDAT=OPWA
+sep=\SB213_14\HKTG.LIT\WORK\OPENWATE.SEP
+TokenSEP=SEEP
+tab=\SB213_14\HKTG.LIT\WORK\OPENWATE.TBL
+TokenTAB=OW_T
+ocf=\Sb213_14\fixed\3b\crop_ow
+
+[RR-Structure layer]
+NrOfFiles=4
+config=dat/def/con/tab
+mainfile=dat
+connectionfile=dd-def,cj-con,gs-set,ws-set
+dat=\SB213_14\HKTG.LIT\WORK\STRUCT3B.DAT
+TokenDAT=STRU
+def=\SB213_14\HKTG.LIT\WORK\STRUCT3B.DEF
+TokenDef=STDS
+con=\SB213_14\HKTG.LIT\WORK\CONTR3B.DEF
+TokenCON=CNTL
+tab=\SB213_14\HKTG.LIT\WORK\STRUCT3B.TBL
+TokenTAB=SWLV
+set=\SB213_14\HKTG.LIT\WORK\STRUCT3B.TBL
+TokenSET=INST
+
+[RR-Boundary layer]
+NrOfFiles=3
+config=dat/tab/sbk
+mainfile=dat
+connectionfile=bl-tab
+dat=\SB213_14\HKTG.LIT\WORK\BOUND3B.3B
+TokenDAT=BOUN
+tab=\SB213_14\HKTG.LIT\WORK\BOUND3B.TBL
+TokenTAB=BN_T
+sbk=\SB213_14\HKTG.LIT\WORK\SBK_LOC.RTC
+TokenSBK=SBKO
+
+[RR-Industry layer]
+NrOfFiles=3
+config=dat/dis/dem
+mainfile=dat
+connectionfile=ds-dis, dm-dem
+dat=\SB213_14\HKTG.LIT\WORK\INDUSTRY.3B
+TokenDAT=INDU
+dis=\SB213_14\HKTG.LIT\WORK\INDUSTRY.TBL
+TokenDIS=DISC
+dem=\SB213_14\HKTG.LIT\WORK\INDUSTRY.TBL
+TokenDEM=DEMD
+
+[RR-NWRW layer]
+NrOfFiles=3
+config=dat/dwa/alg
+mainfile=dat
+connectionfile=dw-dwa
+dat=\SB213_14\HKTG.LIT\WORK\PLUVIUS.3B
+TokenDAT=NWRW
+dwa=\SB213_14\HKTG.LIT\WORK\PLUVIUS.DWA
+TokenDWA=DWA
+alg=\SB213_14\HKTG.LIT\WORK\PLUVIUS.ALG
+TokenALG=PLVG
+TokenSPAREA=PLVA
+TokenGRAREA=PLGR
+
+[RR-WWTP layer]
+NrOfFiles=2
+config=dat/tab
+mainfile=dat
+connectionfile=tb-tab
+dat=\SB213_14\HKTG.LIT\WORK\WWTP.3B
+TokenDAT=WWTP
+tab=\SB213_14\HKTG.LIT\WORK\WWTP.TBL
+TokenTAB=MEAS
+
+[RR-Sacramento layer]
+NrOfFiles=4
+config=dat/cap/uh/oth
+TokenDAT=SACR
+TokenCAP=CAPS
+TokenUH=UNIH
+TokenOTH=OPAR
+mainfile=dat
+dat=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+oth=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+uh=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+cap=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+
+[RR-External Runoff layer]
+NrOfFiles=1
+config=dat
+TokenDAT=EXTR
+mainfile=dat
+dat=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+
+[RR-HBV layer]
+NrOfFiles=5
+config=dat/snow/soil/flow/hini
+TokenDAT=HBV
+TokenSNOW=SNOW
+TokenSOIL=SOIL
+TokenFLOW=FLOW
+TokenHINI=HINI
+mainfile=dat
+dat=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+snow=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+soil=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+flow=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+hini=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+
+[RR-SCS layer]
+NrOfFiles=1
+config=dat
+TokenDAT=SCS
+mainfile=dat
+dat=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+
+[RR-NAM layer]
+NrOfFiles=5
+config=dat/capa/runo/nini
+TokenDAT=NAM
+TokenCAPA=NAMC
+TokenRUNO=NAMR
+TokenNINI=NAMI
+mainfile=dat
+dat=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+capa=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+runo=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+nini=\SB213_14\HKTG.LIT\WORK\SACRMNTO.3B
+
+[RR-Routing layer]
+NrOfFiles=2
+config=dat/def
+TokenDAT=ROUT
+TokenDEF=RDEF
+mainfile=dat
+dat=\SB213_14\HKTG.LIT\WORK\3B_ROUT.3B
+def=\SB213_14\HKTG.LIT\WORK\3B_ROUT.3B
+
+[3B-Control layer]
+NrOfFiles=3
+config=cnt/rai/evp/def
+cnt=\SB213_14\HKTG.LIT\WORK\DELFT_3B.INI
+rai=\SB213_14\FIXED\DEFAULT.BUI
+evp=\SB213_14\FIXED\3B\EVAPOR.GEM
+tmp=\SB213_14\FIXED\DEFAULT.TMP
+rnf=\SB213_14\FIXED\DEFAULT.RNF
+def=..\fixed\3bedit.def
+
+[Switches]
+TableAddNrRows=1
+TableAddRows=-1

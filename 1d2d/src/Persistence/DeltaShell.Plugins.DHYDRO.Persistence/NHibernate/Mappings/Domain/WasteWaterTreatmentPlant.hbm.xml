@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <subclass name="DelftTools.Hydro.WasteWaterTreatmentPlant, DelftTools.Hydro" 
+            discriminator-value="wastewatertreatmentplant" 
+            extends="GeoAPI.Extensions.Feature.IFeature, GeoAPI.Extensions">
+
+    <property name="Name" column="name" />
+    
+    <property name="Description" column="description" />
+
+    <many-to-one name="Basin" cascade="save-update" class="DelftTools.Hydro.DrainageBasin, DelftTools.Hydro" column="basin_id" />
+    
+  </subclass>
+</hibernate-mapping>

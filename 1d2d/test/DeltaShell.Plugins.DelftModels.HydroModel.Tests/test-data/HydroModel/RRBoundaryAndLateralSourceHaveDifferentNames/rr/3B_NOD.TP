@@ -1,0 +1,4 @@
+NODE id 'Catchment_1D_1' nm 'Catchment_1D_1' ri '-1' mt 1 '1' nt 43 ObID '3B_PAVED' px -738.32823611597 py 1511.30248044379 node
+NODE id 'Catchment_1D_2' nm 'Catchment_1D_2' ri '-1' mt 1 '2' nt 44 ObID '3B_UNPAVED' px -627.189426031828 py 1581.15664522566 node
+NODE id 'RunoffBoundary1' nm 'RunoffBoundary1' ri '-1' mt 1 '6' nt 78 ObID 'SBK_SBK-3B-NODE' px -707.998280641864 py 1544.00698320614 node
+NODE id 'RunoffBoundary2' nm 'RunoffBoundary2' ri '-1' mt 1 '6' nt 78 ObID 'SBK_SBK-3B-NODE' px -621.911565063525 py 1551.95344925952 node

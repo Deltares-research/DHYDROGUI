@@ -1,0 +1,4 @@
+STRU id '3##1' nm 'compdef' dd '##1' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo '3' stru
+STRU id '3##2' nm 'compdef3' dd '##2' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo '3' stru
+STRU id '6' nm '' dd '6' stru
+STRU id '7' nm '' dd '7' stru

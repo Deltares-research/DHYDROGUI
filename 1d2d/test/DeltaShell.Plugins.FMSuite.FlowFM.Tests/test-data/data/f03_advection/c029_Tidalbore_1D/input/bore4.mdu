@@ -1,0 +1,68 @@
+# Generated on 17:47:12, 07-01-2011
+# Deltares, UNSTRUC Version 1.1.14.14401M, Jan 07 2011, 11:39:27
+
+[model]
+Program          = UNSTRUC
+Version          = 1.1.14.14401M
+AutoStart        = 0                   # Autostart simulation after loading MDU or not (1/0).
+
+[geometry]
+NetFile          = bore4_net.nc        # *_net.nc
+BathymetryFile   =                     # *.xyb
+LandBoundaryFile =                     # Only for plotting
+ThinDamFile      =                     # *_thd.pli, Polyline(s) for tracing thin dams.
+FixedWeirFile    =                     # *._fxw.pli, Polyline(s) x,y,z, z = fixed weir top levels
+ProfwidthFile    =                     # *._profwidth.xyz, x,y,z, z = rectangular profile width
+WaterLevIni      = 0.                  # Initial water level
+BedLevUni        = -5.                 # Uniform bottom level, (only if BedLevType>=3, used at missing z values in netfile
+BedLevType       = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
+                                       # 2 : Bottom levels at velocity points  (=flow links),            xu, yu, blu, bob = blu,    bl = lowest connected link
+                                       # 3 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
+                                       # 4 : Bottom levels at velocity points  (=flow links), using min  network levels xk, yk, zk  bl = lowest connected link
+                                       # 5 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
+                                       # 5 : above -10 m, but average values of link depths if average value < -10 m
+AngLat           = 0.                  # Angle of latitude (deg), 0=no Coriolis
+Conveyance2D     = 0                   # -1:R=HU,0:R=H, 1:R=A/P, 2:K=analytic-1D conv, 3:K=analytic-2D conv
+
+[numerics]
+CFLMax           = 0.7                 # Max. Courant nr.
+CFLWaveFrac      = 0.1                 # Wave velocity fraction, total courant vel = u + cflw*wavevelocity
+AdvecType        = 3                   # Adv type, 0=no, 1= Wenneker, qu-udzt, 2=1, q(uio-u), 3=Perot q(uio-u), 4=Perot q(ui-u), 5=Perot q(ui-u) without itself
+Limtyphu         = 0                   # Limiter type for waterdepth in continuity eq., 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Limtypsa         = 0                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+
+[physics]
+UnifFrictCoef    = 1.3d-2              # Uniform friction coefficient, 0=no friction
+UnifFrictType    = 1                   # 0=Chezy, 1=Manning, 2=White Colebrook, 3=z0 etc
+Vicouv           = 0.                  # Uniform horizontal eddy viscosity
+Smagorinsky      = 0.                  # Add Smagorinsky horizontal turbulence : vicu = vicu + ( (Smagorinsky*dx)**2)*S, e.g. 0.1
+Elder            = 0.                  # Add Elder contribution                : vicu = vicu + Elder*kappa*ustar*H/6),   e.g. 1.0
+irov             = 0                   # 0=free slip, 1 = partial slip using wall_ks
+wall_ks          = 0.                  # Nikuradse roughness for side walls, wall_z0=wall_ks/30
+Vicoww           = 0.                  # Uniform vertical eddy viscosity
+TidalForcing     = 1                   # Tidal forcing (0=no, 1=yes) (only for jsferic == 1)
+
+[time]
+RefDate          = 19920831            # Reference date (yyyymmdd)
+Tunit            =                     # Time units in MDU (H, M or S)
+DtUser           = 120.                # User timestep in seconds (interval for external forcing update)
+DtMax            = 5.                  # Max timestep in seconds
+DtInit           = 1.                  # Initial timestep in seconds
+AutoTimestep     = 1                   # Use CFL timestep limit or not (1/0)
+TStart           = 0.                  # Start time w.r.t. RefDate (in TUnit)
+TStop            = 8640000.            # Stop  time w.r.t. RefDate (in TUnit)
+
+[external forcing]
+ExtForceFile     = bore.ext            # *.ext
+
+[output]
+ObsFile          =                     # *.xyn Coords+name of observation stations.
+CrsFile          =                     # *_crs.pli Polyline(s) definining cross section(s).
+HisFile          =                     # *_his.nc History file in NetCDF format.
+HisInterval      = 0.                  # Interval (in s) between history outputs
+MapFile          =                     # *_map.nc Map file in NetCDF format.
+MapInterval      = 0.                  # Interval (in s) between map file outputs
+RstInterval      = 0.                  # Interval (in s) between map file outputs
+WaqFileBase      = bore                # Basename (without extension) for all Delwaq files to be written.
+WaqInterval      = 0.                  # Interval (in s) between Delwaq file outputs
+SnapshotDir      =                     # Directory where snapshots/screendumps are saved.

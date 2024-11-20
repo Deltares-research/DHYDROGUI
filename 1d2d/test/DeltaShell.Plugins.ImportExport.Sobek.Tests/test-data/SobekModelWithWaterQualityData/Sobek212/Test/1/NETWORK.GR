@@ -1,0 +1,31 @@
+GR_1.2
+GRID id '1' ci '1' re 0 dc 0 gr gr 
+'GridPoint Table' PDIN 0 0 '' pdin CLTT 'Location' '1/R' cltt CLID '' '' clid
+TBLE
+0 0 '' 'N1' '1' 254902.698666233 471482.595349359 '' 'Node1' '1' <
+660.84258329427 0 '4' 'N3' '' 255445.558183461 471859.446068411 '4' 'Node3' '' <
+tble grid
+GRID id '2' ci '2' re 0 dc 0 gr gr 
+'GridPoint Table' PDIN 0 0 '' pdin CLTT 'Location' '1/R' cltt CLID '' '' clid
+TBLE
+0 0 '' 'N3' '2' 255445.558183461 471859.446068411 '' 'Node3' '2' <
+671.303577247563 0 '5' 'N2' '' 256011.036847239 472221.222758701 '5' 'Node2' '' <
+tble grid
+GRID id '3' ci '3' re 0 dc 0 gr gr 
+'GridPoint Table' PDIN 0 0 '' pdin CLTT 'Location' '1/R' cltt CLID '' '' clid
+TBLE
+0 0 '' 'N3' '3' 255445.558183461 471859.446068411 '' 'Node3' '3' <
+575.047057021267 0 '3' 'N2a' '' 255551.114200699 472424.72214699 '3' 'Node2a' '' <
+tble grid
+GRID id '4' ci '4' re 0 dc 0 gr gr 
+'GridPoint Table' PDIN 0 0 '' pdin CLTT 'Location' '1/R' cltt CLID '' '' clid
+TBLE
+0 0 '' 'N3' '6' 255445.558183461 471859.446068411 '' 'Node3' '6' <
+562.985853613703 0 '7' 'N4' '' 255973.338269654 471663.483694504 '7' 'Node4' '' <
+tble grid
+GRID id '5' ci '5' re 0 dc 0 gr gr 
+'GridPoint Table' PDIN 0 0 '' pdin CLTT 'Location' '1/R' cltt CLID '' '' clid
+TBLE
+0 0 '' 'N3' '8' 255445.558183461 471859.446068411 '' 'Node3' '8' <
+477.259110007224 0 '8' 'LN2' '' 255922.445189914 471878.288604365 '8' 'LonelyNode2' '' <
+tble grid

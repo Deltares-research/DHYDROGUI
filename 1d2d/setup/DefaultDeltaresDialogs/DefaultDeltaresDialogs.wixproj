@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>3.7</ProductVersion>
+    <ProjectGuid>f30c1a46-d283-484e-aabe-ef52f9168e08</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>DefaultDeltaresDialogs</OutputName>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AdvancedWelcomeEulaDlgDeltares.wxs" />
+    <Compile Include="BrowseDlgDeltares.wxs" />
+    <Compile Include="CancelDlgDeltares.wxs" />
+    <Compile Include="CustomizeDlgDeltares.wxs" />
+    <Compile Include="DiskCostDlgDeltares.wxs" />
+    <Compile Include="ErrorDlgDeltares.wxs" />
+    <Compile Include="ExitDialogDeltares.wxs" />
+    <Compile Include="FatalErrorDeltares.wxs" />
+    <Compile Include="FeaturesDlgDeltares.wxs" />
+    <Compile Include="FilesInUseDeltares.wxs" />
+    <Compile Include="InstallDirDlgDeltares.wxs" />
+    <Compile Include="InstallScopeDlgDeltares.wxs" />
+    <Compile Include="IntroDlgDeltares.wxs" />
+    <Compile Include="InvalidDirDlgDeltares.wxs" />
+    <Compile Include="Library.wxs" />
+    <Compile Include="LicenseAgreementDlgDeltares.wxs" />
+    <Compile Include="MaintenanceTypeDlgDeltares.wxs" />
+    <Compile Include="MaintenanceWelcomeDlgDeltares.wxs" />
+    <Compile Include="MsiRMFilesInUseDeltares.wxs" />
+    <Compile Include="OutOfDiskDlgDeltares.wxs" />
+    <Compile Include="OutOfRbDiskDlgDeltares.wxs" />
+    <Compile Include="PrepareDlgDeltares.wxs" />
+    <Compile Include="ProgressDlgDeltares.wxs" />
+    <Compile Include="ResumeDlgDeltares.wxs" />
+    <Compile Include="SetupTypeDlgDeltares.wxs" />
+    <Compile Include="UserExitDeltares.wxs" />
+    <Compile Include="VerifyReadyDlgDeltares.wxs" />
+    <Compile Include="WaitForCostingDlgDeltares.wxs" />
+    <Compile Include="WelcomeDlgDeltares.wxs" />
+    <Compile Include="WixUI_Deltares.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Localization\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\en-Us.wxl" />
+    <EmbeddedResource Include="Localization\nl-NL.wxl" />
+    <EmbeddedResource Include="Localization\WixUI_en-us.wxl" />
+    <EmbeddedResource Include="Localization\WixUI_nl-NL.wxl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
+  <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
+    <Error Text="The WiX Toolset v3 build tools must be installed to build this project. To download the WiX Toolset, see http://wixtoolset.org/releases/" />
+  </Target>
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

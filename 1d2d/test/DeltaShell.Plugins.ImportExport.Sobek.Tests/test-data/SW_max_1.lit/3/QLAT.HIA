@@ -1,0 +1,40 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.07.06
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=1
+NumberOfLocations=20
+T0=2007.01.15 01:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+ 
+[Long Locations]
+4=Marslanden_Noord_Zuid
+8=Bremmelerstraat_Zuidberg
+ 
+[Location Descriptions]
+1=Zwolle
+2=Herfte
+3=Linterzijl
+4=Marslanden_Noord_Zuid
+5=gemaal
+6=gemaal
+7=gemaal
+8=gemaal
+9=Lierder_Molenbroek
+10=Sekdoorn
+11=Markvoort
+12=OK15
+13=OK10
+14=OK5
+15=OK45_OK30_vrij
+16=stuw
+17=stuw
+18=OK65_OK60_OK55_OK50
+19=vrij
+20=gemaal
+ 

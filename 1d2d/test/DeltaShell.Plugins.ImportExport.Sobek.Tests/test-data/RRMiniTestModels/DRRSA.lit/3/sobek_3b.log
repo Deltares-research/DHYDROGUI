@@ -1,0 +1,36 @@
+  Following dimensions have been set:
+  Number of nodes       =          10
+  Boundary nodes        =           5
+  Number of 3B-branches =           7
+  Meteostations         =           1
+  Paved areas           =           2
+  I,ext.knoopnr, upstream/downstream nodes, SimSeq
+       1       1       0       0       6                      cnGFE1022           
+       2       2       0       0       7                      cnGFE1021           
+       3       3       0       1       1 1022                 GFE1022             
+       4       4       0       2       2 1021                 GFE1021             
+       5       5       0       0       8                      cnPVD02             
+       6       6       0       0       9                      cnPVD01             
+       7       7       0       9       3                      PVD02               
+       8       8       0       9       4                      PVD01               
+       9       9       0      10       5                      WWTP                
+      10      10       0       0      10                      cnWWTP              
+  Unpaved areas         =           2
+  Crops                 =          16
+  KvdL history          =         960
+  WWTP or RWZI nodes    =           1
+  RRConnection nodes    =           1
+Warning: Only one weatherstation in rainfall/runoff/temperature file. No check of meteostation names performed; all nodes use this one and only meteostation.
+Warning: Crop factor <=0.0 or >=2.0 for crop greenhouse area
+Warning: Crop factor <=0.0 or >=2.0 for crop flowers
+Warning: Crop factor <=0.0 or >=2.0 for crop greenhouse area
+Warning: Crop factor <=0.0 or >=2.0 for crop flowers
+Warning: Crop factor <=0.0 or >=2.0 for crop greenhouse area
+Warning: Crop factor <=0.0 or >=2.0 for crop flowers
+Warning: Crop factor <=0.0 or >=2.0 for crop greenhouse area
+Warning: Crop factor <=0.0 or >=2.0 for crop flowers
+Warning: Crop factor <=0.0 or >=2.0 for crop greenhouse area
+Warning: Crop factor <=0.0 or >=2.0 for crop flowers
+Warning: Crop factor <=0.0 or >=2.0 also for more crops/timesteps
+  Start event            1
+ Succesfull logout of Sobek_RR                                                  

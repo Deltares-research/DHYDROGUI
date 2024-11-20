@@ -1,0 +1,272 @@
+TP_1.0
+NODE id '0-2063' nm '' px 558450.6 py 644933.7 node
+NODE id '0-2064' nm '' px 558421.5 py 644862.9 node
+NODE id '0-2070' nm '' px 558443.4 py 644937.1 node
+NODE id '0-2111' nm '' px 558466.2 py 644961.3 node
+NODE id '0-2065' nm '' px 558392.3 py 644828.3 node
+NODE id '0-2066' nm '' px 558370.1 py 644804.5 node
+NODE id '0-2067' nm '' px 558392.8 py 644728.8 node
+NODE id '0-12066' nm '' px 558369.1 py 644804.5 node
+NODE id '0-12067' nm '' px 558391.8 py 644728.8 node
+NODE id '0-2068' nm '' px 558406.9 py 644680.3 node
+NODE id '0-12068' nm '' px 558405.9 py 644680.3 node
+NODE id '0-2069' nm '' px 558408.6 py 644673.9 node
+NODE id '0-12069' nm '' px 558407.6 py 644673.9 node
+NODE id '0-1402' nm '' px 558157.3 py 645080.4 node
+NODE id '0-2252' nm '' px 558125.6 py 645095.9 node
+NODE id '0-2249' nm '' px 558180.4 py 645074.3 node
+NODE id '0-2253' nm '' px 558188.3 py 645064.9 node
+NODE id '0-1401' nm '' px 558316.3 py 645008.4 node
+NODE id '0-2108' nm '' px 558351.1 py 645072.4 node
+NODE id '1' nm 'rnd1' px 560698.7 py 655841 node
+NODE id '0-1403' nm '' px 558089.3 py 644937.4 node
+NODE id '0-2263' nm '' px 558067.8 py 644996.5 node
+NODE id '0-2545' nm '' px 558111.7 py 644878.7 node
+NODE id '0-2524' nm '' px 558107.2 py 644872.1 node
+NODE id '0-2544' nm '' px 558110.1 py 644862.7 node
+NODE id '0-2508' nm '' px 558119.1 py 644858.8 node
+NODE id '0-2509' nm '' px 558130.4 py 644826.6 node
+NODE id '6' nm 'p2' px 564367.1 py 652304.3 node
+NODE id '0-2501' nm '' px 558169 py 644722.1 node
+NODE id '0-2513' nm '' px 558164.1 py 644735.9 node
+NODE id '0-2503' nm '' px 558189.8 py 644665.5 node
+NODE id '0-2504' nm '' px 558206.1 py 644621.3 node
+NODE id '0-2505' nm '' px 558220.8 py 644581.8 node
+NODE id '0-2506' nm '' px 558221.7 py 644567.3 node
+NODE id '0-2507' nm '' px 558221.9 py 644561.7 node
+NODE id '0-4676' nm '' px 558123.5 py 644919.2 node
+NODE id '0-1404' nm '' px 558002.3 py 644953.4 node
+NODE id '0-2514' nm '' px 558196.2 py 644748.3 node
+NODE id '0-2515' nm '' px 558244 py 644765.8 node
+NODE id '0-2516' nm '' px 558290.9 py 644782.8 node
+NODE id '0-2517' nm '' px 558293.8 py 644789.8 node
+NODE id '0-2518' nm '' px 558285.8 py 644797.9 node
+NODE id '0-2519' nm '' px 558250.9 py 644837.6 node
+NODE id '0-2520' nm '' px 558219.6 py 644835.7 node
+NODE id '0-2521' nm '' px 558185.5 py 644884.4 node
+NODE id '0-2548' nm '' px 558178.8 py 644895.4 node
+NODE id '0-2523' nm '' px 558119.7 py 644876.4 node
+NODE id '0-2525' nm '' px 558025.7 py 644841.7 node
+NODE id '0-2526' nm '' px 557931.7 py 644807.3 node
+NODE id '0-2546' nm '' px 558142.7 py 644918.4 node
+NODE id '0-2547' nm '' px 558171.9 py 644905.8 node
+NODE id '28' nm 'rnd4' px 564467.1 py 652204.3 node
+NODE id '40' nm 'p5' px 559190.2 py 644579.4 node
+NODE id '41' nm 'p6' px 558545.1 py 644518.3 node
+NODE id '42' nm 'p7' px 558392.4 py 644393.8 node
+NODE id '43' nm 'p8' px 558239.8 py 644208.7 node
+NODE id '44' nm 'p9' px 557716.5 py 643773.7 node
+NODE id '45' nm 'p10' px 557531.8 py 643354.8 node
+NODE id '47' nm 'p11' px 558525.2 py 641775.8 node
+NODE id '23' nm '' px 556928.9 py 645430.5 node
+NODE id '17' nm '' px 557164.1 py 645326.6 node
+NODE id '16' nm '' px 557405.9 py 645213.6 node
+NODE id '21' nm '' px 557509.9 py 645383.1 node
+NODE id '19' nm '' px 557966.5 py 645161.7 node
+NODE id '18' nm '' px 558073.9 py 645110.6 node
+NODE id '0-2266' nm '' px 558046.7 py 645032.1 node
+NODE id '20' nm '' px 557941.6 py 645172.9 node
+NODE id '15' nm '' px 557435.3 py 645206.9 node
+NODE id '24' nm '' px 557279.6 py 645492.3 node
+NODE id '14' nm '' px 557783.4 py 645044.2 node
+NODE id '0-2511' nm '' px 558145.7 py 644785.5 node
+NODE id '27' nm 'rnd3' px 581867.9 py 650290 node
+NODE id '10_34' nm 'tp70' px 569484.5 py 620645.9 node
+NODE id '49' nm '' px 562462.3 py 653041.3 node
+NODE id '50' nm '' px 563563.3 py 651390.2 node
+NODE id '53' nm '' px 565678.4 py 652935.1 node
+NODE id '55' nm '' px 561073.6 py 654283.3 node
+NODE id '73' nm '' px 558426.616269658 py 642988.55566273 node
+NODE id '74' nm '' px 558716.042748833 py 642965.038526804 node
+NODE id '81' nm '' px 567139.232621076 py 644023.626336898 node
+NODE id '78' nm '' px 570526.60784661 py 644225.140374332 node
+NODE id '101' nm '' px 571333.12 py 636245.18 node
+NODE id '102' nm '' px 573430.072325639 py 636648.212566845 node
+NODE id '115' nm '' px 559470.610518997 py 634166.984028804 node
+NODE id '110' nm '' px 560429.36281502 py 630206.104412851 node
+NODE id '113' nm '' px 556466.519991458 py 627842.353674298 node
+NODE id '111' nm '' px 560748.946913694 py 628608.975535451 node
+NODE id '109' nm '' px 561324.198291308 py 626500.765417282 node
+NODE id '107' nm '' px 566054.042951688 py 630397.759878139 node
+NODE id '108' nm '' px 566501.460689832 py 626947.961502954 node
+NODE id '117' nm '' px 572452.493267447 py 647791.176351351 node
+NODE id '118' nm '' px 572493.243671958 py 641517.44527027 node
+NODE id '119' nm '' px 577790.79625829 py 641395.22972973 node
+NODE id '120' nm '' px 577587.044235738 py 648035.607432432 node
+NODE id '114' nm '' px 569058.133479227 py 629056.171621123 node
+NODE id '187' nm '' px 567702.24 py 638739.43 node
+NODE id '188' nm '' px 572306.331977163 py 639175.901916573 node
+NODE id '192' nm '' px 557754 py 644585.2 node
+NODE id '193' nm '' px 557904.2 py 644565.8 node
+NODE id '194' nm '' px 557807.326989414 py 644399.602391163 node
+NODE id '195' nm '' px 575318.622788704 py 638531.508089332 node
+NODE id '196' nm '' px 580812.566176339 py 638183.430058461 node
+NODE id '198' nm '' px 580851.255918505 py 633890.467677719 node
+NODE id '197' nm '' px 575318.622788704 py 633890.467677719 node
+NODE id '199' nm '' px 580580.42772334 py 647968.29025961 node
+NODE id '200' nm '' px 583791.676323154 py 648006.965596373 node
+NODE id '202' nm '' px 583907.745549654 py 645338.367359696 node
+NODE id '201' nm '' px 580619.117465506 py 644912.938655298 node
+NODE id '216' nm '' px 579071.527778849 py 647813.588912556 node
+NODE id '217' nm '' px 579148.907263182 py 644023.405909739 node
+NODE id '218' nm '' px 579148.907263182 py 640503.950264267 node
+NODE id '223' nm '' px 576595.384280197 py 631221.869441042 node
+NODE id '224' nm '' px 579729.253395678 py 631337.895451333 node
+NODE id '225' nm '' px 576479.315053698 py 628707.972551419 node
+NODE id '226' nm '' px 579922.702106511 py 628707.972551419 node
+NODE id '227' nm '' px 576634.074022363 py 626232.750998559 node
+NODE id '228' nm '' px 579961.391848677 py 626464.80301914 node
+NODE id '229' nm '' px 578142.973966854 py 623989.58146628 node
+NODE id '234' nm '' px 581857.189214833 py 626348.77700885 node
+NODE id '236' nm '' px 583482.158385823 py 623950.906129517 node
+NODE id '235' nm '' px 585261.886525479 py 626232.750998559 node
+NODE id '230' nm '' px 582282.776378663 py 631260.544777806 node
+NODE id '231' nm '' px 584991.058330314 py 631260.544777806 node
+NODE id '232' nm '' px 582011.948183498 py 628785.323224946 node
+NODE id '233' nm '' px 585107.127556813 py 628630.621877892 node
+NODE id '238' nm '' px 565955.705184426 py 638840.910783439 node
+NODE id '244' nm '' px 583475.343234303 py 642195.393926849 node
+NODE id '247' nm '' px 586926.434371443 py 641914.606755133 node
+NODE id '246' nm '' px 587127.079204997 py 635055.37727466 node
+NODE id '245' nm '' px 583475.343234303 py 635175.714633966 node
+BRCH id '31' nm '' bn '0-2063' en '0-2064' al 76.5470443582818 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '33' nm '' bn '0-2063' en '0-2070' al 7.96241169492559 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '34' nm '' bn '0-2063' en '0-2111' al 31.7036275527646 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '35' nm '' bn '0-2064' en '0-2065' al 45.2747170062461 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '37' nm '' bn '0-2065' en '0-2066' al 32.5465820018834 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '39' nm '' bn '0-2066' en '0-2067' al 79.0302473740031 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '40' nm '' bn '0-12066' en '0-12067' al 79.0302473740031 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '41' nm '' bn '0-2067' en '0-2068' al 50.5080191652706 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '42' nm '' bn '0-12067' en '0-12068' al 50.5080191652706 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '43' nm '' bn '0-2068' en '0-2069' al 6.62193325246787 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '44' nm '' bn '0-12068' en '0-12069' al 6.62193325246787 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '48' nm '' bn '0-2066' en '0-12066' al 1 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '49' nm '' bn '0-2067' en '0-12067' al 1 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '50' nm '' bn '0-2068' en '0-12068' al 1 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '51' nm '' bn '0-2069' en '0-12069' al 1 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '77' nm '' bn '0-1402' en '0-2252' al 35.2865413437535 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '78' nm '' bn '0-1402' en '0-2249' al 23.8918396110187 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '79' nm '' bn '0-2249' en '0-2253' al 12.2788435937919 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '80' nm '' bn '0-1401' en '0-2253' al 139.915152860582 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '81' nm '' bn '0-1401' en '0-2070' al 145.732974991938 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '82' nm '' bn '0-1401' en '0-2108' al 72.8494337657826 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '106' nm '' bn '0-1403' en '0-2263' al 62.8892677648361 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '107' nm '' bn '0-1403' en '0-2545' al 62.8287354639899 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '108' nm '' bn '0-2524' en '0-2545' al 7.98811617339737 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '109' nm '' bn '0-2524' en '0-2544' al 9.83717439108267 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '110' nm '' bn '0-2508' en '0-2544' al 9.80866963452606 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '111' nm '' bn '0-2508' en '0-2509' al 34.125210622142 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '116' nm '' bn '0-2501' en '0-2513' al 14.644111444588 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '119' nm '' bn '0-2503' en '0-2504' al 47.1097654419294 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '120' nm '' bn '0-2504' en '0-2505' al 42.1466487398708 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '121' nm '' bn '0-2505' en '0-2506' al 14.5279041847003 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '122' nm '' bn '0-2506' en '0-2507' al 5.60357029054433 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '123' nm '' bn '0-1403' en '0-4676' al 38.7411925474598 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '124' nm '' bn '0-1403' en '0-1404' al 88.4590300647707 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '166' nm '' bn '0-2513' en '0-2514' al 34.4117712418161 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '167' nm '' bn '0-2514' en '0-2515' al 50.9027504168925 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '168' nm '' bn '0-2515' en '0-2516' al 49.885969971548 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '169' nm '' bn '0-2516' en '0-2517' al 7.57693869581476 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '170' nm '' bn '0-2517' en '0-2518' al 11.3846387733482 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '176' nm '' bn '0-2518' en '0-2519' al 52.859247062344 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '178' nm '' bn '0-2519' en '0-2520' al 31.3576147052515 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '180' nm '' bn '0-2520' en '0-2521' al 59.4516610365532 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '183' nm '' bn '0-2521' en '0-2548' al 12.8798291913898 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '186' nm '' bn '0-2523' en '0-2524' al 13.218925826269 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '187' nm '' bn '0-2524' en '0-2525' al 86.9851136689573 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '188' nm '' bn '0-2525' en '0-2526' al 100.096753194065 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '189' nm '' bn '0-2546' en '0-2547' al 31.8025156238228 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '191' nm '' bn '0-2546' en '0-4676' al 19.2166594390935 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '193' nm '' bn '0-2547' en '0-2548' al 12.4807852317395 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '1' nm '' bn '0-2517' en '0-12066' al 76.7214441990511 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '69' nm 'RIVER' bn '1' en '6' al 5457.25347577483 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '2' nm 'RIVER' bn '6' en '27' al 20597.2738292439 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '3' nm 'RIVER' bn '28' en '40' al 12462.4319183524 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '4' nm 'RIVER' bn '40' en '41' al 653.660506215969 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '5' nm 'RIVER' bn '41' en '42' al 197.579395869842 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '6' nm 'RIVER' bn '42' en '43' al 249.401010207429 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '7' nm 'RIVER' bn '43' en '44' al 692.920520922398 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '8' nm 'RIVER' bn '44' en '45' al 477.589915461142 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '9' nm 'RIVER' bn '45' en '47' al 1914.29502618224 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '10' nm 'RIVER' bn '47' en '10_34' al 33848.9779285842 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '11' nm '' bn '0-2507' en '42' al 239.29199735881 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '12' nm '' bn '0-12069' en '41' al 207.647802781519 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '13' nm '' bn '0-2069' en '41' al 206.986980266858 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '14' nm '' bn '23' en '17' al 257.126914188272 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '15' nm '' bn '17' en '16' al 266.901180214743 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '19' nm '' bn '21' en '20' al 480.155110354915 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '20' nm '' bn '19' en '18' al 118.936831973963 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '21' nm '' bn '18' en '0-2252' al 53.7492325526032 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '22' nm '' bn '18' en '0-2266' al 83.078817998355 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '23' nm '' bn '20' en '19' al 27.3029302457213 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '24' nm '' bn '16' en '15' al 30.1537725666416 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '18' nm '' bn '24' en '21' al 254.877872715614 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '16' nm '' bn '15' en '14' al 384.245884818571 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '17' nm '' bn '14' en '0-1404' al 236.984915131739 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '25' nm '' bn '6' en '28' al 141.42135623731 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '26' nm '' bn '0-2548' en '0-2523' al 62.0790624930097 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '27' nm '' bn '0-2509' en '0-2511' al 43.855444359805 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '28' nm '' bn '0-2511' en '0-2513' al 52.9029299755557 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '29' nm '' bn '0-2501' en '0-2503' al 60.300912099232 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '30' nm '' bn '0-2266' en '0-2263' al 41.3832091554325 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '32' nm '' bn '49' en '6' al 2042.40839207043 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '36' nm '' bn '50' en '28' al 1216.39354240313 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '38' nm '' bn '53' en '28' al 1414.67887875659 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '45' nm '' bn '49' en '55' al 1863.07586802046 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '46' nm '' bn '73' en '74' al 290.380341155862 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '47' nm '' bn '81' en '78' al 3393.36393949194 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '52' nm '' bn '101' en '102' al 2135.33236427969 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '53' nm '' bn '115' en '110' al 4075.26358622374 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '54' nm '' bn '110' en '113' al 4614.26492501965 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '55' nm '' bn '113' en '111' al 4350.50450204217 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '56' nm '' bn '111' en '109' al 2185.28351702858 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '57' nm '' bn '111' en '110' al 1628.7893194488 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '58' nm '' bn '110' en '107' al 5627.94442556096 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '59' nm '' bn '107' en '108' al 3478.69105581897 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '60' nm '' bn '109' en '108' al 5196.54022232202 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '61' nm '' bn '113' en '109' al 5039.53346215665 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '62' nm '' bn '108' en '114' al 3313.77815406866 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '63' nm '' bn '107' en '114' al 3290.0484721372 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '64' nm '' bn '21' en '16' al 198.862389606481 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '65' nm '' bn '117' en '118' al 6273.86342481164 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '66' nm '' bn '118' en '119' al 5298.962166623 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '67' nm '' bn '119' en '120' al 6643.50291045585 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '68' nm '' bn '120' en '117' al 5140.36576513545 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '70' nm '' bn '187' en '188' al 4624.73465921381 vc_opt 0 vc_equi -1 vc_len 250 brch
+BRCH id '71' nm '' bn '192' en '193' al 151.447680734907 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '72' nm '' bn '193' en '194' al 192.369502164783 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '73' nm '' bn '194' en '192' al 193.106810356238 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '74' nm '' bn '187' en '101' al 4405.06216039003 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '75' nm '' bn '188' en '102' al 2766.22591621175 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '76' nm '' bn '195' en '196' al 5504.95887923915 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '83' nm '' bn '196' en '198' al 4293.1367202333 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '84' nm '' bn '198' en '197' al 5532.63312980102 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '85' nm '' bn '197' en '195' al 4641.04041161307 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '86' nm '' bn '199' en '200' al 3211.48148857832 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '87' nm '' bn '200' en '202' al 2671.12122789961 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '88' nm '' bn '202' en '201' al 3316.03140189791 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '89' nm '' bn '201' en '199' al 3055.59655748616 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '90' nm '' bn '216' en '217' al 3790.97280120003 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '91' nm '' bn '217' en '218' al 3519.45564547193 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '92' nm '' bn '223' en '224' al 3136.01620978431 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '93' nm '' bn '225' en '226' al 3443.38705281296 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '94' nm '' bn '223' en '225' al 2516.57498139749 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '95' nm '' bn '224' en '226' al 2637.0280361071 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '96' nm '' bn '225' en '227' al 2480.0548530477 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '97' nm '' bn '226' en '228' al 2243.50316395893 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '98' nm '' bn '227' en '229' al 2703.44014045609 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '99' nm '' bn '228' en '229' al 3071.37840857748 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '100' nm '' bn '234' en '236' al 2896.60310719665 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '101' nm '' bn '235' en '236' al 2893.82934145337 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '102' nm '' bn '230' en '231' al 2708.28195165098 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '103' nm '' bn '232' en '233' al 3099.04305548902 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '104' nm '' bn '230' en '232' al 2489.99390502045 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '105' nm '' bn '231' en '233' al 2632.48295812767 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '112' nm '' bn '232' en '234' al 2441.45608224972 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '113' nm '' bn '233' en '235' al 2402.85977375622 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '114' nm '' bn '237' en '238' al 5181.5390756661 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '115' nm '' bn '244' en '247' al 3462.4949779958 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '117' nm '' bn '247' en '246' al 6862.1634646095 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '118' nm '' bn '246' en '245' al 3653.71819927387 vc_opt 0 vc_equi -1 vc_len 500 brch
+BRCH id '125' nm '' bn '245' en '244' al 7019.67929288303 vc_opt 0 vc_equi -1 vc_len 500 brch
+NDLK id '237' nm '' px 566002.219777711 py 633659.580492359 ci '10' lc 11142.0854786798 ndlk

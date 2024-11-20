@@ -1,0 +1,42 @@
+010402  Flow area general structure Zwolle_br (    480.) greater than flow area branch (    219.)
+010161  Messages at time step  20000101        0
+010402  Flow area general structure Zwolle_br (    521.) greater than flow area branch (    299.)
+010402  Flow area general structure Dalfsen_br (    177.) greater than flow area branch (    171.)
+010161  Messages at time step  20000101  1000000
+010402  Flow area general structure Zwolle_br (    521.) greater than flow area branch (    299.)
+010402  Flow area general structure Dalfsen_br (    177.) greater than flow area branch (    171.)
+010161  Messages at time step  20000101  2000000
+010402  Flow area general structure Zwolle_br (    521.) greater than flow area branch (    299.)
+010402  Flow area general structure Dalfsen_br (    177.) greater than flow area branch (    171.)
+010161  Messages at time step  20000101  3000000
+010402  Flow area general structure Zwolle_br (    521.) greater than flow area branch (    299.)
+010402  Flow area general structure Dalfsen_br (    177.) greater than flow area branch (    171.)
+010161  Messages at time step  20000101  4000000
+010402  Flow area general structure Zwolle_br (    521.) greater than flow area branch (    299.)
+010402  Flow area general structure Dalfsen_br (    176.) greater than flow area branch (    171.)
+010161  Messages at time step  20000101  5000000
+010402  Flow area general structure Zwolle_br (    521.) greater than flow area branch (    299.)
+010402  Flow area general structure Dalfsen_br (    176.) greater than flow area branch (    170.)
+010161  Messages at time step  20000101  6000000
+010402  Flow area general structure Zwolle_br (    521.) greater than flow area branch (    299.)
+010402  Flow area general structure Dalfsen_br (    176.) greater than flow area branch (    170.)
+010161  Messages at time step  20000101  7000000
+010402  Flow area general structure Zwolle_br (    521.) greater than flow area branch (    298.)
+010402  Flow area general structure Dalfsen_br (    176.) greater than flow area branch (    169.)
+010161  Messages at time step  20000101  8000000
+010402  Flow area general structure Zwolle_br (    520.) greater than flow area branch (    298.)
+010402  Flow area general structure Dalfsen_br (    175.) greater than flow area branch (    168.)
+010161  Messages at time step  20000101  9000000
+010402  Flow area general structure Zwolle_br (    520.) greater than flow area branch (    298.)
+010161  Messages at time step  20000101 10000000
+010312  High Froude numbers (See froude file)
+000131  Maximum Froude number in cell = 0.92
+000141  (Time step      0 Iter. step    2 Branch DV_0_7 X=   5450.00)
+000151  Maximum Froude number in grid point = 1.79
+000141  (Time step      0 Iter. step   38 Branch Neveng_2 X=   3010.00)
+010322         61          timesteps without convergence (See residu file)
+010430  Chezy value in floodplain 1 limited because of low water depth
+010430  Chezy value in floodplain 2 limited because of low water depth
+010331  Minumum number of iterations         3
+010341  Maximum number of iterations       116
+010351  Mean number of iterations         9

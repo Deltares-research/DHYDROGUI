@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define scripts_plugin_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.Toolbox\Scripts\"?>
+  <Directory Id='NetworkEditorScripts_DeltaShell.Plugins.Toolbox' Name='DeltaShell.Plugins.Toolbox'>
+    <Directory Id='NetworkEditorScripts' Name='Scripts'>
+      <Directory Id="network_editor_scripts_examples" Name="Examples">
+        <?define network_editor_scripts_examples_dir="$(var.scripts_plugin_dir)Examples\"?>
+        <Component Id="network_editor_scripts_examples_files" Guid="74CD57A8-7615-4B99-A674-9557AB0D1CB0">
+          <File Id="network_editor_scripts_example_CreatingANetworkFromShpFile.py" Source="$(var.network_editor_scripts_examples_dir)CreatingANetworkFromShpFile.py" />
+        </Component>
+        <?undef network_editor_scripts_examples_dir ?>
+      </Directory>
+      <Directory Id="network_editor_scripts_libraries" Name="Libraries">
+        <?define network_editor_scripts_libraries_dir="$(var.scripts_plugin_dir)Libraries\"?>
+        <Component Id="network_editor_scripts_libraries_files" Guid="490B470E-B0FD-44D9-8A10-C24E9F243806">
+          <File Id="network_editor_scripts_libraries_file_NetworkFunctions.py" Source="$(var.network_editor_scripts_libraries_dir)NetworkFunctions.py" />
+        </Component>
+        <?undef network_editor_scripts_libraries_dir ?>
+      </Directory>
+    </Directory>
+  </Directory>
+  <?undef scripts_plugin_dir ?>
+</Include>

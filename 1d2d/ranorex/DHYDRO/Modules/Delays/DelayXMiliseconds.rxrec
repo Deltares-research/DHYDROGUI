@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="64309eeb-f439-41a7-98a7-fc1d63e0015d"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="DelayXMiliseconds"
+	namespace="DHYDRO.Modules.Delays">
+	</codegen>
+	<variables>
+		<var
+		id="9a7db6ae-dfb4-4e1f-869e-ebd323130abd"
+		name="delayInMiliseconds">
+			0
+		</var>
+	</variables>
+	<recorditems>
+		<explicitdelayitem
+		duration="300ms"
+		enabled="True"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+				<binding
+				target="Duration"
+				variable="delayInMiliseconds">
+				</binding>
+			</bindings>
+		</explicitdelayitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		DelayXMiliseconds.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

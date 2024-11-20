@@ -1,0 +1,1344 @@
+** WARNING: MDU setting "Wrihis_temperature = 1" asks to write temperature to the output his file, but no temperature is involved due to MDU setting "Temperature = 0". So we set "Wrihis_temperature = 0"  and do not write temperature to his file.
+** WARNING: MDU setting "Wrihis_salinity = 1" asks to write salinity to the output his file, but no salinity is involved due to MDU setting "Salinity = 0". So we set "Wrihis_salinity = 0" and do not write salinity to his file.
+** WARNING: TimeSplitInterval invalid, disabling time partitioning of output. Got: 0X
+** INFO   : Read Structure data from structure.ini
+** WARNING: While reading 'olo.mdu': keyword [geometry] layertype=1 was in file, but not used. Check possible typo.
+** WARNING: While reading 'olo.mdu': keyword [geometry] numtopsig=0 was in file, but not used. Check possible typo.
+** WARNING: While reading 'olo.mdu': keyword [geometry] sigmagrowthfactor=1. was in file, but not used. Check possible typo.
+** WARNING: While reading 'olo.mdu': keyword [numerics] qhrelax=0.01 was in file, but not used. Check possible typo.
+** WARNING: Rank =    0: Two grid points on branch 'W_toegevoegd_419' are too close at chainage   0.000     and  0.9591
+** INFO   : Reading Roughness ...
+** INFO   : Reading roughness/r001.ini.
+** INFO   : Reading roughness/r002.ini.
+** INFO   : Reading roughness/r003.ini.
+** INFO   : Reading roughness/r004.ini.
+** INFO   : Reading roughness/r005.ini.
+** INFO   : Reading roughness/r006.ini.
+** INFO   : Reading Roughness Done
+** INFO   : Reading Cross Section Definitions ...
+** INFO   : Reading cross_section_definitions.ini.
+** INFO   : Reading Cross Section Definitions Done
+** INFO   : Reading Cross Section Locations ...
+** INFO   : Reading cross_section_locations.ini.
+** INFO   : Reading Cross Section Locations Done
+** INFO   : Reading Storage Nodes ...
+** INFO   : Reading StorageNodes.ini.
+** INFO   : Done reading storage nodes file 'StorageNodes.ini', 4 storage nodes have been read.
+** INFO   : Reading Storage Nodes Done
+** INFO   : All 1D-Reading Done
+** INFO   : Reading Structures ...
+** INFO   : Reading structure.ini.
+** INFO   : Reading Structures Done
+** INFO   : Reading long culverts from structure.ini.
+** INFO   : Reading Observation Points from 'obspts_obs.ini'...
+** INFO   :         77 observation points have been read from file obspts_obs.ini
+** INFO   : Initializing flow model geometry...
+** INFO   : waterlevelbnd 199149.582000_401064.299000       1 nr of open bndcells
+** INFO   : waterlevelbnd 186301.632000_397595.236700       1 nr of open bndcells
+** INFO   : dischargebnd 193443.998000_386663.835000       1 nr of open bndcells
+** INFO   : waterlevelbnd 201414.562000_396649.200000       1 nr of open bndcells
+** INFO   : waterlevelbnd 190213.802800_396723.817500       1 nr of open bndcells
+** INFO   : dischargebnd 196833.557000_396040.128000       1 nr of open bndcells
+** INFO   : dischargebnd 188941.860000_384285.165000       1 nr of open bndcells
+** INFO   : dischargebnd 186944.190500_393142.431500       1 nr of open bndcells
+** INFO   : dischargebnd 186952.136300_393059.013100       1 nr of open bndcells
+** INFO   : dischargebnd 187295.556000_390844.107000       1 nr of open bndcells
+** INFO   : dischargebnd 188142.195000_387817.834000       1 nr of open bndcells
+** INFO   : dischargebnd 191747.000000_385449.534000       1 nr of open bndcells
+** INFO   : setbedlevelfromextfile: Using bedlevel as specified in net-file.
+** INFO   : setbedlevelfromextfile: Mirroring input bedlevels at open boundaries.
+** WARNING: At node 187990.359000_394621.035000 the bedlevel is below the bedlevel of the assigned storage area.
+The bedlevel (due to invert levels of incoming channels/pipes) =        19.     and the bottom level of the storage area is        19.
+** WARNING: At node 187989.987000_394621.919000 the bedlevel is below the bedlevel of the assigned storage area.
+The bedlevel (due to invert levels of incoming channels/pipes) =        22.     and the bottom level of the storage area is        22.
+** INFO   : Done initializing flow model geometry.
+** WARNING: get_projection: could not initialize projection for proj_string ''.
+** INFO   : Start initializing external forcings...
+** INFO   :        1 nr of pump links
+** INFO   :        1 nr of pump links
+** INFO   : Reading initial field file './initialFields.ini'.
+** INFO   : Finish initializing 1dField file './initialWaterDepth.ini':         0 [Branch] blocks have been read and handled.
+** INFO   : Finish initializing the initial field file './initialFields.ini':       2 blocks have been read and handled.
+** INFO   : Done initializing external forcings.
+** WARNING: The bedlevel of the channel at the left side for 'D_1562_1' is changed from    23.20 into    23.01.
+** WARNING: The bedlevel of the channel at the right side for 'D_1562_1' is changed from    23.19 into    23.01.
+** WARNING: The bedlevel of the channel at the left side for 'D_1562_2' is changed from    23.23 into    23.21.
+** WARNING: The bedlevel of the channel at the right side for 'D_1562_2' is changed from    23.22 into    23.04.
+** WARNING: The bedlevel of the channel at the left side for 'D_1562_3' is changed from    24.56 into    23.92.
+** WARNING: The bedlevel of the channel at the right side for 'D_1562_3' is changed from    24.51 into    23.37.
+** WARNING: The bedlevel of the channel at the left side for 'D_1562_4' is changed from    25.06 into    23.68.
+** WARNING: The bedlevel of the channel at the right side for 'D_1562_4' is changed from    25.01 into    23.78.
+** WARNING: The bedlevel of the channel at the left side for 'B_11936' is changed from    20.50 into    20.50.
+** WARNING: The bedlevel of the channel at the left side for 'B_157877' is changed from    20.11 into    20.11.
+** WARNING: The bedlevel of the channel at the right side for 'B_157877' is changed from    20.12 into    20.11.
+** WARNING: The bedlevel of the channel at the left side for 'B_11547' is changed from    12.80 into    12.74.
+** WARNING: The bedlevel of the channel at the right side for 'B_11544' is changed from    13.11 into    13.11.
+** WARNING: The bedlevel of the channel at the left side for 'B_11541' is changed from    13.76 into    13.46.
+** WARNING: The bedlevel of the channel at the right side for 'B_11541' is changed from    13.93 into    13.46.
+** WARNING: The bedlevel of the channel at the left side for 'B_11972' is changed from    15.80 into    15.63.
+** WARNING: The bedlevel of the channel at the left side for 'B_11947' is changed from    26.32 into    26.31.
+** WARNING: The bedlevel of the channel at the left side for 'B_11955' is changed from    12.15 into    12.13.
+** WARNING: The bedlevel of the channel at the right side for 'B_11955' is changed from    12.21 into    12.13.
+** WARNING: The bedlevel of the channel at the left side for 'B_11543' is changed from    15.66 into    15.65.
+** WARNING: The bedlevel of the channel at the left side for 'B_11943' is changed from    24.04 into    23.99.
+** WARNING: The bedlevel of the channel at the right side for 'B_11943' is changed from    24.02 into    23.99.
+** WARNING: The bedlevel of the channel at the left side for 'B_12070' is changed from    16.48 into    16.48.
+** WARNING: The bedlevel of the channel at the right side for 'B_12070' is changed from    16.63 into    16.48.
+** WARNING: The bedlevel of the channel at the right side for 'B_12110' is changed from    26.20 into    26.08.
+** WARNING: The bedlevel of the channel at the left side for 'B_11920' is changed from    26.57 into    26.46.
+** WARNING: The bedlevel of the channel at the right side for 'B_11920' is changed from    26.60 into    26.46.
+** WARNING: The bedlevel of the channel at the left side for 'B_11940' is changed from    24.89 into    24.89.
+** WARNING: The bedlevel of the channel at the left side for 'B_11934' is changed from    21.44 into    21.42.
+** WARNING: The bedlevel of the channel at the left side for 'B_12111' is changed from    24.67 into    24.66.
+** WARNING: The bedlevel of the channel at the left side for 'B_11933' is changed from    21.33 into    21.33.
+** WARNING: The bedlevel of the channel at the left side for 'B_11932' is changed from    22.77 into    22.70.
+** WARNING: The bedlevel of the channel at the right side for 'B_11932' is changed from    22.75 into    22.70.
+** WARNING: The bedlevel of the channel at the left side for 'B_11931' is changed from    23.46 into    23.39.
+** WARNING: The bedlevel of the channel at the left side for 'B_11930' is changed from    25.75 into    25.75.
+** WARNING: The bedlevel of the channel at the left side for 'B_11735' is changed from    20.16 into    19.66.
+** WARNING: The bedlevel of the channel at the right side for 'B_11735' is changed from    20.16 into    19.66.
+** WARNING: The bedlevel of the channel at the left side for 'B_22836' is changed from    22.16 into    22.05.
+** WARNING: The bedlevel of the channel at the right side for 'B_22836' is changed from    22.22 into    22.05.
+** WARNING: The bedlevel of the channel at the left side for 'B_12118' is changed from    15.12 into    15.12.
+** WARNING: The bedlevel of the channel at the right side for 'B_11927' is changed from    22.05 into    22.00.
+** WARNING: The bedlevel of the channel at the left side for 'B_11944' is changed from    23.44 into    23.41.
+** WARNING: The bedlevel of the channel at the left side for 'B_11482' is changed from    19.81 into    19.76.
+** WARNING: The bedlevel of the channel at the right side for 'B_12062' is changed from    19.75 into    19.52.
+** WARNING: The bedlevel of the channel at the left side for 'B_12095' is changed from    21.93 into    21.91.
+** WARNING: The bedlevel of the channel at the left side for 'B_11489' is changed from    17.19 into    17.17.
+** WARNING: The bedlevel of the channel at the right side for 'B_11489' is changed from    17.20 into    17.17.
+** WARNING: The bedlevel of the channel at the left side for 'B_11487' is changed from    17.27 into    17.21.
+** WARNING: The bedlevel of the channel at the right side for 'B_11487' is changed from    17.23 into    17.21.
+** WARNING: The bedlevel of the channel at the left side for 'B_11484' is changed from    17.73 into    17.66.
+** WARNING: The bedlevel of the channel at the right side for 'B_11484' is changed from    17.73 into    17.66.
+** WARNING: The bedlevel of the channel at the left side for 'B_11542' is changed from    15.88 into    15.85.
+** WARNING: The bedlevel of the channel at the left side for 'B_201453' is changed from    26.70 into    26.26.
+** WARNING: The bedlevel of the channel at the right side for 'B_201453' is changed from    26.75 into    26.26.
+** WARNING: The bedlevel of the channel at the left side for 'B_201454' is changed from    26.29 into    25.67.
+** WARNING: The bedlevel of the channel at the right side for 'B_201454' is changed from    26.28 into    25.67.
+** WARNING: The bedlevel of the channel at the left side for 'B_201455' is changed from    25.31 into    25.04.
+** WARNING: The bedlevel of the channel at the right side for 'B_201455' is changed from    25.45 into    25.04.
+** WARNING: The bedlevel of the channel at the right side for 'D_20791' is changed from    28.77 into    28.76.
+** WARNING: The bedlevel of the channel at the left side for 'D_22846' is changed from    18.35 into    17.93.
+** WARNING: The bedlevel of the channel at the left side for 'D_18812' is changed from    26.93 into    26.62.
+** WARNING: The bedlevel of the channel at the right side for 'D_18812' is changed from    26.94 into    26.66.
+** WARNING: The bedlevel of the channel at the right side for 'D_19618' is changed from    25.53 into    25.44.
+** WARNING: The bedlevel of the channel at the left side for 'D_19619' is changed from    25.53 into    25.46.
+** WARNING: The bedlevel of the channel at the right side for 'D_19619' is changed from    25.55 into    25.46.
+** WARNING: The bedlevel of the channel at the right side for 'D_19621' is changed from    24.11 into    23.98.
+** WARNING: The bedlevel of the channel at the left side for 'D_19622' is changed from    24.11 into    24.04.
+** WARNING: The bedlevel of the channel at the left side for 'D_19623' is changed from    23.80 into    23.74.
+** WARNING: The bedlevel of the channel at the right side for 'D_19623' is changed from    23.81 into    23.74.
+** WARNING: The bedlevel of the channel at the left side for 'D_19624' is changed from    23.81 into    23.69.
+** WARNING: The bedlevel of the channel at the right side for 'D_19624' is changed from    23.82 into    23.72.
+** WARNING: The bedlevel of the channel at the left side for 'D_19625' is changed from    23.54 into    23.51.
+** WARNING: The bedlevel of the channel at the right side for 'D_19402' is changed from    23.49 into    23.49.
+** WARNING: The bedlevel of the channel at the left side for 'D_24348' is changed from    26.71 into    26.63.
+** WARNING: The bedlevel of the channel at the right side for 'D_24348' is changed from    26.71 into    26.49.
+** WARNING: The bedlevel of the channel at the left side for 'D_19407' is changed from    26.94 into    26.93.
+** WARNING: The bedlevel of the channel at the right side for 'D_19407' is changed from    26.91 into    26.89.
+** WARNING: The bedlevel of the channel at the left side for 'D_18799' is changed from    27.47 into    27.22.
+** WARNING: The bedlevel of the channel at the right side for 'D_18799' is changed from    27.46 into    27.24.
+** WARNING: The bedlevel of the channel at the left side for 'D_18801' is changed from    27.04 into    26.75.
+** WARNING: The bedlevel of the channel at the right side for 'D_18801' is changed from    26.95 into    26.74.
+** WARNING: The bedlevel of the channel at the left side for 'D_19630' is changed from    18.44 into    17.70.
+** WARNING: The bedlevel of the channel at the right side for 'D_19630' is changed from    18.44 into    17.58.
+** WARNING: The bedlevel of the channel at the left side for 'D_25029' is changed from    19.42 into    19.28.
+** WARNING: The bedlevel of the channel at the left side for 'D_24523' is changed from    19.49 into    19.31.
+** WARNING: The bedlevel of the channel at the right side for 'D_24523' is changed from    19.42 into    19.30.
+** WARNING: The bedlevel of the channel at the left side for 'D_24604' is changed from    21.16 into    20.83.
+** WARNING: The bedlevel of the channel at the right side for 'D_24604' is changed from    21.16 into    20.82.
+** WARNING: The bedlevel of the channel at the left side for 'D_24606' is changed from    21.57 into    21.25.
+** WARNING: The bedlevel of the channel at the right side for 'D_24606' is changed from    21.57 into    21.25.
+** WARNING: The bedlevel of the channel at the left side for 'D_24607' is changed from    21.43 into    21.27.
+** WARNING: The bedlevel of the channel at the right side for 'D_24607' is changed from    21.43 into    21.24.
+** WARNING: The bedlevel of the channel at the left side for 'D_19266' is changed from    29.07 into    28.87.
+** WARNING: The bedlevel of the channel at the right side for 'D_19266' is changed from    29.09 into    28.79.
+** WARNING: The bedlevel of the channel at the left side for 'D_19394' is changed from    28.64 into    28.36.
+** WARNING: The bedlevel of the channel at the right side for 'D_19394' is changed from    28.61 into    28.39.
+** WARNING: The bedlevel of the channel at the left side for 'D_22539' is changed from    24.68 into    24.07.
+** WARNING: The bedlevel of the channel at the right side for 'D_22539' is changed from    24.61 into    24.15.
+** WARNING: The bedlevel of the channel at the left side for 'D_22540' is changed from    24.34 into    24.27.
+** WARNING: The bedlevel of the channel at the right side for 'D_22540' is changed from    24.31 into    24.25.
+** WARNING: The bedlevel of the channel at the right side for 'D_22541' is changed from    24.05 into    23.97.
+** WARNING: The bedlevel of the channel at the left side for 'D_22344' is changed from    29.26 into    29.23.
+** WARNING: The bedlevel of the channel at the right side for 'D_22344' is changed from    29.28 into    29.22.
+** WARNING: The bedlevel of the channel at the left side for 'D_22346' is changed from    29.23 into    29.18.
+** WARNING: The bedlevel of the channel at the left side for 'D_22347' is changed from    29.12 into    28.96.
+** WARNING: The bedlevel of the channel at the left side for 'D_17636' is changed from    28.11 into    28.10.
+** WARNING: The bedlevel of the channel at the right side for 'D_17636' is changed from    28.18 into    27.98.
+** WARNING: The bedlevel of the channel at the left side for 'D_19842' is changed from    27.89 into    27.86.
+** WARNING: The bedlevel of the channel at the right side for 'D_19842' is changed from    27.89 into    27.82.
+** WARNING: The bedlevel of the channel at the left side for 'D_22037' is changed from    29.16 into    28.99.
+** WARNING: The bedlevel of the channel at the right side for 'D_22037' is changed from    29.16 into    28.85.
+** WARNING: The bedlevel of the channel at the left side for 'D_22038' is changed from    29.16 into    28.95.
+** WARNING: The bedlevel of the channel at the right side for 'D_22038' is changed from    29.16 into    28.92.
+** WARNING: The bedlevel of the channel at the left side for 'D_22343' is changed from    29.17 into    28.87.
+** WARNING: The bedlevel of the channel at the right side for 'D_22343' is changed from    29.18 into    28.91.
+** WARNING: The bedlevel of the channel at the left side for 'D_23618' is changed from    27.77 into    27.70.
+** WARNING: The bedlevel of the channel at the right side for 'D_23618' is changed from    27.75 into    27.61.
+** WARNING: The bedlevel of the channel at the right side for 'D_19973' is changed from    27.75 into    27.67.
+** WARNING: The bedlevel of the channel at the left side for 'D_19972' is changed from    27.47 into    27.40.
+** WARNING: The bedlevel of the channel at the left side for 'D_19899' is changed from    26.25 into    26.16.
+** WARNING: The bedlevel of the channel at the left side for 'D_19976' is changed from    24.98 into    24.97.
+** WARNING: The bedlevel of the channel at the right side for 'D_19976' is changed from    24.98 into    24.97.
+** WARNING: The bedlevel of the channel at the left side for 'D_25017' is changed from    23.33 into    23.05.
+** WARNING: The bedlevel of the channel at the left side for 'D_25016' is changed from    20.55 into    20.47.
+** WARNING: The bedlevel of the channel at the left side for 'D_19923' is changed from    19.51 into    19.31.
+** WARNING: The bedlevel of the channel at the right side for 'D_19923' is changed from    19.43 into    19.29.
+** WARNING: The bedlevel of the channel at the left side for 'D_24295' is changed from    29.28 into    29.16.
+** WARNING: The bedlevel of the channel at the left side for 'D_20060' is changed from    29.17 into    29.06.
+** WARNING: The bedlevel of the channel at the right side for 'D_20060' is changed from    29.17 into    29.05.
+** WARNING: The bedlevel of the channel at the left side for 'D_20794' is changed from    19.24 into    19.19.
+** WARNING: The bedlevel of the channel at the right side for 'D_20794' is changed from    19.23 into    19.22.
+** WARNING: The bedlevel of the channel at the left side for 'D_25475' is changed from    24.63 into    24.62.
+** WARNING: The bedlevel of the channel at the right side for 'D_25475' is changed from    24.62 into    23.35.
+** WARNING: The bedlevel of the channel at the right side for 'D_25482' is changed from    26.72 into    26.62.
+** WARNING: The bedlevel of the channel at the left side for 'D_25694' is changed from    27.07 into    27.01.
+** WARNING: The bedlevel of the channel at the right side for 'D_25694' is changed from    27.10 into    26.94.
+** WARNING: The bedlevel of the channel at the left side for 'D_17160' is changed from    28.99 into    28.98.
+** WARNING: The bedlevel of the channel at the right side for 'D_17160' is changed from    28.97 into    28.95.
+** WARNING: The bedlevel of the channel at the left side for 'D_17157' is changed from    29.00 into    28.55.
+** WARNING: The bedlevel of the channel at the right side for 'D_17157' is changed from    29.00 into    28.49.
+** WARNING: The bedlevel of the channel at the left side for 'D_23905' is changed from    29.24 into    29.09.
+** WARNING: The bedlevel of the channel at the right side for 'D_23905' is changed from    29.22 into    29.04.
+** WARNING: The bedlevel of the channel at the right side for 'D_17161' is changed from    29.80 into    29.74.
+** WARNING: The bedlevel of the channel at the left side for 'D_17170' is changed from    29.97 into    29.96.
+** WARNING: The bedlevel of the channel at the right side for 'D_17170' is changed from    29.96 into    29.75.
+** WARNING: The bedlevel of the channel at the left side for 'D_17171' is changed from    30.03 into    29.97.
+** WARNING: The bedlevel of the channel at the right side for 'D_17171' is changed from    30.03 into    29.99.
+** WARNING: The bedlevel of the channel at the left side for 'D_17172' is changed from    30.04 into    30.01.
+** WARNING: The bedlevel of the channel at the right side for 'D_17172' is changed from    30.04 into    30.02.
+** WARNING: The bedlevel of the channel at the left side for 'D_17173' is changed from    30.04 into    29.99.
+** WARNING: The bedlevel of the channel at the right side for 'D_17173' is changed from    30.04 into    29.94.
+** WARNING: The bedlevel of the channel at the left side for 'D_17174' is changed from    29.69 into    29.60.
+** WARNING: The bedlevel of the channel at the left side for 'D_17175' is changed from    29.49 into    29.25.
+** WARNING: The bedlevel of the channel at the right side for 'D_17175' is changed from    29.46 into    29.28.
+** WARNING: The bedlevel of the channel at the left side for 'D_20140' is changed from    29.05 into    28.85.
+** WARNING: The bedlevel of the channel at the right side for 'D_20140' is changed from    29.04 into    28.99.
+** WARNING: The bedlevel of the channel at the left side for 'D_22831' is changed from    22.61 into    22.60.
+** WARNING: The bedlevel of the channel at the left side for 'D_22832' is changed from    22.89 into    22.68.
+** WARNING: The bedlevel of the channel at the right side for 'D_22832' is changed from    22.89 into    22.73.
+** WARNING: The bedlevel of the channel at the left side for 'D_201511' is changed from    27.41 into    27.37.
+** WARNING: The bedlevel of the channel at the left side for 'D_18804' is changed from    28.42 into    27.58.
+** WARNING: The bedlevel of the channel at the right side for 'D_18804' is changed from    28.42 into    27.60.
+** WARNING: The bedlevel of the channel at the left side for 'D_20483' is changed from    29.79 into    29.51.
+** WARNING: The bedlevel of the channel at the right side for 'D_20483' is changed from    29.79 into    29.45.
+** WARNING: The bedlevel of the channel at the left side for 'D_201471' is changed from    26.18 into    25.98.
+** WARNING: The bedlevel of the channel at the right side for 'D_201471' is changed from    26.13 into    25.75.
+** WARNING: The bedlevel of the channel at the left side for 'D_21452' is changed from    27.29 into    27.21.
+** WARNING: The bedlevel of the channel at the right side for 'D_21452' is changed from    27.35 into    27.29.
+** WARNING: The bedlevel of the channel at the left side for 'D_20362' is changed from    28.18 into    28.09.
+** WARNING: The bedlevel of the channel at the right side for 'D_20362' is changed from    28.11 into    28.09.
+** WARNING: The bedlevel of the channel at the left side for 'D_24400' is changed from    28.10 into    27.61.
+** WARNING: The bedlevel of the channel at the right side for 'D_24400' is changed from    28.10 into    27.62.
+** WARNING: The bedlevel of the channel at the right side for 'D_24422' is changed from    28.23 into    28.21.
+** WARNING: The bedlevel of the channel at the left side for 'D_24423' is changed from    28.16 into    28.11.
+** WARNING: The bedlevel of the channel at the left side for 'D_24424' is changed from    28.35 into    28.04.
+** WARNING: The bedlevel of the channel at the right side for 'D_24424' is changed from    28.35 into    28.10.
+** WARNING: The bedlevel of the channel at the right side for 'D_14808' is changed from    20.59 into    19.94.
+** WARNING: The bedlevel of the channel at the left side for 'D_20853' is changed from    27.23 into    26.96.
+** WARNING: The bedlevel of the channel at the right side for 'D_20853' is changed from    27.23 into    26.53.
+** WARNING: The bedlevel of the channel at the left side for 'D_22833' is changed from    23.09 into    23.03.
+** WARNING: The bedlevel of the channel at the right side for 'D_22833' is changed from    22.98 into    22.95.
+** WARNING: The bedlevel of the channel at the left side for 'D_15565' is changed from    29.91 into    29.84.
+** WARNING: The bedlevel of the channel at the right side for 'D_15565' is changed from    29.86 into    29.80.
+** WARNING: The bedlevel of the channel at the left side for 'D_21493' is changed from    17.70 into    17.43.
+** WARNING: The bedlevel of the channel at the right side for 'D_21493' is changed from    17.70 into    17.43.
+** WARNING: The bedlevel of the channel at the left side for 'D_22916' is changed from    17.17 into    16.72.
+** WARNING: The bedlevel of the channel at the right side for 'D_22916' is changed from    17.32 into    16.77.
+** WARNING: The bedlevel of the channel at the left side for 'D_19866' is changed from    26.98 into    26.81.
+** WARNING: The bedlevel of the channel at the right side for 'D_19866' is changed from    26.97 into    26.81.
+** WARNING: The bedlevel of the channel at the left side for 'D_14893' is changed from    27.01 into    26.87.
+** WARNING: The bedlevel of the channel at the right side for 'D_14893' is changed from    27.00 into    26.87.
+** WARNING: The bedlevel of the channel at the left side for 'D_19867' is changed from    26.99 into    26.30.
+** WARNING: The bedlevel of the channel at the right side for 'D_19867' is changed from    26.98 into    26.30.
+** WARNING: The bedlevel of the channel at the left side for 'D_20850' is changed from    15.76 into    15.45.
+** WARNING: The bedlevel of the channel at the right side for 'D_20850' is changed from    15.76 into    15.61.
+** WARNING: The bedlevel of the channel at the left side for 'D_20852' is changed from    26.35 into    25.98.
+** WARNING: The bedlevel of the channel at the right side for 'D_20852' is changed from    26.39 into    26.02.
+** WARNING: The bedlevel of the channel at the right side for 'D_21446' is changed from    30.00 into    29.85.
+** WARNING: The bedlevel of the channel at the left side for 'D_21447' is changed from    30.00 into    29.76.
+** WARNING: The bedlevel of the channel at the right side for 'D_21447' is changed from    29.95 into    29.68.
+** WARNING: The bedlevel of the channel at the left side for 'D_180390' is changed from    28.34 into    28.25.
+** WARNING: The bedlevel of the channel at the right side for 'D_180390' is changed from    28.34 into    28.22.
+** WARNING: The bedlevel of the channel at the left side for 'D_22933' is changed from    29.13 into    28.80.
+** WARNING: The bedlevel of the channel at the right side for 'D_22933' is changed from    29.07 into    28.82.
+** WARNING: The bedlevel of the channel at the left side for 'D_180391' is changed from    29.00 into    28.97.
+** WARNING: The bedlevel of the channel at the right side for 'D_180391' is changed from    29.00 into    28.98.
+** WARNING: The bedlevel of the channel at the left side for 'D_18578' is changed from    28.44 into    28.28.
+** WARNING: The bedlevel of the channel at the right side for 'D_18578' is changed from    28.44 into    28.23.
+** WARNING: The bedlevel of the channel at the left side for 'D_18805' is changed from    28.29 into    27.40.
+** WARNING: The bedlevel of the channel at the right side for 'D_18805' is changed from    28.28 into    27.41.
+** WARNING: The bedlevel of the channel at the left side for 'D_21449' is changed from    28.42 into    28.35.
+** WARNING: The bedlevel of the channel at the left side for 'D_22375' is changed from    19.24 into    19.12.
+** WARNING: The bedlevel of the channel at the right side for 'D_22375' is changed from    19.18 into    19.14.
+** WARNING: The bedlevel of the channel at the left side for 'D_20477' is changed from    22.86 into    22.66.
+** WARNING: The bedlevel of the channel at the left side for 'D_20482' is changed from    26.20 into    24.36.
+** WARNING: The bedlevel of the channel at the left side for 'D_21755' is changed from    25.35 into    25.29.
+** WARNING: The bedlevel of the channel at the right side for 'D_21755' is changed from    25.35 into    25.27.
+** WARNING: The bedlevel of the channel at the left side for 'D_23861' is changed from    24.82 into    24.82.
+** WARNING: The bedlevel of the channel at the right side for 'D_23861' is changed from    24.86 into    24.85.
+** WARNING: The bedlevel of the channel at the right side for 'D_21839' is changed from    25.23 into    25.11.
+** WARNING: The bedlevel of the channel at the left side for 'D_21015' is changed from    25.43 into    25.28.
+** WARNING: The bedlevel of the channel at the right side for 'D_21015' is changed from    25.42 into    25.41.
+** WARNING: The bedlevel of the channel at the left side for 'D_21016' is changed from    25.52 into    25.31.
+** WARNING: The bedlevel of the channel at the right side for 'D_21016' is changed from    25.52 into    25.32.
+** WARNING: The bedlevel of the channel at the left side for 'D_21838' is changed from    25.18 into    24.98.
+** WARNING: The bedlevel of the channel at the right side for 'D_21838' is changed from    25.19 into    24.87.
+** WARNING: The bedlevel of the channel at the left side for 'D_20854' is changed from    26.27 into    26.19.
+** WARNING: The bedlevel of the channel at the left side for 'D_20855' is changed from    26.29 into    26.20.
+** WARNING: The bedlevel of the channel at the right side for 'D_20855' is changed from    26.29 into    26.20.
+** WARNING: The bedlevel of the channel at the left side for 'D_19974' is changed from    25.79 into    25.78.
+** WARNING: The bedlevel of the channel at the left side for 'D_19975' is changed from    25.90 into    25.71.
+** WARNING: The bedlevel of the channel at the right side for 'D_19975' is changed from    25.81 into    25.69.
+** WARNING: The bedlevel of the channel at the left side for 'D_19680' is changed from    19.39 into    19.38.
+** WARNING: The bedlevel of the channel at the left side for 'D_22854' is changed from    18.10 into    18.09.
+** WARNING: The bedlevel of the channel at the left side for 'D_24046' is changed from    17.91 into    17.88.
+** WARNING: The bedlevel of the channel at the left side for 'D_22856' is changed from    17.85 into    17.84.
+** WARNING: The bedlevel of the channel at the left side for 'D_19843' is changed from    27.27 into    27.14.
+** WARNING: The bedlevel of the channel at the right side for 'D_19843' is changed from    27.38 into    27.30.
+** WARNING: The bedlevel of the channel at the left side for 'D_20134' is changed from    28.70 into    28.70.
+** WARNING: The bedlevel of the channel at the left side for 'D_20136' is changed from    28.72 into    28.70.
+** WARNING: The bedlevel of the channel at the right side for 'D_20136' is changed from    28.72 into    28.63.
+** WARNING: The bedlevel of the channel at the left side for 'D_20139' is changed from    28.75 into    28.73.
+** WARNING: The bedlevel of the channel at the right side for 'D_20139' is changed from    28.74 into    28.70.
+** WARNING: The bedlevel of the channel at the right side for 'D_20144' is changed from    23.69 into    23.69.
+** WARNING: The bedlevel of the channel at the right side for 'D_19642' is changed from    24.47 into    24.38.
+** WARNING: The bedlevel of the channel at the left side for 'D_18820' is changed from    25.91 into    25.63.
+** WARNING: The bedlevel of the channel at the right side for 'D_18820' is changed from    25.76 into    25.72.
+** WARNING: The bedlevel of the channel at the left side for 'D_18821' is changed from    26.12 into    26.05.
+** WARNING: The bedlevel of the channel at the left side for 'D_24231' is changed from    28.58 into    27.08.
+** WARNING: The bedlevel of the channel at the right side for 'D_24231' is changed from    27.75 into    27.02.
+** WARNING: The bedlevel of the channel at the right side for 'D_18823' is changed from    27.10 into    27.05.
+** WARNING: The bedlevel of the channel at the left side for 'D_18828' is changed from    23.95 into    23.81.
+** WARNING: The bedlevel of the channel at the right side for 'D_18828' is changed from    23.95 into    23.70.
+** WARNING: The bedlevel of the channel at the left side for 'D_25014' is changed from    21.19 into    21.12.
+** WARNING: The bedlevel of the channel at the left side for 'D_20182' is changed from    26.28 into    26.17.
+** WARNING: The bedlevel of the channel at the right side for 'D_20182' is changed from    26.28 into    26.09.
+** WARNING: The bedlevel of the channel at the left side for 'D_20184' is changed from    25.65 into    25.64.
+** WARNING: The bedlevel of the channel at the right side for 'D_20184' is changed from    25.65 into    25.63.
+** WARNING: The bedlevel of the channel at the left side for 'D_20185' is changed from    25.63 into    25.51.
+** WARNING: The bedlevel of the channel at the right side for 'D_20185' is changed from    25.62 into    25.50.
+** WARNING: The bedlevel of the channel at the left side for 'D_20186' is changed from    25.62 into    25.53.
+** WARNING: The bedlevel of the channel at the right side for 'D_20186' is changed from    25.61 into    25.56.
+** WARNING: The bedlevel of the channel at the left side for 'D_20187' is changed from    25.58 into    25.55.
+** WARNING: The bedlevel of the channel at the right side for 'D_20187' is changed from    25.57 into    25.53.
+** WARNING: The bedlevel of the channel at the left side for 'D_17395' is changed from    26.24 into    26.19.
+** WARNING: The bedlevel of the channel at the left side for 'D_17399' is changed from    20.92 into    20.83.
+** WARNING: The bedlevel of the channel at the right side for 'D_17399' is changed from    20.92 into    20.67.
+** WARNING: The bedlevel of the channel at the left side for 'D_17712' is changed from    26.18 into    26.14.
+** WARNING: The bedlevel of the channel at the right side for 'D_17712' is changed from    26.16 into    26.13.
+** WARNING: The bedlevel of the channel at the left side for 'D_17716' is changed from    24.77 into    24.75.
+** WARNING: The bedlevel of the channel at the left side for 'D_18579' is changed from    28.44 into    28.29.
+** WARNING: The bedlevel of the channel at the right side for 'D_18579' is changed from    28.44 into    28.33.
+** WARNING: The bedlevel of the channel at the left side for 'D_19900' is changed from    27.27 into    27.23.
+** WARNING: The bedlevel of the channel at the left side for 'D_19604' is changed from    23.09 into    22.98.
+** WARNING: The bedlevel of the channel at the right side for 'D_19604' is changed from    23.09 into    22.89.
+** WARNING: The bedlevel of the channel at the left side for 'D_20484' is changed from    29.59 into    29.25.
+** WARNING: The bedlevel of the channel at the right side for 'D_20484' is changed from    29.59 into    29.11.
+** WARNING: The bedlevel of the channel at the left side for 'D_20485' is changed from    29.21 into    29.19.
+** WARNING: The bedlevel of the channel at the right side for 'D_20485' is changed from    29.21 into    29.16.
+** WARNING: The bedlevel of the channel at the left side for 'D_20793' is changed from    28.47 into    28.39.
+** WARNING: The bedlevel of the channel at the right side for 'D_20793' is changed from    28.50 into    28.41.
+** WARNING: The bedlevel of the channel at the left side for 'D_21234' is changed from    15.29 into    15.23.
+** WARNING: The bedlevel of the channel at the right side for 'D_21234' is changed from    15.27 into    14.97.
+** WARNING: The bedlevel of the channel at the left side for 'D_21237' is changed from    27.23 into    27.02.
+** WARNING: The bedlevel of the channel at the right side for 'D_21237' is changed from    27.23 into    27.06.
+** WARNING: The bedlevel of the channel at the left side for 'D_25552' is changed from    18.41 into    18.02.
+** WARNING: The bedlevel of the channel at the right side for 'D_25552' is changed from    18.41 into    18.00.
+** WARNING: The bedlevel of the channel at the right side for 'D_14895' is changed from    21.56 into    21.46.
+** WARNING: The bedlevel of the channel at the left side for 'D_19562' is changed from    16.95 into    16.89.
+** WARNING: The bedlevel of the channel at the right side for 'D_19562' is changed from    16.95 into    16.91.
+** WARNING: The bedlevel of the channel at the left side for 'D_20223' is changed from    14.93 into    14.56.
+** WARNING: The bedlevel of the channel at the right side for 'D_20223' is changed from    14.60 into    14.54.
+** WARNING: The bedlevel of the channel at the left side for 'D_20760' is changed from    19.46 into    19.41.
+** WARNING: The bedlevel of the channel at the right side for 'D_20760' is changed from    19.46 into    19.44.
+** WARNING: The bedlevel of the channel at the left side for 'D_19304' is changed from    27.55 into    26.96.
+** WARNING: The bedlevel of the channel at the right side for 'D_19304' is changed from    27.44 into    27.43.
+** WARNING: The bedlevel of the channel at the left side for 'D_22917' is changed from    15.64 into    15.63.
+** WARNING: The bedlevel of the channel at the left side for 'D_19600' is changed from    22.24 into    22.10.
+** WARNING: The bedlevel of the channel at the right side for 'D_19600' is changed from    22.20 into    22.06.
+** WARNING: The bedlevel of the channel at the left side for 'D_20056' is changed from    29.22 into    29.21.
+** WARNING: The bedlevel of the channel at the right side for 'D_20056' is changed from    29.21 into    29.19.
+** WARNING: The bedlevel of the channel at the left side for 'D_18847' is changed from    16.89 into    16.88.
+** WARNING: The bedlevel of the channel at the left side for 'D_22546' is changed from    27.07 into    27.05.
+** WARNING: The bedlevel of the channel at the left side for 'D_25451' is changed from    23.25 into    23.15.
+** WARNING: The bedlevel of the channel at the right side for 'D_25451' is changed from    23.22 into    23.18.
+** WARNING: The bedlevel of the channel at the left side for 'D_20220' is changed from    23.52 into    23.42.
+** WARNING: The bedlevel of the channel at the left side for 'D_25698' is changed from    26.58 into    26.55.
+** WARNING: The bedlevel of the channel at the right side for 'D_19651' is changed from    25.50 into    25.38.
+** WARNING: The bedlevel of the channel at the right side for 'D_24942' is changed from    23.73 into    23.45.
+** WARNING: The bedlevel of the channel at the left side for 'D_22834' is changed from    22.35 into    22.32.
+** WARNING: The bedlevel of the channel at the right side for 'D_22834' is changed from    22.35 into    22.18.
+** WARNING: The bedlevel of the channel at the left side for 'D_24944' is changed from    24.77 into    24.49.
+** WARNING: The bedlevel of the channel at the right side for 'D_24944' is changed from    25.11 into    24.55.
+** WARNING: The bedlevel of the channel at the left side for 'D_19595' is changed from    21.01 into    20.95.
+** WARNING: The bedlevel of the channel at the left side for 'D_19598' is changed from    21.66 into    21.48.
+** WARNING: The bedlevel of the channel at the right side for 'D_19598' is changed from    21.64 into    21.50.
+** WARNING: The bedlevel of the channel at the left side for 'D_17168' is changed from    28.46 into    28.38.
+** WARNING: The bedlevel of the channel at the right side for 'D_17168' is changed from    28.46 into    28.44.
+** WARNING: The bedlevel of the channel at the left side for 'D_19599' is changed from    21.80 into    21.71.
+** WARNING: The bedlevel of the channel at the left side for 'D_19601' is changed from    22.43 into    22.39.
+** WARNING: The bedlevel of the channel at the left side for 'D_19603' is changed from    22.79 into    22.62.
+** WARNING: The bedlevel of the channel at the right side for 'D_19603' is changed from    22.76 into    22.65.
+** WARNING: The bedlevel of the channel at the left side for 'D_25701' is changed from    26.91 into    26.56.
+** WARNING: The bedlevel of the channel at the right side for 'D_25701' is changed from    26.49 into    26.49.
+** WARNING: The bedlevel of the channel at the left side for 'D_25296' is changed from    26.56 into    26.51.
+** WARNING: The bedlevel of the channel at the right side for 'D_25296' is changed from    26.63 into    26.41.
+** WARNING: The bedlevel of the channel at the left side for 'D_25298' is changed from    26.42 into    26.42.
+** WARNING: The bedlevel of the channel at the left side for 'D_25301' is changed from    26.09 into    25.91.
+** WARNING: The bedlevel of the channel at the right side for 'D_25301' is changed from    26.09 into    26.04.
+** WARNING: The bedlevel of the channel at the left side for 'D_25302' is changed from    26.03 into    25.98.
+** WARNING: The bedlevel of the channel at the left side for 'D_20355' is changed from    24.17 into    23.93.
+** WARNING: The bedlevel of the channel at the right side for 'D_20355' is changed from    24.12 into    24.02.
+** WARNING: The bedlevel of the channel at the left side for 'D_20359' is changed from    24.66 into    24.64.
+** WARNING: The bedlevel of the channel at the right side for 'D_20359' is changed from    24.70 into    24.66.
+** WARNING: The bedlevel of the channel at the left side for 'D_17396' is changed from    27.11 into    26.70.
+** WARNING: The bedlevel of the channel at the right side for 'D_17396' is changed from    26.64 into    26.62.
+** WARNING: The bedlevel of the channel at the left side for 'D_25776' is changed from    21.87 into    21.84.
+** WARNING: The bedlevel of the channel at the right side for 'D_25776' is changed from    22.10 into    21.77.
+** WARNING: The bedlevel of the channel at the left side for 'D_25370' is changed from    27.10 into    27.10.
+** WARNING: The bedlevel of the channel at the right side for 'D_25370' is changed from    27.10 into    27.08.
+** WARNING: The bedlevel of the channel at the left side for 'D_25371' is changed from    27.27 into    27.17.
+** WARNING: The bedlevel of the channel at the right side for 'D_25371' is changed from    27.22 into    27.13.
+** WARNING: The bedlevel of the channel at the left side for 'D_25373' is changed from    27.59 into    27.55.
+** WARNING: The bedlevel of the channel at the right side for 'D_25373' is changed from    27.60 into    27.60.
+** WARNING: The bedlevel of the channel at the left side for 'D_25374' is changed from    27.58 into    27.53.
+** WARNING: The bedlevel of the channel at the right side for 'D_25374' is changed from    27.59 into    27.48.
+** WARNING: The bedlevel of the channel at the left side for 'D_25375' is changed from    27.55 into    27.55.
+** WARNING: The bedlevel of the channel at the right side for 'D_25375' is changed from    27.56 into    27.51.
+** WARNING: The bedlevel of the channel at the right side for 'D_25376' is changed from    27.58 into    27.58.
+** WARNING: The bedlevel of the channel at the left side for 'D_25377' is changed from    27.62 into    27.61.
+** WARNING: The bedlevel of the channel at the right side for 'D_25377' is changed from    27.62 into    27.60.
+** WARNING: The bedlevel of the channel at the right side for 'D_25378' is changed from    27.71 into    27.69.
+** WARNING: The bedlevel of the channel at the left side for 'D_25380' is changed from    27.97 into    27.94.
+** WARNING: The bedlevel of the channel at the left side for 'D_25381' is changed from    28.00 into    27.69.
+** WARNING: The bedlevel of the channel at the right side for 'D_25381' is changed from    28.00 into    27.81.
+** WARNING: The bedlevel of the channel at the left side for 'D_25795' is changed from    23.21 into    23.16.
+** WARNING: The bedlevel of the channel at the right side for 'D_25795' is changed from    23.22 into    23.18.
+** WARNING: The bedlevel of the channel at the left side for 'D_24256' is changed from    23.02 into    23.02.
+** WARNING: The bedlevel of the channel at the left side for 'D_25798' is changed from    25.19 into    25.18.
+** WARNING: The bedlevel of the channel at the left side for 'D_25800' is changed from    25.20 into    25.10.
+** WARNING: The bedlevel of the channel at the right side for 'D_25800' is changed from    25.20 into    25.16.
+** WARNING: The bedlevel of the channel at the left side for 'D_25802' is changed from    25.79 into    25.49.
+** WARNING: The bedlevel of the channel at the right side for 'D_25802' is changed from    25.79 into    25.55.
+** WARNING: The bedlevel of the channel at the right side for 'D_25449' is changed from    24.90 into    24.61.
+** WARNING: The bedlevel of the channel at the left side for 'D_25454' is changed from    23.45 into    23.34.
+** WARNING: The bedlevel of the channel at the right side for 'D_18317' is changed from    23.00 into    22.95.
+** WARNING: The bedlevel of the channel at the left side for 'D_22830' is changed from    22.89 into    22.70.
+** WARNING: The bedlevel of the channel at the right side for 'D_22830' is changed from    22.92 into    22.74.
+** WARNING: The bedlevel of the channel at the left side for 'D_24421' is changed from    27.98 into    27.49.
+** WARNING: The bedlevel of the channel at the right side for 'D_24421' is changed from    27.91 into    27.49.
+** WARNING: The bedlevel of the channel at the left side for 'D_25560' is changed from    27.69 into    27.39.
+** WARNING: The bedlevel of the channel at the right side for 'D_25560' is changed from    27.69 into    27.42.
+** WARNING: The bedlevel of the channel at the left side for 'D_20395' is changed from    11.16 into    11.01.
+** WARNING: The bedlevel of the channel at the right side for 'D_20395' is changed from    11.17 into    10.99.
+** WARNING: The bedlevel of the channel at the left side for 'D_25460' is changed from    18.05 into    17.49.
+** WARNING: The bedlevel of the channel at the right side for 'D_25460' is changed from    18.02 into    17.47.
+** WARNING: The bedlevel of the channel at the right side for 'D_20361' is changed from    18.08 into    17.96.
+** WARNING: The bedlevel of the channel at the left side for 'D_11483' is changed from    17.50 into    17.21.
+** WARNING: The bedlevel of the channel at the right side for 'D_11483' is changed from    17.72 into    17.22.
+** WARNING: The bedlevel of the channel at the left side for 'D_201510' is changed from    27.49 into    27.34.
+** WARNING: The bedlevel of the channel at the right side for 'D_201510' is changed from    27.49 into    27.40.
+** WARNING: The bedlevel of the channel at the left side for 'D_24404' is changed from    19.01 into    18.88.
+** WARNING: The bedlevel of the channel at the right side for 'D_24404' is changed from    18.89 into    18.75.
+** WARNING: The bedlevel of the channel at the left side for 'D_24513' is changed from    22.54 into    22.47.
+** WARNING: The bedlevel of the channel at the left side for 'D_24514' is changed from    23.68 into    23.65.
+** WARNING: The bedlevel of the channel at the right side for 'D_25473' is changed from    24.29 into    24.28.
+** WARNING: The bedlevel of the channel at the left side for 'D_25474' is changed from    24.54 into    24.51.
+** WARNING: The bedlevel of the channel at the right side for 'D_25474' is changed from    24.58 into    24.50.
+** WARNING: The bedlevel of the channel at the left side for 'D_25476' is changed from    24.93 into    24.85.
+** WARNING: The bedlevel of the channel at the right side for 'D_25476' is changed from    24.90 into    24.81.
+** WARNING: The bedlevel of the channel at the left side for 'D_25477' is changed from    25.07 into    24.96.
+** WARNING: The bedlevel of the channel at the right side for 'D_25477' is changed from    25.07 into    24.96.
+** WARNING: The bedlevel of the channel at the right side for 'D_25478' is changed from    25.17 into    25.10.
+** WARNING: The bedlevel of the channel at the left side for 'D_25479' is changed from    25.78 into    25.16.
+** WARNING: The bedlevel of the channel at the right side for 'D_25479' is changed from    25.78 into    25.16.
+** WARNING: The bedlevel of the channel at the left side for 'D_25480' is changed from    25.29 into    25.20.
+** WARNING: The bedlevel of the channel at the right side for 'D_25480' is changed from    25.23 into    25.05.
+** WARNING: The bedlevel of the channel at the left side for 'D_25481' is changed from    26.65 into    26.42.
+** WARNING: The bedlevel of the channel at the right side for 'D_25481' is changed from    26.63 into    26.40.
+** WARNING: The bedlevel of the channel at the left side for 'D_24249' is changed from    27.09 into    26.85.
+** WARNING: The bedlevel of the channel at the right side for 'D_24249' is changed from    27.08 into    26.93.
+** WARNING: The bedlevel of the channel at the left side for 'D_25690' is changed from    27.16 into    26.92.
+** WARNING: The bedlevel of the channel at the right side for 'D_25690' is changed from    27.12 into    26.98.
+** WARNING: The bedlevel of the channel at the left side for 'D_25691' is changed from    27.17 into    26.96.
+** WARNING: The bedlevel of the channel at the right side for 'D_25691' is changed from    27.17 into    27.03.
+** WARNING: The bedlevel of the channel at the left side for 'D_25695' is changed from    27.05 into    26.97.
+** WARNING: The bedlevel of the channel at the right side for 'D_25695' is changed from    27.05 into    27.05.
+** WARNING: The bedlevel of the channel at the right side for 'D_25696' is changed from    27.07 into    27.06.
+** WARNING: The bedlevel of the channel at the left side for 'D_20219' is changed from    23.57 into    23.45.
+** WARNING: The bedlevel of the channel at the right side for 'D_20219' is changed from    23.55 into    23.53.
+** WARNING: The bedlevel of the channel at the left side for 'D_20189' is changed from    25.54 into    25.33.
+** WARNING: The bedlevel of the channel at the left side for 'D_17313' is changed from    24.40 into    24.35.
+** WARNING: The bedlevel of the channel at the right side for 'D_17313' is changed from    24.39 into    24.28.
+** WARNING: The bedlevel of the channel at the left side for 'D_179580' is changed from    24.70 into    24.65.
+** WARNING: The bedlevel of the channel at the left side for 'D_19267' is changed from    29.18 into    28.92.
+** WARNING: The bedlevel of the channel at the right side for 'D_19267' is changed from    29.19 into    28.86.
+** WARNING: The bedlevel of the channel at the left side for 'D_24340' is changed from    29.14 into    29.09.
+** WARNING: The bedlevel of the channel at the right side for 'D_24340' is changed from    29.14 into    29.09.
+** WARNING: The bedlevel of the channel at the left side for 'D_19264' is changed from    28.53 into    28.46.
+** WARNING: The bedlevel of the channel at the right side for 'D_19264' is changed from    28.54 into    28.50.
+** WARNING: The bedlevel of the channel at the left side for 'D_23906' is changed from    29.86 into    29.84.
+** WARNING: The bedlevel of the channel at the right side for 'D_23906' is changed from    29.80 into    29.80.
+** WARNING: The bedlevel of the channel at the left side for 'D_18878' is changed from    29.15 into    28.86.
+** WARNING: The bedlevel of the channel at the right side for 'D_18878' is changed from    29.14 into    28.86.
+** WARNING: The bedlevel of the channel at the left side for 'D_23594' is changed from    29.11 into    28.87.
+** WARNING: The bedlevel of the channel at the right side for 'D_23594' is changed from    29.10 into    28.87.
+** WARNING: The bedlevel of the channel at the left side for 'D_20142' is changed from    29.87 into    29.56.
+** WARNING: The bedlevel of the channel at the right side for 'D_20142' is changed from    29.87 into    29.57.
+** WARNING: The bedlevel of the channel at the right side for 'D_17400' is changed from    26.08 into    26.06.
+** WARNING: The bedlevel of the channel at the left side for 'D_21837' is changed from    26.98 into    26.92.
+** WARNING: The bedlevel of the channel at the right side for 'D_21837' is changed from    26.94 into    26.92.
+** WARNING: The bedlevel of the channel at the left side for 'D_22547' is changed from    26.97 into    26.96.
+** WARNING: The bedlevel of the channel at the right side for 'D_22547' is changed from    26.97 into    26.96.
+** WARNING: The bedlevel of the channel at the right side for 'D_25551' is changed from    17.71 into    17.70.
+** WARNING: The bedlevel of the channel at the left side for 'D_19144' is changed from    29.26 into    29.01.
+** WARNING: The bedlevel of the channel at the right side for 'D_19144' is changed from    29.26 into    28.09.
+** WARNING: The bedlevel of the channel at the left side for 'D_19308' is changed from    24.48 into    24.44.
+** WARNING: The bedlevel of the channel at the right side for 'D_19308' is changed from    24.44 into    24.43.
+** WARNING: The bedlevel of the channel at the left side for 'D_20478' is changed from    26.90 into    26.56.
+** WARNING: The bedlevel of the channel at the right side for 'D_20478' is changed from    26.90 into    26.54.
+** WARNING: The bedlevel of the channel at the left side for 'D_19133' is changed from    20.64 into    20.53.
+** WARNING: The bedlevel of the channel at the left side for 'D_185611' is changed from    29.14 into    29.07.
+** WARNING: The bedlevel of the channel at the right side for 'D_185611' is changed from    29.14 into    28.97.
+** WARNING: The bedlevel of the channel at the left side for 'D_20481' is changed from    26.04 into    26.00.
+** WARNING: The bedlevel of the channel at the right side for 'D_20481' is changed from    26.01 into    25.89.
+** WARNING: The bedlevel of the channel at the left side for 'D_24602' is changed from    17.91 into    17.69.
+** WARNING: The bedlevel of the channel at the right side for 'D_21451' is changed from    18.03 into    17.97.
+** WARNING: The bedlevel of the channel at the left side for 'D_25453' is changed from    23.30 into    23.30.
+** WARNING: The bedlevel of the channel at the left side for 'D_21757' is changed from    27.53 into    27.46.
+** WARNING: The bedlevel of the channel at the right side for 'D_21757' is changed from    27.49 into    27.44.
+** WARNING: The bedlevel of the channel at the left side for 'D_24522' is changed from    19.70 into    19.43.
+** WARNING: The bedlevel of the channel at the right side for 'D_24522' is changed from    19.63 into    19.43.
+** WARNING: The bedlevel of the channel at the left side for 'D_25456' is changed from    23.92 into    23.88.
+** WARNING: The bedlevel of the channel at the left side for 'D_25697' is changed from    26.67 into    26.54.
+** WARNING: The bedlevel of the channel at the right side for 'D_25697' is changed from    26.67 into    26.60.
+** WARNING: The bedlevel of the channel at the left side for 'D_19131' is changed from    22.87 into    22.63.
+** WARNING: The bedlevel of the channel at the right side for 'D_19131' is changed from    22.87 into    22.62.
+** WARNING: The bedlevel of the channel at the left side for 'D_19138' is changed from    20.48 into    20.38.
+** WARNING: The bedlevel of the channel at the right side for 'D_19138' is changed from    20.59 into    20.51.
+** WARNING: The bedlevel of the channel at the left side for 'D_25563' is changed from    12.40 into    11.92.
+** WARNING: The bedlevel of the channel at the right side for 'D_25563' is changed from    12.25 into    11.88.
+** WARNING: The bedlevel of the channel at the left side for 'D_23731' is changed from    28.91 into    28.62.
+** WARNING: The bedlevel of the channel at the right side for 'D_23731' is changed from    28.92 into    28.73.
+** WARNING: The bedlevel of the channel at the left side for 'D_19641' is changed from    29.27 into    29.15.
+** WARNING: The bedlevel of the channel at the right side for 'D_19641' is changed from    29.29 into    29.22.
+** WARNING: The bedlevel of the channel at the left side for 'D_20792' is changed from    28.51 into    28.34.
+** WARNING: The bedlevel of the channel at the right side for 'D_20792' is changed from    28.49 into    28.34.
+** WARNING: The bedlevel of the channel at the left side for 'D_17713' is changed from    26.53 into    26.44.
+** WARNING: The bedlevel of the channel at the left side for 'D_23692' is changed from    29.53 into    29.13.
+** WARNING: The bedlevel of the channel at the right side for 'D_23692' is changed from    29.53 into    29.11.
+** WARNING: The bedlevel of the channel at the right side for 'D_24385' is changed from    25.76 into    25.71.
+** WARNING: The bedlevel of the channel at the right side for 'D_19388' is changed from    24.06 into    24.04.
+** WARNING: The bedlevel of the channel at the left side for 'D_19644' is changed from    24.89 into    24.82.
+** WARNING: The bedlevel of the channel at the right side for 'D_19644' is changed from    24.89 into    24.79.
+** WARNING: The bedlevel of the channel at the left side for 'D_25693' is changed from    26.76 into    26.65.
+** WARNING: The bedlevel of the channel at the right side for 'D_25693' is changed from    26.74 into    26.67.
+** WARNING: The bedlevel of the channel at the left side for 'D_19389' is changed from    23.98 into    23.95.
+** WARNING: The bedlevel of the channel at the right side for 'D_19389' is changed from    23.95 into    23.92.
+** WARNING: The bedlevel of the channel at the left side for 'D_19650' is changed from    25.75 into    25.74.
+** WARNING: The bedlevel of the channel at the right side for 'D_19650' is changed from    25.76 into    25.74.
+** WARNING: The bedlevel of the channel at the left side for 'D_25553' is changed from    17.06 into    17.00.
+** WARNING: The bedlevel of the channel at the right side for 'D_25553' is changed from    17.08 into    16.99.
+** WARNING: The bedlevel of the channel at the left side for 'D_25379' is changed from    29.55 into    27.80.
+** WARNING: The bedlevel of the channel at the right side for 'D_25379' is changed from    29.55 into    27.82.
+** WARNING: The bedlevel of the channel at the left side for 'D_18757' is changed from    23.08 into    23.03.
+** WARNING: The bedlevel of the channel at the right side for 'D_18757' is changed from    23.06 into    22.98.
+** WARNING: The bedlevel of the channel at the left side for 'D_19606' is changed from    22.18 into    22.01.
+** WARNING: The bedlevel of the channel at the right side for 'D_19606' is changed from    22.18 into    22.05.
+** WARNING: The bedlevel of the channel at the left side for 'D_20393' is changed from    11.29 into    11.25.
+** WARNING: The bedlevel of the channel at the left side for 'D_19607' is changed from    21.85 into    21.79.
+** WARNING: The bedlevel of the channel at the right side for 'D_19607' is changed from    21.83 into    21.62.
+** WARNING: The bedlevel of the channel at the left side for 'D_25455' is changed from    24.00 into    23.92.
+** WARNING: The bedlevel of the channel at the right side for 'D_25455' is changed from    23.87 into    23.80.
+** WARNING: The bedlevel of the channel at the left side for 'D_19283' is changed from    26.02 into    26.00.
+** WARNING: The bedlevel of the channel at the left side for 'D_18826' is changed from    26.27 into    26.21.
+** WARNING: The bedlevel of the channel at the left side for 'D_17714' is changed from    26.44 into    26.43.
+** WARNING: The bedlevel of the channel at the left side for 'D_18827' is changed from    24.09 into    24.07.
+** WARNING: The bedlevel of the channel at the left side for 'D_21448' is changed from    29.95 into    29.62.
+** WARNING: The bedlevel of the channel at the right side for 'D_21448' is changed from    29.91 into    29.52.
+** WARNING: The bedlevel of the channel at the left side for 'D_20263' is changed from    24.96 into    24.90.
+** WARNING: The bedlevel of the channel at the right side for 'D_20263' is changed from    24.95 into    24.88.
+** WARNING: The bedlevel of the channel at the left side for 'D_24240' is changed from    11.12 into    10.82.
+** WARNING: The bedlevel of the channel at the right side for 'D_24240' is changed from    11.12 into    10.91.
+** WARNING: The bedlevel of the channel at the left side for 'D_21450' is changed from    17.77 into    17.71.
+** WARNING: The bedlevel of the channel at the right side for 'D_21450' is changed from    17.79 into    17.70.
+** WARNING: The bedlevel of the channel at the right side for 'D_24605' is changed from    22.50 into    21.16.
+** WARNING: The bedlevel of the channel at the left side for 'D_185610' is changed from    29.14 into    29.02.
+** WARNING: The bedlevel of the channel at the right side for 'D_185610' is changed from    29.14 into    28.73.
+** WARNING: The bedlevel of the channel at the right side for 'D_25794' is changed from    23.01 into    23.01.
+** WARNING: The bedlevel of the channel at the right side for 'D_25457' is changed from    22.63 into    22.54.
+** WARNING: The bedlevel of the channel at the left side for 'D_18811' is changed from    26.92 into    26.86.
+** WARNING: The bedlevel of the channel at the left side for 'D_25775' is changed from    21.97 into    21.76.
+** WARNING: The bedlevel of the channel at the right side for 'D_25775' is changed from    21.90 into    21.74.
+** WARNING: The bedlevel of the channel at the left side for 'D_19302' is changed from    26.92 into    26.68.
+** WARNING: The bedlevel of the channel at the right side for 'D_19302' is changed from    26.92 into    26.66.
+** WARNING: The bedlevel of the channel at the left side for 'D_20790' is changed from    29.18 into    28.93.
+** WARNING: The bedlevel of the channel at the right side for 'D_20790' is changed from    29.18 into    28.77.
+** WARNING: The bedlevel of the channel at the left side for 'D_19390' is changed from    23.91 into    23.65.
+** WARNING: The bedlevel of the channel at the right side for 'D_19390' is changed from    23.89 into    23.64.
+** WARNING: The bedlevel of the channel at the left side for 'D_17985' is changed from    26.04 into    26.00.
+** WARNING: The bedlevel of the channel at the left side for 'D_20183' is changed from    25.66 into    25.48.
+** WARNING: The bedlevel of the channel at the right side for 'D_20183' is changed from    25.66 into    25.46.
+** WARNING: The bedlevel of the channel at the left side for 'D_17314' is changed from    24.21 into    24.00.
+** WARNING: The bedlevel of the channel at the right side for 'D_17314' is changed from    24.14 into    24.12.
+** WARNING: The bedlevel of the channel at the left side for 'D_19406' is changed from    26.53 into    26.43.
+** WARNING: The bedlevel of the channel at the right side for 'D_19406' is changed from    26.51 into    26.38.
+** WARNING: The bedlevel of the channel at the left side for 'D_25554' is changed from    17.15 into    17.10.
+** WARNING: The bedlevel of the channel at the right side for 'D_25554' is changed from    17.09 into    17.09.
+** WARNING: The bedlevel of the channel at the left side for 'D_19404' is changed from    26.69 into    26.67.
+** WARNING: The bedlevel of the channel at the left side for 'D_20851' is changed from    16.22 into    16.15.
+** WARNING: The bedlevel of the channel at the right side for 'D_23806' is changed from    20.92 into    20.58.
+** WARNING: The bedlevel of the channel at the left side for 'D_24405' is changed from    19.09 into    18.83.
+** WARNING: The bedlevel of the channel at the right side for 'D_24405' is changed from    19.08 into    18.88.
+** WARNING: The bedlevel of the channel at the left side for 'D_20190' is changed from    25.23 into    25.16.
+** WARNING: The bedlevel of the channel at the right side for 'D_20190' is changed from    25.21 into    25.15.
+** WARNING: The bedlevel of the channel at the left side for 'D_19679' is changed from    22.29 into    21.95.
+** WARNING: The bedlevel of the channel at the right side for 'D_19679' is changed from    21.98 into    21.78.
+** WARNING: The bedlevel of the channel at the left side for 'D_17715' is changed from    26.42 into    26.40.
+** WARNING: The bedlevel of the channel at the right side for 'D_17715' is changed from    26.40 into    26.39.
+** WARNING: The bedlevel of the channel at the left side for 'D_22845' is changed from    26.96 into    26.84.
+** WARNING: The bedlevel of the channel at the right side for 'D_22845' is changed from    26.95 into    26.88.
+** WARNING: The bedlevel of the channel at the left side for 'D_20222' is changed from    22.94 into    22.84.
+** WARNING: The bedlevel of the channel at the right side for 'D_20222' is changed from    22.93 into    22.81.
+** WARNING: The bedlevel of the channel at the right side for 'D_20394' is changed from    11.16 into    10.96.
+** WARNING: The bedlevel of the channel at the left side for 'D_24347' is changed from    23.46 into    23.36.
+** WARNING: The bedlevel of the channel at the right side for 'D_24347' is changed from    23.44 into    23.40.
+** WARNING: The bedlevel of the channel at the left side for 'D_19405' is changed from    26.74 into    26.68.
+** WARNING: The bedlevel of the channel at the right side for 'D_19405' is changed from    26.74 into    26.67.
+** WARNING: The bedlevel of the channel at the left side for 'D_25562' is changed from    13.05 into    12.75.
+** WARNING: The bedlevel of the channel at the right side for 'D_25562' is changed from    13.02 into    12.78.
+** WARNING: The bedlevel of the channel at the left side for 'D_19306' is changed from    24.55 into    24.39.
+** WARNING: The bedlevel of the channel at the right side for 'D_19306' is changed from    24.52 into    24.45.
+** WARNING: The bedlevel of the channel at the left side for 'D_19605' is changed from    21.45 into    21.43.
+** WARNING: The bedlevel of the channel at the left side for 'D_20480' is changed from    24.99 into    24.92.
+** WARNING: The bedlevel of the channel at the right side for 'D_20480' is changed from    24.98 into    24.82.
+** WARNING: The bedlevel of the channel at the left side for 'D_22538' is changed from    24.81 into    24.53.
+** WARNING: The bedlevel of the channel at the right side for 'D_22538' is changed from    24.75 into    24.61.
+** WARNING: The bedlevel of the channel at the left side for 'D_20789' is changed from    29.02 into    28.82.
+** WARNING: The bedlevel of the channel at the right side for 'D_20789' is changed from    29.06 into    28.84.
+** WARNING: The bedlevel of the channel at the left side for 'D_17717' is changed from    23.01 into    22.98.
+** WARNING: The bedlevel of the channel at the right side for 'D_17717' is changed from    22.97 into    22.94.
+** WARNING: The bedlevel of the channel at the left side for 'D_25450' is changed from    25.00 into    24.98.
+** WARNING: The bedlevel of the channel at the left side for 'D_19639' is changed from    31.18 into    29.54.
+** WARNING: The bedlevel of the channel at the right side for 'D_19639' is changed from    31.16 into    29.50.
+** WARNING: The bedlevel of the channel at the left side for 'D_24601' is changed from    18.46 into    18.35.
+** WARNING: The bedlevel of the channel at the right side for 'D_24601' is changed from    18.39 into    18.37.
+** WARNING: The bedlevel of the channel at the left side for 'D_25564' is changed from    11.13 into    11.09.
+** WARNING: The bedlevel of the channel at the right side for 'D_25564' is changed from    11.13 into    11.08.
+** WARNING: The bedlevel of the channel at the left side for 'D_19303' is changed from    27.21 into    26.98.
+** WARNING: The bedlevel of the channel at the right side for 'D_19303' is changed from    27.16 into    27.11.
+** WARNING: The bedlevel of the channel at the left side for 'D_302917' is changed from    17.67 into    17.51.
+** WARNING: The bedlevel of the channel at the right side for 'D_302917' is changed from    17.67 into    17.51.
+** WARNING: The bedlevel of the channel at the left side for 'D_17987' is changed from    29.67 into    29.59.
+** WARNING: The bedlevel of the channel at the right side for 'D_17987' is changed from    29.68 into    29.54.
+** WARNING: The bedlevel of the channel at the left side for 'D_23813' is changed from    29.77 into    29.62.
+** WARNING: The bedlevel of the channel at the right side for 'D_23813' is changed from    29.77 into    29.61.
+** WARNING: The bedlevel of the channel at the left side for 'D_24013' is changed from    29.65 into    29.60.
+** WARNING: The bedlevel of the channel at the left side for 'D_17604' is changed from    29.68 into    29.59.
+** WARNING: The bedlevel of the channel at the right side for 'D_17604' is changed from    29.67 into    29.55.
+** WARNING: The bedlevel of the channel at the left side for 'D_17605' is changed from    29.73 into    29.63.
+** WARNING: The bedlevel of the channel at the right side for 'D_17605' is changed from    29.73 into    29.65.
+** WARNING: The bedlevel of the channel at the left side for 'D_17606' is changed from    29.71 into    29.59.
+** WARNING: The bedlevel of the channel at the right side for 'D_17606' is changed from    29.72 into    29.57.
+** WARNING: The bedlevel of the channel at the left side for 'D_17607' is changed from    29.71 into    29.64.
+** WARNING: The bedlevel of the channel at the right side for 'D_17607' is changed from    29.71 into    29.53.
+** WARNING: The bedlevel of the channel at the left side for 'D_22348' is changed from    20.52 into    20.29.
+** WARNING: The bedlevel of the channel at the right side for 'D_22348' is changed from    20.52 into    20.27.
+** WARNING: The bedlevel of the channel at the left side for 'D_20800' is changed from    11.05 into    10.77.
+** WARNING: The bedlevel of the channel at the right side for 'D_20800' is changed from    11.05 into    10.79.
+** WARNING: The bedlevel of the channel at the left side for 'D_302903' is changed from    17.82 into    17.64.
+** WARNING: The bedlevel of the channel at the right side for 'D_302903' is changed from    17.82 into    17.61.
+** WARNING: The bedlevel of the channel at the left side for 'D_302904' is changed from    17.69 into    17.51.
+** WARNING: The bedlevel of the channel at the right side for 'D_302904' is changed from    17.67 into    17.46.
+** WARNING: The bedlevel of the channel at the left side for 'D_173466' is changed from    22.00 into    21.98.
+** WARNING: The bedlevel of the channel at the right side for 'D_173466' is changed from    22.00 into    21.98.
+** WARNING: The bedlevel of the channel at the left side for 'D_22848' is changed from    18.20 into    17.99.
+** WARNING: The bedlevel of the channel at the left side for 'D_170307' is changed from    21.48 into    21.31.
+** WARNING: The bedlevel of the channel at the right side for 'D_170307' is changed from    21.30 into    21.30.
+** WARNING: The bedlevel of the channel at the right side for 'D_215295' is changed from    27.08 into    26.11.
+** WARNING: The bedlevel of the channel at the left side for 'D_170306' is changed from    21.92 into    21.91.
+** WARNING: The bedlevel of the channel at the right side for 'D_24365' is changed from    18.14 into    17.94.
+** WARNING: The bedlevel of the channel at the left side for 'D_24948' is changed from    19.54 into    18.30.
+** WARNING: The bedlevel of the channel at the right side for 'D_24948' is changed from    19.90 into    18.30.
+** WARNING: The bedlevel of the channel at the right side for 'D_14900' is changed from    19.25 into    19.05.
+** WARNING: The bedlevel of the channel at the right side for 'D_20152' is changed from    17.91 into    17.90.
+** WARNING: The bedlevel of the channel at the left side for 'D_19870' is changed from    19.25 into    19.05.
+** WARNING: The bedlevel of the channel at the right side for 'D_19870' is changed from    19.25 into    18.19.
+** WARNING: The bedlevel of the channel at the right side for 'D_224675' is changed from    23.82 into    22.18.
+** WARNING: The bedlevel of the channel at the left side for 'D_181410' is changed from    19.27 into    18.25.
+** WARNING: The bedlevel of the channel at the right side for 'D_181410' is changed from    19.54 into    18.30.
+** INFO   : nogauss , nocg :           9960             0
+** INFO   : ** Model initialization was successful **
+** INFO   : * Active Model definition:
+# Generated on 08:41:45, 21-03-2024
+# 1.2.184.a30a0663905cf9945b149b12c452763270412b78
+# Source:all/release/DEVOPSDSC-10_DIMRset_2024.01
+
+[General]
+Program                                   = D-Flow FM           # Program
+Version                                   = 1.2.184.a30a0663905cf9945b149b12c452763270412b78# Version number of computational kernel
+fileType                                  = modelDef            # File type. Do not edit this.
+fileVersion                               = 1.09                # File format version (do not edit this)
+AutoStart                                 = 0                   # Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)
+InputSpecific                             = 0                   # Use of hardcoded specific inputs, shall not be used by users (0: no, 1: yes)
+ModelSpecific                             =                                                                 # Optional 'model specific ID', to enable certain custom runtime function calls (instead of via MDU name).
+PathsRelativeToParent                     = 0                   # Default: 0. Whether or not (1/0) to resolve file names (e.g. inside the *.ext file) relative to their direct parent, instead of to the toplevel MDU working dir.
+
+[geometry]
+NetFile                                   = olo_net.nc          # Unstructured grid file *_net.nc
+GridEnclosureFile                         =                     # Enclosure file to clip outer parts from the grid *.pol
+DryPointsFile                             =                     # Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)
+CrossDefFile                              = cross_section_definitions.ini# 1D Cross section definition file (*.ini)
+CrossLocFile                              = cross_section_locations.ini# 1D Cross section location file (*.ini)
+StorageNodeFile                           = StorageNodes.ini    # 1D Storage node/manhole file (*.ini)
+frictFile                                 = roughness/r001.ini;roughness/r002.ini;roughness/r003.ini;roughness/r004.ini;roughness/r005.ini;roughness/r006.ini# 1D Roughness files (*.ini)
+StructureFile                             = structure.ini       # Hydraulic structure file (*.ini)
+WaterLevIniFile                           =                     # Initial water levels sample file *.xyz using flood fill algorithm
+LandBoundaryFile                          =                     # Land boundaries file *.ldb, used for visualization
+ThinDamFile                               =                     # Polyline file *_thd.pli, containing thin dams
+Cutcelllist                               =                     # File with names of cutcell polygons, e.g. cutcellpolygons.lst
+FixedWeirFile                             =                     # Polyline file *_fxw.pliz, containing fixed weirs with rows x, y, crest level, left ground level, right ground level
+PillarFile                                =                     # Polyline file *_pillar.pliz, containing four colums with x, y, diameter and Cd coefficient
+Gulliesfile                               =                     # Polyline file *_gul.pliz, containing lowest bed level along talweg x, y, z level
+Roofsfile                                 =                     # Polyline file *_rof.pliz, containing roofgutter heights x, y, z level
+VertplizFile                              =                     # Vertical layering file *_vlay.pliz with rows x, y, Z, first Z, nr of layers, second Z, layer type
+ProflocFile                               =                     # Channel profile location file *_proflocation.xyz with rows x, y, z, profile number ref
+ProfdefFile                               =                     # Channel profile definition file *_profdefinition.def with definition for all profile numbers
+ProfdefxyzFile                            =                     # Channel profile definition file _profdefinition.def with definition for all profile numbers
+IniFieldFile                              = ./initialFields.ini # Initial values and parameter fields file
+UseCaching                                = 0                   # Use caching for geometrical/network-related items (0: no, 1: yes)
+Uniformwidth1D                            = 1.                  # Uniform width for channel profiles not specified by profloc
+Uniformheight1D                           = 1.                  # Uniform height for channel profiles not specified by profloc
+Uniformtyp1D                              = 3                   # Uniform type for channel profiles not specified by profloc
+Uniformwidth1Dstreetinlets                = 0.2                 # Uniform width for street inlets
+Uniformheight1Dstreetinlets               = 0.1                 # Uniform height for street inlets
+Uniformtyp1Dstreetinlets                  = -2                  # Uniform type street inlets
+Uniformwidth1Droofgutterpipes             = 0.1                 # Uniform width for roof gutter pipes
+Uniformheight1Droofgutterpipes            = 0.1                 # Uniform height for roof gutter pipes
+Uniformtyp1Droofgutterpipes               = -2                  # Uniform type roof gutter pipes
+1D2DLinkFile                              =                     # File *.ini containing custom parameters for 1D2D links
+Dxmin1D                                   = 1.d-3               # Minimum 1D link length, (except for duikers)
+Dxwuimin2D                                = 0.                  # Smallest fraction dx/wu , set dx > Dxwuimin2D*wu, Default = 0.1
+Removesmalllinkstrsh                      = 0.1                 # 0-1, 0= no removes
+Cosphiutrsh                               = 0.5                 # 0-1, 1= no bad orthos
+1D2Dinternallinktype                      = 1                   # Link treatment method for type-3 internal links.
+PipeFile                                  =                     # File *.pliz containing pipe-based 'culverts'
+ShipdefFile                               =                     # File *.shd containing ship definitions
+WaterLevIni                               = -10.                # Initial water levels sample file *.xyz using flood fill algorithm
+waterdepthini1D                           = -999.               # Initial waterdepth in 1D
+Uniformhu                                 = -999.               # Waterdepth in rigid-lid-like solution
+BedlevUni                                 = 7.                  # Uniform bed level used at missing z values if BedlevType > 2
+Bedslope                                  = 0.                  # Bed slope inclination if BedlevType > 2
+Bedwaveamplitude                          = 0.                  # Bed testcases
+Bedwavelength                             = 0.                  # Bed testcases
+BedlevType                                = 1                   # Bathymetry specification
+                                                                # 1: at cell centers (from Net/IniFieldFile)
+                                                                # 2: at faces (from IniFieldFile)
+                                                                # 3: at nodes, face levels mean of node values
+                                                                # 4: at nodes, face levels min. of node values
+                                                                # 5: at nodes, face levels max. of node values
+                                                                # 6: at nodes, face levels max. of cell-center values
+Blmeanbelow                               = -999.               # If not -999d0, below this level the cell center bed level is the mean of surrouding net nodes
+Blminabove                                = -999.               # If not -999d0, above this level the cell center bed level is the min. of surrouding net nodes
+Groundlayerthickness                      = -999.               # Only in pipes: groundlayer thickness (m)
+PartitionFile                             =                     # Domain partition polygon file *_part.pol for parallel run
+AngLat                                    = 0.                  # Angle of latitude S-N (deg), 0: no Coriolis
+AngLon                                    = 0.                  # Angle of longitude E-W (deg), 0: Greenwich, used in solar heat flux computation.
+Helmert                                   = 0                   # HELMERT yes/no, 1/0
+Conveyance2D                              = -1                  # -1: R=HU,0: R=H, 1: R=A/P, 2: K=analytic-1D conv, 3: K=analytic-2D conv
+Nonlin2D                                  = 0                   # Non-linear 2D volumes, 1 = yes, only used if ibedlevtype=3 and Conveyance2D>=1
+Nonlin1D                                  = 1                   # Non-linear 1D volumes, 1 = Preisman slot, 2 = pipes closed (Nested Newton)
+Slotw2D                                   = 0.                  # -
+Slotw1D                                   = 1.d-3               # -
+Sillheightmin                             = 0.                  # Weir treatment only if both sills larger than this value (m)
+Makeorthocenters                          = 0                   # Switch from circumcentres to orthocentres in geominit (i>=1: number of iterations, 0: do not use)
+stripMesh                                 = 0                   # Strip unused nodes and links from the mesh after clipping (1: strip, 0: do not strip)
+Dcenterinside                             = 1.                  # Limit cell center (1.0: in cell, 0.0: on c/g)
+Bamin                                     = 1.d-6               # Minimum grid cell area, in combination with cut cells
+OpenBoundaryTolerance                     = 3.                  # Search tolerance factor between boundary polyline and grid cells, in cell size units
+AllowBndAtBifurcation                     = 1                   # Allow 1d boundary node when connecting branch leads to bifurcation (1: yes, 0: no)
+CreateLinks1D2D                           = 0                   # Ruecksichtslos create links between 1D nodes and 2D cells when initializing model (1: yes, 0: no)
+RenumberFlowNodes                         = 1                   # Renumber the flow nodes (1: yes, 0: no)
+dxDoubleAt1DEndNodes                      = 1                   # Extend 1D end nodes by 0.5 dx (1: yes, 0: no).
+ChangeVelocityAtStructures                = 1                   # Change the flow velocity at structures in the advection calculation
+ChangeStructureDimensions                 = 0                   # Change the structure dimensions of (universal) weirs, orifices, bridges and general structures in case these dimensions exceed the dimensions of the channel
+Kmx                                       = 0                   # Maximum number of vertical layers
+Layertype                                 = 1                   # Vertical layer type (1: all sigma, 2: all z, 3: use VertplizFile)
+Numtopsig                                 = 0                   # Number of sigma layers in top of z-layer model
+Numtopsiguniform                          = 1                   # Number of sigma layers above z-layers in a z-sigma model
+SigmaGrowthFactor                         = 1.                  # Layer thickness growth factor from bed up
+Dztop                                     = -999.               # Z-layer thickness of layers above level Dztopuniabovez
+Toplayminthick                            = 1.d-2               # Minimum top layer thickness(m), only for Z-layers
+StretchType                               = -1                  # Type of layer stretching, 0 = uniform, 1 = user defined, 2 = fixed level double exponential
+Floorlevtoplay                            = -999.               # Floor level of top layer
+OrgFloorlevtoplaydef                      = 0                   # keep original definition of Floor level of top layer
+ZlayBot                                   = -999.               # level of bottom layer in z-layers
+ZlayTop                                   = -999.               # level of top layer in z-layers
+Dztopuniabovez                            = -999.               # Above this level layers will have uniform Dztop, below we use SigmaGrowthFactor
+Tsigma                                    = 100.                # Sigma Adaptation period for Layertype==4 (s)
+Keepzlayeringatbed                        = 2                   # 0:possibly very thin layer at bed, 1:bedlayerthickness == zlayerthickness, 2=equal thickness first two layers
+Ihuz                                      = 4                   # if keepzlayeratbed>=2 : 1=central from bed til second, 2=all central, 3=from bed till highest equal levels
+ihuzcsig                                  = 3                   # if keepzlayeratbed>=2 : 1,2,3=av,mx,mn of Leftsig,Rightsig,4=uniform
+Zlayeratubybob                            = 0                   # Lowest connected cells governed by bob instead of by bL L/R
+
+[volumeTables]
+useVolumeTables                           = 1                   # Use 1D volume tables (0: no, 1: yes).
+
+[numerics]
+CFLMax                                    = 10.                 # Maximum Courant number
+Lincontin                                 = 0                   # Default 0; Set to 1 for linearizing d(Hu)/dx; link to AdvecType
+AdvecType                                 = 33                  # Advection type (0: none, 1: Wenneker, 2: Wenneker q(uio-u), 3: Perot q(uio-u), 4: Perot q(ui-u), 5: Perot q(ui-u) without itself), 33: as 3 using links (faster)
+AdvecCorrection1D2D                       = 0                   # Advection correction of 1D2D link volume (0: regular advection, 1: link volume au*dx, 2: advection on 1D2D switched off.
+TimeStepType                              = 2                   # Time step handling (0: only transport, 1: transport + velocity update, 2: full implicit step-reduce, 3: step-Jacobi, 4: explicit)
+maxNonlinearIterations                    = 100                 # Maximal iterations in non-linear iteration loop before a time step reduction is applied
+setHorizontalBobsFor1d2d                  = 0                   # bobs are set to 2D bedlevel, to prevent incorrect storage in sewer system (0: no, 1:yes).
+Icoriolistype                             = 5                   # 0=No, 5=default, 3,4 no weights, 5-10 Kleptsova hu/hs, 25-30 Ham hs/hu, odd: 2D hs/hu, even: hsk/huk
+Newcorio                                  = 1                   # 0=prior to 27-11-2019, 1=no normal forcing on open bnds, plus 12 variants )
+Corioconstant                             = 0=default, 1=Coriolis constant in sferic models anyway,2=beta plane, both in cart. and spher. coord.
+Corioadamsbashfordfac                     = 0.5                 # 0=No, 0.5d0=AdamsBashford, only for Newcorio=1)
+Coriohhtrsh                               = 0.                  # 0=default=no safety in hu/hus weightings, only for Newcorio=1)
+Limtyphu                                  = 0                   # Limiter type for waterdepth in continuity eqn. (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)
+Limtypmom                                 = 4                   # Limiter type for cell center advection velocity (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)
+Limtypsa                                  = 4                   # Limiter type for salinity transport (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)
+Limtypw                                   = 4                   # Limiter type for wave action transport (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)
+TransportAutoTimestepdiff                 = 0                   # Auto Timestepdiff in Transport, 0 : lim diff, no lim Dt_tr, 1 : no lim diff, lim Dt_tr, 2: no lim diff, no lim Dt_tr, 3=implicit (only 2D)
+Implicitdiffusion2D                       = 0                   # 1 = Yes, 0 = No
+DiagnosticTransport                       = 0                   # Diagnostic ("frozen") transport (0: prognostic transport, 1: diagnostic transport)
+Vertadvtypsal                             = 6                   # Vertical advection type for salinity (0: none, 1: upwind explicit, 2: central explicit, 3: upwind implicit, 4: central implicit, 5: central implicit but upwind for neg. stratif., 6: higher order explicit, no Forester)
+Vertadvtyptem                             = 6                   # Vertical advection type for temperature (0: none, 1: upwind explicit, 2: central explicit, 3: upwind implicit, 4: central implicit, 5: central implicit but upwind for neg. stratif., 6: higher order explicit, no Forester)
+Vertadvtypmom                             = 6                   # Vertical advection type for u1: 0: No, 3: Upwind implicit, 4: Central implicit, 5: QUICKEST implicit., 6: centerbased upwind expl, 7=6 HO
+Vertadvtypmom3onbnd                       = 0                   # vert. adv. u1 bnd UpwimpL: 0=follow javau , 1 = on bnd, 2= on and near bnd
+Cffacver                                  = 0.                  # Factor for including (1-CFL) in HO term vertical   (0d0: no, 1d0: yes)
+Cffachormom                               = 1.                  # Factor for including (1-CFL) in HO term horizontal mom (0d0: no, 1d0: yes)
+Cfexphormom                               = 1.                  # exponent for including (1-CFL) in HO term horizontal mom )
+Cfconhormom                               = 0.                  # constant for including (1-CFL) in HO term horizontal mom )
+Cffachu                                   = 1.                  # Factor for including (1-CFL) in sethu (0d0: no, 1d0: yes)
+Cfexphu                                   = 1.                  # exp for including (1-CFL) in sethu
+Horadvtypzlayer                           = 0                   # Horizontal advection treatment of z-layers (1: default, 2: sigma-like)
+Pure1D                                    = 0                   # along 1D channels: 0 = 2D Perot, 1 = 1D Perot using vol1_f, 2 = 1D Perot using vol1, 3 and 4 = 1D links
+Junction1D                                = 1                   # at 1D junctions: 0 = org 1D advec, 1 = same as along 1D channels
+Zerozbndinflowadvection                   = 0                   # On waterlevel boundaries set incoming advection velocity to zero (0=no, 1=on inflow, 2=also on outflow)
+Zlayercenterbedvel                        = 1                   # reconstruction of center velocity at half closed bedcells (0=no, 1: copy bed link velocities)
+Structurelayersactive                     = 1                   # 0=structure flow through all layers, 1=structure flow only through open layers
+Icgsolver                                 = 4                   # Solver type (1: sobekGS_OMP, 2: sobekGS_OMPthreadsafe, 3: sobekGS, 4: sobekGS + Saadilud, 5: parallel/global Saad, 6: parallel/Petsc, 7: parallel/GS)
+LogSolverConvergence                      = 0                   # 1: Log time step, number of solver iterations and solver residual.
+Wridia_viscosity_diffusivity_limit        = 0                   # Write info in dia file when viscosity/diffusivity is limited (0: no, 1: yes)
+Maxdegree                                 = 6                   # Maximum degree in Gauss elimination
+jposhchk                                  = 2                   # Check for positive waterdepth (0: no, 1: 0.7*dts, just redo, 2: 1.0*dts, close all links, 3: 0.7*dts, close all links, 4: 1.0*dts, reduce au, 5: 0.7*dts, reduce au, 6: 1.0*dts, close outflowing links, 7: 0.7*dts, close outflowing link
+FixedWeirScheme                           = 9                   # Fixed weir scheme (0: none, 1: compact stencil, 2: whole tile lifted, full subgrid weir + factor)
+FixedWeirScheme1d2d                       = 0                   # Fixed weir scheme for 1d2d links (0: same as fixedweirscheme, 1: lateral iterative fixed weir scheme)
+FixedWeir1d2d_dx                          = 200.                # Extra delta x for lateral 1d2d fixed weirs
+FixedWeirContraction                      = 1.                  # Fixed weir flow width contraction factor
+Fixedweirfrictscheme                      = 0                   # Fixed weir friction scheme (0: friction based on hu, 1: friction based on subgrid weir friction scheme)
+Fixedweirtopwidth                         = 3.                  # Uniform width of the groyne part of fixed weirs
+Fixedweirtopfrictcoef                     = -999.               # Uniform friction coefficient of the groyne part of fixed weirs
+Fixedweirtalud                            = 4.                  # Uniform talud slope of fixed weirs
+FixedweirRelaxationcoef                   = 0.6                 # Fixed weir relaxation coefficient for computation of energy loss
+Izbndpos                                  = 0                   # Position of z boundary (0: D3Dflow, 1: on net boundary, 2: on specified polyline)
+Tlfsmo                                    = 0.                  # Fourier smoothing time (s) on water level boundaries
+Keepstbndonoutflow                        = 0                   # Keep sal and tem signals on bnd also at outflow, 1=yes, 0=no=default=copy inside value on outflow
+Diffusiononbnd                            = 1                   # On open boundaries, 0 switches off horizontal diffusion Default = 1
+Tspinupturblogprof                        = 0.                  # During Tspinup force log profiles to avoid almost zero vertical eddy viscosity
+Logprofatubndin                           = 1                   # ubnds inflow: 0=uniform U1, 1 = log U1, 2 = user3D
+Logprofkepsbndin                          = 0                   # inflow: 0=0 keps, 1 = log keps inflow, 2 = log keps in and outflow
+Slopedrop2D                               = 0.                  # Apply drop losses only if local bed slope > Slopedrop2D, (<=0: no drop losses)
+Drop1D                                    = 0                   # Apply drop losses in 1D (0: no, 1:yes)
+Drop3D                                    = 1.                  # Apply droplosses in 3D if z upwind below bob + 2/3 hu*drop3D
+Chkadvd                                   = 0.1                 # Check advection terms if depth < chkadvdp, => less setbacks
+Linkdriedmx                               = 0                   # Nr of Au reduction steps after having dried
+Huweirregular                             = 0.                  # For villemonte and Tabellenboek, regular hu below Huweirregular
+Chkdifd                                   = 1.d-2               # Check diffusion terms if depth < chkdifd, only if jatransportautotimestepdiff==1
+Trsh_u1Lb                                 = 0.                  # 2D bedfriction in 3D below this threshold (m)
+Epshstem                                  = 1.d-3               # Only compute heatflx + evap if depth > epshstem
+Zwsbtol                                   = 0.                  # tolerance for zws(kb-1) at bed
+Teta0                                     = 0.55                # Theta of time integration (0.5 < theta < 1)
+Jbasqbnddownwindhs                        = 0                   # Water depth scheme at discharge boundaries (0: original hu, 1: downwind hs)
+cstbnd                                    = 0                   # Delft-3D type velocity treatment near boundaries for small coastal models (1: yes, 0: no)
+Maxitverticalforestersal                  = 0                   # Forester iterations for salinity (0: no vertical filter for salinity, > 0: max nr of iterations)
+Maxitverticalforestertem                  = 0                   # Forester iterations for temperature (0: no vertical filter for temperature, > 0: max nr of iterations)
+Turbulencemodel                           = 3                   # Turbulence model (0: none, 1: constant, 2: algebraic, 3: k-epsilon, 4: k-tau)
+Turbulenceadvection                       = 3                   # Turbulence advection (0: none, 3: horizontally explicit and vertically implicit)
+Jadrhodz                                  = 1                   # (1:central org, 2:centralnew, 3:upw cell, 4:most stratf. cell, 5:least stratf. cell)
+FacLaxturb                                = 0.                  # (Default: 0=TurKin0 from links, 1.0=from nodes. 0.5=fityfifty)
+jaFacLaxturbtyp                           = 0                   # (Vertical distr of facLaxturb, 1=: (sigm<0.5=0.0 sigm>0.75=1.0 linear in between), 2:=1.0 for whole column)
+EpsTKE                                    = 1.d-32              # (TKE=max(TKE,EpsTKE), default=1d-32)
+EpsEPS                                    = 1.d-32              # (EPS=max(EPS,EpsEPS), default=1d-32, (or TAU))
+Eddyviscositybedfacmax                    = 0.                  # Limit eddy viscosity at bed )
+AntiCreep                                 = 0                   # Include anti-creep calculation (0: no, 1: yes)
+Baroczlaybed                              = 0                   # Use fix in barocp for zlaybed 0,1, 1=default)
+Barocponbnd                               = 0                   # Use fix in barocp for zlaybed 0,1, 1=default)
+Maxitpresdens                             = 1                   # Max nr of iterations in pressure-density coupling, only used if idensform > 10 )
+Rhointerfaces                             = 0                   # Evaluate rho at interfaces, 0=org at centers, 1=at interfaces )
+Maxwaterleveldiff                         = 0.                  # upper bound (in m) on water level changes (<= 0: no bounds). Run will abort when violated.
+Maxvelocitydiff                           = 0.                  # upper bound (in m/s) on velocity changes (<= 0: no bounds). Run will abort when violated.
+Maxvelocity                               = 0.                  # upper bound (in m/s) on velocity (<= 0: no bounds). Run will abort when violated.
+Waterlevelwarn                            = 0.                  # warning level (in m) on water level (<= 0: no check).
+Velocitywarn                              = 0.                  # warning level (in m/s) on velocity u1 (<= 0: no check).
+Velmagnwarn                               = 0.                  # warning level (in m/s) on velocity magnitude (<= 0: no check).
+MinTimestepBreak                          = 0.                  # smallest allowed timestep (in s), checked on a sliding average of several timesteps. Run will abort when violated.
+Epshu                                     = 1.d-4               # Threshold water depth for wet and dry cells
+Lateral_fixedweir_umin                    = 0.                  # Minimal velocity treshold for weir losses in iterative lateral 1d2d weir coupling.
+Lateral_fixedweir_umin_method             = 0                   # Method for minimal velocity treshold for weir losses in iterative lateral 1d2d weir coupling.
+Lateral_fixedweir_Minimal_1d2d_Embankment = 0.                  # Minimal crest height of 1D2D SOBEK-DFM embankments.
+Lateral_fixedweir_relax                   = 0.1                 # Relaxation factor for iterative lateral 1d2d weir coupling algorithm.
+jaupwindsrc                               = 1                   # 1st-order upwind advection at sources/sinks (1) or higher-order (0)
+jasfer3D                                  = 0                   # corrections for spherical coordinates
+BarrierAdvection                          = 1                   # 1 = no correction, 2 = advection correction
+HorizontalMomentumFilter                  = 0                   # apply horizontal filter (1:explicit, 2,3:implicit) or not (0)
+checkerboardmonitor                       = 0                   # compute and output checkerboard monitor (1) or not (0)
+LocSaltLev                                = 1.                  # salinity level for case of lock exchange
+LocSaltMin                                = 5.                  # minimum salinity for case of lock exchange
+LocSaltMax                                = 10.                 # maximum salinity for case of lock exchange
+Numlimdt_baorg                            = 0                   # if previous numlimdt > Numlimdt_baorg keep original cell area ba in cutcell
+Baorgfracmin                              = 0.                  # Cell area = max(orgcellarea*Baorgfracmin, cutcell area)
+SubsUplUpdateS1                           = 0                   # Update water levels (S1) due to subsidence / uplift
+EpsMaxlev                                 = 1.d-4               # Stop criterium for non linear iteration
+EpsMaxlevm                                = 1.d-4               # Stop criterium for Nested Newton loop in non linear iteration
+Testdryingflooding                        = 0                   # Test for drying flooding algoritm (0: D-Flow FM, 1: Delft3D-FLOW)
+Testfixedweirs                            = 0                   # Test for fixed weir algoritms (0 = Sieben2010, 1 = Sieben2007 )
+
+[physics]
+UnifFrictCoef                             = 3.d-2               # Uniform friction coefficient (0: no friction)
+UnifFrictType                             = 2                   # Uniform friction type (0: Chezy, 1: Manning, 2: White-Colebrook, 3: idem, WAQUA style)
+UnifFrictCoef1D                           = 6.67d-2             # Uniform friction coefficient in 1D links (0: no friction)
+UnifFrictCoef1D2D                         = 3.d-2               # Uniform friction coefficient in 1D links (0: no friction)
+UnifFrictCoefLin                          = 0.                  # Uniform linear friction coefficient (0: no friction)
+UnifFrictCoef1DgrLay                      = 5.d-2               # Uniform ground layer friction coefficient for ocean models (m/s) (0: no friction)
+Umodlin                                   = 1.                  # Linear friction umod, for ifrctyp=4,5,6
+Vicouv                                    = 1.                  # Uniform horizontal eddy viscosity (m2/s)
+Dicouv                                    = 1.                  # Uniform horizontal eddy diffusivity (m2/s)
+Vicoww                                    = 1.d-6               # Uniform vertical eddy viscosity (m2/s)
+Dicoww                                    = 1.d-6               # Uniform vertical eddy diffusivity (m2/s)
+Vicwminb                                  = 0.                  # Minimum visc in prod and buoyancy term (m2/s)
+Xlozmidov                                 = 0.                  # Ozmidov length scale (m), default=0.0, no contribution of internal waves to vertical diffusion
+Smagorinsky                               = 0.                  # Smagorinsky factor in horizontal turbulence, e.g. 0.15
+Elder                                     = 0.                  # Elder factor in horizontal turbulence
+irov                                      = 0                   # 0=free slip, 1 = partial slip using wall_ks
+wall_ks                                   = 0.                  # Wall roughness type (0: free slip, 1: partial slip using wall_ks)
+Rhomean                                   = 1000.               # Average water density (kg/m3)
+Idensform                                 = 2                   # Density calulation (0: uniform, 1: Eckart, 2: UNESCO, 3=UNESCO83, 13=3+pressure)
+Ag                                        = 9.81                # Gravitational acceleration
+TidalForcing                              = 0                   # Tidal forcing, if jsferic=1 (0: no, 1: yes)
+SelfAttractionLoading                     = 0                   # Self attraction and loading (0=no, 1=yes, 2=only self attraction)
+SelfAttractionLoading_correct_wl_with_ini = 0                   # correct water level with initial water level in Self attraction and loading (0=no, 1=yes)
+ITcap                                     = 0.                  # Upper limit on internal tides dissipation (W/m^2)
+Doodsonstart                              = 55.565              # TRIWAQ: 55.565, D3D: 57.555
+Doodsonstop                               = 375.575             # TRIWAQ: 375.575, D3D: 275.555
+Doodsoneps                                = 0.                  # TRIWAQ = 0.0  400 cmps , D3D = 0.03   60 cmps
+VillemonteCD1                             = 1.                  # Calibration coefficient for Villemonte. Default = 1.0.
+VillemonteCD2                             = 10.                 # Calibration coefficient for Villemonte. Default = 10.0.
+Salinity                                  = 0                   # Include salinity, (0: no, 1: yes)
+InitialSalinity                           = 0.                  # Uniform initial salinity concentration (ppt)
+Sal0abovezlev                             = -999.               # Vertical level (m) above which salinity is set 0
+DeltaSalinity                             = -999.               # for testcases
+Salimax                                   = -999.               # Limit the salinity
+Salimin                                   = 0.                  # Limit the salinity
+Backgroundsalinity                        = 30.                 # Background salinity for eqn. of state (psu) if salinity not computed
+Backgroundwatertemperature                = 20.                 # Background water temperature for eqn. of state (deg C) if temperature not computed
+Temperature                               = 0                   # Include temperature (0: no, 1: only transport, 3: excess model of D3D, 5: composite (ocean) model)
+InitialTemperature                        = 6.                  # Uniform initial water temperature (degC)
+Secchidepth                               = 1.                  # Water clarity parameter (m)
+Stanton                                   = 1.300000003539026E-003# Coefficient for convective heat flux, if negative, Ccon = abs(Stanton)*Cdwind
+Dalton                                    = 1.300000003539026E-003# Coefficient for evaporative heat flux, if negative, Ceva = abs(Dalton)*Cdwind
+Tempmax                                   = -999.               # Limit the temperature
+Tempmin                                   = 0.                  # Limit the temperature, if -999, tempmin=(-0.0575d0 - 2.154996d-4*sal)*sal
+Allowcoolingbelowzero                     = 0                   # 0 = no, 1 = yes
+Surftempsmofac                            = 0.                  # Hor . Smoothing factor for surface water in heatflx comp. (0.0-1.0), 0=no
+Soiltempthick                             = 0.                  # Use soil temperature buffer if > 0, e.g. 0.2 (m)
+Heat_eachstep                             = 0                   # 1=heat each timestep, 0=heat each usertimestep
+RhoairRhowater                            = 0                   # windstress rhoa/rhow: 0=Rhoair/Rhomean, 1=Rhoair/rhow(), 2=rhoa0()/rhow(), 3=rhoa10()/Rhow()
+Nudgetimeuni                              = 3600.               # Uniform nudge relaxation time
+IniWithNudge                              = 0                   # Initialize salinity and temperature with nudge variables
+NFEntrainmentMomentum                     = 0                   # 1: Switch on momentum transfer in NearField related entrainment
+SecondaryFlow                             = 0                   # Secondary flow (0: no, 1: yes)
+BetaSpiral                                = 0.                  # Weight factor of the spiral flow intensity on flow dispersion stresses (0d0 = disabled)
+Equili                                    = 0                   # Equilibrium spiral flow intensity (0: no, 1: yes)
+
+[sediment]
+Sedimentmodelnr                           = 0                   # Sediment model nr, (0=no, 1=Krone, 2=SvR2007, 3=E-H, 4=MorphologyModule)
+Implicitfallvelocity                      = 1                   # 1=Impl., 0 = Expl.
+Nr_of_sedfractions                        = 0                   # Nr of sediment fractions, (specify the next parameters for each fraction)
+MxgrKrone                                 = 0                   # Highest fraction index treated by Krone
+Seddenscoupling                           = 0                   # Sed rho coupling (0=no, 1=yes
+
+[veg]
+Vegetationmodelnr                         = 0                   # Vegetation model nr, (0=no, 1=Baptist DFM)
+Clveg                                     = 0.8                 # Stem distance factor, default 0.8 ()
+Cdveg                                     = 0.7                 # Stem Cd coefficient , default 0.7 ()
+Cbveg                                     = 0.                  # Stem stiffness coefficient , default 0.0 ()
+Rhoveg                                    = 0.                  # Stem Rho, if > 0, -> bouyant stick procedure, default 0.0 (kg/m3)
+Stemheightstd                             = 0.                  # Stem height standard deviation fraction, e.g. 0.1  ()
+Densvegminbap                             = 0.                  # Minimum vegetation density in Baptist formula  (1/m2)
+
+[wind]
+ICdtyp                                    = 2                   # Wind drag coefficient type (1: Const, 2: Smith&Banke (2 pts), 3: S&B (3 pts), 4: Charnock 1955, 5: Hwang 2005, 6: Wuest 2005, 7: Hersbach 2010 (2 pts), 8: 4+viscous).
+Cdbreakpoints                             = 6.3d-4 7.23d-3      # Wind drag coefficient break points
+Windspeedbreakpoints                      = 0. 100.             # Wind speed break points (m/s)
+Relativewind                              = 0.                  # Wind speed relative to top-layer water speed*relativewind, 0d0=no relative wind, 1d0=using full top layer speed)
+Windhuorzwsbased                          = 1                   # Wind hu or zws based , 0 = hu, 1 = zws
+Windpartialdry                            = 0                   # Reduce windstress on water if link partially dry, only for bedlevtyp=3, 0 = no, 1 = yes = default
+Rhoair                                    = 1.2                 # Air density (kg/m3)
+PavBnd                                    = 0.                  # Average air pressure on open boundaries (N/m2) (only applied if > 0)
+Pavini                                    = 0.                  # Average air pressure for initial water level correction (N/m2) (only applied if > 0)
+Stresstowind                              = 0                   # Convert EC windstress to wind yes/no (),  1/0, default 0
+
+[grw]
+groundwater                               = 0                   # 0=No (horizontal) groundwater flow, 1=With groundwater flow
+Infiltrationmodel                         = 0                   # Infiltration method (0: No infiltration1: Interception layer2: Constant infiltration capacity3: model unsaturated/saturated (with grw)4: Horton)
+Hinterceptionlayer                        = 0.                  # Intercept this amount of rain (m)
+UnifInfiltrationCapacity                  = 0.                  # Uniform maximum infiltration capacity (m/s)
+Conductivity                              = 0.                  # Non-dimensionless K conductivity   saturated (m/s), Q = K*A*i (m3/s)
+h_aquiferuni                              = 20.                 # bgrw = bl - h_aquiferuni (m), if negative, bgrw = bgrwuni
+h_unsatini                                = 0.200000002980232   # Initial level groundwater is bedlevel - h_unsatini (m), if negative, sgrw = sgrwini
+
+[hydrology]
+InterceptionModel                         = 0                   # Interception model (0: none, 1: on, via layer thickness)
+
+[waves]
+Wavemodelnr                               = 0                   # Wave model nr. (0: none, 1: fetch/depth limited hurdlestive, 2: Young-Verhagen, 3: SWAN, 5: uniform, 6: SWAN-NetCDF, 7: Offline Wave Coupling
+Rouwav                                    = FR84                # Friction model for wave induced shear stress: FR84 (default) or: MS90, HT91, GM79, DS88, BK67, CJ85, OY88, VR04
+Gammax                                    = 1.                  # Maximum wave height/water depth ratio
+uorbfac                                   = 0                   # Orbital velocities: 0=D3D style; 1=Guza style
+jahissigwav                               = 1                   # 1: sign wave height on his output; 0: hrms wave height on his output. Default=1.
+jamapsigwav                               = 0                   # 1: sign wave height on map output; 0: hrms wave height on map output. Default=0 (legacy behaviour).
+hminlw                                    = 0.2                 # Cut-off depth for application of wave forces in momentum balance
+Hwavuni                                   = 0.                  # root mean square wave height (m)
+Twavuni                                   = 0.                  # root mean square wave period (s)
+Phiwavuni                                 = 0.                  # root mean square wave direction, (deg), math convention
+WaveSwartDelwaq                           = 0                   # if WaveSwartDelwaq == 1 .and. Tiwaq > 0 then increase tauwave to Delwaq with 0.5rho*fw*uorbuorb
+Tifetchcomp                               = 0.                  # Time interval fetch comp (s) in wavemodel 1,2
+3Dstokesprofile                           = 1                   # Stokes profile. 0: no, 1:uniform over depth, 2: 2nd order Stokes theory; 3: 2, with vertical stokes gradient in adve
+3Dwavestreaming                           = 0                   # Influence of wave streaming. 0: no, 1: added to adve
+3Dwaveboundarylayer                       = 1                   # Boundary layer formulation. 1: Sana
+
+[sedtrails]
+SedtrailsGrid                             =                     # Grid file for sedtrails output locations on corners
+SedtrailsAnalysis                         = all                 # Sedtrails analysis. Should be all, transport, flowvelocity or soulsby.
+SedtrailsInterval                         = 3600. 0. 0.         # Sedtrails output times (s), interval, starttime, stoptime (s), if starttime, stoptime are left blank, use whole simulation period
+SedtrailsOutputFile                       =                     # Sedtrails time-avgd output file
+
+[time]
+RefDate                                   = 20160622            # Reference date (yyyymmdd)
+Tzone                                     = 0.                  # Time zone assigned to input time series
+DtUser                                    = 3600.               # Time interval (s) for external forcing update
+DtNodal                                   = 60.                 # Time interval (s) for updating nodal factors in astronomical boundary conditions
+DtMax                                     = 3600.               # Maximum computation timestep (s)
+Dtfacmax                                  = 1.1                 # Max timestep increase factor ( )
+DtInit                                    = 3600.               # Initial computation timestep (s)
+Timestepanalysis                          = 0                   # 0=no, 1=see file *.steps
+AutoTimestep                              = 1                   # 0 = no, 1 = 2D (hor. out), 3=3D (hor. out), 5 = 3D (hor. inout + ver. inout), smallest dt
+Autotimestepvisc                          = 0                   # 0 = no, 1 = yes (Time limitation based on explicit diffusive term)
+AutoTimestepNoStruct                      = 1                   # 0 = no, 1 = yes (Exclude structure links (and neighbours) from time step limitation)
+AutoTimestepNoQout                        = 1                   # 0 = no, 1 = yes (Exclude negative qin terms from time step limitation)
+Tunit                                     = S                   # Time unit for start/stop times (D, H, M or S)
+TStart                                    = 0.                  # Start time w.r.t. RefDate (in TUnit)
+TStop                                     = 432000.             # Stop  time w.r.t. RefDate (in TUnit)
+UpdateRoughnessInterval                   = 86400.              # Update interval for time dependent roughness parameters (in s)
+
+[restart]
+RestartFile                               =                     # Restart netcdf-file, either *_rst.nc or *_map.nc
+RestartDateTime                           = yyyymmddhhmmss      # Restart date and time (yyyymmddhhmmss) when restarting from *_map.nc
+RstIgnoreBl                               = 0                   # Flag indicating whether bed level from restart should be ignored (0=no (default), 1=yes)
+
+[external forcing]
+ExtForceFile                              =                     # Old format for external forcings file *.ext, link with tim/cmp-format boundary conditions specification
+ExtForceFileNew                           = olo_new.ext         # New format for external forcings file *.ext, link with bc-format boundary conditions specification
+Rainfall                                  = 0                   # Include rainfall, (0=no, 1=yes)
+QExt                                      = 0                   # Include user Qin/out, externally provided, (0=no, 1=yes)
+Evaporation                               = 0                   # Include evaporation in water balance, (0=no, 1=yes)
+WindExt                                   = 0                   # Include wind, externally provided, (0=no, 1=reserved for EC, 2=yes)
+
+[trachytopes]
+TrtRou                                    =                     # Include alluvial and vegetation roughness (trachytopes) (Y: yes, N: no)
+TrtDef                                    =                     # File (*.ttd) including trachytope definitions
+TrtL                                      =                     # File (*.arl) including distribution of trachytope definitions
+DtTrt                                     = 3600.               # Trachytope roughness update time interval (s)
+TrtMxR                                    = 8                   # Maximum recursion level for composite trachytope definitions
+TrtCll                                    =                     # Calibration factor file for roughness from trachytopes (see also [calibration] block)
+TrtMnH                                    = 0.1                 # Minimum water depth for roughness computations
+TrtMth                                    = 1                   # Area averaging method, (1=Nikuradse k based, 2=Chezy C based (parallel and serial))
+
+[calibration]
+UseCalibration                            = 0                   # Activate calibration factor friction multiplier (1 = yes, 0 = no)
+DefinitionFile                            =                     # File (*.cld) containing calibration definitions
+AreaFile                                  =                     # File (*.cll) containing area distribution of calibration definitions
+
+[output]
+OutputDir                                 =                     # Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for current dir.
+FlowGeomFile                              =                     # Flow geometry NetCDF *_flowgeom.nc
+ObsFile                                   = obspts_obs.ini      # Points file *.xyn with observation stations with rows x, y, station name
+DeleteObsPointsOutsideGrid                = 0                   # 0 - do not delete, 1 - delete
+CrsFile                                   =                     # Polyline file *_crs.pli defining observation cross sections
+RugFile                                   =                     # Polyline file *_rug.pli defining runup gauges
+FouFile                                   =                     # Fourier analysis input file *.fou
+FouUpdateStep                             = 0                   # Fourier update step type: 0=every user time step, 1=every computational timestep, 2=same as history output.
+HisFile                                   =                     # HisFile name *_his.nc
+MapFile                                   =                     # MapFile name *_map.nc
+HisInterval                               = 3600. 0. 432000.    # History times (s), interval, starttime, stoptime (s), if starttime, stoptime are left blank, use whole simulation period
+XLSInterval                               = 0.                  # Interval (s) XLS history
+MapInterval                               = 3600. 0. 432000.    # Map times (s), interval, starttime, stoptime (s), if starttime, stoptime are left blank, use whole simulation period
+RstInterval                               = 2592000. 0. 432000. # Restart times (s), interval, starttime, stoptime (s), if starttime, stoptime are left blank, use whole simulation period
+MbaInterval                               = 0.                  # Mass balance area output interval (s)
+MbaWriteCsv                               = 0                   # Write mass balance area output to a csv-file (1: yes, 0: no)
+MbaLumpFromToMba                          = 0                   # Lump MBA from/to other areas mass balance terms (1: yes, 0: no)
+MbaLumpBoundaries                         = 0                   # Lump MBA boundary mass balance terms (1: yes, 0: no)
+MbaLumpSourceSinks                        = 0                   # Lump MBA source/sink mass balance terms (1: yes, 0: no)
+MbaLumpProcesses                          = 0                   # Lump MBA processes mass balance terms (1: yes, 0: no)
+WaqOutputDir                              =                     # Output directory of WAQ communication files (flowgeom, vol, flo, etc.), default: DFM_DELWAQ_<modelname>. Set to . for current dir.
+WaqInterval                               = 0. 0. 432000.       # DELWAQ output times, given as "interval" "start period" "end period" (s)
+WaqHorAggr                                =                     # DELWAQ output horizontal aggregation file (*.dwq)
+WaqVertAggr                               =                     # DELWAQ output vertical aggregation file (*.vag)
+ClassMapInterval                          = 0. 0. 432000.       # Class map times (s), interval, starttime, stoptime (s), if starttime, stoptime are left blank, use whole simulation period
+ClassMapFile                              =                     # ClassMapFile name *_clm.nc
+WaterlevelClasses                         =                     # Class map's list of class values for water levels
+WaterDepthClasses                         =                     # Class map's list of class values for water depths
+VelocityMagnitudeClasses                  =                     # Class map's list of class values for velocity magnitudes
+VelocityDirectionClassesInterval          =                     # Class map's step size of class values for velocity direction
+StatsInterval                             = -60.                # Screen step output interval in seconds simulation time, if negative in seconds wall clock time
+TimingsInterval                           = 0.                  # Timings statistics output interval
+TimeSplitInterval                         = 0 s                 # Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s.
+MapFormat                                 = 4                   # Map file format, 1: netCDF, 2: Tecplot, 3: netCFD and Tecplot, 4: NetCDF-UGRID
+NcFormat                                  = 4                   # Format for all NetCDF output files (3: classic, 4: NetCDF4+HDF5)
+NcMapDataPrecision                        = 0                   # Precision for NetCDF data in map files (0: double, 1: float)
+NcNoUnlimited                             = 0                   # Write full-length time-dimension instead of unlimited dimension (1: yes, 0: no). (Might require NcFormat=4.)
+NcNoForcedFlush                           = 0                   # Do not force flushing of map-like files every output timestep (1: yes, 0: no).
+NcWriteLatLon                             = 0                   # Write extra lat-lon coordinates for all projected coordinate variables in each NetCDF file (for CF-compliancy).
+MetaDataFile                              =                                                                                                                                                                                                                                                                #
+GenerateUUID                              = 1                   # Generate UUID as unique dataset identifier and include in output NetCDF files.
+Wrihis_balance                            = 1                   # Write mass balance totals to his file (1: yes, 0: no)
+Wrihis_sourcesink                         = 1                   # Write sources-sinks statistics to his file (1: yes, 0: no)
+Wrihis_structure_gen                      = 1                   # Write general structure parameters to his file (1: yes, 0: no)
+Wrihis_structure_dam                      = 1                   # Write dam parameters to his file (1: yes, 0: no)
+Wrihis_structure_pump                     = 1                   # Write pump parameters to his file (1: yes, 0: no)
+Wrihis_structure_gate                     = 1                   # Write gate parameters to his file (1: yes, 0: no)
+Wrihis_structure_weir                     = 1                   # Write weir parameters to his file (1: yes, 0: no)
+Wrihis_structure_orifice                  = 1                   # Write orifice parameters to his file (1: yes, 0: no)
+Wrihis_structure_bridge                   = 1                   # Write bridge parameters to his file (1: yes, 0: no)
+Wrihis_structure_culvert                  = 1                   # Write culvert parameters to his file (1: yes, 0: no)
+Wrihis_structure_damBreak                 = 1                   # Write dam break parameters to his file (1: yes, 0: no)
+Wrihis_structure_uniWeir                  = 1                   # Write universal weir parameters to his file (1: yes, 0: no)
+Wrihis_structure_compound                 = 1                   # Write compound structure parameters to his file (1: yes, 0: no)
+Wrihis_structure_longculvert              = 1                   # Write long culvert parameters to his file (1: yes, 0: no)
+Wrihis_turbulence                         = 1                   # Write k, eps and vicww to his file (1: yes, 0: no)
+Wrihis_wind                               = 1                   # Write wind velocities to his file (1: yes, 0: no)
+Wrihis_rain                               = 1                   # Write precipitation to his file (1: yes, 0: no)
+Wrihis_airdensity                         = 0                   # Write air density to his file (1: yes, 0: no)
+Wrihis_infiltration                       = 1                   # Write infiltration to his file (1: yes, 0: no)
+Wrihis_temperature                        = 0                   # Write temperature to his file (1: yes, 0: no)
+Wrihis_waves                              = 1                   # Write wave data to his file (1: yes, 0: no)
+Wrihis_heat_fluxes                        = 0                   # Write heat fluxes to his file (1: yes, 0: no)
+Wrihis_salinity                           = 0                   # Write salinity to his file (1: yes, 0: no)
+Wrihis_density                            = 1                   # Write density to his file (1: yes, 0: no)
+Wrihis_waterlevel_s1                      = 1                   # Write water level to his file (1: yes, 0: no)
+Wrihis_bedlevel                           = 1                   # Write bed level to his file (1: yes, 0: no)
+Wrihis_waterdepth                         = 0                   # Write water depth to his file (1: yes, 0: no)
+Wrihis_velocity_vector                    = 1                   # Write velocity vectors to his file (1: yes, 0: no)
+Wrihis_upward_velocity_component          = 0                   # Write upward velocity to his file (1: yes, 0: no)
+Wrihis_sediment                           = 1                   # Write sediment transport to his file (1: yes, 0: no)
+Wrihis_constituents                       = 1                   # Write tracers to his file (1: yes, 0: no)
+Wrihis_zcor                               = 1                   # Write vertical coordinates to his file (1: yes, 0: no)
+Wrihis_lateral                            = 1                   # Write lateral data to his file (1: yes, 0: no)
+Wrihis_taucurrent                         = 1                   # Write mean bed shear stress to his file (1: yes, 0: no)
+Wrihis_velocity                           = 1                   # Write velocity magnitude to his file (1: yes, 0: no)
+Wrihis_discharge                          = 1                   # Write discharge magnitude to his file (1: yes, 0: no)
+Wrimap_waterlevel_s0                      = 0                   # Write water levels for previous time step to map file (1: yes, 0: no)
+Wrimap_waterlevel_s1                      = 0                   # Write water levels to map file (1: yes, 0: no)
+Wrimap_flow_analysis                      = 0                   # Write flow analysis data to map file (1: yes, 0: no)
+Wrimap_evaporation                        = 0                   # Write evaporation to map file (1: yes, 0: no)
+Wrimap_volume1                            = 0                   # Write volumes to map file (1: yes, 0: no)
+Wrimap_waterdepth                         = 1                   # Write water depths to map file (1: yes, 0: no)
+Wrimap_waterdepth_hu                      = 0                   # Write water depths on u-points to map file (1: yes, 0: no)
+Wrimap_ancillary_variables                = 0                   # Write ancillary_variables attributes to map file (1: yes, 0: no)
+Wrimap_flowarea_au                        = 0                   # Write flow areas au to map file (1: yes, 0: no)
+Wrimap_velocity_component_u0              = 0                   # Write velocity component for previous time step to map file (1: yes, 0: no)
+Wrimap_velocity_component_u1              = 0                   # Write velocity component to map file (1: yes, 0: no)
+Wrimap_velocity_vector                    = 0                   # Write cell-center velocity vectors to map file (1: yes, 0: no)
+Wrimap_velocity_magnitude                 = 1                   # Write cell-center velocity vector magnitude to map file (1: yes, 0: no)
+Wrimap_velocity_vectorq                   = 0                   # Write cell-center velocity vectors (discharge-based) to map file (1: yes, 0: no)
+Wrimap_upward_velocity_component          = 1                   # Write upward velocity component on cell interfaces (1: yes, 0: no)
+Wrimap_density_rho                        = 1                   # Write flow density to map file (1: yes, 0: no)
+Wrimap_horizontal_viscosity_viu           = 0                   # Write horizontal viscosity to map file (1: yes, 0: no)
+Wrimap_horizontal_diffusivity_diu         = 0                   # Write horizontal diffusivity to map file (1: yes, 0: no)
+Wrimap_flow_flux_q1                       = 1                   # Write flow flux to map file (1: yes, 0: no)
+Wrimap_flow_flux_q1_main                  = 0                   # Write flow flux in main channel to map file (1: yes, 0: no)
+Wrimap_numlimdt                           = 1                   # Write the number times a cell was Courant limiting to map file (1: yes, 0: no). (Consider using Wrimap_flow_analysis instead.)
+Wrimap_taucurrent                         = 1                   # Write the shear stress to map file (1: yes, 0: no)
+Wrimap_chezy                              = 1                   # Write the chezy values in flow elements to map file (1: yes, 0: no)
+Wrimap_chezy_on_flow_links                = 0                   # Write the chezy values on flow links to map file (1: yes, 0: no)
+Wrimap_input_roughness                    = 0                   # Write the input roughness on flow links to map file (1: yes, 0: no)
+Wrimap_turbulence                         = 1                   # Write vicww, k and eps to map file (1: yes, 0: no)
+Wrimap_rain                               = 0                   # Write rainfall rates to map file (1: yes, 0: no)
+Wrimap_interception                       = 0                   # Write interception to map file (1: yes, 0: no)
+Wrimap_wind                               = 1                   # Write wind velocities to map file (1: yes, 0: no)
+Wrimap_windstress                         = 0                   # Write wind stress to map file (1: yes, 0: no)
+Wrimap_airdensity                         = 0                   # Write air density rates to map file (1: yes, 0: no)
+Writek_CdWind                             = 1                   # Write wind friction coeffs to tek file (1: yes, 0: no)
+Wrimap_DTcell                             = 0                   # Write time step per cell based on CFL (1: yes, 0: no)
+Wrimap_wet_waterdepth_threshold           = 2.d-5               # Waterdepth threshold above which a grid point counts as 'wet'. Used for Wrimap_time_water_on_ground.
+Wrimap_time_water_on_ground               = 0                   # Write cumulative time when water is above ground level to map file, only for 1D nodes (1: yes, 0: no)
+Wrimap_freeboard                          = 0                   # Write freeboard to map file, only for 1D nodes (1: yes, 0: no)
+Wrimap_waterdepth_on_ground               = 0                   # Write waterdepth that is above ground level to map file, only for 1D nodes (1: yes, 0: no)
+Wrimap_volume_on_ground                   = 0                   # Write volume that is above ground level to map file, only for 1D nodes (1: yes, 0: no)
+Wrimap_total_net_inflow_1d2d              = 0                   # Write current total 1d2d net inflow (discharge) and cumulative total 1d2d net inflow (volume) to map file, only for 1D nodes (1: yes, 0: no)
+Wrimap_total_net_inflow_lateral           = 0                   # Write current total lateral net inflow (discharge) and cumulative total net lateral inflow (volume) to map file, only for 1D nodes (1: yes, 0: no)
+Wrimap_water_level_gradient               = 0                   # Write water level gradient to map file, only on 1D links (1: yes, 0: no)
+Wrimap_NearField                          = 0                   # Write near field parameters (1: yes, 0: no)
+Writepart_domain                          = 1                   # Write partition domain info. for postprocessing
+Wrishp_crs                                = 0                   # Write grid-snapped cross sections to shapefile (1: yes, 0: no)
+Wrishp_obs                                = 0                   # Write grid-snapped observation stations to shapefile (1: yes, 0: no)
+Wrishp_weir                               = 0                   # Write grid-snapped weirs to shapefile (1: yes, 0: no)
+Wrishp_thd                                = 0                   # Write grid-snapped thin dams to shapefile (1: yes, 0: no)
+Wrishp_gate                               = 0                   # Write grid-snapped gates to shapefile (1: yes, 0: no)
+Wrishp_emb                                = 0                   # Write grid-snapped 1d2d embankments to shapefile (1: yes, 0: no)
+Wrishp_fxw                                = 0                   # Write grid-snapped fixed weirs to shapefile (1: yes, 0: no)
+Wrishp_src                                = 0                   # Write grid-snapped source-sinks to shapefile (1: yes, 0: no)
+Wrishp_pump                               = 0                   # Write grid-snapped pumps to shapefile (1: yes, 0: no)
+Wrishp_dryarea                            = 0                   # Write a shape file for dry areas
+wrishp_genstruc                           = 0                   # Write a shape file for general structures
+wrishp_dambreak                           = 0                   # Write a shape file for dam breaks
+WriteDFMinterpretedvalues                 = 0                   # Write DFMinterpretedvalues (1: yes, 0: no)
+WriteDetailedTimers                       = 0                   # Write detailed timers output file (1: yes, 0: no)
+MapOutputTimeVector                       =                     # File (*.mpt) containing fixed map output times (s) w.r.t. RefDate
+FullGridOutput                            = 0                   # Full grid output mode for layer positions (0: compact, 1: full time-varying grid layer data)
+EulerVelocities                           = 0                   # Euler velocities output (0: GLM, 1: Euler velocities)
+Wrirst_bnd                                = 1                   # Write waterlevel, bedlevel and coordinates of boundaries to restart files
+Wrimap_bnd                                = 0                   # Write boundary points to map file (1: yes, 0: no)
+Wrimap_Qin                                = 0                   # Write sum of all influxes to map file (1: yes, 0: no)
+Wrimap_every_dt                           = 0                   # Write output to map file every dt, based on start and stop from MapInterval, 0=no (default), 1=yes
+
+[processes]
+SubstanceFile                             =                     # substance file
+AdditionalHistoryOutputFile               =                     # extra history output file
+StatisticsFile                            =                     # statistics file
+ThetaVertical                             = 0.                  # theta vertical for waq
+DtProcesses                               = 0.                  # waq processes time step
+DtMassBalance                             = 0.                  # waq mass balance output time step
+ProcessFluxIntegration                    = 1                   # Process fluxes integration option (1: WAQ, 2: D-Flow FM)
+Wriwaqbot3Doutput                         = 0                   # Write 3D water quality bottom variables (1: yes, 0: no)
+VolumeDryThreshold                        = 1.d-3               # Volume below which segments are marked as dry. (m3)
+DepthDryThreshold                         = 1.d-3               # Water depth below which segments are marked as dry. (m)
+SubstanceDensityCoupling                  = 0                   # substance rho coupling (0=no, 1=yes),
+** INFO   : **
+** INFO   : Modelinit finished   at: 08:41:45, 21-03-2024
+** INFO   : 
+** INFO   : 
+** INFO   : nr of netnodes               ( )  :                     9948
+** INFO   : nr of netlinks               ( )  :                     9959
+** INFO   : 
+** INFO   : nr of 2D netlinks            ( )  :                        0
+** INFO   : nr of 1D netlinks            ( )  :                     9959
+** INFO   : 
+** INFO   : nr of netcells               ( )  :                        0
+** INFO   : nr of netcells 1D2D          ( )  :                     9948
+** INFO   : 
+** INFO   : nr of flownodes              ( )  :                     9960
+** INFO   : nr of internal flownodes     ( )  :                     9948
+** INFO   : nr of 2D internal flownodes  ( )  :                        0
+** INFO   : nr of 1D internal flownodes  ( )  :                     9948
+** INFO   : 
+** INFO   : nr of openbnd cells       ( )     :                       12
+** INFO   : nr of 2D boundaries       ( )     :                        0
+** INFO   : nr of 1D boundaries       ( )     :                       12
+** INFO   : nr of flowlinks           ( )     :                     9971
+** INFO   : nr of internal links      ( )     :                     9959
+** INFO   : nr of 1D links            ( )     :                     9959
+** INFO   : 
+** INFO   : nr of closed walls     ( )  :                        0
+** INFO   : 
+** INFO   : 
+** INFO   : my model area          (m2) :         0.1998545925E+06
+** INFO   : my model volume        (m3) :         0.2246878539E+06
+** INFO   : 
+** INFO   : 
+** INFO   : Writing initial output to file(s)...
+** WARNING: Missing coordinate reference system. Now using default: projected_coordinate_system (EPSG:0).
+** INFO   : Done writing initial output to file(s).
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : extra timer:Flow geometry                                        0.0420000553
+** INFO   : extra timer:Flow init                                            1.6719999313
+** INFO   : extra timer:Set boundaries                                       0.4780006409
+** INFO   : extra timer:Sethuau                                            105.5859980583
+** INFO   : extra timer:setdt                                                1.5609998703
+** INFO   : extra timer:Compute advection term                               7.3000011444
+** INFO   : extra timer:u0u1                                                 0.4130003452
+** INFO   : extra timer:Setumod                                             11.3080058098
+** INFO   : extra timer:Set conveyance                                       0.1610009670
+** INFO   : extra timer:Set structures actual parameters                     0.2389991283
+** INFO   : extra timer:step_reduce                                        130.3840115070
+** INFO   : extra timer:Transport                                            1.9819986820
+** INFO   : extra timer:Output                                               9.9400014877
+** INFO   : extra timer:unc_write_his                                        9.3970000744
+** INFO   : extra timer:fill_valobs                                          0.1499991417
+** INFO   : extra timer:unc_write_his str write                              9.2860002518
+** INFO   : extra timer:unc_write_his time data                              0.0810008049
+** INFO   : extra timer:unc_write_flowgeom_filepointer_ugrid                 0.0250000954
+** INFO   : extra timer:unc_write_map_filepointer_ugrid                      0.3310003281
+** INFO   : extra timer:unc_write_flowgeom_filepointer_ugrid INI             0.0160000324
+** INFO   : extra timer:unc_write_map_filepointer_ugrid TIME wri             0.0109994411
+** INFO   : extra timer:unc_write_map_filepointer_ugrid vars                 0.3040008545
+** INFO   : extra timer:update HIS data DtUser                               0.1479990482
+** INFO   : extra timer:call wrirst                                          0.0250003338
+** INFO   : extra timer:call wrimap                                          0.4400019646
+** INFO   : extra timer:call flow_externaloutput                             9.7920024395
+** INFO   : extra timer:wrimap nf90_sync                                     0.1020014286
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : nr of timesteps        ( )  :          8366.0000000000
+** INFO   : average timestep       (s)  :            51.6314091072
+** INFO   : nr of setbacks         ( )  :         13987.0000000000
+** INFO   : 
+** INFO   : 
+** INFO   : simulation period      (d)  :             5.0000000000
+** INFO   : total computation time (d)  :             0.0037665509
+** INFO   : time modelinit         (d)  :             0.0000253125
+** INFO   : time steps (+ plots)   (d)  :             0.0037412384
+** INFO   : 
+** INFO   : simulation period      (h)  :           120.0000000000
+** INFO   : total computation time (h)  :             0.0903972222
+** INFO   : time modelinit         (h)  :             0.0006075000
+** INFO   : time steps (+ plots)   (h)  :             0.0897897222
+** INFO   : 
+** INFO   : simulation period      (s)  :        432000.0000000000
+** INFO   : total computation time (s)  :           325.4300000668
+** INFO   : time modelinit         (s)  :             2.1870000362
+** INFO   : time steps (+ plots)   (s)  :           323.2430000305
+** INFO   : 
+** INFO   : 
+** INFO   : time iniexternalforc.  (s)  :             0.4639999866
+** INFO   : 
+** INFO   : time inistep           (s)  :           133.3009941578
+** INFO   : time setumod           (s)  :            11.1360046864
+** INFO   : time furu              (s)  :            43.9490036964
+** INFO   : time solve             (s)  :            17.3999922276
+** INFO   : time gausselimination  (s)  :            12.1300000000
+** INFO   : time gausssubstitution (s)  :             4.3980000000
+** INFO   : time totalsolve        (s)  :            18.0200000000
+** INFO   : time setexternalforc.  (s)  :             0.0030000210
+** INFO   : time setext.forc.fetch (s)  :             0.0000000000
+** INFO   : time setexternalfbnd.  (s)  :             1.5670003891
+** INFO   : time steps             (s)  :           266.9099998474
+** INFO   : fraction solve/steps   ( )  :             0.0651904846
+** INFO   : total/(dnt*ndx)        (s)  :             0.0000039055
+** INFO   : av nr of cont. it s1it ( )  :             0.0003585515
+** INFO   : time transport         (s)  :             2.1679999999
+** INFO   : time debug            (s)  :             0.0000000000
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : Computation started  at: 08:41:45, 21-03-2024
+** INFO   : Computation finished at: 08:47:09, 21-03-2024
+** INFO   : 
+** INFO   : simulation period      (h)  :           120.0000000000
+** INFO   : total time in timeloop (h)  :             0.0897897222
+** INFO   : MPI    : no.
+** INFO   : OpenMP : yes.         #threads max : 1
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : 

@@ -1,0 +1,122 @@
+<Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+  <?ifdef checkForRegistration?>
+
+    <!-- Make sure that license config keys exist else create them with defaults and update with our custom value -->
+
+    <!--Create "add" 'checkForRegistration' xml element-->
+    <!--Use the Verify Path to check if element and attributes already exist-->
+    <util:XmlConfig Id="CreateElementKey0$(var.CONSOLECONFIGFILE)" 
+                    Action="create" 
+                    On="install" 
+                    Node="element"
+                    File="[#$(var.CONSOLECONFIGFILE)]" 
+                    Name="add"
+                    ElementPath="/configuration/appSettings"
+                    VerifyPath="/configuration/appSettings/add[\[]@key=&quot;checkForRegistration&quot;[\]]/@value"
+                    />
+
+    <!--Create "key=checkForRegistration" attribute-->
+    <util:XmlConfig Id="CreateAttributeKey0$(var.CONSOLECONFIGFILE)"
+                    File="[#$(var.CONSOLECONFIGFILE)]"
+                    ElementId="CreateElementKey0$(var.CONSOLECONFIGFILE)"
+                    Name="key" 
+                    Value="checkForRegistration"
+                    VerifyPath="/configuration/appSettings/add[\[]@key=&quot;checkForRegistration&quot;[\]]/@value"
+                    />
+
+    <!--Create "key=checkForRegistration" attribute-->
+    <util:XmlConfig Id="CreateAttributeKey1$(var.CONSOLECONFIGFILE)"
+                    File="[#$(var.CONSOLECONFIGFILE)]"
+                    ElementId="CreateElementKey0$(var.CONSOLECONFIGFILE)"
+                    Name="value"
+                    Value="false"
+                    VerifyPath="/configuration/appSettings/add[\[]@key=&quot;checkForRegistration&quot;[\]]/@value"
+                    />
+
+    <!--Update with our custom value for "key=checkForRegistration" attribute-->
+    <util:XmlFile Id="SetKey0$(var.CONSOLECONFIGFILE)"
+                  Action="setValue"
+                  ElementPath="/configuration/appSettings/add[\[]@key=&quot;checkForRegistration&quot;[\]]/@value"
+                  File="[#$(var.CONSOLECONFIGFILE)]"
+                  Value="$(var.checkForRegistration)"
+                  />
+  
+    <!--Create "add" 'registrationFeature' xml element -->
+    <!--Use the Verify Path to check if element and attributes already exist-->
+    <util:XmlConfig Id="CreateElementKey1$(var.CONSOLECONFIGFILE)" 
+                    Action="create" 
+                    On="install" 
+                    Node="element"
+                    File="[#$(var.CONSOLECONFIGFILE)]" 
+                    Name="add"
+                    ElementPath="/configuration/appSettings"
+                    VerifyPath="/configuration/appSettings/add[\[]@key=&quot;registrationFeature&quot;[\]]/@value"
+                    />
+
+    <!--Create "key=registrationFeature" attribute-->
+    <util:XmlConfig Id="CreateAttributeKey2$(var.CONSOLECONFIGFILE)"
+                    File="[#$(var.CONSOLECONFIGFILE)]"
+                    ElementId="CreateElementKey1$(var.CONSOLECONFIGFILE)"
+                    Name="key" 
+                    Value="registrationFeature"
+                    VerifyPath="/configuration/appSettings/add[\[]@key=&quot;registrationFeature&quot;[\]]/@value"
+                    />
+
+    <!--Create "key=registrationFeature" attribute-->
+    <util:XmlConfig Id="CreateAttributeKey3$(var.CONSOLECONFIGFILE)"
+                    File="[#$(var.CONSOLECONFIGFILE)]"
+                    ElementId="CreateElementKey1$(var.CONSOLECONFIGFILE)"
+                    Name="value"
+                    Value="false"
+                    VerifyPath="/configuration/appSettings/add[\[]@key=&quot;registrationFeature&quot;[\]]/@value"
+                    />
+
+    <!--Update with our custom value for "key=registrationFeature" attribute-->
+    <util:XmlFile Id="SetKey1$(var.CONSOLECONFIGFILE)"
+                  Action="setValue"
+                  ElementPath="/configuration/appSettings/add[\[]@key=&quot;registrationFeature&quot;[\]]/@value"
+                  File="[#$(var.CONSOLECONFIGFILE)]"
+                  Value="!(loc.RegistrationFeature)"
+                  />
+
+    <!--Create "add" 'registrationVersion' xml element -->
+    <!--Use the Verify Path to check if element and attributes already exist-->
+    <util:XmlConfig Id="CreateElementKey2$(var.CONSOLECONFIGFILE)" 
+                    Action="create" 
+                    On="install" 
+                    Node="element"
+                    File="[#$(var.CONSOLECONFIGFILE)]" 
+                    Name="add"
+                    ElementPath="/configuration/appSettings"
+                    VerifyPath="/configuration/appSettings/add[\[]@key=&quot;registrationVersion&quot;[\]]/@value"
+                    />
+
+    <!--Create "key=registrationVersion" attribute-->
+    <util:XmlConfig Id="CreateAttributeKey4$(var.CONSOLECONFIGFILE)"
+                    File="[#$(var.CONSOLECONFIGFILE)]"
+                    ElementId="CreateElementKey2$(var.CONSOLECONFIGFILE)"
+                    Name="key" 
+                    Value="registrationVersion"
+                    VerifyPath="/configuration/appSettings/add[\[]@key=&quot;registrationVersion&quot;[\]]/@value"
+                    />
+
+    <!--Create "key=registrationVersion" attribute-->
+    <util:XmlConfig Id="CreateAttributeKey5$(var.CONSOLECONFIGFILE)"
+                    File="[#$(var.CONSOLECONFIGFILE)]"
+                    ElementId="CreateElementKey2$(var.CONSOLECONFIGFILE)"
+                    Name="value"
+                    Value="false"
+                    VerifyPath="/configuration/appSettings/add[\[]@key=&quot;registrationVersion&quot;[\]]/@value"
+                    />
+
+    <!--Update with our custom value for "key=registrationVersion" attribute-->
+    <util:XmlFile Id="SetKey2$(var.CONSOLECONFIGFILE)"
+                  Action="setValue"
+                  ElementPath="/configuration/appSettings/add[\[]@key=&quot;registrationVersion&quot;[\]]/@value"
+                  File="[#$(var.CONSOLECONFIGFILE)]"
+                  Value="!(loc.RegistrationVersion)"
+                  />
+  <?endif?>
+
+</Include>

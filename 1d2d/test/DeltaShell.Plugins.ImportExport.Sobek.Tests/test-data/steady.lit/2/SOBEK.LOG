@@ -1,0 +1,595 @@
+sobeksim version 3.07.61
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_001_9 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach N_002 . This part of
+  cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_002_45 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_002_46 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_002_49 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_002_50 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_002_51 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_002_52 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_002_53 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_002_57 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_002_58 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_002_59 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_10 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_11 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_14 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_15 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_16 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_17 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_21 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_22 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_30 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_37 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_38 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_39 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_40 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_41 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_54 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_55 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_56 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_61 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_003_70 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach N_004 . This part of
+  cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_004_3 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_004_6 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_004_7 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_004_8 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_004_9 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_004_10 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_004_11 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_004_20 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_004_21 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_004_22 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach N_005 . This part of
+  cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_005_7 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_005_8 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_005_12 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_005_19 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_005_20 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_005_49 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_005_80 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_006_6 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_006_28 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_9 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_16 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_49 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_50 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_51 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_53 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_54 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_55 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_56 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_57 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_58 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_59 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_67 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_68 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_74 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_75 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_007_76 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_26 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_27 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_28 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_34 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_35 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_36 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_52 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_53 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_54 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_74 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_75 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_97 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_98 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_99 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_120 . This par
+ t of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_130 . This par
+ t of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_008_133 . This par
+ t of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_009_6 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_009_7 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_009_8 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_009_19 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_009_53 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_009_60 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_009_88 . This part
+  of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach N_010 . This part of
+  cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach N_010 . This part of
+  cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach R_011_1 . This part 
+ of cross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach N_012 . This part of
+  cross-section table is set to 0.0001 m. width
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure General Structure, id= C_01##S_0
+ 1
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_01##
+ S_01
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+setback dt=     300.000000
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+setback dt=     165.000000
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+ Warning in subroutine plchqi
+ Lateral discharge set to zero R_005_24
+setback dt=      98.917572
+setback dt=     100.212006
+setback dt=      92.774391
+setback dt=     102.196793
+setback dt=      95.665016
+setback dt=      47.832508
+setback dt=      86.427681
+setback dt=      63.470329
+setback dt=      30.743441
+setback dt=     103.054802
+setback dt=      51.527401
+setback dt=     101.581093
+setback dt=      74.625015
+setback dt=     101.553307
+setback dt=     107.118988
+setback dt=      96.355141
+setback dt=      94.722130
+setback dt=     108.607269
+ Warning in subroutine flgs
+ Area in reach less than area in general structure General Structure, id= C_02##
+ S_03
+---------------------------------
+Normal end of Sobeksim
+closed file : ..\work\sobek.log

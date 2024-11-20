@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain"
+                   assembly="DeltaShell.Plugins.DelftModels.RealTimeControl">
+
+  <class name="RtcBaseObject" lazy="false" abstract="true" table="rtc_base_objects">
+    <id name="Id" column="id" type="Int64" access="property">
+      <generator class="increment" />
+    </id>
+    <discriminator column="type" type="string" />
+    <property name="Name" column="name" />
+    <property name="LongName" column="longname" />
+  </class>
+</hibernate-mapping>

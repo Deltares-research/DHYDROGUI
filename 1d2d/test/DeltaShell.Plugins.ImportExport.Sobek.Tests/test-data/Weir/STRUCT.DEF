@@ -1,0 +1,24 @@
+STDS id '3' nm '' ty 6 cl 0.7 cw 2 ce 1 sc 1 rt 0  stds
+STDS id '10' nm '' ty 11 cl 1 si '1' ce 1 sv 0.667 rt 0 stds
+STDS id '14' nm '' ty 7 cl 0.7 cw 2 gh 0.9 mu 0.63 sc 1 rt 0  stds
+STDS id '##2' nm 'AdvancedDefinition' ty 1 cl 5 sw 5 ni 2 ph 11 nh 11 pw 1 nw 1 pp 0.5 np 0.5 pa 0.6 na 0.7 stds
+STDS id '##3' nm 'GeneralDefinition' ty 2 w1 1 wl 1 ws 1 wr 1 w2 1 z1 2 zl 2 zs 2 zr 2 z2 2 gh 5 pg 0.5 pd 0.3 pi 0.52 pr 0.9 pc 0.8 ng 0.3 nd 0.12 nf 0.6 nr 0.5 nc 0.9 stds
+STDS id '##4' nm 'RiverWeirDefinition' ty 0 cl 5 cw 10 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0  pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble stds

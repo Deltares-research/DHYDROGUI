@@ -1,0 +1,22 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=4
+NumberOfLocations=245
+T0=2004.02.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+2=W.level up mean (m AD)
+3=W.level down mean(m AD)
+4=Crest level mean (m AD)
+ 
+[Long Locations]
+24=GM2-10A0002-000-a_stuw
+74=SI_GM1-10A0034-000-ZZ
+143=GM2-20-Schoenaker_stuw
+ 

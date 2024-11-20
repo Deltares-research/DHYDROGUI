@@ -1,0 +1,10 @@
+  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock
+                          5.73 ; integration option
+; detailed balance options
+   BAL_NOLUMPPROCESSES BAL_LUMPLOADS BAL_NOLUMPTRANSPORT
+   BAL_NOSUPPRESSSPACE BAL_NOSUPPRESSTIME
+
+           2000/01/01-00:00:00 ; simulation starting time
+           2000/12/31-00:00:00 ; simulation end time
+                             0 ; timestep constant
+                     000000500 ; simulation timestep

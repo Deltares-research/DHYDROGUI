@@ -1,0 +1,2 @@
+BRCH id 'HydroLink_1D_1' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'Catchment_1D_1' en 'LateralSource_1D_1' brch
+BRCH id 'HydroLink_1D_2' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn 'Catchment_1D_2' en 'LateralSource_1D_2' brch

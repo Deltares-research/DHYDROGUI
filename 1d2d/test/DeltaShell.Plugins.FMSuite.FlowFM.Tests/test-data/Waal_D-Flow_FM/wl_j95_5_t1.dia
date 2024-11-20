@@ -1,0 +1,330 @@
+** INFO   : Opened file : ISOCOLOUR.hls
+** INFO   : Using Local FileISOCOLOUR.hls
+** INFO   : Closed file : ISOCOLOUR.hls
+** INFO   : Opened file : ISOCOLOUR.hls
+** INFO   : Using Local FileISOCOLOUR.hls
+** INFO   : Closed file : ISOCOLOUR.hls
+* Deltares, D-Flow FM Version 1.1.72.29095, Jul 09 2013, 16:13:17
+* File creation date: 00:00:00, **-**- 120
+** INFO   :  MAXIMUM NUMBER OF LINKS         :            2
+** INFO   :  MAXIMUM NUMBER OF NODES         :            0
+** INFO   :  RESOLUTION GRAPHICS SCREEN      :         1024         768
+** INFO   :  RESOLUTION TEXT     SCREEN      :          128          48
+** INFO   :  NUMBER OF COLOURS AVAILABLE     :          256
+** INFO   :              0        100002 NOD(KMAX)
+** INFO   :              6        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** INFO   :              6         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** INFO   :              6         50000 xlan(maxlan)
+** INFO   :              7         50000 ylan(maxlan)
+** INFO   :              7         50000 zlan(maxlan)
+** INFO   :              7         25000 nclan(maxlan)
+ Until here copy of previous diagnostic file
+** INFO   : Opened Model definition file : wl_j95_5_t1.mdu
+** DEBUG  : Opened 'wl_j95_5_hoog_net.nc' as #***.
+** INFO   :              9        245631 NOD(KMAX)
+** INFO   :             23       1719417 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** DEBUG  : Closed NetCDF file 'wl_j95_5_hoog_net.nc.
+** INFO   : Opened file : wl_j95_5_obs.xyn
+** INFO   : Closed file : wl_j95_5_obs.xyn
+** INFO   : Opened file : sections_crs.pli
+** INFO   : Closed file : sections_crs.pli
+** INFO   :             25        218446 netcell(numpx1)
+** INFO   :             27        287444 lnn(numl)
+** INFO   :             32        574888 lne(2,numl)
+** INFO   :             33        141814 xz(numc)
+** INFO   :             34        141814 yz(numc)
+** INFO   :             35        141814 xzw(numc)
+** INFO   :             36        141814 yzw(numc)
+** INFO   :             37        141814 ba(numc)
+** DEBUG  :  Renumber flow nodes...
+** DEBUG  :  Sumdiff:   715573994  Sumdiff renum:    590595366
+** DEBUG  :  Bandwidth:        4283  Bandwidth renum:          211
+** INFO   : Opened file : wl_j95_5_hoog.ext
+** INFO   :             40        287444 xe (nx)
+** INFO   :             42        287444 ye (nx)
+** INFO   :             44        287444 xyen(2, nx)
+** INFO   :             65       2586996 kce(nx), kez(nx), keu(nx), kes(nx), kesd(nx), ket(nx), ken(nx), keg(nx), ked(nx), kep(nx), itpez(nx), itpeu(nx)
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : wl_j95_5_bndin.pli
+** INFO   : Closed file : wl_j95_5_bndin.pli
+** INFO   : dischargebndwl_j95_5_bndin.pli      15nr of open bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : wl_j95_5_bndout.pli
+** INFO   : Closed file : wl_j95_5_bndout.pli
+** INFO   : waterlevelbnd wl_j95_5_bndout.pli      25 nr of open bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : looking for keyword: QUANTITY
+** INFO   : keyword QUANTITY NOT found!
+** INFO   :             74       1134832 nd(ndx), bl(ndx), bai(ndx), kcs(ndx), aif(ndx)
+** INFO   :             92        559704 ln   (2,lnx)
+** INFO   :             97        559704 lncn (2,lnx)
+** INFO   :            101        559704 bob  (2,lnx)
+** INFO   :            103        279852 dx   (  lnx)
+** INFO   :            106        279852 dxi  (  lnx)
+** INFO   :            108        279852 wu   (  lnx)
+** INFO   :            110        279852 wui  (  lnx)
+** INFO   :            112        279852 kcu  (  lnx)
+** INFO   :            115        279852 csu  (  lnx)
+** INFO   :            117        279852 snu  (  lnx)
+** INFO   :            119        279852 acl  (  lnx)
+** INFO   :            121        279852 acn  (2,lnx)
+** INFO   :            124        279852 iadv   (lnx)
+** INFO   :            126        279852 ibot   (lnx)
+** INFO   :            133        839556 xu(lnx), yu(lnx) , blu(lnx)
+** INFO   :            135        287444 ln2lne (nex)
+** INFO   :            137        287444 lne2ln (nex)
+** INFO   :            143        145631  cn (numk)
+** INFO   :            144        145631 ucnx(numk)
+** INFO   :            145        145631 ucny(numk)
+** INFO   :            146        145631 ban (numk)
+** INFO   : cutcell_list; nr of *.cut files found =              0             4
+** INFO   :            155       1119408 wcxyl(4,lnx)
+** INFO   :            157        283708 wcxy (2,ndx)
+** INFO   :            162        559704 wcL  (2,Lnx)
+** INFO   :            163        141854 wc     (ndx)
+** INFO   :            172       1119408 wcnxyl(4,lnx)
+** INFO   :            176        436893 wcnxy (3,numk)
+** INFO   :            176          7590 cscnw(nrcnw)
+** INFO   :            176          7590 sncnw(nrcnw)
+** INFO   :            176          7590  kcnw(nrcnw)
+** INFO   : cutcell_list; nr of *.cut files found =              0             5
+** INFO   :            181        121472 walls(17,nw)
+** INFO   :            186        567256 banf(mxban)
+** INFO   :            190        567256 nban(2,mxban)
+** INFO   :            195        567256 rr(mxban), nr(mxban)
+** INFO   :            199        567256 banh (mxban)
+** INFO   :            204        567256 nbanh(2,mxban)
+** INFO   :            206        283708 s0  (ndx) , s1  (ndx)
+** INFO   :            208        283708 a0  (ndx) , a1  (ndx)
+** INFO   :            211        283708 hs  (ndx) , s00 (ndx)
+** INFO   :            212        141854 cfs (ndx)
+** INFO   :            214        283708 ucx (ndkx) , ucy (ndkx)
+** INFO   :            216        283708 uqcx(ndkx) , uqcy(ndkx)
+** INFO   :            219        283708 ucxq(ndkx) , ucyq(ndkx)
+** INFO   :            221        283708 qin (ndkx) , vih (ndkx)
+** INFO   :            223        283708 dvxc(ndkx) , dvyc(ndkx)
+** INFO   :            224        141854 cfli(ndkx)
+** INFO   :            225        141854 squ (ndkx)
+** INFO   :            227        141854 sqi (ndkx)
+** INFO   :            228        141854 sq  (ndkx)
+** INFO   :            229        141854 vol0(ndkx)
+** INFO   :            230        141854 vol1(ndkx)
+** INFO   :            231        141854 volerror(ndkx)
+** INFO   :            232        141854 tidep (ndx)
+** INFO   :            234        279852 cfu  (lnx)
+** INFO   :            236        141854 frcu (lnx)
+** INFO   :            237        141854 ifrcutp(lnx)
+** INFO   :            239        279852 wsu  (lnx)
+** INFO   :            241        279852 u0   (lnkx)
+** INFO   :            243        279852 u1   (lnkx)
+** INFO   :            246        279852 q1   (lnkx)
+** INFO   :            248        279852 qa   (lnkx)
+** INFO   :            250        279852 v    (lnkx)
+** INFO   :            252        279852 ucxu (lnkx)
+** INFO   :            255        279852 ucyu (lnkx)
+** INFO   :            257        279852 hu   (lnkx)
+** INFO   :            259        279852 huvli(lnkx)
+** INFO   :            261        279852 au   (lnkx)
+** INFO   :            264        279852 viu  (lnkx)
+** INFO   :            266        279852 cflj (lnkx)
+** INFO   :            268        279852 tetaj(lnkx)
+** INFO   :            270        279852 suu  (lnkx)
+** INFO   :            273        279852 advi (lnkx)
+** INFO   :            275        279852 adve (lnkx)
+** INFO   :            277        279852 rhou (lnkx)
+** INFO   :            279        279852 plotlin(max(lnkx,ndkx))
+** INFO   :            280        141854 numlimdt(ndx)
+** INFO   :            282        141854 bb   (ndx )
+** INFO   :            283        141854 dd   (ndx )
+** INFO   :            284        141854 fu   (lnkx)
+** INFO   :            285        141854 ru   (lnkx)
+** INFO   :            287        279852 teta (lnx)
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : External Forcing or Initialising 'dischargebnd' from file 'wl_j95_5_bndin.pli'.
+** INFO   : Opened file : wl_j95_5_bndin.pli
+** INFO   : Closed file : wl_j95_5_bndin.pli
+** INFO   : Opened file : wl_j95_5_bndin_0001.tim
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : External Forcing or Initialising 'waterlevelbnd' from file 'wl_j95_5_bndout.pli'.
+** INFO   : Opened file : wl_j95_5_bndout.pli
+** INFO   : Closed file : wl_j95_5_bndout.pli
+** INFO   : Opened file : wl_j95_5_bndout_0001.tim
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : External Forcing or Initialising 'frictioncoefficient' from file 'xyz_k_nikuradse-uv.xyz'.
+** INFO   :            289        279852 viuh(lnx)
+** INFO   :            292        279852 zh(nx)
+** INFO   : Opened file : xyz_k_nikuradse-uv.xyz
+** INFO   :            295        356792 XS(NSMAX),YS(NSMAX),ZS(NSMAX)
+** INFO   :            297        356792 ipsam(NSMAX)
+** INFO   : Closed file : xyz_k_nikuradse-uv.xyz
+** INFO   :            340       5351916 INDX(3,NSM)
+** INFO   : looking for keyword: QUANTITY
+** INFO   : keyword QUANTITY NOT found!
+** INFO   : External Forcing or Initialising 'frictioncoefficient' from file 'xyz_k_nikuradse-uv.xyz'.
+** INFO   : Closed file : wl_j95_5_hoog.ext
+** INFO   : Opened file : weirs.pli
+** INFO   : Closed file : weirs.pli
+** INFO   :            340         29614 lntdk(ntdk)
+** INFO   : Number of flow Links with thindykes ::          29614
+** INFO   :            343        279852 klnup(6,lnx)
+** INFO   :            345        279852 slnup(6,lnx)
+** INFO   :            346        141854 ij(nodtot)
+** INFO   :            347        141854 nodbr2(nodtot)
+** INFO   :            348        141854 nbrstk(nodtot)
+** INFO   :            349        141854 nodstk(nodtot)
+** INFO   :            351        141854 noel(nodtot)
+** INFO   :            352        141854 noel0(nodtot)
+** INFO   :            353        141854 ia(nodtot)
+** INFO   :            354        141854 row(nodtot)
+** INFO   :            356        279852 lv2(lintot)
+** INFO   :            357        141854 jagauss(nodtot)
+** INFO   :            374        555308 ccr(0:ijstck)
+** INFO   :            378        555308 bbl(0:ijstck)
+** INFO   :            381        283708 bbr(nodtot), ddr(nodtot)
+** INFO   :            386        709270 d0(nodtot), zkr(nodtot),pk(0:nodtot), apk(nodtot), rk(nodtot)
+** INFO   : nogauss , nocg :          67284         74570
+** INFO   :            390        421706 qsho(lnkx), pp(ndkx)
+** INFO   : Modelinit finished   at: 00:**:**, **-**-****
+** INFO   : * Active Model definition:
+# Generated on 00:06:00, **-**-****
+# Deltares, D-Flow FM Version 1.1.72.29095, Jul 09 2013, 16:13:17
+
+[model]
+Program              = D-Flow FM
+Version              = 1.1.72.29095
+AutoStart            = 2                   # Autostart simulation after loading MDU or not (0=no, 1=autostart, 2=autostartstop).
+
+[geometry]
+NetFile              = wl_j95_5_hoog_net.nc# *_net.nc
+BathymetryFile       =                     # *.xyb
+WaterLevIniFile      =                     # Initial water levels sample file *.xyz
+LandBoundaryFile     =                     # Only for plotting
+ThinDamFile          =                     # *_thd.pli, Polyline(s) for tracing thin dams.
+FixedWeirFile        = weirs.pli           # *._fxw.pli, Polyline(s) x,y,z, z = fixed weir top levels
+ProflocFile          =                     # *_proflocation.xyz)    x,y,z, z = profile refnumber
+ProfdefFile          =                     # *_profdefinition.def) definition for all profile nrs
+ManholeFile          =                     # *...
+WaterLevIni          = 10.                 # Initial water level
+Bedlevuni            = -5.                 # Uniform bottom level, (only if bedlevtype>=3, used at missing z values in netfile
+BedlevType           = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
+                                           # 2 : Bottom levels at velocity points  (=flow links),            xu, yu, blu, bob = blu,    bl = lowest connected link
+                                           # 3 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
+                                           # 4 : Bottom levels at velocity points  (=flow links), using min  network levels xk, yk, zk  bl = lowest connected link
+                                           # 5 : Bottom levels at velocity points  (=flow links), using max  network levels xk, yk, zk  bl = lowest connected link
+PartitionFile        =                     # *_part.pol, polyline(s) x,y
+AngLat               = 0.                  # Angle of latitude (deg), 0=no Coriolis
+Conveyance2D         = 3                   # -1:R=HU,0:R=H, 1:R=A/P, 2:K=analytic-1D conv, 3:K=analytic-2D conv
+Sillheightmin        = 0.5                 # Weir treatment only if both sills larger than this value (m)
+Makeorthocenters     = 0                   # 1=yes, 0=no switch from circumcentres to orthocentres in geominit
+Dcenterinside        = 1.                  # limit cell center; 1.0:in cell <-> 0.0:on c/g
+
+[numerics]
+CFLMax               = 0.7                 # Max. Courant nr.
+CFLWaveFrac          = 0.                  # Wave velocity fraction, total courant vel = u + cflw*wavevelocity
+AdvecType            = 3                   # Adv type, 0=no, 1= Wenneker, qu-udzt, 2=1, q(uio-u), 3=Perot q(uio-u), 4=Perot q(ui-u), 5=Perot q(ui-u) without itself
+Limtypmom            = 4                   # Limiter type for cell center advection velocity, 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Limtypsa             = 0                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Icgsolver            = 4                   # Solver type , 1 = sobekGS_OMP, 2 = sobekGS_OMPthreadsafe, 3 = sobekGS, 4 = sobekGS + Saadilud, 5 = parallel/global Saad, 6 = parallel/Petsc, 7 = parallel/GS
+Maxdegree            = 6                   # Maximum degree in Gauss elimination
+FixedWeirScheme      = 1                   # 0 = no, 1 = compact stencil, 2 = whole tile lifted, full subgrid weir + factor
+FixedWeirContraction = 1.                  # flow width = flow width*fixedweircontraction
+Slopedrop2D          = 0.3                 # Apply droplosses only if local bottom slope > Slopedrop2D
+
+[physics]
+UnifFrictCoef        = 0.2                 # Uniform friction coefficient, 0=no friction
+UnifFrictType        = 2                   # 0=Chezy, 1=Manning, 2=White Colebrook, 3=z0 etc
+Vicouv               = 1.                  # Uniform horizontal eddy viscosity (m2/s)
+Dicouv               = 0.                  # Uniform horizontal eddy diffusivity (m2/s)
+Smagorinsky          = 0.                  # Add Smagorinsky horizontal turbulence : vicu = vicu + ( (Smagorinsky*dx)**2)*S, e.g. 0.1
+Elder                = 0.                  # Add Elder contribution                : vicu = vicu + Elder*kappa*ustar*H/6),   e.g. 1.0
+irov                 = 0                   # 0=free slip, 1 = partial slip using wall_ks
+wall_ks              = 0.                  # Nikuradse roughness for side walls, wall_z0=wall_ks/30
+TidalForcing         = 0                   # Tidal forcing (0=no, 1=yes) (only for jsferic == 1)
+Salinity             = 0                   # Include salinity, (0=no, 1=yes)
+
+[wind]
+ICdtyp               = 2                   # ( ),1=const, 2=S&B 2 breakpoints, 3= S&B 3 breakpoints, 4=Charnock constant, e.g. 0.012
+Cdbreakpoints        = 6.3d-4 7.23d-3      # ( ),   e.g. 0.00063  0.00723
+Windspeedbreakpoints = 0. 100.             # (m/s), e.g. 0.0      100.0
+
+[time]
+RefDate              = 19950101            # Reference date (yyyymmdd)
+Tunit                = M                   # Time units in MDU (H, M or S)
+DtUser               = 60.                 # User timestep in seconds (interval for external forcing update & his/map output)
+DtMax                = 15.                 # Max timestep in seconds
+DtInit               = 15.                 # Initial timestep in seconds
+AutoTimestep         = 1                   # Use CFL timestep limit or not (1/0)
+TStart               = 0.                  # Start time w.r.t. RefDate (in TUnit)
+TStop                = 2880.               # Stop  time w.r.t. RefDate (in TUnit)
+
+[restart]
+RestartFile          =                     # Restart file, only map, hence: *_map.nc
+RestartDateTime      =                     # Restart time (YYYYMMDDHHMMSS)
+
+[external forcing]
+ExtForceFile         = wl_j95_5_hoog.ext   # *.ext
+
+[output]
+OutputDir            =                     # Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for no dir/current dir.
+ObsFile              = wl_j95_5_obs.xyn    # *.xyn Coords+name of observation stations.
+CrsFile              = sections_crs.pli    # *_crs.pli Polyline(s) definining cross section(s).
+HisInterval          = 900.                # History output, given as "interval" "start period" "end period" (s)
+XLSInterval          = 0.                  # Interval (s) between XLS history
+FlowGeomFile         =                     # *_flowgeom.nc Flow geometry file in NetCDF format.
+MapInterval          = 10800.              # Map file output, given as "interval" "start period" "end period" (s)
+MapFormat            = 1                   # Map file format, 1: netCDF, 2: Tecplot, 3: netCFD and Tecplot
+RstInterval          = 86400.              # Interval (s) between restart file outputs
+WaqInterval          = 0.                  # Interval (in s) between Delwaq file outputs
+StatsInterval        = 0.                  # Interval (in s) between simulation statistics output.
+SnapshotDir          = BMP                 # Directory where snapshots/screendumps are saved.
+TimingsInterval      = 0.                  # Timings output interval
+TimeSplitInterval    = 0X                  # Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s.
+MapOutputTimeVector  =                     # File (.mpt) containing fixed map output times (s) w.r.t. RefDate
+** INFO   : **
+** DEBUG  : Opened NetCDF file 'DFM_OUTPUT_wl_j95_5_t1/wl_j95_5_t1_his.nc' as #***.
+** DEBUG  : Opened NetCDF file 'DFM_OUTPUT_wl_j95_5_t1/wl_j95_5_t1_map.nc' as #***.
+** INFO   : Opened file : DFM_OUTPUT_wl_j95_5_t1/wl_j95_5_t1_19950101_000000.rst
+** INFO   : Closed file : DFM_OUTPUT_wl_j95_5_t1/wl_j95_5_t1_19950101_000000.rst
+** INFO   : Opened file : DFM_OUTPUT_wl_j95_5_t1/wl_j95_5_t1_19950102_000000.rst
+** INFO   : Closed file : DFM_OUTPUT_wl_j95_5_t1/wl_j95_5_t1_19950102_000000.rst
+** INFO   : Opened file : DFM_OUTPUT_wl_j95_5_t1/wl_j95_5_t1_19950103_000000.rst
+** INFO   : Closed file : DFM_OUTPUT_wl_j95_5_t1/wl_j95_5_t1_19950103_000000.rst
+** INFO   : simulation period     (s)  :   172800.0000000000
+** INFO   : nr of timesteps       ( )  :    34960.0000000000
+** INFO   : cputime in solve      (s)  :     5155.4130000000
+** INFO   : cputime steps         (s)  :    15059.6549999978
+** INFO   : cputime steps + plots (s)  :    15113.3680000000
+** INFO   : fraction solve/steps  ( )  :        0.3423327427
+** INFO   : total/(dnt*ndx)       (s)  :        0.0000030475
+** INFO   : av nr of cont. it s1it( )  :        0.0000000000
+** INFO   : cputime setumod       (s)  :     2341.9280000005
+** INFO   : Modelinit finished   at: 00:**:**, **-**-****
+** INFO   : Computation finished at: 45:**:**, 45-**-****
+** INFO   : Opened file : DFM_OUTPUT_wl_j95_5_t1/wl_j95_5_t1_19950103_000000.rst
+** INFO   : Closed file : DFM_OUTPUT_wl_j95_5_t1/wl_j95_5_t1_19950103_000000.rst
+** INFO   : Opened file : numlimdt.xyz
+** INFO   : Closed file : numlimdt.xyz

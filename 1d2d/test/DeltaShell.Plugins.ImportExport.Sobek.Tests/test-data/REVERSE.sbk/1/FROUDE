@@ -1,0 +1,357 @@
+ Froude numbers higher than 0.8. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Branch name
+  - Coordinate
+  - Froude number gridpoint ( *** = supercritical flow )
+  - Froude number next cel ( *** = supercritical flow )
+  
+ Time step =    21 Iter. step =   1
+    Branch001            X=  24500.00 Froude grdpnt=   0.81013    Froude next cel=   0.86262
+ Time step =    21 Iter. step =   2
+    Branch001            X=  24500.00 Froude grdpnt=   1.02623*** Froude next cel=   0.89822
+ Time step =    21 Iter. step =   5
+    Branch001            X=  24000.00 Froude grdpnt=   0.92189    Froude next cel=   0.84695
+ Time step =    21 Iter. step =   6
+    Branch001            X=  24000.00 Froude grdpnt=   0.89779    Froude next cel=   0.83087
+ Time step =    21 Iter. step =   7
+    Branch001            X=  24000.00 Froude grdpnt=   0.86984    Froude next cel=   0.81684
+ Time step =    21 Iter. step =   8
+    Branch001            X=  24000.00 Froude grdpnt=   0.86228    Froude next cel=   0.81236
+ Time step =    21 Iter. step =   9
+    Branch001            X=  24000.00 Froude grdpnt=   0.86177    Froude next cel=   0.81144
+ Time step =    21 Iter. step =  10
+    Branch001            X=  24000.00 Froude grdpnt=   0.86198    Froude next cel=   0.81117
+ Time step =    21 Iter. step =  11
+    Branch001            X=  24000.00 Froude grdpnt=   0.86212    Froude next cel=   0.81106
+ Time step =    21 Iter. step =  12
+    Branch001            X=  24000.00 Froude grdpnt=   0.86221    Froude next cel=   0.81101
+ Time step =    21 Iter. step =  13
+    Branch001            X=  24000.00 Froude grdpnt=   0.86226    Froude next cel=   0.81099
+ Time step =    21 Iter. step =  14
+    Branch001            X=  24000.00 Froude grdpnt=   0.86229    Froude next cel=   0.81098
+ Time step =    21 Iter. step =  15
+    Branch001            X=  24000.00 Froude grdpnt=   0.86230    Froude next cel=   0.81098
+ Time step =    21 Iter. step =  16
+    Branch001            X=  24000.00 Froude grdpnt=   0.86231    Froude next cel=   0.81098
+  
+ Time step =    22 Iter. step =   2
+    Branch001            X=  24000.00 Froude grdpnt=   0.81508    Froude next cel=   0.81222
+ Time step =    22 Iter. step =   3
+    Branch001            X=  23500.00 Froude grdpnt=   0.87786    Froude next cel=   0.85156
+ Time step =    22 Iter. step =   4
+    Branch001            X=  23500.00 Froude grdpnt=   0.83004    Froude next cel=   0.81844
+  
+ Time step =    23 Iter. step =   1
+    Branch001            X=  23500.00 Froude grdpnt=   0.82769    Froude next cel=   0.81681
+  
+ Time step =    25 Iter. step =   1
+    Branch001            X=  24500.00 Froude grdpnt=   0.64328    Froude next cel=   0.83124
+    Branch001            X=  25000.00 Froude grdpnt=   1.03886*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =   2
+    Branch001            X=  24500.00 Froude grdpnt=   0.62667    Froude next cel=   0.86074
+    Branch001            X=  25000.00 Froude grdpnt=   1.11985*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =   3
+    Branch001            X=  24500.00 Froude grdpnt=   0.59122    Froude next cel=   0.84308
+    Branch001            X=  25000.00 Froude grdpnt=   1.12220*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =   4
+    Branch001            X=  24500.00 Froude grdpnt=   0.58029    Froude next cel=   0.83712
+    Branch001            X=  25000.00 Froude grdpnt=   1.12159*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =   5
+    Branch001            X=  24500.00 Froude grdpnt=   0.57759    Froude next cel=   0.83636
+    Branch001            X=  25000.00 Froude grdpnt=   1.12284*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =   6
+    Branch001            X=  24500.00 Froude grdpnt=   0.57609    Froude next cel=   0.83665
+    Branch001            X=  25000.00 Froude grdpnt=   1.12511*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =   7
+    Branch001            X=  24500.00 Froude grdpnt=   0.57515    Froude next cel=   0.83695
+    Branch001            X=  25000.00 Froude grdpnt=   1.12678*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =   8
+    Branch001            X=  24500.00 Froude grdpnt=   0.57463    Froude next cel=   0.83711
+    Branch001            X=  25000.00 Froude grdpnt=   1.12771*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =   9
+    Branch001            X=  24500.00 Froude grdpnt=   0.57435    Froude next cel=   0.83719
+    Branch001            X=  25000.00 Froude grdpnt=   1.12818*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =  10
+    Branch001            X=  24500.00 Froude grdpnt=   0.57420    Froude next cel=   0.83722
+    Branch001            X=  25000.00 Froude grdpnt=   1.12841*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =  11
+    Branch001            X=  24500.00 Froude grdpnt=   0.57412    Froude next cel=   0.83723
+    Branch001            X=  25000.00 Froude grdpnt=   1.12853*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =  12
+    Branch001            X=  24500.00 Froude grdpnt=   0.57408    Froude next cel=   0.83723
+    Branch001            X=  25000.00 Froude grdpnt=   1.12859*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =  13
+    Branch001            X=  24500.00 Froude grdpnt=   0.57406    Froude next cel=   0.83723
+    Branch001            X=  25000.00 Froude grdpnt=   1.12861*** Froude next cel=   0.00000
+ Time step =    25 Iter. step =  14
+    Branch001            X=  24500.00 Froude grdpnt=   0.57405    Froude next cel=   0.83723
+    Branch001            X=  25000.00 Froude grdpnt=   1.12863*** Froude next cel=   0.00000
+  
+ Time step =    26 Iter. step =   1
+    Branch001            X=  24500.00 Froude grdpnt=   0.51732    Froude next cel=   0.87406
+    Branch001            X=  25000.00 Froude grdpnt=   1.29756*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =   2
+    Branch001            X=  24500.00 Froude grdpnt=   0.52128    Froude next cel=   0.92692
+    Branch001            X=  25000.00 Froude grdpnt=   1.40916*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =   3
+    Branch001            X=  24500.00 Froude grdpnt=   0.51616    Froude next cel=   0.94553
+    Branch001            X=  25000.00 Froude grdpnt=   1.45681*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =   4
+    Branch001            X=  24500.00 Froude grdpnt=   0.50620    Froude next cel=   0.94906
+    Branch001            X=  25000.00 Froude grdpnt=   1.47658*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =   5
+    Branch001            X=  24500.00 Froude grdpnt=   0.50217    Froude next cel=   0.95064
+    Branch001            X=  25000.00 Froude grdpnt=   1.48479*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =   6
+    Branch001            X=  24500.00 Froude grdpnt=   0.50009    Froude next cel=   0.95183
+    Branch001            X=  25000.00 Froude grdpnt=   1.48987*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =   7
+    Branch001            X=  24500.00 Froude grdpnt=   0.49894    Froude next cel=   0.95251
+    Branch001            X=  25000.00 Froude grdpnt=   1.49276*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =   8
+    Branch001            X=  24500.00 Froude grdpnt=   0.49832    Froude next cel=   0.95283
+    Branch001            X=  25000.00 Froude grdpnt=   1.49422*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =   9
+    Branch001            X=  24500.00 Froude grdpnt=   0.49799    Froude next cel=   0.95297
+    Branch001            X=  25000.00 Froude grdpnt=   1.49494*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =  10
+    Branch001            X=  24500.00 Froude grdpnt=   0.49781    Froude next cel=   0.95304
+    Branch001            X=  25000.00 Froude grdpnt=   1.49530*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =  11
+    Branch001            X=  24500.00 Froude grdpnt=   0.49772    Froude next cel=   0.95307
+    Branch001            X=  25000.00 Froude grdpnt=   1.49547*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =  12
+    Branch001            X=  24500.00 Froude grdpnt=   0.49767    Froude next cel=   0.95308
+    Branch001            X=  25000.00 Froude grdpnt=   1.49556*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =  13
+    Branch001            X=  24500.00 Froude grdpnt=   0.49765    Froude next cel=   0.95308
+    Branch001            X=  25000.00 Froude grdpnt=   1.49560*** Froude next cel=   0.00000
+ Time step =    26 Iter. step =  14
+    Branch001            X=  24500.00 Froude grdpnt=   0.49764    Froude next cel=   0.95309
+    Branch001            X=  25000.00 Froude grdpnt=   1.49562*** Froude next cel=   0.00000
+  
+ Time step =    27 Iter. step =   1
+    Branch001            X=  24500.00 Froude grdpnt=   0.47780    Froude next cel=   1.06845***
+    Branch001            X=  25000.00 Froude grdpnt=   1.83957*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =   2
+    Branch001            X=  24500.00 Froude grdpnt=   0.46045    Froude next cel=   1.12392***
+    Branch001            X=  25000.00 Froude grdpnt=   1.99124*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =   3
+    Branch001            X=  24500.00 Froude grdpnt=   0.42467    Froude next cel=   1.11922***
+    Branch001            X=  25000.00 Froude grdpnt=   2.02773*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =   4
+    Branch001            X=  24500.00 Froude grdpnt=   0.41235    Froude next cel=   1.12283***
+    Branch001            X=  25000.00 Froude grdpnt=   2.05172*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =   5
+    Branch001            X=  24500.00 Froude grdpnt=   0.40818    Froude next cel=   1.12667***
+    Branch001            X=  25000.00 Froude grdpnt=   2.06574*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =   6
+    Branch001            X=  24500.00 Froude grdpnt=   0.40599    Froude next cel=   1.12901***
+    Branch001            X=  25000.00 Froude grdpnt=   2.07387*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =   7
+    Branch001            X=  24500.00 Froude grdpnt=   0.40482    Froude next cel=   1.13017***
+    Branch001            X=  25000.00 Froude grdpnt=   2.07805*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =   8
+    Branch001            X=  24500.00 Froude grdpnt=   0.40419    Froude next cel=   1.13070***
+    Branch001            X=  25000.00 Froude grdpnt=   2.08008*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =   9
+    Branch001            X=  24500.00 Froude grdpnt=   0.40386    Froude next cel=   1.13094***
+    Branch001            X=  25000.00 Froude grdpnt=   2.08106*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =  10
+    Branch001            X=  24500.00 Froude grdpnt=   0.40368    Froude next cel=   1.13105***
+    Branch001            X=  25000.00 Froude grdpnt=   2.08153*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =  11
+    Branch001            X=  24500.00 Froude grdpnt=   0.40359    Froude next cel=   1.13110***
+    Branch001            X=  25000.00 Froude grdpnt=   2.08176*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =  12
+    Branch001            X=  24500.00 Froude grdpnt=   0.40354    Froude next cel=   1.13112***
+    Branch001            X=  25000.00 Froude grdpnt=   2.08187*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =  13
+    Branch001            X=  24500.00 Froude grdpnt=   0.40352    Froude next cel=   1.13113***
+    Branch001            X=  25000.00 Froude grdpnt=   2.08193*** Froude next cel=   0.00000
+ Time step =    27 Iter. step =  14
+    Branch001            X=  24500.00 Froude grdpnt=   0.40350    Froude next cel=   1.13113***
+    Branch001            X=  25000.00 Froude grdpnt=   2.08195*** Froude next cel=   0.00000
+  
+ Time step =    28 Iter. step =   1
+    Branch001            X=  24500.00 Froude grdpnt=   0.34254    Froude next cel=   1.24584***
+    Branch001            X=  25000.00 Froude grdpnt=   2.56894*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =   2
+    Branch001            X=  24500.00 Froude grdpnt=   0.33860    Froude next cel=   1.35226***
+    Branch001            X=  25000.00 Froude grdpnt=   2.83382*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =   3
+    Branch001            X=  24500.00 Froude grdpnt=   0.32590    Froude next cel=   1.38158***
+    Branch001            X=  25000.00 Froude grdpnt=   2.92137*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =   4
+    Branch001            X=  24500.00 Froude grdpnt=   0.31665    Froude next cel=   1.39944***
+    Branch001            X=  25000.00 Froude grdpnt=   2.97627*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =   5
+    Branch001            X=  24500.00 Froude grdpnt=   0.31259    Froude next cel=   1.40790***
+    Branch001            X=  25000.00 Froude grdpnt=   3.00128*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =   6
+    Branch001            X=  24500.00 Froude grdpnt=   0.31054    Froude next cel=   1.41198***
+    Branch001            X=  25000.00 Froude grdpnt=   3.01337*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =   7
+    Branch001            X=  24500.00 Froude grdpnt=   0.30945    Froude next cel=   1.41387***
+    Branch001            X=  25000.00 Froude grdpnt=   3.01913*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =   8
+    Branch001            X=  24500.00 Froude grdpnt=   0.30887    Froude next cel=   1.41471***
+    Branch001            X=  25000.00 Froude grdpnt=   3.02181*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =   9
+    Branch001            X=  24500.00 Froude grdpnt=   0.30857    Froude next cel=   1.41509***
+    Branch001            X=  25000.00 Froude grdpnt=   3.02306*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =  10
+    Branch001            X=  24500.00 Froude grdpnt=   0.30840    Froude next cel=   1.41525***
+    Branch001            X=  25000.00 Froude grdpnt=   3.02364*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =  11
+    Branch001            X=  24500.00 Froude grdpnt=   0.30832    Froude next cel=   1.41532***
+    Branch001            X=  25000.00 Froude grdpnt=   3.02391*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =  12
+    Branch001            X=  24500.00 Froude grdpnt=   0.30827    Froude next cel=   1.41534***
+    Branch001            X=  25000.00 Froude grdpnt=   3.02403*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =  13
+    Branch001            X=  24500.00 Froude grdpnt=   0.30825    Froude next cel=   1.41536***
+    Branch001            X=  25000.00 Froude grdpnt=   3.02408*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =  14
+    Branch001            X=  24500.00 Froude grdpnt=   0.30824    Froude next cel=   1.41536***
+    Branch001            X=  25000.00 Froude grdpnt=   3.02411*** Froude next cel=   0.00000
+ Time step =    28 Iter. step =  15
+    Branch001            X=  24500.00 Froude grdpnt=   0.30823    Froude next cel=   1.41536***
+    Branch001            X=  25000.00 Froude grdpnt=   3.02412*** Froude next cel=   0.00000
+  
+ Time step =    29 Iter. step =   1
+    Branch001            X=  24500.00 Froude grdpnt=   0.27786    Froude next cel=   1.67260***
+    Branch001            X=  25000.00 Froude grdpnt=   3.99423*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =   2
+    Branch001            X=  24500.00 Froude grdpnt=   0.26438    Froude next cel=   1.83374***
+    Branch001            X=  25000.00 Froude grdpnt=   4.42152*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =   3
+    Branch001            X=  24500.00 Froude grdpnt=   0.23953    Froude next cel=   1.86775***
+    Branch001            X=  25000.00 Froude grdpnt=   4.52961*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =   4
+    Branch001            X=  24500.00 Froude grdpnt=   0.23060    Froude next cel=   1.89421***
+    Branch001            X=  25000.00 Froude grdpnt=   4.59760*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =   5
+    Branch001            X=  24500.00 Froude grdpnt=   0.22708    Froude next cel=   1.90715***
+    Branch001            X=  25000.00 Froude grdpnt=   4.62775*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =   6
+    Branch001            X=  24500.00 Froude grdpnt=   0.22528    Froude next cel=   1.91323***
+    Branch001            X=  25000.00 Froude grdpnt=   4.64152*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =   7
+    Branch001            X=  24500.00 Froude grdpnt=   0.22433    Froude next cel=   1.91592***
+    Branch001            X=  25000.00 Froude grdpnt=   4.64749*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =   8
+    Branch001            X=  24500.00 Froude grdpnt=   0.22382    Froude next cel=   1.91706***
+    Branch001            X=  25000.00 Froude grdpnt=   4.64997*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =   9
+    Branch001            X=  24500.00 Froude grdpnt=   0.22355    Froude next cel=   1.91753***
+    Branch001            X=  25000.00 Froude grdpnt=   4.65096*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =  10
+    Branch001            X=  24500.00 Froude grdpnt=   0.22341    Froude next cel=   1.91771***
+    Branch001            X=  25000.00 Froude grdpnt=   4.65133*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =  11
+    Branch001            X=  24500.00 Froude grdpnt=   0.22334    Froude next cel=   1.91778***
+    Branch001            X=  25000.00 Froude grdpnt=   4.65146*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =  12
+    Branch001            X=  24500.00 Froude grdpnt=   0.22330    Froude next cel=   1.91780***
+    Branch001            X=  25000.00 Froude grdpnt=   4.65150*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =  13
+    Branch001            X=  24500.00 Froude grdpnt=   0.22328    Froude next cel=   1.91781***
+    Branch001            X=  25000.00 Froude grdpnt=   4.65151*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =  14
+    Branch001            X=  24500.00 Froude grdpnt=   0.22327    Froude next cel=   1.91781***
+    Branch001            X=  25000.00 Froude grdpnt=   4.65150*** Froude next cel=   0.00000
+ Time step =    29 Iter. step =  15
+    Branch001            X=  24500.00 Froude grdpnt=   0.22326    Froude next cel=   1.91780***
+    Branch001            X=  25000.00 Froude grdpnt=   4.65150*** Froude next cel=   0.00000
+  
+ Time step =    30 Iter. step =   1
+    Branch001            X=  24500.00 Froude grdpnt=   0.17928    Froude next cel=   2.31084***
+    Branch001            X=  25000.00 Froude grdpnt=   6.38516*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =   2
+    Branch001            X=  24500.00 Froude grdpnt=   0.17286    Froude next cel=   2.62641***
+    Branch001            X=  25000.00 Froude grdpnt=   7.13728*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =   3
+    Branch001            X=  24500.00 Froude grdpnt=   0.16263    Froude next cel=   2.68338***
+    Branch001            X=  25000.00 Froude grdpnt=   7.16200*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =   4
+    Branch001            X=  24500.00 Froude grdpnt=   0.15682    Froude next cel=   2.72191***
+    Branch001            X=  25000.00 Froude grdpnt=   7.17603*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =   5
+    Branch001            X=  24500.00 Froude grdpnt=   0.15417    Froude next cel=   2.73844***
+    Branch001            X=  25000.00 Froude grdpnt=   7.16644*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =   6
+    Branch001            X=  24500.00 Froude grdpnt=   0.15287    Froude next cel=   2.74572***
+    Branch001            X=  25000.00 Froude grdpnt=   7.15668*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =   7
+    Branch001            X=  24500.00 Froude grdpnt=   0.15220    Froude next cel=   2.74889***
+    Branch001            X=  25000.00 Froude grdpnt=   7.14997*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =   8
+    Branch001            X=  24500.00 Froude grdpnt=   0.15185    Froude next cel=   2.75024***
+    Branch001            X=  25000.00 Froude grdpnt=   7.14586*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =   9
+    Branch001            X=  24500.00 Froude grdpnt=   0.15167    Froude next cel=   2.75082***
+    Branch001            X=  25000.00 Froude grdpnt=   7.14350*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =  10
+    Branch001            X=  24500.00 Froude grdpnt=   0.15158    Froude next cel=   2.75106***
+    Branch001            X=  25000.00 Froude grdpnt=   7.14220*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =  11
+    Branch001            X=  24500.00 Froude grdpnt=   0.15153    Froude next cel=   2.75115***
+    Branch001            X=  25000.00 Froude grdpnt=   7.14148*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =  12
+    Branch001            X=  24500.00 Froude grdpnt=   0.15151    Froude next cel=   2.75119***
+    Branch001            X=  25000.00 Froude grdpnt=   7.14110*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =  13
+    Branch001            X=  24500.00 Froude grdpnt=   0.15150    Froude next cel=   2.75121***
+    Branch001            X=  25000.00 Froude grdpnt=   7.14089*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =  14
+    Branch001            X=  24500.00 Froude grdpnt=   0.15149    Froude next cel=   2.75121***
+    Branch001            X=  25000.00 Froude grdpnt=   7.14078*** Froude next cel=   0.00000
+ Time step =    30 Iter. step =  15
+    Branch001            X=  24500.00 Froude grdpnt=   0.15149    Froude next cel=   2.75121***
+    Branch001            X=  25000.00 Froude grdpnt=   7.14072*** Froude next cel=   0.00000
+  
+ Time step =    31 Iter. step =   1
+    Branch001            X=  24500.00 Froude grdpnt=   0.12854    Froude next cel=   3.46693***
+    Branch001            X=  25000.00 Froude grdpnt=  10.24259*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =   2
+    Branch001            X=  24500.00 Froude grdpnt=   0.12704    Froude next cel=   3.69838***
+    Branch001            X=  25000.00 Froude grdpnt=  10.97018*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =   3
+    Branch001            X=  24500.00 Froude grdpnt=   0.12086    Froude next cel=   3.74930***
+    Branch001            X=  25000.00 Froude grdpnt=  11.14707*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =   4
+    Branch001            X=  24500.00 Froude grdpnt=   0.11914    Froude next cel=   3.76405***
+    Branch001            X=  25000.00 Froude grdpnt=  11.19856*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =   5
+    Branch001            X=  24500.00 Froude grdpnt=   0.11839    Froude next cel=   3.77354***
+    Branch001            X=  25000.00 Froude grdpnt=  11.23078*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =   6
+    Branch001            X=  24500.00 Froude grdpnt=   0.11795    Froude next cel=   3.77765***
+    Branch001            X=  25000.00 Froude grdpnt=  11.24515*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =   7
+    Branch001            X=  24500.00 Froude grdpnt=   0.11770    Froude next cel=   3.77908***
+    Branch001            X=  25000.00 Froude grdpnt=  11.25049*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =   8
+    Branch001            X=  24500.00 Froude grdpnt=   0.11756    Froude next cel=   3.77948***
+    Branch001            X=  25000.00 Froude grdpnt=  11.25219*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =   9
+    Branch001            X=  24500.00 Froude grdpnt=   0.11749    Froude next cel=   3.77951***
+    Branch001            X=  25000.00 Froude grdpnt=  11.25257*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =  10
+    Branch001            X=  24500.00 Froude grdpnt=   0.11745    Froude next cel=   3.77945***
+    Branch001            X=  25000.00 Froude grdpnt=  11.25252*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =  11
+    Branch001            X=  24500.00 Froude grdpnt=   0.11743    Froude next cel=   3.77938***
+    Branch001            X=  25000.00 Froude grdpnt=  11.25238*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =  12
+    Branch001            X=  24500.00 Froude grdpnt=   0.11742    Froude next cel=   3.77932***
+    Branch001            X=  25000.00 Froude grdpnt=  11.25224*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =  13
+    Branch001            X=  24500.00 Froude grdpnt=   0.11741    Froude next cel=   3.77929***
+    Branch001            X=  25000.00 Froude grdpnt=  11.25216*** Froude next cel=   0.00000
+ Time step =    31 Iter. step =  14
+    Branch001            X=  24500.00 Froude grdpnt=   0.11741    Froude next cel=   3.77926***
+    Branch001            X=  25000.00 Froude grdpnt=  11.25209*** Froude next cel=   0.00000
+  

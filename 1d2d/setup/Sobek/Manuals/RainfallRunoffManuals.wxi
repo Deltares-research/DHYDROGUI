@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <File Id="DRainfallRunoffUserManual" Source="$(var.ProjectDir)..\Sobek\Manuals\D-Rainfall_Runoff_User_Manual.pdf"/>
+  <File Id="DRainfallRunoffTechnicalReferenceManual" Source="$(var.ProjectDir)..\Sobek\Manuals\D-Rainfall_Runoff_Technical_Reference_Manual.pdf"/>
+</Include>

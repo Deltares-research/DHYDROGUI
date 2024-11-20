@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"  namespace="SharpMap" assembly="SharpMap" auto-import="false" >
+
+  <subclass name="DeltaShell.Plugins.NetworkEditor.MapLayers.Providers.HydroNetworkFeatureCollection, DeltaShell.Plugins.NetworkEditor" 
+            extends="SharpMap.Api.IFeatureProvider, SharpMap.Api"
+            discriminator-value="hydro_network_feature_collection" >
+    <property name="FeatureType" column="feature_type" type="Type"/>
+    <many-to-one name="Network" class="GeoAPI.Extensions.Networks.INetwork, GeoAPI.Extensions" column="network_id"/>
+  </subclass>
+</hibernate-mapping>

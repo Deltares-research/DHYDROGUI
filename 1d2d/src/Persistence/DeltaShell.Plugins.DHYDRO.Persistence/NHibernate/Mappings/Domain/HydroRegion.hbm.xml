@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <subclass name="DelftTools.Hydro.HydroRegion, DelftTools.Hydro" discriminator-value="hydro_region" extends="DelftTools.Hydro.IHydroRegion, DelftTools.Hydro">
+  </subclass>
+</hibernate-mapping>

@@ -1,0 +1,8 @@
+TP_1.0
+NODE id 'N1' nm 'Node1' px 254902.698666233 py 471482.595349359 node
+NODE id 'N3' nm 'Node3' px 255445.558183461 py 471859.446068411 node
+NODE id 'N2a' nm 'Node2a' px 255551.114200699 py 472424.72214699 node
+NODE id 'N2' nm 'Node2' px 256011.036847239 py 472221.222758701 node
+BRCH id '1' nm '' bn 'N1' en 'N3' al 660.84258329427 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '2' nm '' bn 'N3' en 'N2' al 671.303577247563 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '3' nm '' bn 'N3' en 'N2a' al 575.047057021267 vc_opt 0 vc_equi -1 vc_len 100 brch

@@ -1,0 +1,19 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=01.06.17
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=15
+NumberOfLocations=410
+T0=2007. 1. 1  7: 0: 0
+TimeStepUnit=Second
+TimeStepMultiplyer=900
+ 
+[Long Parameters]
+10=FreeWaterContent [mm]
+12=UpperZoneContent [mm]
+13=LowerZoneContent [mm]
+ 
+[Long Locations]
+ 

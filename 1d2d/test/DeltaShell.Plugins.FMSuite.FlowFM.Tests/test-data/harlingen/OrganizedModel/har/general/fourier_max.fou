@@ -1,0 +1,16 @@
+*var      tsrts     sstop     numcyc    knfac     v0plu     layno     elp       
+wl        0         86400     0         1         0                   
+wl        0         86400     0         1         0                   max
+wl        0         86400     0         1         0                   min
+uc        0         86400     0         1         0         1         
+uc        0         86400     0         1         0         1         max
+uc        0         86400     0         1         0         1         min
+fb        0         86400     0         1         0                   
+fb        0         86400     0         1         0                   max
+fb        0         86400     0         1         0                   min
+wdog      0         86400     0         1         0                   
+wdog      0         86400     0         1         0                   max
+wdog      0         86400     0         1         0                   min
+vog       0         86400     0         1         0                   
+vog       0         86400     0         1         0                   max
+vog       0         86400     0         1         0                   min

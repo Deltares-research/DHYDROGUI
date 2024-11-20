@@ -1,0 +1,35 @@
+Warning: Initialisation option Unsaturated Zone not specified in Settings
+  Following dimensions have been set:
+  Number of nodes       =           2
+  Boundary nodes        =           1
+  Number of 3B-branches =           1
+  Meteostations         =           1
+  I,ext.knoopnr, type, upstream/downstream nodes, SimSeq
+       1       1       2       0       2       1 2                    2                   
+       2       2       6       0       0       2 1                    1                   
+  Unpaved areas         =           1
+  Crops                 =          16
+  KvdL history          =        1200
+  Read Unpaved.3b file
+  Read Unpaved.Sto file
+  Read Unpaved.Alf file
+  Read Unpaved.Alf file; ERNS records
+  Read Unpaved.Inf file
+  Read Unpaved.Sep file
+  Read Bound3B.3b file
+  RRConnection nodes    =           1
+  RRBifurcation nodes    =           1
+Warning: Only one weatherstation in rainfall/runoff/temperature file. No check of meteostation names performed; all nodes use this one and only meteostation.
+Warning: Only one weatherstation in rainfall/runoff/temperature file. No check of meteostation names performed; all nodes use this one and only meteostation.
+Warning: Crop factor <=0.0 or >=2.0 for crop greenhouse area
+Warning: Crop factor <=0.0 or >=2.0 for crop flowers
+Warning: Crop factor <=0.0 or >=2.0 for crop greenhouse area
+Warning: Crop factor <=0.0 or >=2.0 for crop flowers
+Warning: Crop factor <=0.0 or >=2.0 for crop greenhouse area
+Warning: Crop factor <=0.0 or >=2.0 for crop flowers
+Warning: Crop factor <=0.0 or >=2.0 for crop greenhouse area
+Warning: Crop factor <=0.0 or >=2.0 for crop flowers
+Warning: Crop factor <=0.0 or >=2.0 for crop greenhouse area
+Warning: Crop factor <=0.0 or >=2.0 for crop flowers
+Warning: Crop factor <=0.0 or >=2.0 also for more crops/timesteps
+  Start event            1

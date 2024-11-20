@@ -1,0 +1,47 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=-1
+ImportFrom=FromScratch
+ImportDate=6-12-2012 14:08:11
+SuftableHasRun=-1
+Case Name=AP JH (Deltares edit) - week - sequentieel - flow - WAQ
+QuantityResultsPresent=-1
+UserId=runasspc
+UserName=
+ComputerName=L00976
+[Previous OutputFiles]
+..\work\calcpnt.his=-1
+..\work\reachseg.his=-1
+..\work\qlat.his=-1
+..\work\struc.his=-1
+..\work\flowanal.his=-1
+..\work\calcdim.his=-1
+..\work\reachdim.his=-1
+..\work\strucdim.his=-1
+..\work\qwb.his=-1
+..\work\simulate.rep=-1
+..\work\sobek.log=-1
+..\work\indicat.flw=-1
+..\work\pvstordt.his=0
+..\work\upflowdt.his=0
+..\work\3bareas.his=0
+..\work\rrbalans.his=0
+..\work\sobek_3b.log=0
+..\work\3B_GENER.OUT=0
+..\work\PAVED.OUT=0
+..\work\UNPAVED.OUT=0
+..\work\balansdt.his=0
+..\work\controll.his=-1
+..\work\reachvol.his=-1
+..\work\reachflw.his=-1
+..\work\measstat.his=-1
+..\work\delwaq.map=-1
+..\work\delwaq.his=-1
+..\work\wqbou20.his=-1
+..\work\parsen.msg=-1
+..\work\wqint.lst=-1
+..\work\delwaq.lst=-1
+..\work\delwaq.lsp=-1
+..\work\delwaq.mon=-1
+..\work\waterbal.prn=-1

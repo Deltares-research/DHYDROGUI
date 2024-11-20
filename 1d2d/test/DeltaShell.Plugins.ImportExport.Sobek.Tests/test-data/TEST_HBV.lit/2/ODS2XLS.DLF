@@ -1,0 +1,6 @@
+DLF1.0
+[Rainfall Runoff Module: Simulation Results]
+FILE "@3blinks.his"      LAYER " " TYPE branch VAR 1 HISLOC 2 LINKSEP ""    = Flows on Links
+FILE "@rrbalans.his"    LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = System Balance per Timestep
+[Rainfall Runoff Module: Dimensions]
+FILE "@3bareas.his"      LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Node Areas

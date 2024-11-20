@@ -1,0 +1,6 @@
+
+[boundary]
+quantity=1d2dbnd
+locationfile=Bank01_bnk.pliz
+OpenBoundaryTolerance=5.0000000e-001
+forcingfile=REALTIME

@@ -1,0 +1,8 @@
+ITEM
+USEFOR 'MyOwnLittleFraction' 'MyOwnLittleFraction'
+CONCENTRATION
+USEFOR 'COBD5' 'COBD5'
+USEFOR 'COBD5_2' 'COBD5_2'
+DATA           'COBD5_2'
+               222           -999
+

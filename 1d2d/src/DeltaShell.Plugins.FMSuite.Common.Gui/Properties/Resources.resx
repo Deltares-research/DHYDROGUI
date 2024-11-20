@@ -1,0 +1,388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\arrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrow_down_large" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\arrow_down_large.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="polygon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\polygon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gradient" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gradient.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="linetool" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\linetool.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="up" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\up.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Chart" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\chart_curve.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Plus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\112_Plus_Blue_16x16_72.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="contour" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\contour.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="interpolate_fill" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\interpolate_fill.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="merge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\merge.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="blur" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\blur.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boundary_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boundary_folder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="waterLayers" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\waterLayers.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="diffusion" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\diffusion.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="timers" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\timers.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="validation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\validation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="area2d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\area2d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="folder_wrench" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder_wrench.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="processes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\processes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="folder_output" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder_output.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="output_param" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\output_param.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bathymetry" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bathymetry.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="set_coordinate_system" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\set_coordinate_system.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteHS.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="import" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\import.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="properties" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\properties.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="document_tree" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\document-tree.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hurricane2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hurricane2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hurricane_del" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hurricane_del.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Observation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\observation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="settings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\settings.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dry_area" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dry_area.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dry_point" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dry_point.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fixedweir" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fixedweir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Gate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="landboundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\landboundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ObservationCS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\observationcs.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pump" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pump.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="thindam" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\thindam.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Weir" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\weir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FMSuiteNodePresenterBase_GetContextMenu_Open__With___" xml:space="preserve">
+    <value>Open &amp;With...</value>
+  </data>
+  <data name="FMSuiteNodePresenterBase_GetContextMenu__Import___" xml:space="preserve">
+    <value>&amp;Import...</value>
+  </data>
+  <data name="FMSuiteNodePresenterBase_GetContextMenu__Export___" xml:space="preserve">
+    <value>&amp;Export...</value>
+  </data>
+  <data name="FMSuiteNodePresenterBase_GetContextMenu__Properties" xml:space="preserve">
+    <value>&amp;Properties</value>
+  </data>
+  <data name="FMMenuItemHelper_CreateCoordinateTransformItem_Convert_All_Model_Coordinates___" xml:space="preserve">
+    <value>Convert All Model Coordinates...</value>
+  </data>
+  <data name="FMMenuItemHelper_CreateResetCoordinateSystemItem_Reset_Coordinate_System___" xml:space="preserve">
+    <value>Reset Coordinate System...</value>
+  </data>
+  <data name="HBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HConst" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HConst.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="linkOverlay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\linkOverlay.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="none" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\none.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="QBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="QConst" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QConst.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="QHBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QHBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_DisplayName" xml:space="preserve">
+    <value>Boundary node data</value>
+  </data>
+  <data name="Categories_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Common_Name_DisplayName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_Name_Description" xml:space="preserve">
+    <value>Name of the boundary node data shown to the user.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_Type_DisplayName" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_Type_Description" xml:space="preserve">
+    <value>Data type of the boundary node data.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_InterpolationTypeT_DisplayName" xml:space="preserve">
+    <value>Interpolation scheme for Q(t) or H(t)</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_InterpolationTypeT_Description" xml:space="preserve">
+    <value>Interpolation scheme used along the time axis for the time-dependent water flow and water level time-series.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName" xml:space="preserve">
+    <value>Interpolation scheme for Q(h)</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_InterpolationTypeQh_Description" xml:space="preserve">
+    <value>Interpolation scheme used along the water level axis for the water level dependent water flow data series.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_ExtrapolationTypeT_DisplayName" xml:space="preserve">
+    <value>Extrapolation scheme for Q(t) or H(t)</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_ExtrapolationTypeT_Description" xml:space="preserve">
+    <value>Extrapolation scheme used along the time axis for the time-dependent water flow and water level time-series.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName" xml:space="preserve">
+    <value>Extrapolation scheme for Q(h)</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description" xml:space="preserve">
+    <value>Extrapolation scheme used along the water level axis for the water level dependent water flow data series.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_NodeName_DisplayName" xml:space="preserve">
+    <value>Boundary node name</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_NodeName_Description" xml:space="preserve">
+    <value>Name of the node associated with this boundary data.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_OutletCompartment_DisplayName" xml:space="preserve">
+    <value>Boundary outlet compartment name</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_OutletCompartment_Description" xml:space="preserve">
+    <value>Name of the outlet compartment associated with this boundary data.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_DisplayName" xml:space="preserve">
+    <value>Lateral source boundary data</value>
+  </data>
+  <data name="Model1DLateralDataProperties_Name_Description" xml:space="preserve">
+    <value>Name of the lateral sources boundary data shown to the user.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_Type_DisplayName" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Model1DLateralDataProperties_Type_Description" xml:space="preserve">
+    <value>Data type of the lateral source boundary data.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_InterpolationTypeQt_DisplayName" xml:space="preserve">
+    <value>Interpolation scheme for Q(t)</value>
+  </data>
+  <data name="Model1DLateralDataProperties_InterpolationTypeQt_Description" xml:space="preserve">
+    <value>Interpolation scheme used along the time axis for the time-dependent water flow time-series.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_ExtrapolationTypeQt_Description" xml:space="preserve">
+    <value>Extrapolation scheme used along the time axis for the time-dependent water flow time-series.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_ExtrapolationTypeQt_DisplayName" xml:space="preserve">
+    <value>Extrapolation scheme for Q(t)</value>
+  </data>
+  <data name="Model1DLateralDataProperties_Compartment_DisplayName" xml:space="preserve">
+    <value>Lateral source data compartment.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_Compartment_Description" xml:space="preserve">
+    <value>The compartment on which this lateral source data is connected to</value>
+  </data>
+  <data name="Boundary_1d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Boundary_1d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="realtime" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\realtime.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+</root>

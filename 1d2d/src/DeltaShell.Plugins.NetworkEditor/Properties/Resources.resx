@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="catchment" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\catchment.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CrossSectionSmallWithExclamation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CrossSectionSmallWithExclamation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DrainageBasin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\basin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HydroRegion" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\region.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Network" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\network_crs.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="runoff" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\runoff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wwtp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\wwtp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BridgeSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BridgeSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CulvertSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CulvertSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LateralSourceMap" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LateralSourceMap.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NodeOnMultipleBranches" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NodeOnMultipleBranches.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NodeOnSingleBranch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NodeOnSingleBranch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Observation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Observation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PumpSmallNegative" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PumpSmallNegative.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PumpSmallPositive" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PumpSmallPositive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RoughnessSection" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RoughnessSection.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ReverseRoughnessSection" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ReverseRoughnessSection.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Retention" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Retention.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WeirSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WeirSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dry_point" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\dry_point.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="guide" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\guide.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NetworkEditorApplicationPlugin_Description" xml:space="preserve">
+    <value>Provides editing functionality for geometrical information in the hydro region.</value>
+  </data>
+  <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Region" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro" xml:space="preserve">
+    <value>Hydro</value>
+  </data>
+  <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Basin" xml:space="preserve">
+    <value>Basin</value>
+  </data>
+  <data name="NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin" xml:space="preserve">
+    <value>Hydro Region Plugin</value>
+  </data>
+  <data name="NetworkEditorApplicationPlugin_HandleRegionDataItemCollectionChanged__0__is_not_supported_for_hydro_regions_in_the_project" xml:space="preserve">
+    <value>{0} is not supported for hydro regions in the project</value>
+  </data>
+  <data name="NetworkEditorApplicationPlugin_HandleSubRegionCollectionChanged__0__is_not_supported_on_the_hydro_region_collection" xml:space="preserve">
+    <value>{0} is not supported on the hydro region collection</value>
+  </data>
+  <data name="Gully" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Gully.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CrossSectionYZFromGisImporter_Name_Y_Z_cross_section_from_GIS_importer" xml:space="preserve">
+    <value>Y'Z cross-section from GIS importer</value>
+  </data>
+  <data name="CrossSectionYZFromGisImporter_SetGisImportSettings_Cross_Sections_Y_Z" xml:space="preserve">
+    <value>Cross Sections Y'Z</value>
+  </data>
+  <data name="CrossSectionYZFromGisImporter_ConvertCrossSectionPropertiesYz_Exception_ocurred_during_import_of_crosssection___0_____1_" xml:space="preserve">
+    <value>Exception ocurred during import of crosssection "{0}": {1}</value>
+  </data>
+  <data name="CrossSectionZWFromGisImporter_CrossSectionZWFromGisImporter_Cross_Sections_ZW" xml:space="preserve">
+    <value>Cross Sections ZW</value>
+  </data>
+  <data name="CrossSectionZWFromGisImporter_Name_Tabulated_river_cross_section_from_GIS_importer" xml:space="preserve">
+    <value>Tabulated river cross-section from GIS importer</value>
+  </data>
+  <data name="BridgeYzFromGisImporter_BridgeYzFromGisImporter_Bridges__YZ_profile_" xml:space="preserve">
+    <value>Bridges (YZ profile)</value>
+  </data>
+  <data name="BridgeYzFromGisImporter_Name_Bridge_YZ_from_GIS_importer" xml:space="preserve">
+    <value>Bridge YZ from GIS importer</value>
+  </data>
+  <data name="BridgeZwFromGisImporter_BridgeZwFromGisImporter_Bridges__ZW_profile_" xml:space="preserve">
+    <value>Bridges (ZW profile)</value>
+  </data>
+  <data name="BridgeZwFromGisImporter_Name_Bridge_ZW_from_GIS_importer" xml:space="preserve">
+    <value>Bridge ZW from GIS importer</value>
+  </data>
+  <data name="BridgeZwFromGisImporter_ConvertBridgeProperties_Exception_ocurred_during_import_of_bridge___0_____1_" xml:space="preserve">
+    <value>Exception ocurred during import of bridge "{0}": {1}</value>
+  </data>
+  <data name="BridgeYzFromGisImporter_ConvertBridgeProperties_Exception_ocurred_during_import_of_bridge___0_____1_" xml:space="preserve">
+    <value>Exception ocurred during import of bridge "{0}": {1}</value>
+  </data>
+  <data name="BridgeRectangularFromGisImporter_BridgeRectangularFromGisImporter_Bridges__rectangle_profile_" xml:space="preserve">
+    <value>Bridges (rectangle profile)</value>
+  </data>
+  <data name="BridgeRectangularFromGisImporter_Name_Bridge_from_GIS_importer" xml:space="preserve">
+    <value>Bridge from GIS importer</value>
+  </data>
+  <data name="BridgeRectangularFromGisImporter_ConvertBridgeProperties_Exception_ocurred_during_import_of_bridge___0_____1_" xml:space="preserve">
+    <value>Exception ocurred during import of bridge "{0}": {1}</value>
+  </data>
+  <data name="BridgeFromGisImporterBase_ImportBridge_Exception_ocurred_during_import_of_bridge___0_____1_" xml:space="preserve">
+    <value>Exception ocurred during import of bridge "{0}": {1}</value>
+  </data>
+  <data name="BridgeFromGisImporterBase_ImportBridge_Failed_to_import_bridge___0___" xml:space="preserve">
+    <value>Failed to import bridge "{0}".</value>
+  </data>
+  <data name="CrossSectionYZFromGisImporter_ImportItem_Cross_section_definition__0___not_an_YZ_cross_section_definition" xml:space="preserve">
+    <value>Cross section definition {0}, not an YZ cross section definition</value>
+  </data>
+</root>

@@ -1,0 +1,4 @@
+STRU id 'cs1##1' nm 'mem 1' dd '##1' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'cs1' stru
+STRU id 'cs1##2' nm 'mem 2' dd '##2' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'cs1' stru
+STRU id 'wr1' nm 'Weir 1' dd 'wr1' stru
+STRU id 'rwr1' nm '' dd '##3' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru

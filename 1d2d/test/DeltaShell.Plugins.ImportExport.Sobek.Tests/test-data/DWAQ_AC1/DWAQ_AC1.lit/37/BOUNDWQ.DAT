@@ -1,0 +1,61 @@
+
+
+ITEM
+USEFOR 'n1' 'n1'
+ABSOLUTE TIME
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NH4' 'NH4'
+USEFOR 'CBOD5' 'CBOD5'
+USEFOR 'CBOD5_2' 'CBOD5_2'
+USEFOR 'OXY' 'OXY'
+DATA                         'Continuity'                'NH4'         'CBOD5'       'CBOD5_2'     'OXY' 
+'2010/01/01-00:00:00'       1             1             0             1             5.5 
+'2010/01/10-00:00:00'       1             1             0             1             5.5 
+'2010/02/01-00:00:00'       1             1             0             1             5.5 
+'2010/02/03-00:00:00'       1             2             0.88          1             6.5 
+'2010/02/05-00:00:00'       1             1.2           0.45          -999          7.5 
+'2010/02/10-00:00:00'       1             1             0.1           1             6.9
+
+
+ITEM
+USEFOR 'nL1' 'nL1'
+CONCENTRATION
+USEFOR 'NH4' 'NH4'
+USEFOR 'CBOD5' 'CBOD5'
+USEFOR 'CBOD5_2' 'CBOD5_2'
+USEFOR 'OXY' 'OXY'
+USEFOR 'Continuity' 'Continuity'
+DATA        'NH4'         'CBOD5'       'CBOD5_2'     'OXY'         'Continuity' 
+           5.5          60          40          6.5          1 
+
+
+ITEM
+USEFOR 'n21' 'n21'
+ABSOLUTE TIME
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NH4' 'NH4'
+USEFOR 'CBOD5' 'CBOD5'
+USEFOR 'CBOD5_2' 'CBOD5_2'
+USEFOR 'OXY' 'OXY'
+LINEAR DATA                  'Continuity'                'NH4'         'CBOD5'       'CBOD5_2'     'OXY' 
+'2010/01/01-00:00:00'       1             1             0             1             5.5 
+'2010/01/10-00:00:00'       1             1             0             1             5.5 
+'2010/02/01-00:00:00'       1             1             0             1             5.5 
+'2010/02/03-00:00:00'       1             2             .88           1             6.5 
+'2010/02/05-00:00:00'       1             1.2           .45           -999          7.5 
+'2010/02/10-00:00:00'       1             1             .1            1             6.9 
+
+
+;; ITEM
+;; USEFOR 'n3' 'n3'
+;; CONCENTRATION
+;; USEFOR 'Continuity' 'Continuity'
+;; USEFOR 'NH4' 'NH4'
+;; USEFOR 'CBOD5' 'CBOD5'
+;; USEFOR 'CBOD5_2' 'CBOD5_2'
+;; USEFOR 'OXY' 'OXY'
+;; DATA        'Continuity'                'NH4'         'CBOD5'       'CBOD5_2'     'OXY' 
+;;            -999          -999          -999          -999          -999 
+

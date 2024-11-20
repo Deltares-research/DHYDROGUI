@@ -1,0 +1,315 @@
+
+Derivation of exact solution of 1D linear model problem describing waves along an equator with a uniformly deep ocean - JAN'10
+
+The equations to solve:  
+     "(&PartialD; Zeta)/(&PartialD; t)+h(&PartialD; u)/(&PartialD; x)=0"
+  and  
+"(&PartialD; u)/(&PartialD; t)+U[0](&PartialD; u)/(&PartialD; x)+g(&PartialD;\
+
+   Zeta)/(&PartialD; x)=-lambda*u+f"
+  with:
+uniform constant depth  
+                                      h
+  (5000m),
+constant gravitational acceleration  
+                                      g
+  (9.81m/s2),
+some constant background current  
+                                    U[0]
+  ([m/s]),
+constant linear friction coefficient  
+                                       g U[typ]
+                              lambda = --------
+                                           2   
+                                         hC    
+  ([1/s]),
+periodic tidal forcing/acceleration  
+                        f = F exp(I (omega t - k x))
+ ([m/s2]).
+Periodic boundaries on a domain of length  
+                                      l
+  ( 
+                              "2*Pi*r[earth]="
+2À*6800km = 42726km), hence in space solution and also forcing must be of the form  
+                                 exp(I k x)
+ , with  ( 
+                          2 Pi n     2 Pi n      n    
+                      k = ------ and ------ = --------
+                            l          l      r[earth]
+ ,  
+                                      n
+  some integer > 0).
+We could apply coordinate transformation  
+                                     1       
+                                x = --- l phi
+                                    360      
+ , with  
+                                     phi
+  angle in degrees.
+=>  
+   "(&PartialD; Zeta)/(&PartialD; t)+h'(&PartialD; u)/(&PartialD; phi)=0"
+  and  
+"(&PartialD; u)/(&PartialD; t)+U[0]'(&PartialD; u)/(&PartialD; phi)+g'(&Parti\
+
+  alD; Zeta)/(&PartialD; phi)=-lambda*u+f"
+  with:  
+                                 d      360 h
+                                --- h = -----
+                                 dx       l  
+ ,  
+                            d            360 U[0]
+                           --- U[0](x) = --------
+                            dx              l    
+ ,  
+                                 d      360 g
+                                --- g = -----
+                                 dx       l  
+ ,  
+                             /  /          / d   \    \\
+                    f = F exp|I |omega t - |--- k| phi||
+                             \  \          \ dx  /    //
+ ,  
+                            d       /         1 \
+                           --- k = *|2 Pi n, ---|
+                            dx      \        360/
+ . Hm, perhaps not so useful.
+
+> restart;
+The equations
+> cont := diff( zeta(x,t), t )                          + h * diff(  u(x,t),   x ) = 0;
+mom  := diff(  u(x,t),   t ) + U0 * diff( u(x,t), x ) + g * diff( zeta(x,t), x ) = - lambda * u(x,t) + F * exp( I*(omega*t - k*x) );
+                   / d            \     / d         \    
+                   |--- zeta(x, t)| + h |--- u(x, t)| = 0
+                   \ dt           /     \ dx        /    
+   / d         \      / d         \     / d            \                  
+   |--- u(x, t)| + U0 |--- u(x, t)| + g |--- zeta(x, t)| = -lambda u(x, t)
+   \ dt        /      \ dx        /     \ dx           /                  
+
+      + F exp(I (omega t - k x))
+The solution(s)
+> zp := Z(t) * exp( I*(- k*x) ):
+up := U(t) * exp( I*(- k*x) ):
+> contp := simplify( eval( subs( zeta(x,t)=zp, u(x,t)=up, cont ) ) / exp( I*(- k*x) ) );
+momp  := simplify( eval( subs( zeta(x,t)=zp, u(x,t)=up, mom  ) ) / exp( I*(- k*x) ) );
+                         / d      \                 
+                         |--- Z(t)| - I h U(t) k = 0
+                         \ dt     /                 
+   / d      \                                                             
+   |--- U(t)| - I U0 U(t) k - I g Z(t) k = -lambda U(t) + F exp(I omega t)
+   \ dt     /                                                             
+> sol := dsolve( [contp,momp] );
+ /             /  /    /               
+ |          1  |  |1   |               
+< U(t) = - --- |I |- I \I lambda + U0 k
+ |         h k |  |2                   
+ \             \  \                    
+
+                                                     (1/2)\    /    /        
+     /       2                       2  2        2  \     |    |1   |        
+   - \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / exp|- I \I lambda
+                                                               \2            
+
+                                                            (1/2)\  \           
+            /       2                       2  2        2  \     |  |       1   
+   + U0 k - \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / t| _C2 + - I 
+                                                                    /       2   
+
+  /                                                                  (1/2)\ 
+  |                  /       2                       2  2        2  \     | 
+  \I lambda + U0 k + \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / 
+
+     /    /               
+     |1   |               
+  exp|- I \I lambda + U0 k
+     \2                   
+
+                                                     (1/2)\  \    
+     /       2                       2  2        2  \     |  |    
+   + \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / t| _C1
+                                                             /    
+
+                                                  \\            /    /        
+              h k F omega exp(I omega t)          ||            |1   |        
+   - ---------------------------------------------||, Z(t) = exp|- I \I lambda
+        2                                        2||            \2            
+     h k  g + I lambda omega + U0 k omega - omega //                          
+
+                                                            (1/2)\  \       
+            /       2                       2  2        2  \     |  |       
+   + U0 k - \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / t| _C2 + 
+                                                                    /       
+
+     /    /               
+     |1   |               
+  exp|- I \I lambda + U0 k
+     \2                   
+
+                                                     (1/2)\  \    
+     /       2                       2  2        2  \     |  |    
+   + \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / t| _C1
+                                                             /    
+
+                                                  \ 
+                I h k F exp(I omega t)            | 
+   + --------------------------------------------- >
+        2                                        2| 
+     h k  g + I lambda omega + U0 k omega - omega / 
+> usol := subs( op(1,sol), up ) ;
+zsol := subs( op(2,sol), zp ) ;
+      /  /    /               
+   1  |  |1   |               
+- --- |I |- I \I lambda + U0 k
+  h k |  |2                   
+      \  \                    
+
+                                                     (1/2)\    /    /        
+     /       2                       2  2        2  \     |    |1   |        
+   - \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / exp|- I \I lambda
+                                                               \2            
+
+                                                            (1/2)\  \           
+            /       2                       2  2        2  \     |  |       1   
+   + U0 k - \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / t| _C2 + - I 
+                                                                    /       2   
+
+  /                                                                  (1/2)\ 
+  |                  /       2                       2  2        2  \     | 
+  \I lambda + U0 k + \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / 
+
+     /    /               
+     |1   |               
+  exp|- I \I lambda + U0 k
+     \2                   
+
+                                                     (1/2)\  \    
+     /       2                       2  2        2  \     |  |    
+   + \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / t| _C1
+                                                             /    
+
+                                                  \            \
+              h k F omega exp(I omega t)          |            |
+   - ---------------------------------------------| exp(-I k x)|
+        2                                        2|            |
+     h k  g + I lambda omega + U0 k omega - omega /            /
+/   /    /               
+|   |1   |               
+|exp|- I \I lambda + U0 k
+|   \2                   
+\                        
+
+                                                     (1/2)\  \          /    /        
+     /       2                       2  2        2  \     |  |          |1   |        
+   - \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / t| _C2 + exp|- I \I lambda
+                                                             /          \2            
+
+                                                            (1/2)\  \    
+            /       2                       2  2        2  \     |  |    
+   + U0 k + \-lambda  + 2 I lambda U0 k + U0  k  + 4 h k  g/     / t| _C1
+                                                                    /    
+
+                                                  \            
+                I h k F exp(I omega t)            |            
+   + ---------------------------------------------| exp(-I k x)
+        2                                        2|            
+     h k  g + I lambda omega + U0 k omega - omega /            
+> MTM[fortran](usol,uexa);
+MTM[fortran](zsol,zexa);
+Warning, the following variable name replacements were made: ["cg", "cg1"] = ["_C1", "_C2"]
+ "      uexa = (0, -1) * ((0, 0.1D1 / 0.2D1) * ((0, 1) * lambda + U0 * k -
+
+        # csqrt(-lambda ** 2 + (0, 2) * lambda * U0 * k + U0 ** 2 * k ** 2 
+
+        #+ 4 * h * k ** 2 * g)) * cexp((0, 0.1D1 / 0.2D1) * ((0, 1) * lambd
+
+        #a + U0 * k - csqrt(-lambda ** 2 + (0, 2) * lambda * U0 * k + U0 **
+
+        # 2 * k ** 2 + 4 * h * k ** 2 * g)) * t) * cg1 + (0, 0.1D1 / 0.2D1)
+
+        # * ((0, 1) * lambda + U0 * k + csqrt(-lambda ** 2 + (0, 2) * lambd
+
+        #a * U0 * k + U0 ** 2 * k ** 2 + 4 * h * k ** 2 * g)) * cexp((0, 0.
+
+        #1D1 / 0.2D1) * ((0, 1) * lambda + U0 * k + csqrt(-lambda ** 2 + (0
+
+        #, 2) * lambda * U0 * k + U0 ** 2 * k ** 2 + 4 * h * k ** 2 * g)) *
+
+        # t) * cg - 0.1D1 / (h * k ** 2 * g + (0, 1) * lambda * omega + U0 
+
+        #* k * omega - omega ** 2) * h * k * F * omega * cexp((0, 1) * omeg
+
+        #a * t)) / h / k * cexp((0, -1) * k * x)
+
+   "
+Warning, the following variable name replacements were made: ["cg", "cg1"] = ["_C1", "_C2"]
+ "      zexa = (cexp((0, 0.1D1 / 0.2D1) * ((0, 1) * lambda + U0 * k - csqr
+
+        #t(-lambda ** 2 + (0, 2) * lambda * U0 * k + U0 ** 2 * k ** 2 + 4 *
+
+        # h * k ** 2 * g)) * t) * cg1 + cexp((0, 0.1D1 / 0.2D1) * ((0, 1) *
+
+        # lambda + U0 * k + csqrt(-lambda ** 2 + (0, 2) * lambda * U0 * k +
+
+        # U0 ** 2 * k ** 2 + 4 * h * k ** 2 * g)) * t) * cg + (0, 1) / (h *
+
+        # k ** 2 * g + (0, 1) * lambda * omega + U0 * k * omega - omega ** 
+
+        #2) * h * k * F * cexp((0, 1) * omega * t)) * cexp((0, -1) * k * x)
+
+   "
+> h := 5000:
+g := 9.81:
+l := 2*Pi*6800000:  # earth's circumference in meters
+period := 24*60*60: # number of seconds in a day
+k     := 2*Pi* nmode / l:
+omega := 2*Pi* nfreq / period:
+# nmode  := 1:
+# nfreq  := 1:
+# lambda := 0:
+# U0     := 0:
+> # uexa := unapply( Re(usol), [nmode,nfreq,lambda,U0,_C1,_C2,F,x,t] );
+zexa := unapply( Re(zsol), [nmode,nfreq,lambda,U0,_C1,_C2,F,x,t] );
+                                                   //   /1   /        
+(nmode, nfreq, lambda, U0, _C1, _C2, F, x, t) -> Re||exp|- I |I lambda
+                                                   \\   \2   \        
+
+        1               /       2      1                     
+   + ------- U0 nmode - |-lambda  + ------- I lambda U0 nmode
+     6800000            \           3400000                  
+
+           1          2      2                 -9      2\      \  \          /
+   + -------------- U0  nmode  + 4.243079584 10   nmode |^(1/2)| t| _C2 + exp|
+     46240000000000                                     /      /  /          \
+
+  1   /              1               /       2      1                     
+  - I |I lambda + ------- U0 nmode + |-lambda  + ------- I lambda U0 nmode
+  2   \           6800000            \           3400000                  
+
+           1          2      2                 -9      2\      \  \       /
+   + -------------- U0  nmode  + 4.243079584 10   nmode |^(1/2)| t| _C1 + |
+     46240000000000                                     /      /  /       \
+
+   1                /  1               \\//              -9      2
+  ---- I nmode F exp|----- I Pi nfreq t|| |1.060769896 10   nmode 
+  1360              \43200             // \                       
+
+       1                            1                        
+   + ----- I lambda Pi nfreq + ------------ U0 nmode Pi nfreq
+     43200                     293760000000                  
+
+         1        2      2\\    /    1             \\
+   - ---------- Pi  nfreq || exp|-------- I nmode x||
+     1866240000           //    \ 6800000          //
+> plot( [ zexa(1,1,   0   , 0 , 0,0,0.00001, x,   0    ),
+        zexa(1,1,   0   , 0 , 0,0,0.00001, x,period/2),
+        zexa(1,1,0.00001, 0 , 0,0,0.00001, x,   0    ),
+        zexa(1,1,0.00001, 0 , 0,0,0.00001, x,period/2),
+        zexa(1,1,   0   , 0 , 1,0,   0   , x,   0    ),
+        zexa(1,1,   0   , 0 , 1,0,   0   , x,period/2),
+        zexa(1,1,0.00001, 0 , 1,0,   0   , x,   0    ),
+        zexa(1,1,0.00001, 0 , 1,0,   0   , x,period/2)
+      ], x=0..l,
+         legendstyle=[location=right], legend=[ "plot1", "plot2", "plot3", "plot4", "plot5", "plot6", "plot7", "plot8" ] );
+
+> 
+> 
+

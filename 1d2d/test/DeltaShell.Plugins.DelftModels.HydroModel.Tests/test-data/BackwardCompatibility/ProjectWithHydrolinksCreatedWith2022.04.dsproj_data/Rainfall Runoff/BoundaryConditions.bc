@@ -1,0 +1,18 @@
+[General]
+    fileVersion           = 1.01                
+    fileType              = boundConds          
+
+[Boundary]
+    name                  = LateralSource_1D_1  
+    function              = constant            
+    quantity              = water_level         
+    unit                  = m                   
+    0 
+
+[Boundary]
+    name                  = LateralSource_1D_2  
+    function              = constant            
+    quantity              = water_level         
+    unit                  = m                   
+    0 
+

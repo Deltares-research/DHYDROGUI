@@ -1,0 +1,41 @@
+*Name of this file: \Sobek\FIXED\HBVbui.TMP
+*Date and time of construction: 30-11-2004   13:41:21
+*Enige algemene wenken:
+*Gebruik de default dataset (1) of de volledige reeks (0) voor overige invoer
+1
+*Aantal stations
+ 1 
+*Namen van stations
+'De Bilt'
+*Aantal gebeurtenissen (omdat het 1 bui betreft is dit altijd 1)
+*en het aantal seconden per waarnemingstijdstap
+ 1  86400 
+*Elke commentaarregel wordt begonnen met een * (asteriks).
+*Eerste record bevat startdatum en -tijd, lengte van de gebeurtenis in dd hh mm ss
+*Het format is: yyyymmdd:hhmmss:ddhhmmss
+*Daarna voor elk station de neerslag in mm per tijdstap.
+ 1960 10 1 1 0 0 24 0 0 0
+  -5
+  -6
+  -5
+  -5
+  -4
+  -2
+  -1
+  0
+  0
+  0
+  0
+  0
+  -1
+  0
+  0
+  0.5
+  1
+  1
+  1.5
+  2
+  2
+  4
+  4
+  5

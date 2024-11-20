@@ -1,0 +1,24 @@
+[General]
+Title=demo_02
+AppType=1
+Version=1.0.0
+CATTemplateFile=Fixed\Cat.tpl
+ThematicMapOption=2
+CATIniFile=C:\SBKRiver\Programs\Cat\cat.ini
+WQStandardsOption=0
+SaveTemplateonExit=True
+UserName=SOBEK
+
+[Functions]
+defaultini=C:\SBKRiver\Programs\Cat\functions.ini
+
+[Netter]
+NtpFile=C:\SBKRiver\Programs\cat\netter.ntp
+
+[CMTApps]
+NumberApps=1
+App1=\SBKRIVER\demo_02.lit, demo_02
+
+[StandAloneApps]
+NumberApps=0
+

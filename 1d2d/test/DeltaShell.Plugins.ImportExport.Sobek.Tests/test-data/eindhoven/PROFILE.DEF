@@ -1,0 +1,382 @@
+CRDS id '1' nm 'r_Rectangle 1.5,2' ty 0 wm 1.5 w1 0 w2 0 lt lw
+TBLE
+ 0  1.5  1.5 < 
+ 2  1.5  1.5 < 
+ 2.0001  .0001  .0001 < 
+tble  crds
+CRDS id '2' nm 'r_Rectangle 1,1' ty 0 wm 1 w1 0 w2 0 lt lw
+TBLE
+ 0  1  1 < 
+ 1  1  1 < 
+ 1.0001  .0001  .0001 < 
+tble  crds
+CRDS id '3' nm 'r_Rectangle 1.9,1.5' ty 0 wm 1.9 w1 0 w2 0 lt lw
+TBLE
+ 0  1.9  1.9 < 
+ 1.5  1.9  1.9 < 
+ 1.5001  .0001  .0001 < 
+tble  crds
+CRDS id '4' nm 'r_Rectangle 2.65,2.1' ty 0 wm 2.65 w1 0 w2 0 lt lw
+TBLE
+ 0  2.65  2.65 < 
+ 2.1  2.65  2.65 < 
+ 2.1001  .0001  .0001 < 
+tble  crds
+CRDS id '5' nm 'r_Rectangle 2,1.8' ty 0 wm 2 w1 0 w2 0 lt lw
+TBLE
+ 0  2  2 < 
+ 1.8  2  2 < 
+ 1.8001  .0001  .0001 < 
+tble  crds
+CRDS id '6' nm 'r_Rectangle 2.25,1.8' ty 0 wm 2.25 w1 0 w2 0 lt lw
+TBLE
+ 0  2.25  2.25 < 
+ 1.8  2.25  2.25 < 
+ 1.8001  .0001  .0001 < 
+tble  crds
+CRDS id '7' nm 'r_Rectangle 1.5,1' ty 0 wm 1.5 w1 0 w2 0 lt lw
+TBLE
+ 0  1.5  1.5 < 
+ 1  1.5  1.5 < 
+ 1.0001  .0001  .0001 < 
+tble  crds
+CRDS id '8' nm 'r_Rectangle 3.5,2.5' ty 0 wm 3.5 w1 0 w2 0 lt lw
+TBLE
+ 0  3.5  3.5 < 
+ 2.5  3.5  3.5 < 
+ 2.5001  .0001  .0001 < 
+tble  crds
+CRDS id '9' nm 'Round 200 mm' ty 4 bl 0 rd  .1 crds
+CRDS id '10' nm 'Egg-Shape 500 mm/ 750' ty 6 bl 0 bo .5 crds
+CRDS id '11' nm 'Round 800 mm' ty 4 bl 0 rd  .4 crds
+CRDS id '12' nm 'Round 400 mm' ty 4 bl 0 rd  .2 crds
+CRDS id '13' nm 'Round 1000 mm' ty 4 bl 0 rd  .5 crds
+CRDS id '14' nm 'Round 500 mm' ty 4 bl 0 rd  .25 crds
+CRDS id '15' nm 'Round 300 mm' ty 4 bl 0 rd  .15 crds
+CRDS id '16' nm 'Round 380 mm' ty 4 bl 0 rd  .19 crds
+CRDS id '17' nm 'r_Rectangle 5.2,.7' ty 0 wm 5.2 w1 0 w2 0 lt lw
+TBLE
+ 0  5.2  5.2 < 
+ .7  5.2  5.2 < 
+ .7001  .0001  .0001 < 
+tble  crds
+CRDS id '18' nm 'r_Rectangle 5.5,.75' ty 0 wm 5.5 w1 0 w2 0 lt lw
+TBLE
+ 0  5.5  5.5 < 
+ .75  5.5  5.5 < 
+ .7501  .0001  .0001 < 
+tble  crds
+CRDS id '19' nm 'r_Rectangle 2.35,1.1' ty 0 wm 2.35 w1 0 w2 0 lt lw
+TBLE
+ 0  2.35  2.35 < 
+ 1.1  2.35  2.35 < 
+ 1.1001  .0001  .0001 < 
+tble  crds
+CRDS id '20' nm 'r_Rectangle 3.36,1' ty 0 wm 3.36 w1 0 w2 0 lt lw
+TBLE
+ 0  3.36  3.36 < 
+ 1  3.36  3.36 < 
+ 1.0001  .0001  .0001 < 
+tble  crds
+CRDS id '21' nm 'Round 1500 mm' ty 4 bl 0 rd  .75 crds
+CRDS id '22' nm 'r_Rectangle 18.3,1.25' ty 0 wm 18.3 w1 0 w2 0 lt lw
+TBLE
+ 0  18.3  18.3 < 
+ 1.25  18.3  18.3 < 
+ 1.2501  .0001  .0001 < 
+tble  crds
+CRDS id '23' nm 'r_Rectangle 20,.85' ty 0 wm 20 w1 0 w2 0 lt lw
+TBLE
+ 0  20  20 < 
+ .85  20  20 < 
+ .8501  .0001  .0001 < 
+tble  crds
+CRDS id '24' nm 'r_Rectangle 4.19,1.7' ty 0 wm 4.19 w1 0 w2 0 lt lw
+TBLE
+ 0  4.19  4.19 < 
+ 1.7  4.19  4.19 < 
+ 1.7001  .0001  .0001 < 
+tble  crds
+CRDS id '25' nm 'r_Rectangle 2.5,1.85' ty 0 wm 2.5 w1 0 w2 0 lt lw
+TBLE
+ 0  2.5  2.5 < 
+ 1.85  2.5  2.5 < 
+ 1.8501  .0001  .0001 < 
+tble  crds
+CRDS id '26' nm 'r_Rectangle 16.93,1.5' ty 0 wm 16.93 w1 0 w2 0 lt lw
+TBLE
+ 0  16.93  16.93 < 
+ 1.5  16.93  16.93 < 
+ 1.5001  .0001  .0001 < 
+tble  crds
+CRDS id '27' nm 'r_Rectangle 9.25,1.4' ty 0 wm 9.25 w1 0 w2 0 lt lw
+TBLE
+ 0  9.25  9.25 < 
+ 1.4  9.25  9.25 < 
+ 1.4001  .0001  .0001 < 
+tble  crds
+CRDS id '28' nm 'Round 700 mm' ty 4 bl 0 rd  .35 crds
+CRDS id '29' nm 'Round 315 mm' ty 4 bl 0 rd  .1575 crds
+CRDS id '30' nm 'Round 250 mm' ty 4 bl 0 rd  .125 crds
+CRDS id '31' nm 'Round 600 mm' ty 4 bl 0 rd  .3 crds
+CRDS id '32' nm 'r_Rectangle 1.45,1.2' ty 0 wm 1.45 w1 0 w2 0 lt lw
+TBLE
+ 0  1.45  1.45 < 
+ 1.2  1.45  1.45 < 
+ 1.2001  .0001  .0001 < 
+tble  crds
+CRDS id '33' nm 'Round 1250 mm' ty 4 bl 0 rd  .625 crds
+CRDS id '34' nm 'Round 70 mm' ty 4 bl 0 rd  .035 crds
+CRDS id '35' nm 'Round 900 mm' ty 4 bl 0 rd  .45 crds
+CRDS id '36' nm 'Round 160 mm' ty 4 bl 0 rd  .08 crds
+CRDS id '37' nm 'Egg-Shape 300 mm/ 450' ty 6 bl 0 bo .3 crds
+CRDS id '38' nm 'Egg-Shape 400 mm/ 600' ty 6 bl 0 bo .4 crds
+CRDS id '39' nm 'Round 100 mm' ty 4 bl 0 rd  .05 crds
+CRDS id '40' nm 'r_Rectangle 1.8,1.5' ty 0 wm 1.8 w1 0 w2 0 lt lw
+TBLE
+ 0  1.8  1.8 < 
+ 1.5  1.8  1.8 < 
+ 1.5001  .0001  .0001 < 
+tble  crds
+CRDS id '41' nm 'r_Rectangle 1.9,1.6' ty 0 wm 1.9 w1 0 w2 0 lt lw
+TBLE
+ 0  1.9  1.9 < 
+ 1.6  1.9  1.9 < 
+ 1.6001  .0001  .0001 < 
+tble  crds
+CRDS id '42' nm 'r_Rectangle 1.2,.8' ty 0 wm 1.2 w1 0 w2 0 lt lw
+TBLE
+ 0  1.2  1.2 < 
+ .8  1.2  1.2 < 
+ .8001  .0001  .0001 < 
+tble  crds
+CRDS id '43' nm 'r_Rectangle 1.6,1.3' ty 0 wm 1.6 w1 0 w2 0 lt lw
+TBLE
+ 0  1.6  1.6 < 
+ 1.3  1.6  1.6 < 
+ 1.3001  .0001  .0001 < 
+tble  crds
+CRDS id '44' nm 'r_Rectangle 1.8,1.4' ty 0 wm 1.8 w1 0 w2 0 lt lw
+TBLE
+ 0  1.8  1.8 < 
+ 1.4  1.8  1.8 < 
+ 1.4001  .0001  .0001 < 
+tble  crds
+CRDS id '45' nm 'r_Rectangle 2,1.2' ty 0 wm 2 w1 0 w2 0 lt lw
+TBLE
+ 0  2  2 < 
+ 1.2  2  2 < 
+ 1.2001  .0001  .0001 < 
+tble  crds
+CRDS id '46' nm 'Round 125 mm' ty 4 bl 0 rd  .0625 crds
+CRDS id '47' nm 'Egg-Shape 600 mm/ 900' ty 6 bl 0 bo .6 crds
+CRDS id '48' nm 'Egg-Shape 1000 mm/ 1500' ty 6 bl 0 bo 1 crds
+CRDS id '49' nm 'Egg-Shape 900 mm/ 1350' ty 6 bl 0 bo .9 crds
+CRDS id '50' nm 'Egg-Shape 800 mm/ 1200' ty 6 bl 0 bo .8 crds
+CRDS id '51' nm 'Egg-Shape 700 mm/ 1050' ty 6 bl 0 bo .7 crds
+CRDS id '52' nm 'Egg-Shape 250 mm/ 375' ty 6 bl 0 bo .25 crds
+CRDS id '53' nm 'Egg-Shape 1200 mm/ 1800' ty 6 bl 0 bo 1.2 crds
+CRDS id '54' nm 'Egg-Shape 350 mm/ 525' ty 6 bl 0 bo .35 crds
+CRDS id '55' nm 'Round 750 mm' ty 4 bl 0 rd  .375 crds
+CRDS id '56' nm 'Round 860 mm' ty 4 bl 0 rd  .43 crds
+CRDS id '57' nm 'Round 1200 mm' ty 4 bl 0 rd  .6 crds
+CRDS id '58' nm 'Round 110 mm' ty 4 bl 0 rd  .055 crds
+CRDS id '59' nm 'r_Rectangle 2,1.6' ty 0 wm 2 w1 0 w2 0 lt lw
+TBLE
+ 0  2  2 < 
+ 1.6  2  2 < 
+ 1.6001  .0001  .0001 < 
+tble  crds
+CRDS id '60' nm 'r_Rectangle 2,1.7' ty 0 wm 2 w1 0 w2 0 lt lw
+TBLE
+ 0  2  2 < 
+ 1.7  2  2 < 
+ 1.7001  .0001  .0001 < 
+tble  crds
+CRDS id '61' nm 'r_Rectangle 2.2,1.8' ty 0 wm 2.2 w1 0 w2 0 lt lw
+TBLE
+ 0  2.2  2.2 < 
+ 1.8  2.2  2.2 < 
+ 1.8001  .0001  .0001 < 
+tble  crds
+CRDS id '62' nm 'r_Rectangle 2.4,1.8' ty 0 wm 2.4 w1 0 w2 0 lt lw
+TBLE
+ 0  2.4  2.4 < 
+ 1.8  2.4  2.4 < 
+ 1.8001  .0001  .0001 < 
+tble  crds
+CRDS id '63' nm 'r_Rectangle 1.5,1.3' ty 0 wm 1.5 w1 0 w2 0 lt lw
+TBLE
+ 0  1.5  1.5 < 
+ 1.3  1.5  1.5 < 
+ 1.3001  .0001  .0001 < 
+tble  crds
+CRDS id '64' nm 'r_Rectangle 1.7,1.5' ty 0 wm 1.7 w1 0 w2 0 lt lw
+TBLE
+ 0  1.7  1.7 < 
+ 1.5  1.7  1.7 < 
+ 1.5001  .0001  .0001 < 
+tble  crds
+CRDS id '65' nm 'r_Rectangle 1.8,1.6' ty 0 wm 1.8 w1 0 w2 0 lt lw
+TBLE
+ 0  1.8  1.8 < 
+ 1.6  1.8  1.8 < 
+ 1.6001  .0001  .0001 < 
+tble  crds
+CRDS id '66' nm 'r_Rectangle 1.6,1.4' ty 0 wm 1.6 w1 0 w2 0 lt lw
+TBLE
+ 0  1.6  1.6 < 
+ 1.4  1.6  1.6 < 
+ 1.4001  .0001  .0001 < 
+tble  crds
+CRDS id '67' nm 'r_Rectangle 1.9,1.7' ty 0 wm 1.9 w1 0 w2 0 lt lw
+TBLE
+ 0  1.9  1.9 < 
+ 1.7  1.9  1.9 < 
+ 1.7001  .0001  .0001 < 
+tble  crds
+CRDS id '68' nm 'r_Rectangle 2,1.5' ty 0 wm 2 w1 0 w2 0 lt lw
+TBLE
+ 0  2  2 < 
+ 1.5  2  2 < 
+ 1.5001  .0001  .0001 < 
+tble  crds
+CRDS id '69' nm 'Round 150 mm' ty 4 bl 0 rd  .075 crds
+CRDS id '70' nm 'Round 1800 mm' ty 4 bl 0 rd  .9 crds
+CRDS id '71' nm 'r_Rectangle 4,4.5' ty 0 wm 4 w1 0 w2 0 lt lw
+TBLE
+ 0  4  4 < 
+ 4.5  4  4 < 
+ 4.5001  .0001  .0001 < 
+tble  crds
+CRDS id '100' nm 'r_Rectangle 2.5,2' ty 0 wm 2.5 w1 0 w2 0 lt lw
+TBLE
+ 0  2.5  2.5 < 
+ 2  2.5  2.5 < 
+ 2.0001  .0001  .0001 < 
+tble  crds
+CRDS id '72' nm 'Round 780 mm' ty 4 bl 0 rd  .39 crds
+CRDS id '73' nm 'r_Rectangle 1.6,1.5' ty 0 wm 1.6 w1 0 w2 0 lt lw
+TBLE
+ 0  1.6  1.6 < 
+ 1.5  1.6  1.6 < 
+ 1.5001  .0001  .0001 < 
+tble  crds
+CRDS id '74' nm 'r_Rectangle 1.5,1.2' ty 0 wm 1.5 w1 0 w2 0 lt lw
+TBLE
+ 0  1.5  1.5 < 
+ 1.2  1.5  1.5 < 
+ 1.2001  .0001  .0001 < 
+tble  crds
+CRDS id '75' nm 'r_Rectangle 2.3,1.9' ty 0 wm 2.3 w1 0 w2 0 lt lw
+TBLE
+ 0  2.3  2.3 < 
+ 1.9  2.3  2.3 < 
+ 1.9001  .0001  .0001 < 
+tble  crds
+CRDS id '76' nm 'Round 580 mm' ty 4 bl 0 rd  .29 crds
+CRDS id '78' nm 'r_Rectangle 2,1.25' ty 0 wm 2 w1 0 w2 0 lt lw
+TBLE
+ 0  2  2 < 
+ 1.25  2  2 < 
+ 1.2501  .0001  .0001 < 
+tble  crds
+CRDS id '79' nm 'r_Rectangle 1.7,1.3' ty 0 wm 1.7 w1 0 w2 0 lt lw
+TBLE
+ 0  1.7  1.7 < 
+ 1.3  1.7  1.7 < 
+ 1.3001  .0001  .0001 < 
+tble  crds
+CRDS id '80' nm 'r_Rectangle 2.2,1.5' ty 0 wm 2.2 w1 0 w2 0 lt lw
+TBLE
+ 0  2.2  2.2 < 
+ 1.5  2.2  2.2 < 
+ 1.5001  .0001  .0001 < 
+tble  crds
+CRDS id '81' nm 'Round 1540 mm' ty 4 bl 0 rd  .77 crds
+CRDS id '82' nm 'Round 560 mm' ty 4 bl 0 rd  .28 crds
+CRDS id '83' nm 'r_Rectangle 2.2,1.4' ty 0 wm 2.2 w1 0 w2 0 lt lw
+TBLE
+ 0  2.2  2.2 < 
+ 1.4  2.2  2.2 < 
+ 1.4001  .0001  .0001 < 
+tble  crds
+CRDS id '84' nm 'Round 350 mm' ty 4 bl 0 rd  .175 crds
+CRDS id '85' nm 'r_Rectangle 3.61,2.5' ty 0 wm 3.61 w1 0 w2 0 lt lw
+TBLE
+ 0  3.61  3.61 < 
+ 2.5  3.61  3.61 < 
+ 2.5001  .0001  .0001 < 
+tble  crds
+CRDS id '86' nm 'r_Rectangle 1.6,1.2' ty 0 wm 1.6 w1 0 w2 0 lt lw
+TBLE
+ 0  1.6  1.6 < 
+ 1.2  1.6  1.6 < 
+ 1.2001  .0001  .0001 < 
+tble  crds
+CRDS id '87' nm 'r_Rectangle 1.75,1' ty 0 wm 1.75 w1 0 w2 0 lt lw
+TBLE
+ 0  1.75  1.75 < 
+ 1  1.75  1.75 < 
+ 1.0001  .0001  .0001 < 
+tble  crds
+CRDS id '88' nm 'Round 50 mm' ty 4 bl 0 rd  .025 crds
+CRDS id '89' nm 'Round 960 mm' ty 4 bl 0 rd  .48 crds
+CRDS id '90' nm 'r_Rectangle 2.5,1.75' ty 0 wm 2.5 w1 0 w2 0 lt lw
+TBLE
+ 0  2.5  2.5 < 
+ 1.75  2.5  2.5 < 
+ 1.7501  .0001  .0001 < 
+tble  crds
+CRDS id '91' nm 'r_Rectangle 2.5,1.5' ty 0 wm 2.5 w1 0 w2 0 lt lw
+TBLE
+ 0  2.5  2.5 < 
+ 1.5  2.5  2.5 < 
+ 1.5001  .0001  .0001 < 
+tble  crds
+CRDS id '92' nm 'r_Rectangle 2,1.75' ty 0 wm 2 w1 0 w2 0 lt lw
+TBLE
+ 0  2  2 < 
+ 1.75  2  2 < 
+ 1.7501  .0001  .0001 < 
+tble  crds
+CRDS id '93' nm 'Round 620 mm' ty 4 bl 0 rd  .31 crds
+CRDS id '94' nm 'r_Rectangle 2.6,2.1' ty 0 wm 2.6 w1 0 w2 0 lt lw
+TBLE
+ 0  2.6  2.6 < 
+ 2.1  2.6  2.6 < 
+ 2.1001  .0001  .0001 < 
+tble  crds
+CRDS id '95' nm 'r_Rectangle 1.7,1.4' ty 0 wm 1.7 w1 0 w2 0 lt lw
+TBLE
+ 0  1.7  1.7 < 
+ 1.4  1.7  1.7 < 
+ 1.4001  .0001  .0001 < 
+tble  crds
+CRDS id '96' nm 'r_Rectangle 2.5,2.2' ty 0 wm 2.5 w1 0 w2 0 lt lw
+TBLE
+ 0  2.5  2.5 < 
+ 2.2  2.5  2.5 < 
+ 2.2001  .0001  .0001 < 
+tble  crds
+CRDS id '97' nm 'r_Rectangle 2.4,1.9' ty 0 wm 2.4 w1 0 w2 0 lt lw
+TBLE
+ 0  2.4  2.4 < 
+ 1.9  2.4  2.4 < 
+ 1.9001  .0001  .0001 < 
+tble  crds
+CRDS id '98' nm 'r_Rectangle 1.65,.9' ty 0 wm 1.65 w1 0 w2 0 lt lw
+TBLE
+ 0  1.65  1.65 < 
+ .9  1.65  1.65 < 
+ .9001  .0001  .0001 < 
+tble  crds
+CRDS id '99' nm 'Round 2000 mm' ty 4 bl 0 rd  1 crds
+CRDS id '101' nm 'Egg-Shape 450 mm/ 675' ty 6 bl 0 bo .45 crds
+CRDS id '102' nm 'Default (102)' ty 4 bl 0 rd 0.15 crds
+CRDS id '104' nm 'r_Rectangle 2.0,2.0' ty 0 wm 2 w1 0 w2 0 lt lw
+TBLE
+ 0  2  2 < 
+ 2  2  2 < 
+ 2.0001  .0001  .0001 < 
+tble  crds

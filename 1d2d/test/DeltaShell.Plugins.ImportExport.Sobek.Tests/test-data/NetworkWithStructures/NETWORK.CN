@@ -1,0 +1,99 @@
+CN_1.1
+FLBO id '1' ci '1' flbo
+FLBO id '27' ci '27' flbo
+FLBO id '10_34' ci '10_34' flbo
+FLBO id '50' ci '50' flbo
+FLBO id '53' ci '53' flbo
+FLBO id '55' ci '55' flbo
+FLBO id '115' ci '115' flbo
+FLBO id '113' ci '113' flbo
+FLBO id '114' ci '114' flbo
+FLBX id 'l_0-2063--2064' nm '' ci '31' lc 38.2735221791409 flbx 
+FLBX id 'l_0-2063--2070' nm '' ci '33' lc 3.98120584746279 flbx 
+FLBX id 'l_0-2063--2111' nm '' ci '34' lc 15.8518137763823 flbx 
+FLNX id '0-2111' nm '' ci '0-2111' flnx 
+FLBX id 'l_0-2064--2065' nm '' ci '35' lc 22.637358503123 flbx 
+FLBX id 'l_0-2065--2066' nm '' ci '37' lc 16.2732910009417 flbx 
+FLBX id 'l_0-2066--2067' nm '' ci '39' lc 39.5151236870015 flbx 
+FLBX id 'l_0-2067--2068' nm '' ci '41' lc 25.2540095826353 flbx 
+FLBX id 'l_0-2068--2069' nm '' ci '43' lc 3.31096662623394 flbx 
+FLBX id 'l_0-1402--2252' nm '' ci '77' lc 17.6432706718768 flbx 
+FLBX id 'l_0-1402--2249' nm '' ci '78' lc 11.9459198055093 flbx 
+FLBX id 'l_0-2249--2253' nm '' ci '79' lc 6.13942179689597 flbx 
+FLBX id 'l_0-1401--2253' nm '' ci '80' lc 69.957576430291 flbx 
+FLBX id 'l_0-1401--2070' nm '' ci '81' lc 72.8664874959688 flbx 
+FLBX id 'l_0-1401--2108' nm '' ci '82' lc 36.4247168828913 flbx 
+FLNX id '0-2108' nm '' ci '0-2108' flnx 
+FLBX id 'l_0-1403--2263' nm '' ci '106' lc 31.444633882418 flbx 
+FLBX id 'l_0-2524--2544' nm '' ci '109' lc 4.91858719554134 flbx 
+FLBX id 'l_0-2508--2509' nm '' ci '111' lc 17.062605311071 flbx 
+FLBX id 'l_0-2503--2504' nm '' ci '119' lc 23.5548827209647 flbx 
+FLBX id 'l_0-2504--2505' nm '' ci '120' lc 21.0733243699354 flbx 
+FLBX id 'l_0-2505--2506' nm '' ci '121' lc 7.26395209235015 flbx 
+FLBX id 'l_0-2506--2507' nm '' ci '122' lc 2.80178514527216 flbx 
+FLNO id '0-1404' nm '' ci '0-1404' flno 
+FLBX id 'l_0-2513--2514' nm '' ci '166' lc 17.2058856209081 flbx 
+FLBX id 'l_0-2514--2515' nm '' ci '167' lc 25.4513752084463 flbx 
+FLBX id 'l_0-2515--2516' nm '' ci '168' lc 24.942984985774 flbx 
+FLBX id 'l_0-2516--2517' nm '' ci '169' lc 3.78846934790738 flbx 
+FLBX id 'l_0-2517--2518' nm '' ci '170' lc 5.69231938667409 flbx 
+FLBX id 'l_0-2518--2519' nm '' ci '176' lc 26.429623531172 flbx 
+FLBX id 'l_0-2519--2520' nm '' ci '178' lc 15.6788073526257 flbx 
+FLBX id 'l_0-2520--2521' nm '' ci '180' lc 29.7258305182766 flbx 
+FLBX id 'l_0-2521--2548' nm '' ci '183' lc 6.43991459569488 flbx 
+FLBX id 'l_0-2523--2524' nm '' ci '186' lc 6.60946291313448 flbx 
+FLBX id 'l_0-2524--2525' nm '' ci '187' lc 43.4925568344786 flbx 
+FLBX id 'l_0-2525--2526' nm '' ci '188' lc 50.0483765970326 flbx 
+FLNO id '0-2526' nm '' ci '0-2526' flno 
+FLBX id 'l_0-2546--2547' nm '' ci '189' lc 15.9012578119114 flbx 
+FLBX id 'l_0-2546--4676' nm '' ci '191' lc 9.60832971954673 flbx 
+FLBX id 'l_0-2547--2548' nm '' ci '193' lc 6.24039261586973 flbx 
+FLBX id 'l_0-2517--12066' nm '' ci '1' lc 38.3607220995256 flbx 
+FLBR id '70' nm '' ci '7' lc 135.298548927401 flbr 
+FLBX id '103' nm '' ci '10' lc 4825.36174902033 flbx 
+FLBR id '205' nm '' ci '10' lc 7100.43959710272 flbr 
+FLBR id '25' nm '' ci '10' lc 7307.03991354773 flbr 
+FLBR id '204' nm '' ci '10' lc 7633.3574631259 flbr 
+FLBR id '203' nm '' ci '10' lc 7876.58215635904 flbr 
+FLNO id '23' nm '' ci '23' flno
+FLBX id 'l_23' nm '' ci '22' lc 41.5394089991775 flbx 
+FLBX id 'l_24' nm '' ci '23' lc 13.6514651228607 flbx 
+FLBX id 'l_25' nm '' ci '24' lc 15.0768862833208 flbx 
+FLNX id '24' nm '' ci '24' flnx
+FLBX id 'l_26' nm '' ci '18' lc 127.438936357807 flbx 
+FLBX id 'l_27' nm '' ci '16' lc 192.122942409285 flbx 
+FLBX id 'l_28' nm '' ci '17' lc 118.492457565869 flbx 
+FLBX id 'l_0-2548--2523' nm '' ci '26' lc 31.0395312465049 flbx 
+FLBX id 'l_0-2509--2511' nm '' ci '27' lc 21.9277221799025 flbx 
+FLBX id 'l_0-2511--2513' nm '' ci '28' lc 26.4514649877778 flbx 
+FLBX id 'l_0-2501--2503' nm '' ci '29' lc 30.150456049616 flbx 
+FLBX id 'l_0-2266--2263' nm '' ci '30' lc 20.6916045777163 flbx 
+FLNX id '187' nm '' ci '187' flnx
+FLNO id '187' nm '' ci '187' flno
+FLBX id 'l_156' nm '' ci '70' lc 2312.36732960691 flbx 
+FLNX id '188' nm '' ci '188' flnx 
+FLNO id '188' nm '' ci '188' flno 
+FLDI id 'l_162' ci '76' fldi 
+FLDI id 'l_173' ci '76' fldi 
+FLDI id 'l_163' ci '83' fldi 
+FLDI id 'l_164' ci '84' fldi 
+FLDI id 'l_174' ci '84' fldi 
+FLDI id 'l_165' ci '85' fldi 
+FLNO id '199' nm '' ci '199' flno
+FLNO id '200' nm '' ci '200' flno 
+FLNO id '202' nm '' ci '202' flno 
+FLNO id '201' nm '' ci '201' flno 
+FLNO id '244' nm '' ci '244' flno
+FLDI id 'l_204' ci '115' fldi 
+FLDI id 'l_208' ci '115' fldi 
+FLNO id '247' nm '' ci '247' flno 
+FLDI id 'l_205' ci '117' fldi 
+FLDI id 'l_209' ci '117' fldi 
+FLNO id '246' nm '' ci '246' flno 
+FLDI id 'l_206' ci '118' fldi 
+FLDI id 'l_210' ci '118' fldi 
+FLNO id '245' nm '' ci '245' flno 
+FLDI id 'l_207' ci '125' fldi 
+FLDI id 'l_211' ci '125' fldi 
+D2PT id '72' nm '' ci '72' px 558619.567255775 py 643261.354439474 d2pt
+D2IN id '241' nm '' ci '241' px 570659.383069264 py 642215.242220045 d2in

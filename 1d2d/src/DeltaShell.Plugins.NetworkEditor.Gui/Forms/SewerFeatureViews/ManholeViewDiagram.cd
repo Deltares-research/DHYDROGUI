@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.ManholeViewModel" Collapsed="true">
+    <Position X="2" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ACAAIBABAIAAAAFIAAEAAAAAAAEABAAUBBAAEAAAIBQ=</HashCode>
+      <FileName>Forms\SewerFeatureViews\ManholeViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Manhole" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.ManholeView" Collapsed="true">
+    <Position X="2" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AACACAAAACAAAAAAAACAAAAQAAgAAJAIAAAACCAgIAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\ManholeView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DelftTools.Hydro.Structures.Manhole" Collapsed="true">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.ManholeVisualisationViewModel" Collapsed="true">
+    <Position X="6.75" Y="3.75" Width="2.5" />
+    <AssociationLine Name="Manhole" Type="DelftTools.Hydro.Structures.Manhole" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.75" Y="4" />
+        <Point X="5.5" Y="4" />
+        <Point X="5.5" Y="3.191" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AHEFAAACChEEAUAAAAQCQEABACAEACAQBAAAEDYEBAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\ManholeVisualisationViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Manhole" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Shapes" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.ManholeVisualisation" Collapsed="true">
+    <Position X="6.75" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>QAAACDQAAEAQUAkAgACgEACChgAAIDAAAFgQGBABIAI=</HashCode>
+      <FileName>Forms\SewerFeatureViews\ManholeVisualisation.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.CreateShapesHelper" Collapsed="true">
+    <Position X="12.25" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAgAABAIAAQAAAAJgAAAAgCAAAAAAAAAQAAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\ManholeVisualisationViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.PositionHelper" Collapsed="true">
+    <Position X="12.25" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAIEAgBAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\ManholeVisualisationViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.DimensionsHelper" Collapsed="true">
+    <Position X="12.25" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\ManholeVisualisationViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.IDrawingShape" Collapsed="true">
+    <Position X="10.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAIAAABgAAAAAAAAAIAEAAAIIAAAAIIAIAAAAAAAA=</HashCode>
+      <FileName>Forms\SewerFeatureViews\IDrawingShape.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

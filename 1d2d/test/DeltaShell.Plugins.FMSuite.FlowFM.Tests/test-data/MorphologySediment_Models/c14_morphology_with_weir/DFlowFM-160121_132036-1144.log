@@ -1,0 +1,102 @@
+** WARNING: TimeSplitInterval invalid, disabling time partitioning of output. Got: 0X
+** WARNING: readMDUFile: physics effectspiral=0. was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: wind gapres=101325. was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: output snapshotdir=figures was in file, but not used. Check possible typo.
+** INFO   : Opened file : beyer_004_obs.xyn
+** INFO   : Closed file : beyer_004_obs.xyn
+** INFO   : Opened file : beyer_004_crs.pli
+** INFO   : Closed file : beyer_004_crs.pli
+** INFO   : Initializing flow model geometry...
+** INFO   : Opened file : beyer_004.ext
+** INFO   : Opened file : left.pli
+** INFO   : Closed file : left.pli
+** INFO   : boundary: left.pli opened 1 cells.
+** INFO   : dischargebnd left.pli       1 nr of open bndcells
+** INFO   : Opened file : right.pli
+** INFO   : Closed file : right.pli
+** INFO   : boundary: right.pli opened 1 cells.
+** INFO   : waterlevelbnd right.pli       1 nr of open bndcells
+** INFO   : Done initializing flow model geometry.
+** INFO   : Start initializing external forcings...
+** INFO   : External Forcing or Initialising dischargebnd from file left.pli.
+** INFO   : External Forcing or Initialising waterlevelbnd from file right.pli.
+** INFO   : Closed file : beyer_004.ext
+** INFO   : No wind, so waves is switched off
+** INFO   : Done initializing external forcings.
+** INFO   : Opened file : weir_tdk.pliz
+** INFO   : Opened file : DFM_interpreted_fxwvalues_weir_tdk.xyz
+** INFO   : Closed file : weir_tdk.pliz
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : Finding crossed flowlinks...
+** INFO   : done
+** INFO   : Delete kdtree...
+** INFO   : Closed file : DFM_interpreted_fxwvalues_weir_tdk.xyz
+** INFO   : Number of flow Links with fixed weirs ::              1
+** INFO   : nogauss , nocg :             10             0
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : Finding crossed flowlinks...
+** INFO   : done
+** INFO   : Delete kdtree...
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : Finding flow nodes...
+** INFO   : done in      0.00000 sec.
+** INFO   : Delete kdtree...
+** INFO   : Modelinit finished   at: 13:20:36, 21-01-2016
+** INFO   : ** Model initialization was successful **
+** INFO   : * Active Model definition:
+** INFO   : **
+** INFO   : Start of the computation time loop
+** INFO   : Writing initial output to file(s)...
+** INFO   : Done writing initial output to file(s).
+** INFO   :
+** INFO   :
+** INFO   :
+** INFO   : nr of netnodes        ( )  :                       18
+** INFO   : nr of netlinks        ( )  :                       25
+** INFO   : nr of flownodes       ( )  :                       10
+** INFO   : nr of openbnd cells   ( )  :                        2
+** INFO   : nr of 1D-flownodes    ( )  :                        0
+** INFO   : model area            (m2) :          9000.0000000000
+** INFO   : model volume          (m3) :         16675.3893230164
+** INFO   :
+** INFO   :
+** INFO   :
+** INFO   : simulation period     (s)  :         30000.0000000000
+** INFO   : nr of timesteps       ( )  :          3004.0000000000
+** INFO   : average timestep      (s)  :             9.9866844208
+** INFO   : time inistep          (s)  :             0.0520000000
+** INFO   : time setumod          (s)  :             0.0120000000
+** INFO   : time furu             (s)  :             0.0060000000
+** INFO   : time solve            (s)  :             0.0380000000
+** INFO   : time setexternalforc. (s)  :             0.0080000000
+** INFO   : time setexternalfbnd. (s)  :             0.0160000000
+** INFO   : time steps            (s)  :             0.1910000000
+** INFO   : time steps + plots    (s)  :             0.2460000000
+** INFO   : fraction solve/steps  ( )  :             0.1989528794
+** INFO   : total/(dnt*ndx)       (s)  :             0.0000081891
+** INFO   : av nr of cont. it s1it( )  :             0.0000000000
+** INFO   : time transport s         :             0.0090000000
+** INFO   : time debug     s         :             0.0000000000
+** INFO   :
+** INFO   :
+** INFO   :
+** INFO   : Computation started  at: 13:20:36, 21-01-2016
+** INFO   : Computation finished at: 13:20:36, 21-01-2016
+** INFO   :
+** INFO   : MPI    : no.
+** INFO   : OpenMP : yes.         #threads max : 1
+** INFO   :
+** INFO   :
+** INFO   :
+** INFO   : Opened file : beyer_004_19900101_082000
+** INFO   : Closed file : beyer_004_19900101_082000
+** INFO   : Opened file : numlimdt.xyz
+** INFO   : Closed file : numlimdt.xyz
+** INFO   :
+** INFO   : crosssection discharges (m3/s) :
+** INFO   :          0.000
+** INFO   : crosssection areas (m2/s) :
+** INFO   :          0.000

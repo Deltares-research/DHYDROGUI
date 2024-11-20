@@ -1,0 +1,3 @@
+BBB2.2
+NODE id '2' nm 'REF 400, Ernst-001: drainage basic functionality' ri '-1' mt 1 '2' nt 44 ObID '3B_UNPAVED' px 88100 py 444000  node
+NODE id '1' nm 'fixed level = 0' ri '-1' mt 1 '6' nt 47 ObID '3B_BOUNDARY' px 88000 py 444000  node

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <!-- DIMR -->
+  <File Id="DIMR_Technical_Reference_Manual" Source="$(var.ProjectDir)..\Dimr\!(loc.Delft3DPackageName)_Manuals\DIMR_Technical_Reference_Manual.pdf"/>
+  <File Id="DIMR_User_Manual" Source="$(var.ProjectDir)\..\Dimr\!(loc.Delft3DPackageName)_Manuals\DIMR_User_Manual.pdf"/>
+</Include>

@@ -1,0 +1,692 @@
+ Delft3D-WAQ version  4.5212 17-06-2011
+ Only to be used by Buffel                                  
+ (c) Deltares
+ Execution start: 2012/04/13 10:39:06 
+       ----------> Version number of the input file is: 4.910
+       ----------> Output level of the listfile is: 9
+
+
+ Model :            Water quality calculation Sobek-WQ      
+                                                            
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\DELWAQ4.INP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+
+ Run   :                                                    
+                    T0: 1996.01.01 00:00:00  (scu=       1s)
+
+ Intermediate version absolute timer detected !
+ System clock is     1 seconds !
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\DELWAQ4.INP                                        
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\SUBSTANC.DWQ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\SUBSTANC.DWQ                                       
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Number of active constituents   :  1
+ Number of inactive constituents :  0
+ Total number of constituents    :  1
+ Number   name
+    1     Cl                  
+
+ *********************************************************** B L O C K - 1 *****
+
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\DELWAQ1.INP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+
+ Factor between two clocks :       86400
+ System clock in date-format  DDHHMMSS 
+ Auxiliary timer in date-format DDHHMMSS 
+
+ The auxiliary timer is not equal to the system timer.
+ All the process fluxes will be scaled from the auxiliary timer to the system timer.
+
+ Integration option :                3.60
+ Start of simulation : 0Y-  0D- 0H- 0M- 0S.
+ End of simulation   : 0Y- 14D- 0H- 0M- 0S.
+ Selected option for time step size :  0
+ Integration time stepsize is : 0Y-  0D- 1H- 0M- 0S.
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\DELWAQ1.INP                                        
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Dump areas:
+ option selected for input : 1
+ Information from the standard input file.
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\OUTLOCWQ.DAT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+ Including file: ..\work\segment.dat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+ Number of dump areas :    8
+
+ Dump area :    1 : Segment    1        
+ Number of segments in area :              1
+          number   segment
+              1              1
+
+ Dump area :    2 : Segment    2        
+ Number of segments in area :              1
+          number   segment
+              1              2
+
+ Dump area :    3 : Segment    3        
+ Number of segments in area :              1
+          number   segment
+              1              3
+
+ Dump area :    4 : Segment    4        
+ Number of segments in area :              1
+          number   segment
+              1              4
+
+ Dump area :    5 : Segment    5        
+ Number of segments in area :              1
+          number   segment
+              1              5
+
+ Dump area :    6 : Segment    6        
+ Number of segments in area :              1
+          number   segment
+              1              6
+
+ Dump area :    7 : Segment    7        
+ Number of segments in area :              1
+          number   segment
+              1              7
+
+ Dump area :    8 : Segment    8        
+ Number of segments in area :              1
+          number   segment
+              1              8
+
+ Closing file: ..\work\segment.dat                                                           
+
+ Continuing on file: \SBKRIVER\DEMO_01.LIT\WORK\OUTLOCWQ.DAT                                       
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\OUTLOCWQ.DAT                                       
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Transects:
+ option selected for input : 2
+ No transects used.
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\DELWAQ2.INP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+
+ Monitoring  timings :
+ Start time : 0Y-  0D- 0H- 0M- 0S 
+ Stop time  : 0Y- 14D- 0H- 0M- 0S 
+ Time step  : 0Y-  0D- 1H- 0M- 0S 
+
+
+ Output      timings :
+ Start time : 0Y-  0D- 0H- 0M- 0S 
+ Stop time  : 0Y- 14D- 0H- 0M- 0S 
+ Time step  : 0Y-  0D- 1H- 0M- 0S 
+
+
+ History     timings :
+ Start time : 0Y-  0D- 0H- 0M- 0S 
+ Stop time  : 0Y- 14D- 0H- 0M- 0S 
+ Time step  : 0Y-  0D- 1H- 0M- 0S 
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\DELWAQ2.INP                                        
+
+ Continuing on file: delwaq.inp                                                                    
+
+ *********************************************************** B L O C K - 2 *****
+
+
+ Including file: ..\WORK\nrofsegm.dat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+
+ Number of segments :              8
+
+ Closing file: ..\WORK\nrofsegm.dat                                                          
+
+ Continuing on file: delwaq.inp                                                                    
+
+ NO process decomposition selected
+
+ option selected for grid layout : 2
+ Grid layout not used.
+
+  0 blocks of time independent attribute contribution
+
+ option for time dependent attributes   0
+ NO time dependent attributes
+ No first attribute set, using default 1
+ No second attribute set, using default 0
+
+ Volumes:
+
+ Including file: flowfil.mod                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
+ First  selected option   :      -2
+
+ Closing file: flowfil.mod                                                                   
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Information from unformatted intermediate file.
+ Filename is: ..\WORK\Volume.dat                                                                                                                                                                                                                                             
+ WARNING file does not exist.
+ Filename: ..\WORK\Volume.dat                                                                                                                                                                                                                                             
+
+ *********************************************************** B L O C K - 3 *****
+
+
+ Including file: ..\WORK\nrofexch.dat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+
+ Dimensions of the system :
+ Number of exchanges 1st direction :       9
+ Number of exchanges 2nd direction :       0
+ Number of exchanges 3rd direction :       0
+ Total number of exchanges         :       9
+
+ Closing file: ..\WORK\nrofexch.dat                                                          
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Number of dispersion arrays       :       1
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\DISPERSW.DAT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+ Item nr:       names:
+     1          Dispersion          
+ 
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\DISPERSW.DAT                                       
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Number of velocity arrays         :       0
+ System dispersion velocity
+   nr.      nr.      nr.   
+     1        1        0
+
+ Input option                      :       1
+
+ Option selected for pointers      :      -1
+
+ Including file: ..\WORK\Pointer.dat                                                                                                                                                                                                                                            
+
+           First direction :
+   Item nr.  From      To  From-1    To+1
+       1       2       1       3       0
+       2       3       2       4       1
+       3       4       3       5       2
+       4       5       4       6       3
+       5       6       5       7       4
+       6       7       6       8       5
+       7       8       7       0       6
+       8      -1       1      -1       2
+       9      -2       8      -2       7
+
+ Number of boundaries  :   2
+
+
+ boundary  exchange    from        to
+  number    number    segment    segment
+      1         8        -1         1
+      2         9        -2         8
+
+ Dispersion:
+
+ Closing file: ..\WORK\Pointer.dat                                                           
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\DELWAQ3.INP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+ First  selected option   :       1
+ Information from the standard input file.
+ Constant values without defaults 
+
+ Scale factors:
+                 1           2           3
+              1.0000E+00  1.0000E+00  1.0000E+00
+ Unscaled values:
+         1    5.0000E+00  0.0000E+00  0.0000E+00
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\DELWAQ3.INP                                        
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: ..\work\disperx.dat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+ Second selected option   :       1
+
+ First  direction:
+ Constant values without defaults 
+
+ Scale factors:
+                 1
+              1.0000E+00
+ Unscaled values:
+         1    0.0000E+00
+         2    0.0000E+00
+         3    0.0000E+00
+         4    0.0000E+00
+         5    0.0000E+00
+         6    0.0000E+00
+         7    0.0000E+00
+         8    0.0000E+00
+         9    0.0000E+00
+
+ Area:
+
+ Closing file: ..\work\disperx.dat                                                           
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: flowfil.mod                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
+ First  selected option   :      -2
+
+ Closing file: flowfil.mod                                                                   
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Information from unformatted intermediate file.
+ Filename is: ..\WORK\Area.dat                                                                                                                                                                                                                                               
+ WARNING file does not exist.
+ Filename: ..\WORK\Area.dat                                                                                                                                                                                                                                               
+
+ Flows:
+
+ Including file: flowfil.mod                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
+ First  selected option   :      -2
+
+ Closing file: flowfil.mod                                                                   
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Information from unformatted intermediate file.
+ Filename is: ..\WORK\Flow.dat                                                                                                                                                                                                                                               
+ WARNING file does not exist.
+ Filename: ..\WORK\Flow.dat                                                                                                                                                                                                                                               
+
+ Lengths:
+ Option for lengths          :      1
+ Lengths variable over the area.
+
+ First  selected option   :       0
+
+ Information from unformatted intermediate file.
+ Filename is: ..\WORK\Length.dat                                                                                                                                                                                                                                             
+ WARNING file does not exist.
+ Filename: ..\WORK\Length.dat                                                                                                                                                                                                                                             
+
+ *********************************************************** B L O C K - 4 *****
+
+
+ Boundary-IDs:       boundary-names:                         boundary-types:
+
+
+ Including file: ..\WORK\Boundwq.id                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+nNOD00000               1                                   Boundary Flow       
+nNOD00008               2                                   Boundary Flow       
+ 
+ Number of different boundary types:    1
+ Type:  Type-string
+     1  Boundary Flow       
+ 
+
+ Closing file: ..\WORK\Boundwq.id                                                            
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: ..\work\tatcherharlemen.wq                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+
+ Time lag option:  0
+ No time lags
+
+ Boundary concentrations
+
+ Closing file: ..\work\tatcherharlemen.wq                                                    
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\BOUNDWQ.TYP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+ BLOCKED per ITEM:
+ Input BOUNDARIES nr:    1 is BOUNDARIES type:    1 with type: Boundary Flow        and local substitution: Boundary Flow       
+
+ CONCENTRATIONs within the item blocks:
+ Input CONCENTR.  nr:    1 is CONCENTR.  nr:    1 with ID  : Cl                   and local substitution: Cl                  
+ 
+ Column:  1 contains: Cl                                       Status: used    
+
+ DATA grouped in         1 blocks of         1 Substance 
+ Constant values in this block.
+ Substance      1
+ boundary     Cl          
+         1   -9.9900E+02
+
+ ====> input item completed <==== 
+
+
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\BOUNDWQ.TYP                                        
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\BOUNDWQ.DAT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+ BLOCKED per ITEM:
+ Input BOUNDARIES nr:    1 is BOUNDARIES nr:    1 with ID  : nNOD00000            and local substitution: nNOD00000           
+ Absolute times (YYYY/MM/DD;HH:MM:SS) expected in next time function block.
+
+ CONCENTRATIONs within the item blocks:
+ Input CONCENTR.  nr:    1 is CONCENTR.  nr:    1 with ID  : Cl                   and local substitution: Cl                  
+
+ Linear interpolation is selected !
+ 
+ Column:  1 contains: Cl                                       Status: used    
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\BOUNDWQ.DAT                                        
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: ..\work\em2wq.dat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+
+ Closing file: ..\work\em2wq.dat                                                             
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: \SBKRIVER\FIXED\RSDUMMY.DUM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
+ Closing file: \SBKRIVER\FIXED\RSDUMMY.DUM                                                   
+
+ Continuing on file: delwaq.inp                                                                    
+
+ DATA grouped in         1 blocks of         1 Substance 
+
+ Number of breakpoints with full data:    6
+ breakpoint       1 :         0
+ Substance      1
+ boundary     Cl          
+         1    0.0000E+00
+ breakpoint       2 :    345600
+ Substance      1
+ boundary     Cl          
+         1    0.0000E+00
+ breakpoint       3 :    381600
+ Substance      1
+ boundary     Cl          
+         1    1.0000E+01
+ breakpoint       4 :    396000
+ Substance      1
+ boundary     Cl          
+         1    1.0000E+01
+ breakpoint       5 :    432000
+ Substance      1
+ boundary     Cl          
+         1    0.0000E+00
+ breakpoint       6 :  31622400
+ Substance      1
+ boundary     Cl          
+         1    0.0000E+00
+
+ ====> input item completed <==== 
+
+
+
+ *********************************************************** B L O C K - 5 *****
+
+
+ Including file: ..\WORK\nrofDWL.dat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+ No waste loads 
+
+ Closing file: ..\WORK\nrofDWL.dat                                                           
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: ..\WORK\Loadswq.id                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+ Closing file: ..\WORK\Loadswq.id                                                            
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\LOADSWQ.TYP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\LOADSWQ.TYP                                        
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\LOADSWQ.DAT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\LOADSWQ.DAT                                        
+
+ Continuing on file: delwaq.inp                                                                    
+
+ *********************************************************** B L O C K - 6 *****
+
+ Input constant   nr:    1 is constant   nr:    1 with ID  : Iteration report    
+ constant values in this block.
+ values         1
+ constants    Iteration   
+         1    0.0000E+00
+
+ ====> input item completed <==== 
+
+
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\PROCESS.DWQ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\PROCESS.DWQ                                        
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: \SBKRIVER\DEMO_01.LIT\WORK\CONSTANT.DWQ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+ Closing file: \SBKRIVER\DEMO_01.LIT\WORK\CONSTANT.DWQ                                       
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: ..\work\param.dat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+  
+ Input parameter  nr:    1 is parameter  nr:    1 with ID  : Xseg                
+
+ Input will be given for all          8 segments.
+
+ parameter s ordered in groups of segments per parameter .
+ constant values in this block.
+ segments       1
+ parameters   Xseg        
+         1    5.0000E-01
+         2    2.5050E+02
+         3    5.0050E+02
+         4    7.5050E+02
+         5    1.0005E+03
+         6    1.2505E+03
+         7    1.5005E+03
+         8    1.7505E+03
+
+ ====> input item completed <==== 
+
+
+  
+ Input parameter  nr:    1 is parameter  nr:    2 with ID  : Yseg                
+
+ Input will be given for all          8 segments.
+
+ parameter s ordered in groups of segments per parameter .
+ constant values in this block.
+ segments       2
+ parameters   Yseg        
+         1    0.0000E+00
+         2    0.0000E+00
+         3    0.0000E+00
+         4    0.0000E+00
+         5    0.0000E+00
+         6    0.0000E+00
+         7    0.0000E+00
+         8    0.0000E+00
+
+ ====> input item completed <==== 
+
+
+
+ Closing file: ..\work\param.dat                                                             
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: \SBKRIVER\FIXED\1996_0.QWC                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+ Input constant   nr:    1 is constant   nr:    2 with ID  : VWIND               
+ Input constant   nr:    2 is constant   nr:    3 with ID  : WINDDIR             
+ constant values in this block.
+ values         2           3
+ constants    VWIND       WINDDIR     
+         1    0.0000E+00  2.4100E+02
+
+ ====> input item completed <==== 
+
+
+
+ Closing file: \SBKRIVER\FIXED\1996_0.QWC                                                    
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: \SBKRIVER\FIXED\1996_0.QSC                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+ Input constant   nr:    1 is constant   nr:    4 with ID  : NATTEMP             
+ Input constant   nr:    2 is constant   nr:    5 with ID  : RAD                 
+ constant values in this block.
+ values         4           5
+ constants    NATTEMP     RAD         
+         1    1.8200E+01  5.0000E+01
+
+ ====> input item completed <==== 
+
+
+
+ Closing file: \SBKRIVER\FIXED\1996_0.QSC                                                    
+
+ Continuing on file: delwaq.inp                                                                    
+  
+ Input seg-funct. nr:    1 is seg-funct. nr:    1 with ID  : Chezy               
+ Input seg-funct. nr:    2 is seg-funct. nr:    2 with ID  : Surf                
+ Input seg-funct. nr:    3 is seg-funct. nr:    3 with ID  : Velocity            
+ Input seg-funct. nr:    4 is seg-funct. nr:    4 with ID  : Width               
+
+ Input will be given for all          8 segments.
+
+ seg-funct.s ordered in groups of segments per seg-funct..
+ Input comes from binary file: ..\work\segfun.dat                                                                                                                                                                                                                                              
+ info comes at runtime from binary file: ..\work\segfun.dat
+
+ ====> input item completed <==== 
+
+
+
+ Total number of constants        :    5
+
+ Total number of parameters       :    2
+
+ Total number of functions        :    0
+
+ Total number of segment functions:    4
+
+ *********************************************************** B L O C K - 7 *****
+
+
+ Including file: ..\work\wq2.dat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+
+ Option selected for initials    :   0
+
+ Information from unformatted intermediate file.
+ Filename is: ..\work\wqres.res                                                                                                                                                                                                                                              
+ WARNING file does not exist.
+ Filename: ..\work\wqres.res                                                                                                                                                                                                                                              
+
+ Closing file: ..\work\wq2.dat                                                               
+
+ Continuing on file: delwaq.inp                                                                    
+
+ *********************************************************** B L O C K - 8 *****
+
+
+
+ Option selected for output specification :   1
+ Information from the standard input file.
+
+ Specification of monitor output
+
+ Default output for this file
+
+ Specification of grid dump output
+
+ No output for this file
+
+ Specification of history output
+
+ Including file: hisvar.dat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+
+ Default output for this file
+
+ Specification of map output
+
+ Closing file: hisvar.dat                                                                    
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Including file: mapvar.dat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+
+ Default output for this file
+
+ Closing file: mapvar.dat                                                                    
+
+ Continuing on file: delwaq.inp                                                                    
+
+ Binary history file switched on
+
+ Binary map file switched on
+
+ NEFIS history file switched off
+
+ NEFIS map file switched off
+
+ NO BALANCE output : balance option not active !
+
+ *********************************************************** B L O C K - 9 *****
+
+
+ Output operations
+Number of periods defined:     0
+ 
+
+ *********************************************************** B L O C K -10 *****
+
+
+
+ Messages presented in this .lst file:
+
+ Number of WARNINGS            :  5
+ Number of ERRORS during input :  0
+ 
+
+
+ Messages presented including .lsp file:
+ Number of WARNINGS            :     6
+
+ Number of ERRORS during input :     0
+
+ Parallel processing with   1 processor(s)
+
+ total real      array space:        284
+ total integer   array space:       1978
+ total character array space:        193
+ grand total in 4-byte words:       2455 =   0-GB   0-MB   9-KB 820-Byte.
+ Execution stop : 2012/04/13 10:39:06 

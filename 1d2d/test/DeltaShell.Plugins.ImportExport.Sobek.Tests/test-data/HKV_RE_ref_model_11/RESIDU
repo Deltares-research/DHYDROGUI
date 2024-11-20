@@ -1,0 +1,415 @@
+ Residues in case of continuing with no convergence
+ Each record contains:
+  - Time step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  - Waterlevel convergence error
+    (if waterlevel criterion specified)
+  - Waterlevel convergence error factor
+    (if waterlevel criterion specified)
+  - Discharge convergence error
+    (if any discharge criterion specified)
+  - Discharge convergence error factor
+    (if any discharge criterion specified)
+  
+ Time step =   177
+    OV_20_35                       X=   6400.00 DH=   0.00478
+    OV_20_35                       X=   6400.00 DQ=    -0.371
+    Waterlevel convergence error=   0.00378
+    Waterlevel convergence error factor=     4.782
+    Discharge convergence error=   0.28004
+    Discharge convergence error factor=     4.091
+ Time step =   181
+    OV_13_20                       X=   6600.00 DH=  -0.00470
+    OV_13_20                       X=   6600.00 DQ=     0.280
+    Waterlevel convergence error=   0.00370
+    Waterlevel convergence error factor=     4.703
+    Discharge convergence error=   0.18670
+    Discharge convergence error factor=     2.994
+ Time step =   183
+    OV_13_20                       X=   6600.00 DH=  -0.00476
+    OV_13_20                       X=   6600.00 DQ=     0.284
+    Waterlevel convergence error=   0.00376
+    Waterlevel convergence error factor=     4.762
+    Discharge convergence error=   0.18816
+    Discharge convergence error factor=     2.959
+ Time step =   184
+    OV_13_20                       X=   6600.00 DH=  -0.00290
+    OV_13_20                       X=   6600.00 DQ=     0.185
+    Waterlevel convergence error=   0.00190
+    Waterlevel convergence error factor=     2.895
+    Discharge convergence error=   0.08836
+    Discharge convergence error factor=     1.912
+ Time step =   191
+    OV_13_20                       X=   6600.00 DH=  -0.00291
+    OV_13_20                       X=   6600.00 DQ=     0.187
+    Waterlevel convergence error=   0.00191
+    Waterlevel convergence error factor=     2.914
+    Discharge convergence error=   0.08440
+    Discharge convergence error factor=     1.821
+ Time step =   194
+    OV_20_35                       X=  12044.00 DH=  -0.01118
+    OV_13_20                       X=   6601.00 DQ=     0.258
+    Waterlevel convergence error=   0.01018
+    Waterlevel convergence error factor=    11.182
+    Discharge convergence error=   0.15310
+    Discharge convergence error factor=     2.460
+ Time step =   195
+    OV_20_35                       X=  11842.00 DH=  -0.00340
+    OV_20_35                       X=  12044.00 DQ=     0.210
+    Waterlevel convergence error=   0.00240
+    Waterlevel convergence error factor=     3.400
+    Discharge convergence error=   0.10424
+    Discharge convergence error factor=     1.982
+ Time step =   196
+    OV_20_35                       X=  11842.00 DH=  -0.02266
+    OV_20_35                       X=  12044.00 DQ=     0.200
+    Waterlevel convergence error=   0.02166
+    Waterlevel convergence error factor=    22.658
+    Discharge convergence error=   0.09247
+    Discharge convergence error factor=     1.863
+ Time step =   197
+    OV_20_35                       X=  11842.00 DH=   0.11126
+    OV_20_35                       X=  12044.00 DQ=    -0.824
+    Waterlevel convergence error=   0.11026
+    Waterlevel convergence error factor=   111.257
+    Discharge convergence error=   0.71567
+    Discharge convergence error factor=     7.625
+ Time step =   198
+    OV_20_35                       X=  11640.00 DH=  -0.04624
+    OV_20_35                       X=  12044.00 DQ=    -0.168
+    Waterlevel convergence error=   0.04524
+    Waterlevel convergence error factor=    46.238
+    Discharge convergence error=   0.05836
+    Discharge convergence error factor=     1.533
+ Time step =   199
+    OV_20_35                       X=  11842.00 DH=   0.00726
+    OV_20_35                       X=  12044.00 DQ=    -0.048
+    Waterlevel convergence error=   0.00626
+    Waterlevel convergence error factor=     7.262
+ Time step =   231
+    OV_0_2                         X=   1423.50 DH=  -0.00319
+    OV_0_2                         X=   1626.50 DQ=     0.040
+    Waterlevel convergence error=   0.00219
+    Waterlevel convergence error factor=     3.185
+ Time step =   232
+    OV_5_13                        X=   7000.00 DH=  -0.00563
+    OV_5_13                        X=   7001.00 DQ=     0.320
+    Waterlevel convergence error=   0.00463
+    Waterlevel convergence error factor=     5.626
+    Discharge convergence error=   0.17107
+    Discharge convergence error factor=     2.145
+ Time step =   251
+    OV_0_2                         X=    814.50 DH=   0.06372
+    OV_0_2                         X=   1017.50 DQ=    -0.689
+    Waterlevel convergence error=   0.06272
+    Waterlevel convergence error factor=    63.718
+    Discharge convergence error=   0.50098
+    Discharge convergence error factor=     3.667
+ Time step =   252
+    OV_5_13                        X=   7125.00 DH=  -0.01186
+    OV_0_2                         X=    814.50 DQ=     0.147
+    Waterlevel convergence error=   0.01086
+    Waterlevel convergence error factor=    11.864
+ Time step =   255
+    OV_0_2                         X=    814.50 DH=  -0.00932
+    OV_0_2                         X=    814.50 DQ=     0.123
+    Waterlevel convergence error=   0.00832
+    Waterlevel convergence error factor=     9.322
+ Time step =   256
+    OV_0_2                         X=    814.50 DH=   0.04727
+    OV_0_2                         X=   1017.50 DQ=    -0.420
+    Waterlevel convergence error=   0.04627
+    Waterlevel convergence error factor=    47.267
+    Discharge convergence error=   0.22247
+    Discharge convergence error factor=     2.124
+ Time step =   259
+    OV_0_2                         X=    611.50 DH=   0.01878
+    OV_0_2                         X=    814.50 DQ=    -0.218
+    Waterlevel convergence error=   0.01778
+    Waterlevel convergence error factor=    18.777
+    Discharge convergence error=   0.01389
+    Discharge convergence error factor=     1.068
+ Time step =   260
+    OV_0_2                         X=    611.50 DH=  -0.04535
+    OV_0_2                         X=    408.50 DQ=     0.119
+    Waterlevel convergence error=   0.04435
+    Waterlevel convergence error factor=    45.352
+ Time step =   261
+    OV_0_2                         X=    611.50 DH=   0.04715
+    OV_0_2                         X=    814.50 DQ=    -0.427
+    Waterlevel convergence error=   0.04615
+    Waterlevel convergence error factor=    47.147
+    Discharge convergence error=   0.21969
+    Discharge convergence error factor=     2.057
+ Time step =   262
+    OV_0_2                         X=    611.50 DH=   0.05018
+    OV_0_2                         X=    814.50 DQ=    -0.491
+    Waterlevel convergence error=   0.04918
+    Waterlevel convergence error factor=    50.181
+    Discharge convergence error=   0.28093
+    Discharge convergence error factor=     2.340
+ Time step =   263
+    OV_0_2                         X=    611.50 DH=   0.07908
+    OV_0_2                         X=    814.50 DQ=    -0.604
+    Waterlevel convergence error=   0.07808
+    Waterlevel convergence error factor=    79.079
+    Discharge convergence error=   0.39242
+    Discharge convergence error factor=     2.856
+ Time step =   286
+    OV_0_2                         X=    408.50 DH=  -0.00408
+    OV_0_2                         X=    611.50 DQ=     0.111
+    Waterlevel convergence error=   0.00308
+    Waterlevel convergence error factor=     4.077
+ Time step =   295
+    Neveng_1                       X=   1160.00 DH=  -0.03857
+    Neveng_1                       X=   1160.00 DQ=    -0.070
+    Waterlevel convergence error=   0.03757
+    Waterlevel convergence error factor=    38.567
+ Time step =   591
+    OV_0_2                         X=    408.50 DH=   0.04483
+    OV_0_2                         X=    611.50 DQ=    -0.757
+    Waterlevel convergence error=   0.04383
+    Waterlevel convergence error factor=    44.831
+    Discharge convergence error=   0.47697
+    Discharge convergence error factor=     2.702
+ Time step =   604
+    OV_2_5                         X=    431.00 DH=  -0.01836
+    OV_2_5                         X=    400.00 DQ=    -0.362
+    Waterlevel convergence error=   0.01736
+    Waterlevel convergence error factor=    18.356
+    Discharge convergence error=   0.11194
+    Discharge convergence error factor=     1.448
+ Time step =   606
+    OV_0_2                         X=    611.50 DH=  -0.05297
+    OV_0_2                         X=    814.50 DQ=     0.475
+    Waterlevel convergence error=   0.05197
+    Waterlevel convergence error factor=    52.975
+    Discharge convergence error=   0.22851
+    Discharge convergence error factor=     1.928
+ Time step =   607
+    OV_0_2                         X=    611.50 DH=  -0.02350
+    OV_0_2                         X=    408.50 DQ=     0.211
+    Waterlevel convergence error=   0.02250
+    Waterlevel convergence error factor=    23.501
+ Time step =   608
+    OV_0_2                         X=    611.50 DH=  -0.00798
+    OV_0_2                         X=    814.50 DQ=     0.125
+    Waterlevel convergence error=   0.00698
+    Waterlevel convergence error factor=     7.979
+ Time step =   609
+    OV_0_2                         X=    611.50 DH=   0.17741
+    OV_0_2                         X=    814.50 DQ=    -1.187
+    Waterlevel convergence error=   0.17641
+    Waterlevel convergence error factor=   177.407
+    Discharge convergence error=   0.94654
+    Discharge convergence error factor=     4.943
+ Time step =   613
+    OV_5_13                        X=   7001.00 DH=   0.01312
+    OV_0_2                         X=    814.50 DQ=     0.097
+    Waterlevel convergence error=   0.01212
+    Waterlevel convergence error factor=    13.117
+ Time step =   616
+    OV_0_2                         X=    814.50 DH=  -0.00714
+    OV_0_2                         X=    814.50 DQ=     0.097
+    Waterlevel convergence error=   0.00614
+    Waterlevel convergence error factor=     7.140
+ Time step =   617
+    OV_0_2                         X=   1017.50 DH=  -0.01578
+    OV_0_2                         X=   1220.50 DQ=     0.112
+    Waterlevel convergence error=   0.01478
+    Waterlevel convergence error factor=    15.776
+ Time step =   625
+    OV_5_13                        X=   7000.00 DH=  -0.00360
+    OV_5_13                        X=   7000.00 DQ=     0.220
+    Waterlevel convergence error=   0.00260
+    Waterlevel convergence error factor=     3.598
+    Discharge convergence error=   0.01813
+    Discharge convergence error factor=     1.090
+ Time step =   626
+    OV_5_13                        X=   7000.00 DH=   0.00540
+    OV_5_13                        X=   7001.00 DQ=    -0.308
+    Waterlevel convergence error=   0.00440
+    Waterlevel convergence error factor=     5.397
+    Discharge convergence error=   0.11002
+    Discharge convergence error factor=     1.555
+ Time step =   627
+    OV_5_13                        X=   7000.00 DH=   0.00241
+    OV_5_13                        X=   7000.00 DQ=    -0.142
+    Waterlevel convergence error=   0.00141
+    Waterlevel convergence error factor=     2.411
+ Time step =   647
+    OV_20_35                       X=  11842.00 DH=   0.03319
+    OV_20_35                       X=  12044.00 DQ=    -0.312
+    Waterlevel convergence error=   0.03219
+    Waterlevel convergence error factor=    33.194
+    Discharge convergence error=   0.18606
+    Discharge convergence error factor=     2.478
+ Time step =   648
+    OV_20_35                       X=  11842.00 DH=   0.11337
+    OV_20_35                       X=  12044.00 DQ=    -1.009
+    Waterlevel convergence error=   0.11237
+    Waterlevel convergence error factor=   113.371
+    Discharge convergence error=   0.88573
+    Discharge convergence error factor=     8.193
+ Time step =   663
+    OV_20_35                       X=   6400.00 DH=  -0.00258
+    OV_20_35                       X=   6401.00 DQ=     0.183
+    Waterlevel convergence error=   0.00158
+    Waterlevel convergence error factor=     2.584
+    Discharge convergence error=   0.08714
+    Discharge convergence error factor=     1.913
+ Time step =   666
+    OV_20_35                       X=   6400.00 DH=   0.00721
+    OV_20_35                       X=   6400.00 DQ=    -0.544
+    Waterlevel convergence error=   0.00621
+    Waterlevel convergence error factor=     7.212
+    Discharge convergence error=   0.45159
+    Discharge convergence error factor=     5.863
+ Time step =   667
+    OV_20_35                       X=   6400.00 DH=  -0.00259
+    OV_20_35                       X=   6401.00 DQ=     0.182
+    Waterlevel convergence error=   0.00159
+    Waterlevel convergence error factor=     2.588
+    Discharge convergence error=   0.08964
+    Discharge convergence error factor=     1.972
+ Time step =   668
+    OV_20_35                       X=   6400.00 DH=   0.00720
+    OV_20_35                       X=   6400.00 DQ=    -0.544
+    Waterlevel convergence error=   0.00620
+    Waterlevel convergence error factor=     7.202
+    Discharge convergence error=   0.45242
+    Discharge convergence error factor=     5.932
+ Time step =   670
+    OV_20_35                       X=   6400.00 DH=  -0.00298
+    OV_20_35                       X=   6400.00 DQ=     0.239
+    Waterlevel convergence error=   0.00198
+    Waterlevel convergence error factor=     2.984
+    Discharge convergence error=   0.14808
+    Discharge convergence error factor=     2.628
+ Time step =   671
+    OV_20_35                       X=   6400.00 DH=   0.00720
+    OV_20_35                       X=   6400.00 DQ=    -0.542
+    Waterlevel convergence error=   0.00620
+    Waterlevel convergence error factor=     7.201
+    Discharge convergence error=   0.45165
+    Discharge convergence error factor=     5.982
+ Time step =   672
+    OV_20_35                       X=   6400.00 DH=  -0.00421
+    OV_20_35                       X=   6401.00 DQ=     0.303
+    Waterlevel convergence error=   0.00321
+    Waterlevel convergence error factor=     4.213
+    Discharge convergence error=   0.21278
+    Discharge convergence error factor=     3.353
+ Time step =   674
+    OV_20_35                       X=   6400.00 DH=  -0.00422
+    OV_20_35                       X=   6401.00 DQ=     0.304
+    Waterlevel convergence error=   0.00322
+    Waterlevel convergence error factor=     4.218
+    Discharge convergence error=   0.21412
+    Discharge convergence error factor=     3.378
+ Time step =   676
+    OV_20_35                       X=   6400.00 DH=  -0.00422
+    OV_20_35                       X=   6401.00 DQ=     0.304
+    Waterlevel convergence error=   0.00322
+    Waterlevel convergence error factor=     4.220
+    Discharge convergence error=   0.21451
+    Discharge convergence error factor=     3.392
+ Time step =   678
+    OV_20_35                       X=   6400.00 DH=  -0.00422
+    OV_20_35                       X=   6401.00 DQ=     0.304
+    Waterlevel convergence error=   0.00322
+    Waterlevel convergence error factor=     4.220
+    Discharge convergence error=   0.21479
+    Discharge convergence error factor=     3.402
+ Time step =   680
+    OV_20_35                       X=   6400.00 DH=  -0.00422
+    OV_20_35                       X=   6401.00 DQ=     0.304
+    Waterlevel convergence error=   0.00322
+    Waterlevel convergence error factor=     4.220
+    Discharge convergence error=   0.21495
+    Discharge convergence error factor=     3.408
+ Time step =   682
+    OV_20_35                       X=   6400.00 DH=  -0.00422
+    OV_20_35                       X=   6401.00 DQ=     0.304
+    Waterlevel convergence error=   0.00322
+    Waterlevel convergence error factor=     4.220
+    Discharge convergence error=   0.21500
+    Discharge convergence error factor=     3.410
+ Time step =   684
+    OV_20_35                       X=   6400.00 DH=  -0.00422
+    OV_20_35                       X=   6401.00 DQ=     0.304
+    Waterlevel convergence error=   0.00322
+    Waterlevel convergence error factor=     4.220
+    Discharge convergence error=   0.21503
+    Discharge convergence error factor=     3.412
+ Time step =   686
+    OV_20_35                       X=   6400.00 DH=  -0.00422
+    OV_20_35                       X=   6401.00 DQ=     0.304
+    Waterlevel convergence error=   0.00322
+    Waterlevel convergence error factor=     4.220
+    Discharge convergence error=   0.21507
+    Discharge convergence error factor=     3.413
+ Time step =   688
+    OV_20_35                       X=   6400.00 DH=  -0.00422
+    OV_20_35                       X=   6401.00 DQ=     0.304
+    Waterlevel convergence error=   0.00322
+    Waterlevel convergence error factor=     4.220
+    Discharge convergence error=   0.21506
+    Discharge convergence error factor=     3.413
+ Time step =   692
+    OV_20_35                       X=   6400.00 DH=  -0.00298
+    OV_20_35                       X=   6400.00 DQ=     0.238
+    Waterlevel convergence error=   0.00198
+    Waterlevel convergence error factor=     2.980
+    Discharge convergence error=   0.14925
+    Discharge convergence error factor=     2.674
+ Time step =   694
+    OV_20_35                       X=   6400.00 DH=   0.00720
+    OV_20_35                       X=   6400.00 DQ=    -0.542
+    Waterlevel convergence error=   0.00620
+    Waterlevel convergence error factor=     7.200
+    Discharge convergence error=   0.45330
+    Discharge convergence error factor=     6.086
+ Time step =   695
+    OV_20_35                       X=   6400.00 DH=   0.00720
+    OV_20_35                       X=   6400.00 DQ=    -0.541
+    Waterlevel convergence error=   0.00620
+    Waterlevel convergence error factor=     7.197
+    Discharge convergence error=   0.45198
+    Discharge convergence error factor=     6.070
+ Time step =   696
+    OV_20_35                       X=   6400.00 DH=   0.00719
+    OV_20_35                       X=   6400.00 DQ=    -0.541
+    Waterlevel convergence error=   0.00619
+    Waterlevel convergence error factor=     7.194
+    Discharge convergence error=   0.45171
+    Discharge convergence error factor=     6.064
+ Time step =   705
+    OV_20_35                       X=   6400.00 DH=   0.00720
+    OV_20_35                       X=   6400.00 DQ=    -0.542
+    Waterlevel convergence error=   0.00620
+    Waterlevel convergence error factor=     7.199
+    Discharge convergence error=   0.45310
+    Discharge convergence error factor=     6.085
+ Time step =   711
+    OV_20_35                       X=   6400.00 DH=   0.00720
+    OV_20_35                       X=   6400.00 DQ=    -0.542
+    Waterlevel convergence error=   0.00620
+    Waterlevel convergence error factor=     7.199
+    Discharge convergence error=   0.45305
+    Discharge convergence error factor=     6.084
+ Time step =   717
+    OV_20_35                       X=   6400.00 DH=   0.00720
+    OV_20_35                       X=   6400.00 DQ=    -0.542
+    Waterlevel convergence error=   0.00620
+    Waterlevel convergence error factor=     7.199
+    Discharge convergence error=   0.45306
+    Discharge convergence error factor=     6.085
+ Time step =   723
+    OV_20_35                       X=   6400.00 DH=   0.00720
+    OV_20_35                       X=   6400.00 DQ=    -0.542
+    Waterlevel convergence error=   0.00620
+    Waterlevel convergence error factor=     7.199
+    Discharge convergence error=   0.45312
+    Discharge convergence error factor=     6.085

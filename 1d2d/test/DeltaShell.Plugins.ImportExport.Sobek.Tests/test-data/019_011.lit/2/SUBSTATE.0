@@ -1,0 +1,9 @@
+substance_group 'General' 
+    substance 'Cl' 
+    name      'Chloride' 
+    unit      'g/m3' 
+    active     1  
+    selected_processes
+    end-selected_processes 
+    end-substance
+end-substance_group

@@ -1,0 +1,203 @@
+Deltares, Parsen Version 2.08.002.54560 (Win64), Feb 20 2018, 11:17:39
+file_top_ntw = \S216003\ISSUES.LIT\WORK\NETWORK.NTW                                            
+file_top_net = \S216003\ISSUES.LIT\WORK\NETWORK.TP                                             
+file_top_obi = \S216003\ISSUES.LIT\WORK\NETWORK.OBI                                            
+file_top_cpt = \S216003\ISSUES.LIT\WORK\NETWORK.CP                                             
+file_top_nfl =                                                                                 
+file_top_dat = \S216003\ISSUES.LIT\WORK\NODES.DAT                                              
+file_top_xyc = \S216003\ISSUES.LIT\WORK\NETWORK.D12                                            
+file_crs_net = \S216003\ISSUES.LIT\WORK\NETWORK.CR                                             
+file_crs_def = \S216003\ISSUES.LIT\WORK\PROFILE.DEF                                            
+file_crs_dat = \S216003\ISSUES.LIT\WORK\PROFILE.DAT                                            
+file_str_net = \S216003\ISSUES.LIT\WORK\NETWORK.ST                                             
+file_str_def = \S216003\ISSUES.LIT\WORK\STRUCT.DEF                                             
+file_str_dbs = \S216003\ISSUES.LIT\WORK\STRUCT.DEF                                             
+file_str_dat = \S216003\ISSUES.LIT\WORK\STRUCT.DAT                                             
+file_str_con = \S216003\ISSUES.LIT\WORK\CONTROL.DEF                                            
+file_str_trg = \S216003\ISSUES.LIT\WORK\TRIGGER.DEF                                            
+file_str_cmp = \S216003\ISSUES.LIT\WORK\STRUCT.CMP                                             
+file_str_vlv = \S216003\ISSUES.LIT\WORK\VALVE.TAB                                              
+file_str_mud =                                                                                 
+file_str_mum =                                                                                 
+file_frc_bed = \S216003\ISSUES.LIT\WORK\FRICTION.DAT                                           
+file_frc_wnd = \S216003\ISSUES.LIT\WORK\FRICTION.DAT                                           
+file_frc_exr = \S216003\ISSUES.LIT\WORK\FRICTION.DAT                                           
+file_frc_glf = \S216003\ISSUES.LIT\WORK\FRICTION.DAT                                           
+file_cnd_net = \S216003\ISSUES.LIT\WORK\NETWORK.CN                                             
+file_cnd_flb = \S216003\ISSUES.LIT\WORK\BOUNDARY.DAT                                           
+file_cnd_fll = \S216003\ISSUES.LIT\WORK\LATERAL.DAT                                            
+file_cnd_fbd = \S216003\ISSUES.LIT\WORK\BOUNDLAT.DAT                                           
+file_cnd_sab = \S216003\ISSUES.LIT\WORK\BOUNDARY.SAL                                           
+file_cnd_sal = \S216003\ISSUES.LIT\WORK\LATERAL.SAL                                            
+file_ini_igl = \S216003\ISSUES.LIT\WORK\INITIAL.DAT                                            
+file_ini_ifl = \S216003\ISSUES.LIT\WORK\INITIAL.DAT                                            
+file_ini_isa = \S216003\ISSUES.LIT\WORK\INITIAL.SAL                                            
+file_met_wnd = \S216003\FIXED\24_11_22.WDC                                                     
+file_met_bui = \S216003\FIXED\24_11_22.BUI                                                     
+file_met_wat =                                                                                 
+file_dsp_gld = \S216003\ISSUES.LIT\WORK\GLOBDISP.DAT                                           
+file_dsp_lod = \S216003\ISSUES.LIT\WORK\LOKDISP.DAT                                            
+file_dsp_fwt = \S216003\ISSUES.LIT\WORK\FRESHWAT.DAT                                           
+file_dsp_mou = \S216003\ISSUES.LIT\WORK\MOUTH.DAT                                              
+file_dsp_brm = \S216003\ISSUES.LIT\WORK\BRMOUTH.DAT                                            
+file_grd_net = \S216003\ISSUES.LIT\WORK\NETWORK.GR                                             
+file_rtm_flt = ..\work\runtime.dat                                                             
+file_rtm_flm = ..\work\runtime.dat                                                             
+file_rtm_san = ..\work\runtime.dat                                                             
+file_rtm_gwn =                                                                                 
+file_gwm_gwm =                                                                                 
+file_mea_net = \S216003\ISSUES.LIT\WORK\NETWORK.ME                                             
+Opening File: \S216003\ISSUES.LIT\WORK\SETTINGS.DAT
+File Opened
+Opening File: parsen.ini
+File Opened
+ConveyanceAccuracyFactor= 0.015
+DefaultDistrictCode=00
+Opening File: NtrPluv.ini
+File Opened
+CalculationPointMinDistDwn1=  0.50
+CalculationPointMinDistUp 1=  0.50
+CalculationPointMinDistDwn2=  0.50
+CalculationPointMinDistUp 2=  0.50
+CalculationPointMinDistDwn3=  0.50
+CalculationPointMinDistUp 3=  0.50
+CalculationPointMinDistDwn4=  0.50
+CalculationPointMinDistUp 4=  0.50
+CompoundObjectDistance= 10.00
+No range check
+Existance check
+ max_increase_width_with_h_subs=    99999.00    
+ max_increase_width_with_h_nosubs=    99999.00    
+ max_change_deltax_with_x =    99999.00    
+ max_change_totwidth_with_x =    99999.00    
+ max_change_flowwidth_with_x =    99999.00    
+Conveyance tables created
+ applications: <RIVR><FLOW> 
+ Start parsing FLOW data
+ Counting objects ......
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.TP
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.CN
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.NTW
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.ME
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\CONTROL.DEF
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\FRICTION.DAT
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.ST
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\STRUCT.DAT
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\TRIGGER.DEF
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.CR
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\PROFILE.DEF
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\FRICTION.DAT
+File Opened
+ Topography layer ......
+ Start Reading Topo Data
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.TP
+File Opened
+ Reading Obi Data
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.OBI
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.OBI
+File Opened
+ Start hashing branches, nodes
+ Start converting topo_1
+ Start converting topo_2
+ Start parsing pluvius nodes
+Opening File: \S216003\ISSUES.LIT\WORK\NODES.DAT
+File Opened
+ Grid layer ......
+ Start reading cs-locations
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.CR
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\PROFILE.DAT
+File Opened
+ Start ordering cross-sections
+ Start reading grid data
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.GR
+File Opened
+ Runtime data ......
+Opening File: ..\work\runtime.dat
+File Opened
+Opening File: \S216003\FIXED\24_11_22.BUI
+File Opened
+ Start converting grid data
+Opening File: \S216003\ISSUES.LIT\WORK\STRUCT.DEF
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.TP
+File Opened
+ Condition Layer ......
+ Read Condition Tables
+Opening File: \S216003\ISSUES.LIT\WORK\BOUNDLAT.DAT
+File Opened
+ Read Condition Locations
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.CN
+File Opened
+ Convert Boundary Conditions
+Opening File: \S216003\ISSUES.LIT\WORK\BOUNDARY.DAT
+File Opened
+ Convert Lateral Discharges
+Opening File: \S216003\ISSUES.LIT\WORK\LATERAL.DAT
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.NTW
+File Opened
+ Convert Lateral U-Discharges
+ Cross sections layer ......
+ Start reading cs-definition data
+Opening File: \S216003\ISSUES.LIT\WORK\PROFILE.DEF
+File Opened
+ No y/z-crossections, conveyance switched off
+ Start reading cs-location data
+Opening File: \S216003\ISSUES.LIT\WORK\PROFILE.DAT
+File Opened
+ Friction layer ......
+ Global Friction
+Opening File: \S216003\ISSUES.LIT\WORK\FRICTION.DAT
+File Opened
+ Bed Friction
+Opening File: \S216003\ISSUES.LIT\WORK\FRICTION.DAT
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\FRICTION.DAT
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\FRICTION.DAT
+File Opened
+ Cross-Section Friction
+Opening File: \S216003\ISSUES.LIT\WORK\FRICTION.DAT
+File Opened
+ Convert Cross-Sections to Grid
+ Maximum number of conveyance levels computed:            0
+ Wind Friction
+Opening File: \S216003\ISSUES.LIT\WORK\WND_LOC.DAT
+File Opened
+Opening File: \S216003\FIXED\24_11_22.WDC
+File Opened
+ Curving Points
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.CP
+File Opened
+ 2D-Connections
+Opening File: \S216003\ISSUES.LIT\WORK\NETWORK.D12
+File Opened
+ Initial conditions layer ......
+Opening File: \S216003\ISSUES.LIT\WORK\INITIAL.DAT
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\INITIAL.DAT
+File Opened
+Opening File: \S216003\ISSUES.LIT\WORK\INITIAL.DAT
+File Opened
+ Output options ......
+Opening File: ..\work\runtime.dat
+File Opened
+ Checking Flap Gates ......
+ Checking Extra Resistances ......
+ Stop parsing FLOW data
+ Writing NEFIS files ...
+
+End of program

@@ -1,0 +1,120 @@
+VLVE id 'Culvert_3' nm 'Valve for culvert Culvert_3' lt lc
+TBLE
+0 1 <
+0.1 0.9 <
+0.2 0.8 <
+0.3 0.7 <
+0.4 0.6 <
+0.5 0.5 <
+0.6 0.4 <
+0.7 0.3 <
+0.8 0.2 <
+0.9 0.1 <
+1 0 <
+tble
+vlve
+VLVE id 'Culvert_4' nm 'Valve for culvert Culvert_4' lt lc
+TBLE
+0 2 <
+0.1 1.9 <
+0.2 1.8 <
+0.3 1.7 <
+0.4 1.6 <
+0.5 1.5 <
+0.6 1.4 <
+0.7 1.3 <
+0.8 1.2 <
+0.9 1.1 <
+1 1 <
+tble
+vlve
+VLVE id 'Culvert_2' nm 'Valve for culvert Culvert_2' lt lc
+TBLE
+0 1 <
+0.1 0.9 <
+0.2 0.8 <
+0.3 0.7 <
+0.4 0.6 <
+0.5 0.5 <
+0.6 0.4 <
+0.7 0.3 <
+0.8 0.2 <
+0.9 0.1 <
+1 0 <
+tble
+vlve
+VLVE id 'InvSiphon_2' nm 'Valve for culvert InvSiphon_2' lt lc
+TBLE
+0 2 <
+0.1 1.8 <
+0.2 1.6 <
+0.3 1.4 <
+0.4 1.2 <
+0.5 1 <
+0.6 0.8 <
+0.7 0.6 <
+0.8 0.4 <
+0.9 0.2 <
+1 0 <
+tble
+vlve
+VLVE id 'Siphon_2' nm 'Valve for culvert Siphon_2' lt lc
+TBLE
+0 1 <
+0.1 0.9 <
+0.2 0.8 <
+0.3 0.7 <
+0.4 0.6 <
+0.5 0.5 <
+0.6 0.4 <
+0.7 0.3 <
+0.8 0.2 <
+0.9 0.1 <
+1 0 <
+tble
+vlve
+VLVE id 'Siphon_4' nm 'Valve for culvert Siphon_4' lt lc
+TBLE
+0 1 <
+0.1 0.9 <
+0.2 0.8 <
+0.3 0.7 <
+0.4 0.6 <
+0.5 0.5 <
+0.6 0.4 <
+0.7 0.3 <
+0.8 0.2 <
+0.9 0.1 <
+1 0 <
+tble
+vlve
+VLVE id 'InvSiphon_3' nm 'Valve for culvert InvSiphon_3' lt lc
+TBLE
+0 2 <
+0.1 1.8 <
+0.2 1.6 <
+0.3 1.4 <
+0.4 1.2 <
+0.5 1 <
+0.6 0.8 <
+0.7 0.6 <
+0.8 0.4 <
+0.9 0.2 <
+1 0 <
+tble
+vlve
+VLVE id 'InvSiphon_4' nm 'Valve for culvert InvSiphon_4' lt lc
+TBLE
+ 0 1 < 
+ 0.1 0.9 < 
+ 0.2 0.8 < 
+ 0.3 0.7 < 
+ 0.4 0.6 < 
+ 0.5 0.5 < 
+ 0.6 0.4 < 
+ 0.7 0.3 < 
+ 0.8 0.2 < 
+ 0.9 0.1 < 
+ 1 0 < 
+tble
+ vlve

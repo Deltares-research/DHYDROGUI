@@ -1,0 +1,25 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=0
+ImportFrom=Hydroworks
+ImportDate=10/19/2009 3:26:46 PM
+Case Name=POUPPER_AA2 vDELTARES19-03-2010v7
+QuantityResultsPresent=0
+UserId=Govert Verhoeven
+UserName=verho_g
+ComputerName=wl01827
+[Previous OutputFiles]
+..\work\calcpnt.his=-1
+..\work\reachseg.his=-1
+..\work\qlat.his=-1
+..\work\struc.his=-1
+..\work\flowanal.his=-1
+..\work\calcdim.his=-1
+..\work\reachdim.his=-1
+..\work\strucdim.his=-1
+..\work\qwb.his=-1
+..\work\simulate.rep=-1
+..\work\sobek.log=-1
+..\work\network.rep=0
+..\work\indicat.flw=-1

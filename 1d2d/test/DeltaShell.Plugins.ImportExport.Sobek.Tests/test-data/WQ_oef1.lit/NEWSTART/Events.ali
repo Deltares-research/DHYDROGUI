@@ -1,0 +1,7 @@
+event.*   \S212003\fixed\default.bui
+evapor.*  \S212003\fixed\3b\evapor.gem
+wind.*    \S212003\fixed\default.wdc
+delwaq.*  \S212003\fixed\default.qsc
+wq_wind.* \S212003\fixed\default.qwc
+temp.*    \S212003\fixed\default.tmp
+rnff.*    \S212003\fixed\default.rnf

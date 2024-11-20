@@ -1,0 +1,27 @@
+CN_1.1
+FLBO id 'benedenrand_ZwarteWater' ci 'benedenrand_ZwarteWater' flbo
+FLBO id 'rand_Koelwaterkanaal' ci 'rand_Koelwaterkanaal' flbo
+FLBO id 'Langeslag' ci 'Langeslag' flbo
+FLBO id 'OK22_OK20' ci 'OK22_OK20' flbo
+FLBO id 'Hancate' ci 'Hancate' flbo
+FLBO id 'Boxbergen' ci 'Boxbergen' flbo
+FLBR id 'Zwolle' nm 'Zwolle' ci 'stadsgrachten Zwolle Midden' lc 437.188205277233 flbr 
+FLBR id 'Herfte' nm 'Herfte' ci 'Almelose kanaal' lc 1026.41368952124 flbr 
+FLBR id 'Linterzijl' nm 'Linterzijl' ci 'Nieuwe Wetering' lc 794.582047406519 flbr 
+FLBR id 'Marslanden_Noord_Zuid' nm 'Marslanden_Noord_Zuid' ci 'Nieuwe Wetering' lc 2960.37276124645 flbr 
+FLBR id 'Zandwetering' nm 'gemaal' ci 'Soestwetering' lc 22.9704449164251 flbr 
+FLBR id 'Oude_Wetering' nm 'gemaal' ci 'Soestwetering' lc 56.5741110197363 flbr 
+FLBR id 'Rietberg' nm 'gemaal' ci 'Soestwetering' lc 1983.95475489212 flbr 
+FLBR id 'Bremmelerstraat_Zuidberg' nm 'gemaal' ci 'Soestwetering' lc 3073.1652883657 flbr 
+FLBR id 'Lierder_Molenbroek' nm 'Lierder_Molenbroek' ci 'Soestwetering' lc 6068.48003508853 flbr 
+FLBR id 'Sekdoorn' nm 'Sekdoorn' ci 'Soestwetering' lc 9739.52456225818 flbr 
+FLBR id 'Markvoort' nm 'Markvoort' ci 'Soestwetering' lc 10024.9321619963 flbr 
+FLBR id 'OK15' nm 'OK15' ci 'Bo_Overijsselsch Kanaal' lc 1362.72724355054 flbr 
+FLBR id 'OK10' nm 'OK10' ci 'Bo_Overijsselsch Kanaal' lc 4421.47422192982 flbr 
+FLBR id 'OK5' nm 'OK5' ci 'Bo_Overijsselsch Kanaal' lc 5876.42303037434 flbr 
+FLBR id 'OK45_OK30_vrij' nm 'OK45_OK30_vrij' ci 'Bo_1' lc 1800.13758462279 flbr 
+FLBR id 'OK40' nm 'stuw' ci 'Bo_1' lc 1932.35361164128 flbr 
+FLBR id 'OK35_OK25' nm 'stuw' ci 'Bo_1' lc 2948.23844510547 flbr 
+FLBR id 'OK65_OK60_OK55_OK50' nm 'OK65_OK60_OK55_OK50' ci 'Bo_2' lc 862.171783413503 flbr 
+FLBR id 'SW75_OK80_OK85' nm 'vrij' ci 'Bo_Soestwetering' lc 2937.37619561087 flbr 
+FLBR id 'SW70' nm 'gemaal' ci 'Bo_Soestwetering' lc 5595.61134027456 flbr 

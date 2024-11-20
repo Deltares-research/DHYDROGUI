@@ -1,0 +1,6 @@
+MEAS id '1' nm 'Default (1)' PDIN 1 1 '365;00:00:00' pdin TBLE
+'2002/01/01;00:00:00' 0 <
+'2002/12/31;23:59:00' 0 <  tble meas
+MEAS id '2' nm 'Default (2)' PDIN 1 1 '365;00:00:00' pdin TBLE 
+'2002/01/01;00:00:00' 0 < 
+'2002/12/31;23:59:00' 0 <  tble meas
