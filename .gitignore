@@ -1,4 +1,3 @@
-
 # Visual studio
 *.suo
 *.user
@@ -60,6 +59,7 @@ $RECYCLE.BIN/
 AcceptanceModels
 AcceptanceModelsReferenceSaveData
 AcceptanceModelsReferenceOutput
+AcceptanceModelsRTCFMDimrXmlBased
 DiagnosticReport
 
 # Automatically generated

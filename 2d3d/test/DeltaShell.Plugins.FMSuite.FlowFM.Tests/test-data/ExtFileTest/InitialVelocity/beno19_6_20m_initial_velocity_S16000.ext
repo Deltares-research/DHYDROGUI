@@ -1,0 +1,14 @@
+
+QUANTITY=initialvelocityx
+FILENAME=rijn_beno19_6_v2a_waal_ucx_S16000.xyz
+FILETYPE=7
+METHOD=5
+OPERAND=O
+EXTRAPOLTOL=40
+
+QUANTITY=initialvelocityy
+FILENAME=rijn_beno19_6_v2a_waal_ucy_S16000.xyz
+FILETYPE=7
+METHOD=5
+OPERAND=O
+EXTRAPOLTOL=40

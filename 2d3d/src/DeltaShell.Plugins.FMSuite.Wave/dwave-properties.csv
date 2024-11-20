@@ -1,0 +1,97 @@
+# mdwgroups with multiplicity that can be > 1 should not be in this file..,,,,,,,,,,,,,,,,
+GUIGroups,(order determines order of appearance),,,,,,,,,,,,,,,
+General,General,,,,,,,,,,,,,,,
+spectral,Spectral Domain,,,,,,,,,,,,,,,
+Physical Processes,Physical Processes,,,,,,,,,,,,,,,
+Numerical Parameters,Numerical Parameters,,,,,,,,,,,,,,,
+Output,Output Parameters,,,,,,,,,,,,,,,
+misc, Miscellaneous,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,,
+MdwGroups,,,,,,,,,,,,,,,,
+WaveFileInformation,,,,,,,,,,,,,,,,
+General,,,,,,,,,,,,,,,,
+Constants,,,,,,,,,,,,,,,,
+Processes,,,,,,,,,,,,,,,,
+Numerics,,,,,,,,,,,,,,,,
+Output,,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,,
+MdwGroup,MdwName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MdwOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description,Unit,
+WaveFileInformation,FileVersion,,,,String,02.00,,,True,,,,,,,
+General,ProjectName,General,General Settings,Project name,String,,,,,,,,,,,
+General,ProjectNr,General,General Settings,Project number,String,,,,,,,,,,,
+General,ReferenceDate,General,General Settings,Reference date,DateOnly,2000-01-01,,,,,,,,,, [YYYY-MM-DD]
+General,DirConvention,General,General Settings,Directional convention:nautical|cartesian,nautical|cartesian,nautical,,,,,,,,,Direction specification convention,
+General,INPUTTemplateFile,General,General Settings,INPUT template file,FileName,,,,,,,,,,Path to pre-existing SWAN INPUT file,
+Output,COMFile,General,Communication,Communication file,FileName,,,,,,,,,,Wave communication file (*_com.nc) for coupling,
+Output,WriteCOM,General,Communication,Write communication files,true|false,false,,,,,,,,,Write results to communication file(s),
+Output,COMWriteInterval,General,Communication,Communication interval,Double,60.0,,,,WriteCOM,,,,,Interval for writing data to communication file(s) in minutes, min
+Output,AppendCOM,General,Communication,Append to com file,true|false,false,,,,WriteCOM,,,,,Upon writing to communication file(s) overwrite the previous data (false) or append to the data series (true),
+Output,MassFluxToCOM,General,Communication,Mass flux to com,true|false,true,,,,WriteCOM,,,,,write mass fluxes due to wave to communication file(s),
+General,TSeriesFile,,,Timeseries File,FileName,,,,True,,,,,,,
+General,MeteoFile,General,,Meteo File,FileName,,,,,False,,,,,,
+General,SimMode,General,Simulation mode,Simulation mode:stationary|non-stationary,stationary|non-stationary,stationary,,,,,,,,,,
+General,TimeStep,General,Simulation mode,D-Waves time step,Double,10,1,,,SimMode=1,,,,,Time step in case of non-stationary simulation, min
+General,TimeInterval,General,Simulation mode,D-Waves time interval,Double,60,,,,SimMode=1,,,,,Time interval in case of non-stationary simulation, min
+General,OnlyInputVerify,General,Simulation mode,Verify input,true|false,false,,,True,,,,,,Switch for input validation or simulation run: false = simulation run; true = input validation only,
+General,FlowBedLevel,General,Default domain data,Bed level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of bed level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
+General,FlowWaterLevel,General,Default domain data,Water level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of water level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
+General,FlowVelocity,General,Default domain data,Velocity:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of velocity from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
+General,FlowVelocityType,General,Default domain data,Velocity type:depth-averaged|surface-level|wave-dependent,depth-averaged|surface-level|wave-dependent,depth-averaged,,,,,,,,,Method of velocity computation,
+General,FlowWind,General,Default domain data,Wind:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of wind from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
+General,DirSpace,spectral,Defaults,Directional space:circle|sector,circle|sector,circle,,,,,,,,,Default directional space,
+General,NDir,spectral,Defaults,Nr. of directions,Integer,36,1,,,,,,,,Default number of directional bins,
+General,StartDir,spectral,Defaults,Start direction,Double,0.0,,,,DirSpace=1,,,,,Default start direction (in case of sector), deg
+General,EndDir,spectral,Defaults,End direction,Double,360.0,,,,DirSpace=1,,,,,Default end direction (in case of sector), deg
+General,NFreq,spectral,Defaults,Nr. of frequencies,Integer,24,1,,,,,,,,Default number of frequencies,
+General,FreqMin,spectral,Defaults,Min. frequency,Double,0.03,,,,,,,,,Default minimum frequency,Hz
+General,FreqMax,spectral,Defaults,Max. frequency,Double,1.0,,,,,,,,,Default maximum frequency,Hz
+General,WaterLevel,spectral,Defaults,Water level,Double,0.0,,,True,,,,,,Default water level,
+General,XVeloc,spectral,Defaults,Velocity x-direction,Double,0.0,,,True,,,,,,Default water velocity in x-direction,
+General,YVeloc,spectral,Defaults,Velocity y-direction,Double,0.0,,,True,,,,,,Default water velocity in y-direction,
+General,WindSpeed,spectral,Defaults,Wind speed,Double,0.0,,,True,,,,,,Default wind speed, m/s
+General,WindDir,spectral,Defaults,Wind direction,Double,0.0,,,True,,,,,,Default wind direction, deg
+General,ObstacleFile,,,Obstacle File,FileName,,,,True,,,,,,,
+Constants,WaterLevelCorrection,Physical Processes,Constants,Water level correction,Double,0.0,,,,,,,,,Overall water level correction,m
+Constants,Gravity,Physical Processes,Constants,Gravitational acceleration,Double,9.81,,,,,,,,,Gravitational acceleration,  m/s2
+Constants,WaterDensity,Physical Processes,Constants,Water density,Double,1025.0,,,,,,,,,Density of water, kg/m3
+Constants,NorthDir,Physical Processes,Constants,North direction w.r.t. x-axis,Double,90.0,,,,,,,,,Direction of north relative to x-axis,deg
+Constants,MinimumDepth,Physical Processes,Constants,Minimum water depth,Double,0.05,,,,,,,,,Minimum water depth below which points are excluded from the computation , m
+Processes,GenModePhys,Physical Processes,General,Physics mode:first generation|second generation|third generation,1|2|3,3,,,,,,,,,Physics generation mode,
+Processes,WaveSetup,Physical Processes,General,Wave setup,true|false,false,,,,,,,,,Include wave setup,
+Processes,Breaking,Physical Processes,Breaking,Depth induced breaking,true|false,true,,,,,,,,,Depth induced breaking,
+Processes,BreakAlpha,Physical Processes,Breaking,Alpha,Double,1.0,,,,,Breaking,,,,Alpha coefficient for wave breaking, -
+Processes,BreakGamma,Physical Processes,Breaking,Gamma,Double,0.73,,,,,Breaking,,,,Gamma coefficient for wave breaking, -
+Processes,Triads,Physical Processes,Triads,Triads,true|false,false,,,,,,,,,Include triads,
+Processes,TriadsAlpha,Physical Processes,Triads,TrFac,Double,0.05,,,,,Triads,,,,Alpha coefficient for triads, -
+Processes,TriadsBeta,Physical Processes,Triads,CutFr,Double,2.5,,,,,Triads,,,,Beta coefficient for triads, -
+Processes,BedFriction,Physical Processes,Bed friction,Bed friction:none|JONSWAP|Collins|Madsen et al.,none|jonswap|collins|madsen et al.,jonswap,,,,,,,,,Bed friction type,
+Processes,BedFricCoef,Physical Processes,Bed friction,Bed friction coef.,Double,BedFriction:0|0.038|0.015|0.05,,,,,BedFriction=1|2|3,,,,Bed friction coefficient (default: 0.067 for JONSWAP; 0.015 for Collings: 0.05 for Madsen et al.), m2/s3
+Processes,Diffraction,Physical Processes,Diffraction,Diffraction,true|false,false,,,,,,,,,Diffraction,
+Processes,DiffracSteps,Physical Processes,Diffraction,Diffraction steps,Integer,0,,,,,Diffraction,,,,Number of diffraction smoothing steps
+Processes,DiffracProp,Physical Processes,Diffraction,Diffraction prop.,true|false,true,,,,,Diffraction,,,,Include adaption of propagation velocities due to diffraction,
+Processes,DiffracCoef,Physical Processes,Diffraction,Diffraction coefficient,Double,0.2,,,,,Diffraction,,,,diffraction coefficient, -
+#GuiOnly,Wind,Physical Processes,General,Wind,true|false,true,,,,,,,,,Include wind,
+Processes,WindGrowth,Physical Processes,General,Wind growth,true|false,true,,,,,,,,,Include wind growth,
+Processes,Quadruplets,Physical Processes,General,Quadruplets,true|false,true,,,,,,,,,Include quadruplets,
+Processes,WhiteCapping,Physical Processes,General,White capping formulation:off|Komen|Van der Westhuysen,off|Komen|Westhuysen,Komen,,,,,,,,,White capping,
+Processes,Refraction,Physical Processes,General,Refraction,true|false,true,,,,,,,,,Include refraction,
+Processes,FreqShift,Physical Processes,General,Frequency shifting,true|false,true,,,,,,,,,Include frequency shifting in frequency space,
+Processes,WaveForces,Physical Processes,General,Wave force computation:dissipation 3d|dissipation|radiation stresses|radiation stresses <2013,dissipation 3d|dissipation|radiation stresses|radiation stresses <2013,dissipation 3d,,,,,,,,,Method of wave force computation,
+Numerics,DirSpaceCDD,Numerical Parameters,Numerical Parameters,Directional discretisation,Double,0.5,0.0,1.0,,,,,,,"Discretisation in directional space: 0 for central, 1 for upwind", -
+Numerics,FreqSpaceCSS,Numerical Parameters,Numerical Parameters,Frequency discretisation,Double,0.5,0.0,1.0,,,,,,,"Discretisation in frequency space: 0 for central, 1 for upwind", -
+Numerics,RChHsTm01,Numerical Parameters,Numerical Parameters,RChHsTm01,Double,0.02,,,,,,,,,Relative change of wave height or mean wave period with respect to local value,
+Numerics,RChMeanHs,Numerical Parameters,Numerical Parameters,RChMeanHs,Double,0.02,,,,,,,,,Relative change of wave height with respect to model-wide average wave height,m
+Numerics,RChMeanTm01,Numerical Parameters,Numerical Parameters,RChMeanTm01,Double,0.02,,,,,,,,,Relative change of mean wave period with respect to model-wide average mean wave period,
+Numerics,PercWet,Numerical Parameters,Numerical Parameters,Convergence percentage,Double,98.0,0.0,100.0,,,,,,,Percentage of points included in simulation at which convergence criteria must be satisfied,%
+Numerics,MaxIter,Numerical Parameters,Numerical Parameters,Max. nr. of iterations,Integer,SimMode:50|15 ,,,,,,,,,Maximum number of iterations for convergence,
+Output,MapWriteInterval,Output,Map,Map file interval,Double,60.0,,,,,,,,,Interval for writing data to map file(s) in minutes, min
+Output,WriteTable,Output,Tables,Write tables,true|false,false,,,,,,,,,Write tables for output locations,
+Output,WriteSpec1D,Output,Tables,Write 1D spectra,true|false,false,,,,,,,,,Write 1D spectra for output locations,
+Output,WriteSpec2D,Output,Tables,Write 2D spectra,true|false,false,,,,,,,,,Write 2D spectra for output locations,
+Output,LocationFile,Output,Tables,Location file,FileName,,,,,,,,,,File name of output locations,
+Output,UseHotFile,Output,Hotstart,Write/read hotstart,true|false,false,,,,,,,,,Write and read hotstart files,
+Output,TestOutputLevel,Output,Miscellaneous,Test output level,Integer,0,,,,,,,,,Test output level,
+Output,TraceCalls,Output,Miscellaneous,Trace subroutine calls,true|false,false,,,,,,,,,Trace subroutine calls,
+Output,MapWriteNetCDF,Output,Miscellaneous,Write NetCDF, true|false,true,,,,,,,,,Write output to NetCDF,
+Output,NetCDFSinglePrecision,Output,Miscellaneous,Use NetCDF single precision,true|false,false,,,,MapWriteNetCDF,,,,,Use single precision for NetCDF,
+Output,KeepINPUT,Output,Miscellaneous,Keep a copy of the Swan INPUT file(s),true|false,FALSE,,,,,,,,,Keep a copy of the Swan INPUT file(s),

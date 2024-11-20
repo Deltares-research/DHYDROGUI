@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components.GeneralStructureStreamFieldsHeaderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.NGHS.Common.Gui;component/CommonSettingsStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Style="{StaticResource GridStyle}"
+          Grid.Column="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0"
+                   Text="Upstream 1"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+        <TextBlock Grid.Column="1"
+                   Text="Upstream 2"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+        <TextBlock Grid.Column="2"
+                   Text="Downstream 1"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+        <TextBlock Grid.Column="3"
+                   Text="Downstream 2"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+    </Grid>
+</UserControl>

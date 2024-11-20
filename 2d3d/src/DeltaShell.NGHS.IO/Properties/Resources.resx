@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AGrid_CreateFile_Couldn_t_create_new_NetCDF_file_at_location_" xml:space="preserve">
+    <value>Couldn't create new NetCDF file at location </value>
+  </data>
+  <data name="AGrid_Initialize_Couldn_t_open_grid_nc_file__" xml:space="preserve">
+    <value>Couldn't open grid nc file: </value>
+  </data>
+  <data name="AGrid_Initialize_Couldn_t_get_coordinate_system_code" xml:space="preserve">
+    <value>Couldn't get coordinate system code</value>
+  </data>
+  <data name="AGrid_Couldn_t_get_the_number_of_networks" xml:space="preserve">
+    <value>Couldn't get the number of networks</value>
+  </data>
+  <data name="AGrid_Couldn_t_get_the_network_ids" xml:space="preserve">
+    <value>Couldn't get the network ids</value>
+  </data>
+  <data name="AGrid___because_the_API_was_not_instantiated_" xml:space="preserve">
+    <value>, because the API was not instantiated.</value>
+  </data>
+  <data name="AGrid_ThrowIfError__because_of_error_number___0_" xml:space="preserve">
+    <value>, because of error number: {0}</value>
+  </data>
+  <data name="AGrid_CleanUp_Couldn_t_close_grid_nc_file" xml:space="preserve">
+    <value>Couldn't close grid nc file</value>
+  </data>
+  <data name="GridApi_Initialize_Level_0__Message_1_" xml:space="preserve">
+    <value>Level: {0}. message = {1}</value>
+  </data>
+  <data name="GridApi_Initialize_Progress_0_Message_1_" xml:space="preserve">
+    <value>Progress: {0:P2}. message = {1}</value>
+  </data>
+  <data name="UGrid_ZCoordinateFillValue_Couldn_t_get_the_z_coordinate" xml:space="preserve">
+    <value>Couldn't get the z-coordinate</value>
+  </data>
+  <data name="UGrid_ZCoordinateFillValue_Couldn_t_set_the_z_coordinate" xml:space="preserve">
+    <value>Couldn't set the z-coordinate</value>
+  </data>
+  <data name="UGrid_GetNumberOf2DMeshes_Couldn_t_get_the_number_of_2D_meshes" xml:space="preserve">
+    <value>Couldn't get the number of 2D meshes</value>
+  </data>
+  <data name="UGrid_GetNumberOfNodesForMeshId_Couldn_t_get_the_number_of_nodes" xml:space="preserve">
+    <value>Couldn't get the number of nodes</value>
+  </data>
+  <data name="UGrid_GetNumberOfEdgesForMeshId_Couldn_t_get_number_of_edges" xml:space="preserve">
+    <value>Couldn't get number of edges</value>
+  </data>
+  <data name="UGrid_GetNumberOfFacesForMeshId_Couldn_t_get_number_of_faces" xml:space="preserve">
+    <value>Couldn't get number of faces</value>
+  </data>
+  <data name="UGrid_GetNumberOfMaxFaceNodesForMeshId_Couldn_t_get_max_face_nodes" xml:space="preserve">
+    <value>Couldn't get max face nodes</value>
+  </data>
+  <data name="UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_x_node_coordinates" xml:space="preserve">
+    <value>Couldn't get x node coordinates</value>
+  </data>
+  <data name="UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_y_node_coordinates" xml:space="preserve">
+    <value>Couldn't get y node coordinates</value>
+  </data>
+  <data name="UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_z_node_coordinates" xml:space="preserve">
+    <value>Couldn't get z node coordinates</value>
+  </data>
+  <data name="UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_the_node_coordinates" xml:space="preserve">
+    <value>Couldn't get the node coordinates</value>
+  </data>
+  <data name="UGrid_GetEdgeNodesForMeshId_Couldn_t_get_edge_nodes_of_the_mesh" xml:space="preserve">
+    <value>Couldn't get edge nodes of the mesh</value>
+  </data>
+  <data name="UGrid_GetFaceNodesForMeshId_Couldn_t_get_face_nodes_of_the_mesh" xml:space="preserve">
+    <value>Couldn't get face nodes of the mesh</value>
+  </data>
+  <data name="UGrid_NumberOfNamesAtLocation_Couldn_t_get_the_number_of_names_for_location_type" xml:space="preserve">
+    <value>Couldn't get the number of names for location type</value>
+  </data>
+  <data name="UGrid_GetNamesAtLocation_Couldn_t_get_the_names_at_location" xml:space="preserve">
+    <value>Couldn't get the names at location</value>
+  </data>
+  <data name="UGrid_RewriteGridCoordinates_Couldn_t_rewrite_grid_coordinates" xml:space="preserve">
+    <value>Couldn't rewrite grid coordinates</value>
+  </data>
+  <data name="UGrid_WriteZValuesAtFacesForMeshId_z_coordinate_of_mesh_faces" xml:space="preserve">
+    <value>z-coordinate of mesh faces</value>
+  </data>
+  <data name="UGrid_WriteZValuesAtNodesForMeshId_z_coordinate_of_mesh_nodes" xml:space="preserve">
+    <value>z-coordinate of mesh nodes</value>
+  </data>
+  <data name="UGrid_GetMeshName_Couldn_t_get_meshname" xml:space="preserve">
+    <value>Couldn't get meshname</value>
+  </data>
+  <data name="SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__" xml:space="preserve">
+    <value>No snapped geometry was generated for type {0}.</value>
+  </data>
+  <data name="UGrid_ReadZValuesAtFacesForMeshId_Error_reading_z_values_at_mesh_faces" xml:space="preserve">
+    <value>Error reading z values at mesh faces</value>
+  </data>
+  <data name="UGrid_ReadZValuesAtNodesForMeshId_Error_reading_z_values_at_mesh_nodes" xml:space="preserve">
+    <value>Error reading z values at mesh nodes</value>
+  </data>
+  <data name="UGrid_WriteZValuesAtFacesForMeshId_Error_writing_z_values_at_mesh_faces" xml:space="preserve">
+    <value>Error writing z values at mesh faces</value>
+  </data>
+  <data name="UGrid_WriteZValuesAtNodesForMeshId_Error_writing_z_values_at_mesh_nodes" xml:space="preserve">
+    <value>Error writing z values at mesh nodes</value>
+  </data>
+  <data name="UnstructuredGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported" xml:space="preserve">
+    <value>Unable to write z-values at this location, CellEdges are not currently supported</value>
+  </data>
+  <data name="UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported" xml:space="preserve">
+    <value>Unable to read z-values at this location, CellEdges are not currently supported</value>
+  </data>
+  <data name="UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention" xml:space="preserve">
+    <value>Unable to read z-values from file: {0}, file is not UGrid convention</value>
+  </data>
+  <data name="WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_not_currently_supported" xml:space="preserve">
+    <value>Unstructured grid edge coverages are not currently supported</value>
+  </data>
+  <data name="WaterFlowFMModel_UpdateBathymetryCoverage_The_BedLevel_location_specified_does_not_match_the_existing_BedLevel_data__a_new_BedLevel_Data_will_be_generated_" xml:space="preserve">
+    <value>The BedLevel location specified does not match the existing BedLevel data, a new BedLevel Data will be generated.</value>
+  </data>
+  <data name="WaterFlowFMModel_UpdateBathymetryCoverage_Reapplying_existing_spatial_operations_to_new_BedLevel_Data" xml:space="preserve">
+    <value>Reapplying existing spatial operations to new BedLevel Data</value>
+  </data>
+  <data name="WaterFlowFMModel_GetGridSnapApi_Last_attempt_to_perform_snapping_operation_failed__please_verify_the_model_first_" xml:space="preserve">
+    <value>Last attempt to perform snapping operation failed, please verify the model first.</value>
+  </data>
+  <data name="WaterFlowFMModel_GetGridSnapApi_Kernel_failed_to_perform_operation___0_" xml:space="preserve">
+    <value>Kernel failed to perform operation: {0}</value>
+  </data>
+  <data name="WaterFlowFMModel_DisposeSnapApi_Error_disposing_grid_operation_api___0_" xml:space="preserve">
+    <value>Error disposing grid operation api: {0}</value>
+  </data>
+  <data name="IniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_" xml:space="preserve">
+    <value>Invalid key-value-comment line on line {0} in file {1}</value>
+  </data>
+  <data name="IniReader_Invalid_group_on_line__0__in_file__1_" xml:space="preserve">
+    <value>Invalid group on line {0} in file {1}</value>
+  </data>
+  <data name="GridApiException_Message_ErrorCodeWithMessage" xml:space="preserve">
+    <value>GridApi returned error code {0}: {1}</value>
+  </data>
+  <data name="GridApiException_Message_ErrorCode" xml:space="preserve">
+    <value>GridApi returned error code {0}</value>
+  </data>
+</root>

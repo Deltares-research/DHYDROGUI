@@ -1,0 +1,1 @@
+UGRID 'D:/test/WAQ_model/westernscheldt/westernscheldt_waqgeom.nc'

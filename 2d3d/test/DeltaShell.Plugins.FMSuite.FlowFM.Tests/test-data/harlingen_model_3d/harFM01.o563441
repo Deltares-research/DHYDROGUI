@@ -1,0 +1,662 @@
+ my_rank =           0
+ MAXIMUM NUMBER OF LINKS         :            2
+ MAXIMUM NUMBER OF NODES         :            0
+ RESOLUTION GRAPHICS SCREEN      :         1024         768
+ RESOLUTION TEXT     SCREEN      :          128          48
+ NUMBER OF COLOURS AVAILABLE     :          256
+             0        100002 NOD(KMAX)
+             6        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+             6         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+             6         50000 xlan(maxlan)
+             7         50000 ylan(maxlan)
+             7         50000 zlan(maxlan)
+             7         25000 nclan(maxlan)
+Opened Model definition file : har.mdu
+ Node: har.mdu
+    (unknown data type) -- ? --  T
+    Node: model
+       (unknown data type) -- ? --  T
+       Node: program
+          D-Flow FM -- STRING --  T
+       Node: version
+          1.1.62.000000 -- STRING --  T
+       Node: autostart
+          0 -- STRING --  T
+    Node: geometry
+       (unknown data type) -- ? --  T
+       Node: netfile
+          d3d_005_net.nc -- STRING --  T
+       Node: bathymetryfile
+           -- STRING --  T
+       Node: waterlevinifile
+           -- STRING --  T
+       Node: landboundaryfile
+           -- STRING --  T
+       Node: thindamfile
+           -- STRING --  T
+       Node: thindykefile
+           -- STRING --  T
+       Node: proflocfile
+           -- STRING --  T
+       Node: profdeffile
+           -- STRING --  T
+       Node: manholefile
+           -- STRING --  T
+       Node: waterlevini
+          -1 -- STRING --  T
+       Node: bedlevuni
+          -5. -- STRING --  T
+       Node: bedlevtype
+          3 -- STRING --  T
+       Node: partitionfile
+           -- STRING --  T
+       Node: anglat
+          0. -- STRING --  T
+       Node: conveyance2d
+          3 -- STRING --  T
+       Node: makeorthocenters
+          0 -- STRING --  T
+       Node: dcenterinside
+          1. -- STRING --  T
+       Node: kmx
+          1 -- STRING --  T
+    Node: numerics
+       (unknown data type) -- ? --  T
+       Node: cflmax
+          0.7 -- STRING --  T
+       Node: cflwavefrac
+          0.1 -- STRING --  T
+       Node: advectype
+          3 -- STRING --  T
+       Node: limtypmom
+          4 -- STRING --  T
+       Node: limtypsa
+          4 -- STRING --  T
+       Node: icgsolver
+          1 -- STRING --  T
+       Node: maxdegree
+          6 -- STRING --  T
+    Node: physics
+       (unknown data type) -- ? --  T
+       Node: uniffrictcoef
+          2.3d-2 -- STRING --  T
+       Node: uniffricttype
+          1 -- STRING --  T
+       Node: vicouv
+          0. -- STRING --  T
+       Node: dicouv
+          0. -- STRING --  T
+       Node: vicoww
+          0. -- STRING --  T
+       Node: dicoww
+          0. -- STRING --  T
+       Node: smagorinsky
+          0. -- STRING --  T
+       Node: elder
+          0. -- STRING --  T
+       Node: irov
+          0 -- STRING --  T
+       Node: wall_ks
+          0. -- STRING --  T
+       Node: tidalforcing
+          1 -- STRING --  T
+       Node: salinity
+          1 -- STRING --  T
+       Node: initialsalinity
+          0. -- STRING --  T
+    Node: wind
+       (unknown data type) -- ? --  T
+       Node: icdtyp
+          2 -- STRING --  T
+       Node: cdbreakpoints
+          6.3d-4 7.23d-3 -- STRING --  T
+       Node: windspeedbreakpoints
+          0. 100. -- STRING --  T
+    Node: time
+       (unknown data type) -- ? --  T
+       Node: refdate
+          20080109 -- STRING --  T
+       Node: tunit
+          M -- STRING --  T
+       Node: dtuser
+          300 -- STRING --  T
+       Node: dtmax
+          60. -- STRING --  T
+       Node: dtinit
+          1. -- STRING --  T
+       Node: autotimestep
+          1 -- STRING --  T
+       Node: tstart
+          15120. -- STRING --  T
+       Node: tstop
+          35280. -- STRING --  T
+    Node: restart
+       (unknown data type) -- ? --  T
+       Node: restartfile
+           -- STRING --  T
+       Node: restartdatetime
+          20080109000000 -- STRING --  T
+    Node: external forcing
+       (unknown data type) -- ? --  T
+       Node: extforcefile
+          001.ext -- STRING --  T
+    Node: output
+       (unknown data type) -- ? --  T
+       Node: obsfile
+          har_fine_V3_obs.xyn -- STRING --  T
+       Node: crsfile
+          har_crs_V2.pli -- STRING --  T
+       Node: hisfile
+          001_his.nc -- STRING --  T
+       Node: hisinterval
+          60. -- STRING --  T
+       Node: xlsinterval
+          0. -- STRING --  T
+       Node: flowgeomfile
+           -- STRING --  T
+       Node: mapfile
+          001_map.nc -- STRING --  T
+       Node: mapinterval
+          600. -- STRING --  T
+       Node: mapformat
+          1 -- STRING --  T
+       Node: rstinterval
+          0. -- STRING --  T
+       Node: waqfilebase
+          har -- STRING --  T
+       Node: waqinterval
+          0. -- STRING --  T
+       Node: statsinterval
+          0. -- STRING --  T
+       Node: snapshotdir
+          figures -- STRING --  T
+       Node: timingsinterval
+          60 -- STRING --  T
+Opened 'd3d_005_net.nc' as #***.
+Closed NetCDF file 'd3d_005_net.nc.
+Opened file : har_fine_V3_obs.xyn
+Closed file : har_fine_V3_obs.xyn
+Opened file : har_crs_V2.pli
+Closed file : har_crs_V2.pli
+             8         43201 netcell(numpx1)
+             8         56854 lnn(numl)
+             9        113708 lne(2,numl)
+             9         28054 xz(numc)
+            10         28054 yz(numc)
+            10         28054 xzw(numc)
+            10         28054 yzw(numc)
+            10         28054 ba(numc)
+ Renumber flow nodes...
+ Sumdiff:    22033690  Sumdiff renum:     18135792
+ Bandwidth:       56013  Bandwidth renum:          311
+Opened file : 001.ext
+            11         56854 xe (nx)
+            11         56854 ye (nx)
+            12         56854 xyen(2, nx)
+            16        511686 kce(nx), kez(nx), keu(nx), kes(nx), kesd(nx), ket(nx), ken(nx), keg(nx), ked(nx), kep(nx), itpez(nx), itpeu(nx)
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Opened file : 071_01.pli
+Closed file : 071_01.pli
+ boundary: 071_01.pli          95
+waterlevelbnd 071_01.pli      95 nr of open bndcells
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Opened file : 071_02.pli
+Closed file : 071_02.pli
+ boundary: 071_02.pli         210
+waterlevelbnd 071_02.pli     210 nr of open bndcells
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Opened file : 071_03.pli
+Closed file : 071_03.pli
+ boundary: 071_03.pli         154
+waterlevelbnd 071_03.pli     154 nr of open bndcells
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Opened file : 071_01_sal.pli
+Closed file : 071_01_sal.pli
+ boundary: 071_01_sal.pli          95
+salinitybnd071_01_sal.pli      95nr of salinity bndcells
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Opened file : 071_02_sal.pli
+Closed file : 071_02_sal.pli
+ boundary: 071_02_sal.pli         210
+salinitybnd071_02_sal.pli     210nr of salinity bndcells
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Opened file : 071_03_sal.pli
+Closed file : 071_03_sal.pli
+ boundary: 071_03_sal.pli         154
+salinitybnd071_03_sal.pli     154nr of salinity bndcells
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Opened file : sluice.pli
+Closed file : sluice.pli
+ boundary: sluice.pli           1
+dischargebndsluice.pli       1nr of open bndcells
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Found optional keyword VALUE
+looking for keyword: QUANTITY
+keyword QUANTITY NOT found!
+            18        228112 nd(ndx), bl(ndx), bai(ndx), kcs(ndx), aif(ndx)
+            21        111520 ln   (2,lnx)
+            22        111520 lncn (2,lnx)
+            23        111520 bob  (2,lnx)
+            23         55760 dx   (  lnx)
+            24         55760 dxi  (  lnx)
+            24         55760 wu   (  lnx)
+            25         55760 wui  (  lnx)
+            25         55760 kcu  (  lnx)
+            26         55760 csu  (  lnx)
+            26         55760 snu  (  lnx)
+            26         55760 acl  (  lnx)
+            27         55760 acn  (2,lnx)
+            27         55760 iadv   (lnx)
+            28         55760 ibot   (lnx)
+            29        167280 xu(lnx), yu(lnx) , blu(lnx)
+            30         56854 ln2lne (nex)
+            30         56854 lne2ln (nex)
+            31         28801  cn (numk)
+            31         28801 ucnx(numk)
+            32         28801 ucny(numk)
+            32         28801 ban (numk)
+cutcell_list; nr of *.cut files found =              0             4
+            34        223040 wcxyl(4,lnx)
+            34         57028 wcxy (2,ndx)
+            35        111520 wcL  (2,Lnx)
+            35         28514 wc     (ndx)
+            37        223040 wcnxyl(4,lnx)
+            38         86403 wcnxy (3,numk)
+            38          1091 cscnw(nrcnw)
+            38          1091 sncnw(nrcnw)
+            38          1091  kcnw(nrcnw)
+cutcell_list; nr of *.cut files found =              0             5
+            39         17504 walls(17,nw)
+            40        112154 banf(mxban)
+            41        112154 nban(2,mxban)
+            41        112154 rr(mxban), nr(mxban)
+            42        112154 banh (mxban)
+            43        112154 nbanh(2,mxban)
+            44         57028 s0  (ndx) , s1  (ndx)
+            44         57028 a0  (ndx) , a1  (ndx)
+            45         57028 hs  (ndx) , s00 (ndx)
+            45         28514 cfs (ndx)
+            45         28514 kbot (ndx)
+            45         28514 ktop (ndx)
+            46         28514 kmxn (ndx)
+            46         55760 Lbot (Lnx)
+            46         55760 Ltop (Lnx)
+            47         55760 kmxL (Lnx)
+            47         28799 kbotc(numkmin: numkmax)
+            47         28799 kmxc (numkmin: numkmax)
+            48         28514 asig  (ndx)
+            48         55760 ustb  (lnx)
+            48         55760 ustw  (lnx)
+            50        171084 ucx (ndkx) , ucy (ndkx)
+            51        171084 uqcx(ndkx) , uqcy(ndkx)
+            53        171084 ucxq(ndkx) , ucyq(ndkx)
+            54        171084 qin (ndkx) , vih (ndkx)
+            55        171084 dvxc(ndkx) , dvyc(ndkx)
+            56         85542 cfli(ndkx)
+            57         85542 squ (ndkx)
+            57         85542 sqi (ndkx)
+            58         28514 sq  (ndkx)
+            58         85542 vol0(ndkx)
+            59         85542 vol1(ndkx)
+            59         28514 volerror(ndkx)
+            59         28514 tidep (ndx)
+            60         85542 zws (ndkx)
+            61         85542 zws0(ndkx)
+            61         85542 ww1 (ndkx)
+            62         85542 qw  (ndkx)
+            63         85542 rho (ndkx)
+            63         55760 cfu  (lnx)
+            64         28514 frcu (lnx)
+            64         28514 ifrcutp(lnx)
+            64         55760 wsu  (lnx)
+            66        167280 u0   (lnkx)
+            67        167280 u1   (lnkx)
+            68        167280 q1   (lnkx)
+            70        167280 qa   (lnkx)
+            71        167280 v    (lnkx)
+            72        167280 ucxu (lnkx)
+            74        167280 ucyu (lnkx)
+            75        167280 hu   (lnkx)
+            76        167280 huvli(lnkx)
+            78        167280 au   (lnkx)
+            79        167280 viu  (lnkx)
+            80        167280 cflj (lnkx)
+            82        167280 tetaj(lnkx)
+            83        167280 suu  (lnkx)
+            84        167280 advi (lnkx)
+            86        167280 adve (lnkx)
+            87        167280 rhou (lnkx)
+            88        167280 plotlin(max(lnkx,ndkx))
+            89         28514 numlimdt(ndx)
+            89         28514 bb   (ndx )
+            89         28514 dd   (ndx )
+            89         28514 fu   (lnkx)
+            89         28514 ru   (lnkx)
+            90         55760 teta (lnx)
+            91        171084 sa0 (ndkx) , sa1 (ndkx)
+            92         85542 supq(ndkx)
+            92          4590 xbndz(nbndz), ybndz(nbndz), xy2bndz(2,nbndz), zbndz(nbndz), kbndz(n4,nbndz), kdz(nbndz)
+Enabled salinity while reading external forcings.
+            92          4131 xbnds(nbnds), ybnds(nbnds), xy2bnds(2,nbnds), zbnds(nbnds), kbnds(4,nbnds), kds(nbnds)
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+External Forcing or Initialising 'waterlevelbnd' from file '071_01.pli'.
+Opened file : 071_01.pli
+Closed file : 071_01.pli
+Opened file : 071_01_0001.tim
+Opened file : 071_01_0002.tim
+Opened file : 071_01_0003.tim
+Opened file : 071_01_0004.tim
+Opened file : 071_01_0005.tim
+Opened file : 071_01_0006.tim
+Opened file : 071_01_0007.tim
+Opened file : 071_01_0008.tim
+Opened file : 071_01_0009.tim
+Opened file : 071_01_0010.tim
+Opened file : 071_01_0011.tim
+Opened file : 071_01_0012.tim
+Opened file : 071_01_0013.tim
+Opened file : 071_01_0014.tim
+Opened file : 071_01_0015.tim
+Opened file : 071_01_0016.tim
+Opened file : 071_01_0017.tim
+Opened file : 071_01_0018.tim
+Opened file : 071_01_0019.tim
+Opened file : 071_01_0020.tim
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+External Forcing or Initialising 'waterlevelbnd' from file '071_02.pli'.
+Opened file : 071_02.pli
+Closed file : 071_02.pli
+Opened file : 071_02_0001.tim
+Opened file : 071_02_0002.tim
+Opened file : 071_02_0003.tim
+Opened file : 071_02_0004.tim
+Opened file : 071_02_0005.tim
+Opened file : 071_02_0006.tim
+Opened file : 071_02_0007.tim
+Opened file : 071_02_0008.tim
+Opened file : 071_02_0009.tim
+Opened file : 071_02_0010.tim
+Opened file : 071_02_0011.tim
+Opened file : 071_02_0012.tim
+Opened file : 071_02_0013.tim
+Opened file : 071_02_0014.tim
+Opened file : 071_02_0015.tim
+Opened file : 071_02_0016.tim
+Opened file : 071_02_0017.tim
+Opened file : 071_02_0018.tim
+Opened file : 071_02_0019.tim
+Opened file : 071_02_0020.tim
+Opened file : 071_02_0021.tim
+Opened file : 071_02_0022.tim
+Opened file : 071_02_0023.tim
+Opened file : 071_02_0024.tim
+Opened file : 071_02_0025.tim
+Opened file : 071_02_0026.tim
+Opened file : 071_02_0027.tim
+Opened file : 071_02_0028.tim
+Opened file : 071_02_0029.tim
+Opened file : 071_02_0030.tim
+Opened file : 071_02_0031.tim
+Opened file : 071_02_0032.tim
+Opened file : 071_02_0033.tim
+Opened file : 071_02_0034.tim
+Opened file : 071_02_0035.tim
+Opened file : 071_02_0036.tim
+Opened file : 071_02_0037.tim
+Opened file : 071_02_0038.tim
+Opened file : 071_02_0039.tim
+Opened file : 071_02_0040.tim
+Opened file : 071_02_0041.tim
+Opened file : 071_02_0042.tim
+Opened file : 071_02_0043.tim
+Opened file : 071_02_0044.tim
+Opened file : 071_02_0045.tim
+Opened file : 071_02_0046.tim
+Opened file : 071_02_0047.tim
+Opened file : 071_02_0048.tim
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+External Forcing or Initialising 'waterlevelbnd' from file '071_03.pli'.
+Opened file : 071_03.pli
+Closed file : 071_03.pli
+Opened file : 071_03_0001.tim
+Opened file : 071_03_0002.tim
+Opened file : 071_03_0003.tim
+Opened file : 071_03_0004.tim
+Opened file : 071_03_0005.tim
+Opened file : 071_03_0006.tim
+Opened file : 071_03_0007.tim
+Opened file : 071_03_0008.tim
+Opened file : 071_03_0009.tim
+Opened file : 071_03_0010.tim
+Opened file : 071_03_0011.tim
+Opened file : 071_03_0012.tim
+Opened file : 071_03_0013.tim
+Opened file : 071_03_0014.tim
+Opened file : 071_03_0015.tim
+Opened file : 071_03_0016.tim
+Opened file : 071_03_0017.tim
+Opened file : 071_03_0018.tim
+Opened file : 071_03_0019.tim
+Opened file : 071_03_0020.tim
+Opened file : 071_03_0021.tim
+Opened file : 071_03_0022.tim
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+External Forcing or Initialising 'salinitybnd' from file '071_01_sal.pli'.
+Opened file : 071_01_sal.pli
+Closed file : 071_01_sal.pli
+Opened file : 071_01_sal_0001.tim
+Opened file : 071_01_sal_0002.tim
+Opened file : 071_01_sal_0003.tim
+Opened file : 071_01_sal_0004.tim
+Opened file : 071_01_sal_0005.tim
+Opened file : 071_01_sal_0006.tim
+Opened file : 071_01_sal_0007.tim
+Opened file : 071_01_sal_0008.tim
+Opened file : 071_01_sal_0009.tim
+Opened file : 071_01_sal_0010.tim
+Opened file : 071_01_sal_0011.tim
+Opened file : 071_01_sal_0012.tim
+Opened file : 071_01_sal_0013.tim
+Opened file : 071_01_sal_0014.tim
+Opened file : 071_01_sal_0015.tim
+Opened file : 071_01_sal_0016.tim
+Opened file : 071_01_sal_0017.tim
+Opened file : 071_01_sal_0018.tim
+Opened file : 071_01_sal_0019.tim
+Opened file : 071_01_sal_0020.tim
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+External Forcing or Initialising 'salinitybnd' from file '071_02_sal.pli'.
+Opened file : 071_02_sal.pli
+Closed file : 071_02_sal.pli
+Opened file : 071_02_sal_0001.tim
+Opened file : 071_02_sal_0002.tim
+Opened file : 071_02_sal_0003.tim
+Opened file : 071_02_sal_0004.tim
+Opened file : 071_02_sal_0005.tim
+Opened file : 071_02_sal_0006.tim
+Opened file : 071_02_sal_0007.tim
+Opened file : 071_02_sal_0008.tim
+Opened file : 071_02_sal_0009.tim
+Opened file : 071_02_sal_0010.tim
+Opened file : 071_02_sal_0011.tim
+Opened file : 071_02_sal_0012.tim
+Opened file : 071_02_sal_0013.tim
+Opened file : 071_02_sal_0014.tim
+Opened file : 071_02_sal_0015.tim
+Opened file : 071_02_sal_0016.tim
+Opened file : 071_02_sal_0017.tim
+Opened file : 071_02_sal_0018.tim
+Opened file : 071_02_sal_0019.tim
+Opened file : 071_02_sal_0020.tim
+Opened file : 071_02_sal_0021.tim
+Opened file : 071_02_sal_0022.tim
+Opened file : 071_02_sal_0023.tim
+Opened file : 071_02_sal_0024.tim
+Opened file : 071_02_sal_0025.tim
+Opened file : 071_02_sal_0026.tim
+Opened file : 071_02_sal_0027.tim
+Opened file : 071_02_sal_0028.tim
+Opened file : 071_02_sal_0029.tim
+Opened file : 071_02_sal_0030.tim
+Opened file : 071_02_sal_0031.tim
+Opened file : 071_02_sal_0032.tim
+Opened file : 071_02_sal_0033.tim
+Opened file : 071_02_sal_0034.tim
+Opened file : 071_02_sal_0035.tim
+Opened file : 071_02_sal_0036.tim
+Opened file : 071_02_sal_0037.tim
+Opened file : 071_02_sal_0038.tim
+Opened file : 071_02_sal_0039.tim
+Opened file : 071_02_sal_0040.tim
+Opened file : 071_02_sal_0041.tim
+Opened file : 071_02_sal_0042.tim
+Opened file : 071_02_sal_0043.tim
+Opened file : 071_02_sal_0044.tim
+Opened file : 071_02_sal_0045.tim
+Opened file : 071_02_sal_0046.tim
+Opened file : 071_02_sal_0047.tim
+Opened file : 071_02_sal_0048.tim
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+External Forcing or Initialising 'salinitybnd' from file '071_03_sal.pli'.
+Opened file : 071_03_sal.pli
+Closed file : 071_03_sal.pli
+Opened file : 071_03_sal_0001.tim
+Opened file : 071_03_sal_0002.tim
+Opened file : 071_03_sal_0003.tim
+Opened file : 071_03_sal_0004.tim
+Opened file : 071_03_sal_0005.tim
+Opened file : 071_03_sal_0006.tim
+Opened file : 071_03_sal_0007.tim
+Opened file : 071_03_sal_0008.tim
+Opened file : 071_03_sal_0009.tim
+Opened file : 071_03_sal_0010.tim
+Opened file : 071_03_sal_0011.tim
+Opened file : 071_03_sal_0012.tim
+Opened file : 071_03_sal_0013.tim
+Opened file : 071_03_sal_0014.tim
+Opened file : 071_03_sal_0015.tim
+Opened file : 071_03_sal_0016.tim
+Opened file : 071_03_sal_0017.tim
+Opened file : 071_03_sal_0018.tim
+Opened file : 071_03_sal_0019.tim
+Opened file : 071_03_sal_0020.tim
+Opened file : 071_03_sal_0021.tim
+Opened file : 071_03_sal_0022.tim
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+External Forcing or Initialising 'dischargebnd' from file 'sluice.pli'.
+Opened file : sluice.pli
+Closed file : sluice.pli
+Opened file : sluice_0001.tim
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Found optional keyword VALUE
+External Forcing or Initialising 'initialsalinity' from file 'network_bounds_d3d.pol'.
+            92         28514 zh(nx)
+Opened file : network_bounds_d3d.pol
+Closed file : network_bounds_d3d.pol
+looking for keyword: QUANTITY
+keyword QUANTITY NOT found!
+External Forcing or Initialising 'initialsalinity' from file 'network_bounds_d3d.pol'.
+Closed file : 001.ext
+            92         28514 ij(nodtot)
+            93         28514 nodbr2(nodtot)
+            93         28514 nbrstk(nodtot)
+            93         28514 nodstk(nodtot)
+            93         28514 noel(nodtot)
+            94         28514 noel0(nodtot)
+            94         28514 ia(nodtot)
+            94         28514 row(nodtot)
+            94         55760 lv2(lintot)
+            98        110244 ccr(0:ijstck)
+            99        110244 bbl(0:ijstck)
+            99         57028 bbr(nodtot), ddr(nodtot)
+           100        142570 d0(nodtot), zkr(nodtot),pk(0:nodtot), apk(nodtot), rk(nodtot)
+nogauss , nocg :          14039         14475
+           101         55760 klnup(6,lnx)
+           101         55760 slnup(6,lnx)
+Modelinit finished   at: 00:**:00, **-00-****
+* Active Model definition:
+**
+Opened display settings file : har.cfg
+Opened NetCDF file 'DFM_OUTPUT_har/001_his.nc' as #***.
+Opened NetCDF file 'DFM_OUTPUT_har/001_map.nc' as #***.
+simulation period     (s)  :  1209600.0000000000
+nr of timesteps       ( )  :    20195.0000000000
+cputime in solve      (s)  :      100.3790000005
+cputime steps         (s)  :      889.3420000005
+cputime steps + plots (s)  :     1022.3180000000
+fraction solve/steps  ( )  :        0.1128688401
+total/(dnt*ndx)       (s)  :        0.0000017754
+av nr of cont. it s1it( )  :        0.0000000000
+cputime setumod       (s)  :      116.2880000006
+Modelinit finished   at: 00:**:00, **-00-****
+Computation finished at: 45:**:**, 45-**-****
+Opened file : DFM_OUTPUT_har/har_20080202_120000.rst
+Closed file : DFM_OUTPUT_har/har_20080202_120000.rst
+Opened file : DFM_OUTPUT_har/har__salbot.xyz
+Closed file : DFM_OUTPUT_har/har__salbot.xyz
+Opened file : numlimdt.xyz
+Closed file : numlimdt.xyz

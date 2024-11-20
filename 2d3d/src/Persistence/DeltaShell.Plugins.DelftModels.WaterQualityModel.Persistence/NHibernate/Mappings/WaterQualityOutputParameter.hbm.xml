@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary"
+                   assembly="DeltaShell.Plugins.DelftModels.WaterQualityModel">
+
+  <class name="WaterQualityOutputParameter"
+         lazy="false"
+         table="wq_output_parameter">
+
+    <id name="Id" column="output_parameter_id" type="Int64">
+      <generator class="increment" />
+    </id>
+
+    <property name="Name" column="name" />
+    <property name="Description" column="description" />
+    <property name="ShowInMap" column="show_in_map" />
+    <property name="ShowInHis" column="show_in_his" />
+
+  </class>
+
+</hibernate-mapping>

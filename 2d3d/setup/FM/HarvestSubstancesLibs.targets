@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Target Name="HarvestSubstancesFilesTarget">
+	  <HeatDirectory
+
+		 OutputFile="$(ProjectDir)..\Waq\SubstancesFiles.wxs"
+
+		 Directory="$(SolutionDir)bin\$(ConfigurationName)\plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plugins-qt\x64"
+
+		 ComponentGroupName="SubstancesFiles"
+
+		 DirectoryRefId="SubstancesFilesDir"
+
+		 AutogenerateGuids="true"
+		 
+		 GenerateGuidsNow="true"
+
+		 PreprocessorVariable="var.substances_kernels_lib_dir"
+
+		 SuppressRegistry="true"
+
+		 SuppressRootDirectory="true"
+		 
+		 SuppressUniqueIds="false"
+
+		 ToolPath="$(WixToolPath)"
+		 
+		 Transforms='$(WaqProjectTransformFile)'
+
+		 VerboseOutput='true'
+		 
+		 SuppressFragments='true'
+		 
+		 KeepEmptyDirectories='true'
+		 
+		 NoLogo="false" />
+	</Target>
+</Project>

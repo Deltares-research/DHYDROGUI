@@ -1,0 +1,1 @@
+don't use FlowFM_otherTimestep.hyd for real calculations. It is only used for test purposes.

@@ -1,0 +1,140 @@
+# Generated on 03/02/2015 14:06:12
+# Deltares, FM-Suite DFlowFM Model Version 1.0.0.0, DFlow FM Version 1.1.133.38661
+
+[model]
+Program           = D-Flow FM
+Version           = 1.1.133.38661
+GuiVersion        = 1.0.0.0
+AutoStart         = 0                   # Autostart simulation after loading MDU or not (0=no, 1=autostart, 2=autostartstop).
+
+[geometry]
+NetFile           = fm_003_net.nc       # *_net.nc
+BathymetryFile    =                     # *.xyb
+WaterLevIniFile   =                     # Initial water levels sample file *.xyz
+LandBoundaryFile  = Harlingen_haven.ldb # Only for plotting
+DryPointsFile     =
+ThinDamFile       = thindam_thd.pli     # *_thd.pli, Polyline(s) for tracing thin dams.
+FixedWeirFile     = fixedweir_fxw.pli   # *._fxw.pli, Polyline(s) x,y,z, z = fixed weir top levels
+StructureFile     = har_structures.ini
+ProflocFile       =                     # *_proflocation.xyz)    x,y,z, z = profile refnumber
+ProfdefFile       =                     # *_profdefinition.def) definition for all profile nrs
+ManholeFile       =                     # *...
+WaterLevIni       = 0                   # Initial water level
+Bedlevuni         = -5                  # Uniform bottom level, (only if bedlevtype>=3, used at missing z values in netfile
+Bedslope          = 0
+BedlevType        = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
+                                           # 2 : Bottom levels at velocity points  (=flow links),            xu, yu, blu, bob = blu,    bl = lowest connected link
+                                           # 3 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
+                                           # 4 : Bottom levels at velocity points  (=flow links), using min  network levels xk, yk, zk  bl = lowest connected link
+                                           # 5 : Bottom levels at velocity points  (=flow links), using max  network levels xk, yk, zk  bl = lowest connected link
+PartitionFile     =                     # *_part.pol, polyline(s) x,y
+AngLat            = 0                   # Angle of latitude (deg), 0=no Coriolis
+Conveyance2D      = 3                   # -1:R=HU,0:R=H, 1:R=A/P, 2:K=analytic-1D conv, 3:K=analytic-2D conv
+Sillheightmin     = 0.5
+Makeorthocenters  = 0                   # 1=yes, 0=no switch from circumcentres to orthocentres in geominit
+Dcenterinside     = 1                   # limit cell center; 1.0:in cell <-> 0.0:on c/g
+Kmx               = 0                   # Max nr of vertical layers
+
+[numerics]
+CFLWaveFrac       = 0.1                 # Wave velocity fraction, total courant vel = u + cflw*wavevelocity
+AdvecType         = 3                   # Adv type, 0=no, 1= Wenneker, qu-udzt, 2=1, q(uio-u), 3=Perot q(uio-u), 4=Perot q(ui-u), 5=Perot q(ui-u) without itself
+Limtyphu          = 0
+Limtypmom         = 4                   # Limiter type for cell center advection velocity, 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Limtypsa          = 4                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Icgsolver         = 1                   # Solver type , 1 = sobekGS_OMP, 2 = sobekGS_OMPthreadsafe, 3 = sobekGS, 4 = sobekGS + Saadilud, 5 = parallel/global Saad, 6 = parallel/Petsc, 7 = parallel/GS
+Maxdegree         = 6                   # Maximum degree in Gauss elimination
+FixedWeirScheme   = 1
+FixedWeirContraction= 1
+Izbndpos          = 0
+Tlfsmo            = 0
+Lincontin         = 0
+Jaembed1D         = 0
+Slopedrop2D       = 0
+Chkadvd           = 0.1
+Teta0             = 0.55
+Jbasqbnddownwindhs= 0
+Maxitverticalforester= 0
+CFLMax            = 0.7                 # Max. Courant nr.
+SomeNewFactor     = 2.56                # Some new factor that should be read and written, but is not known
+
+[physics]
+Ag                = 9.81
+Rhomean           = 1000
+UnifFrictCoef     = 0.023               # Uniform friction coefficient, 0=no friction
+UnifFrictType     = 1                   # 0=Chezy, 1=Manning, 2=White Colebrook, 3=z0 etc
+UnifFrictCoefLin  = 0
+Umodlin           = 1
+Vicouv            = 0                   # Uniform horizontal eddy viscosity (m2/s)
+Dicouv            = 0                   # Uniform horizontal eddy diffusivity (m2/s)
+Vicoww            = 0                   # Uniform vertical eddy viscosity  (m2/s)
+Dicoww            = 0                   # Uniform vertical eddy diffusivity  (m2/s)
+Smagorinsky       = 0                   # Add Smagorinsky horizontal turbulence : vicu = vicu + ( (Smagorinsky*dx)**2)*S, e.g. 0.1
+Elder             = 0                   # Add Elder contribution                : vicu = vicu + Elder*kappa*ustar*H/6),   e.g. 1.0
+irov              = 0                   # 0=free slip, 1 = partial slip using wall_ks
+wall_ks           = 0                   # Nikuradse roughness for side walls, wall_z0=wall_ks/30
+TidalForcing      = 1                   # Tidal forcing (0=no, 1=yes) (only for jsferic == 1)
+Salinity          = 1                   # Include salinity, (0=no, 1=yes)
+InitialSalinity   = 0                   # Inital salinity concentration (ppt)
+Temperature       = 0
+InitialTemperature= 5
+Secchidepth       = 2
+Stanton           = 0.0013
+Dalton            = 0.0013
+
+[wind]
+ICdtyp            = 2                   # ( ), Cd = const, 2=S&B 2 breakpoints, 3= S&B 3 breakpoints
+Cdbreakpoints     = 0.00063 0.00723     # ( ),   e.g. 0.00063  0.00723
+Windspeedbreakpoints= 0 100               # (m/s), e.g. 0.0      100.0
+Rhoair            = 1.2
+PavBnd            = 101325
+Gapres            = 101325
+
+[waves]
+Wavemodelnr       = 0
+WaveNikuradse     = 0.01
+Rouwav            = FR84
+
+[time]
+RefDate           = 20080109            # Reference date (yyyymmdd)
+Tunit             = M                   # Time units in MDU (H, M or S)
+TStart            = 15120               # Start time w.r.t. RefDate (in TUnit)
+TStop             = 15180               # Stop  time w.r.t. RefDate (in TUnit)
+DtUser            = 60                  # User timestep in seconds (interval for external forcing update & his/map output)
+DtMax             = 60                  # Max timestep in seconds
+DtInit            = 1                   # Initial timestep in seconds
+AutoTimestep      = 1                   # Use CFL timestep limit or not (1/0)
+
+[restart]
+RestartFile       =                     # Restart file, only map, hence: *_map.nc
+RestartDateTime   = 20080109            # Restart time (YYYYMMDDHHMMSS)
+
+[external forcing]
+ExtForceFile      = 001.ext             # *.ext
+ExtForceFileNew   =
+
+[output]
+MapFormat         = 1                   # Map file format, 1: netCDF, 2: Tecplot, 3: netCFD and Tecplot
+OutputDir         =                     # Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>
+ObsFile           = har_fine_V3_obs.xyn # *.xyn Coords+name of observation stations.
+CrsFile           = har_crs_V2.pli      # *_crs.pli Polyline(s) definining cross section(s).
+HisInterval       = 60                  # Interval (s) between history outputs
+XLSInterval       = 0                   # Interval (s) between XLS history
+FlowGeomFile      =                     # *_flowgeom.nc Flow geometry file in NetCDF format.
+MapInterval       = 600                 # Interval (s) between map file outputs
+RstInterval       =                     # Interval (s) between map file outputs
+S1incinterval     =
+WaqInterval       = 0                   # Interval (in s) between Delwaq file outputs
+StatsInterval     = 0                   # Interval (in s) between simulation statistics output.
+TimingsInterval   = 60                  # Timings output interval
+MapOutputTimeVector=
+FullGridOutput    = 0
+HisFile           = 001_his.nc          # *_his.nc History file in NetCDF format.
+MapFile           = 001_map.nc          # *_map.nc Map file in NetCDF format.
+WaqFileBase       = har                 # Basename (without extension) for all Delwaq files to be written.
+SnapshotDir       = figures             # Directory where snapshots/screendumps are saved.
+
+[trachytopes]
+TrtRou            = N
+TrtDef            =
+TrtL              =
+TrtDt             = 60

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="ee37b9b7-757c-4578-b808-1352c32b922b"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="ExpandOutputMap"
+	namespace="DHYDRO.Modules.Map">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<setvaluerecorditem
+		attrname="IsChecked"
+		enabled="True"
+		optional="False"
+		searchpropertyid="a685b0f2-0214-4107-84b8-96734f909d8c">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="f0297ad5-1265-4c0b-87f3-d624da343355"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@automationid='Window']/list[@automationid='ListView']/tree/treeitem/container/treeitem/container/treeitem/text[@text='Output (map)']/parent::treeitem/button
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+			<AttributeValue>
+				True
+			</AttributeValue>
+		</setvaluerecorditem>
+		<explicitdelayitem
+		duration="300ms"
+		enabled="True"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+		</explicitdelayitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		ExpandOutputMap.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

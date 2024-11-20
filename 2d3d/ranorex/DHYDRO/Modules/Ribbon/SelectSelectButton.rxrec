@@ -1,0 +1,783 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="48d81c13-0d34-44eb-9688-f27d6eb6f8ee"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="SelectSelectButton"
+	namespace="DHYDRO.Modules.Ribbon">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="25d3a034-5020-432b-96ea-5c6025688af4"
+		sx="240"
+		sy="74"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="adda2eda-1125-4082-a3e7-ac9dbab5c7e5"
+			sourcename="Recorder">
+				<element
+				capabilities="wpfelement, wpfgroupelement"
+				dontcache="False"
+				enabled="True"
+				flavor="wpf"
+				hasfocus="False"
+				index="0"
+				prefcap="button"
+				rect="228,59,28,28"
+				role="button"
+				snapElem=""
+				valid="True"
+				visible="True">
+					<attribute
+					name="pressed"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="text"
+					type="System.String">
+						Select
+					</attribute>
+					<attribute
+					name="automationid"
+					type="System.String">
+						ButtonMapSelect
+					</attribute>
+					<attribute
+					name="automationproperties_acceleratorkey"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_accesskey"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_helptext"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_iscolumnheader"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_isrequiredforform"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_isrowheader"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_itemstatus"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_itemtype"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_name"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="basetype"
+					type="System.String">
+						System.Windows.Controls.Primitives.ToggleButton
+					</attribute>
+					<attribute
+					name="fulltype"
+					type="System.String">
+						Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton&gt;
+					</attribute>
+					<attribute
+					name="name"
+					type="System.String">
+						ButtonMapSelect
+					</attribute>
+					<attribute
+					name="type"
+					type="System.String">
+						DepoGroup&lt;ToggleButton&gt;
+					</attribute>
+					<attribute
+					name="ranorexgroupleaderid"
+					type="System.Guid">
+						64662e30-f218-4e28-9e86-1d670850c88d
+					</attribute>
+					<attribute
+					name="ranorexgroupmemberids"
+					type="System.Guid[]">
+						AAEAAAD/////AQAAAAAAAAAHAQAAAAABAAAABAAAAAMLU3lzdGVtLkd1aWQE/v///wtTeXN0ZW0u
+R3VpZAsAAAACX2ECX2ICX2MCX2QCX2UCX2YCX2cCX2gCX2kCX2oCX2sAAAAAAAAAAAAAAAgHBwIC
+AgICAgICMC5mZBjyKE6ehh1nCFDIjQH9/////v///+dZ6X56r2NFqlLMVggXol4B/P////7///9D
+zaBWP0wBTpVTy1ckZjkEAfv////+////Ni1cqPe9pUqP3GmfSL032Qs=
+					</attribute>
+					<attribute
+					name="ranorexgroupobjectid"
+					type="System.Guid">
+						80cb4a77-4ce8-4474-8f09-60bae8f03b56
+					</attribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ActualHeight property of type Double."
+					name="ActualHeight"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ActualWidth property of type Double."
+					name="ActualWidth"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.AllowDrop property of type Boolean."
+					name="AllowDrop"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Background property of type Brush."
+					name="Background"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.BackgroundColor property of type String."
+					name="BackgroundColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.BindingGroup property of type BindingGroup."
+					name="BindingGroup"
+					readonly="False"
+					type="System.Windows.Data.BindingGroup, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.BitmapEffect property of type BitmapEffect."
+					name="BitmapEffect"
+					readonly="False"
+					type="System.Windows.Media.Effects.BitmapEffect, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.BitmapEffectInput property of type BitmapEffectInput."
+					name="BitmapEffectInput"
+					readonly="False"
+					type="System.Windows.Media.Effects.BitmapEffectInput, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.BorderBrush property of type Brush."
+					name="BorderBrush"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.BorderColor property of type String."
+					name="BorderColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.CacheMode property of type CacheMode."
+					name="CacheMode"
+					readonly="False"
+					type="System.Windows.Media.CacheMode, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.CanAddToQuickAccessToolBar property of type Boolean."
+					name="CanAddToQuickAccessToolBar"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ClickMode property of type ClickMode."
+					name="ClickMode"
+					readonly="False"
+					type="System.Windows.Controls.ClickMode, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Clip property of type Geometry."
+					name="Clip"
+					readonly="False"
+					type="System.Windows.Media.Geometry, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ClipToBounds property of type Boolean."
+					name="ClipToBounds"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Column property of type Int32."
+					name="Column"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ColumnSpan property of type Int32."
+					name="ColumnSpan"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.CommandParameter property of type Object."
+					name="CommandParameter"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Content property of type Object."
+					name="Content"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ContentStringFormat property of type String."
+					name="ContentStringFormat"
+					readonly="False"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ContextMenu property of type ContextMenu."
+					name="ContextMenu"
+					readonly="False"
+					type="System.Windows.Controls.ContextMenu, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.DataContext property of type Object."
+					name="DataContext"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Effect property of type Effect."
+					name="Effect"
+					readonly="False"
+					type="System.Windows.Media.Effects.Effect, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.FlowDirection property of type FlowDirection."
+					name="FlowDirection"
+					readonly="False"
+					type="System.Windows.FlowDirection, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Focusable property of type Boolean."
+					name="Focusable"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.FontSize property of type Double."
+					name="FontSize"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ForceCursor property of type Boolean."
+					name="ForceCursor"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Foreground property of type Brush."
+					name="Foreground"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ForegroundColor property of type String."
+					name="ForegroundColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.GroupName property of type String."
+					name="GroupName"
+					readonly="False"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.HasContent property of type Boolean."
+					name="HasContent"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Header property of type Object."
+					name="Header"
+					readonly="False"
+					type="System.Object"
+					weight="107">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Height property of type Double."
+					name="Height"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.HorizontalAlignment property of type HorizontalAlignment."
+					name="HorizontalAlignment"
+					readonly="False"
+					type="System.Windows.HorizontalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.HorizontalContentAlignment property of type HorizontalAlignment."
+					name="HorizontalContentAlignment"
+					readonly="False"
+					type="System.Windows.HorizontalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Icon property of type Object."
+					name="Icon"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.IsChecked property of type Nullable`1."
+					name="IsChecked"
+					readonly="False"
+					type="System.Nullable`1[[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.IsDefinitive property of type Boolean."
+					name="IsDefinitive"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.IsHitTestVisible property of type Boolean."
+					name="IsHitTestVisible"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.IsItemsHost property of type Boolean."
+					name="IsItemsHost"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.IsManipulationEnabled property of type Boolean."
+					name="IsManipulationEnabled"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.IsPressed property of type Boolean."
+					name="IsPressed"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.IsSharedSizeScope property of type Boolean."
+					name="IsSharedSizeScope"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.IsTabStop property of type Boolean."
+					name="IsTabStop"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.IsThreeState property of type Boolean."
+					name="IsThreeState"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ItemForItemContainer property of type Object."
+					name="ItemForItemContainer"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Keys property of type String."
+					name="Keys"
+					readonly="False"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.LargeIcon property of type Object."
+					name="LargeIcon"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.LayoutTransform property of type Transform."
+					name="LayoutTransform"
+					readonly="False"
+					type="System.Windows.Media.Transform, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.MaxHeight property of type Double."
+					name="MaxHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.MaxWidth property of type Double."
+					name="MaxWidth"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.MinHeight property of type Double."
+					name="MinHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.MinWidth property of type Double."
+					name="MinWidth"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Opacity property of type Double."
+					name="Opacity"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.OpacityMask property of type Brush."
+					name="OpacityMask"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Orientation property of type Orientation."
+					name="Orientation"
+					readonly="False"
+					type="System.Windows.Controls.Orientation, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.OverridesDefaultStyle property of type Boolean."
+					name="OverridesDefaultStyle"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.RenderTransform property of type Transform."
+					name="RenderTransform"
+					readonly="False"
+					type="System.Windows.Media.Transform, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.RenderTransformOrigin property of type Point."
+					name="RenderTransformOrigin"
+					readonly="False"
+					type="System.Windows.Point, WindowsBase, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Row property of type Int32."
+					name="Row"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.RowSpan property of type Int32."
+					name="RowSpan"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.SharedSizeGroupName property of type String."
+					name="SharedSizeGroupName"
+					readonly="False"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ShowGridLines property of type Boolean."
+					name="ShowGridLines"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.SnapsToDevicePixels property of type Boolean."
+					name="SnapsToDevicePixels"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.TabIndex property of type Int32."
+					name="TabIndex"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Tag property of type Object."
+					name="Tag"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ToolTip property of type Object."
+					name="ToolTip"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Uid property of type String."
+					name="Uid"
+					readonly="False"
+					type="System.String"
+					weight="150">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.UseLayoutRounding property of type Boolean."
+					name="UseLayoutRounding"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.VerticalAlignment property of type VerticalAlignment."
+					name="VerticalAlignment"
+					readonly="False"
+					type="System.Windows.VerticalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.VerticalContentAlignment property of type VerticalAlignment."
+					name="VerticalContentAlignment"
+					readonly="False"
+					type="System.Windows.VerticalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Visibility property of type Visibility."
+					name="Visibility"
+					readonly="False"
+					type="System.Windows.Visibility, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.Width property of type Double."
+					name="Width"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.ZIndex property of type Int32."
+					name="ZIndex"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicaction
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.CreateQuickAccessItem method."
+					displayName="CreateQuickAccessItem">
+						<returns
+						description="Return value."
+						displayName="returns"
+						type="System.Windows.FrameworkElement, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+						</returns>
+					</dynamicaction>
+					<dynamicaction
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.InvokeClick method."
+					displayName="InvokeClick">
+						<returns
+						description="Return value."
+						displayName="returns"
+						type="System.Void">
+						</returns>
+					</dynamicaction>
+					<dynamicaction
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.OnKeyTipBack method."
+					displayName="OnKeyTipBack">
+						<returns
+						description="Return value."
+						displayName="returns"
+						type="System.Void">
+						</returns>
+					</dynamicaction>
+					<dynamicaction
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.ToggleButton>.OnKeyTipPressed method."
+					displayName="OnKeyTipPressed">
+						<returns
+						description="Return value."
+						displayName="returns"
+						type="System.Object">
+						</returns>
+					</dynamicaction>
+				</element>
+				<path>
+					/form[@automationid='Window']/list[@automationid='ListView']/menubar[@automationid='MainWindowRibbon']/list[@automationid='PART_RibbonTabControl']/container[2]/list[4]/button[@automationid='ButtonMapSelect']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+			<helperscreenshot
+			guid="e72324fc-61d8-4aba-a6ad-f74f7cca2845">
+				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
+			</helperscreenshot>
+		</mouseitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		SelectSelectButton.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

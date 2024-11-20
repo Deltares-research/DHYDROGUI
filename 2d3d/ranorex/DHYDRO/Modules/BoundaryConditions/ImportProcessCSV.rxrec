@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="117b5715-b085-4a3b-98b5-819228ee0f3c"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="ImportProcessCSV"
+	namespace="DHYDRO.Modules.BoundaryConditions">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<invokeactionrecorditem
+		action="Focus"
+		enabled="True"
+		optional="False"
+		searchpropertyid="cf05ab29-f6af-4862-82f6-85f356744406">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="1835095a-5d3d-466f-9e32-c4b0c30f5382"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='FunctionListView']/container[@controlname='splitContainer1']//table/container[@accessiblename='Data Panel']/row/cell[@text=$VariableName]/../cell[@accessiblename&gt;'Edit']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+			<arguments
+			id="144d0d79-ab30-453e-b4a2-5b0668cfd2f4">
+			</arguments>
+		</invokeactionrecorditem>
+		<invokeactionrecorditem
+		action="Select"
+		enabled="True"
+		optional="False"
+		searchpropertyid="bd5f551c-6291-442e-af9b-5a50dd1771b1">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="1835095a-5d3d-466f-9e32-c4b0c30f5382"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='FunctionListView']/container[@controlname='splitContainer1']//table/container[@accessiblename='Data Panel']/row/cell[@text=$VariableName]/../cell[@accessiblename&gt;'Edit']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+			<arguments
+			id="b429d9b9-43cf-4769-baa2-1e9a9230560e">
+			</arguments>
+		</invokeactionrecorditem>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="77bc6667-4a39-43f4-a08a-b0b7a473db41"
+		sx="1049"
+		sy="428"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="1835095a-5d3d-466f-9e32-c4b0c30f5382"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='FunctionListView']/container[@controlname='splitContainer1']//table/container[@accessiblename='Data Panel']/row/cell[@text=$VariableName]/../cell[@accessiblename&gt;'Edit']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+		<explicitdelayitem
+		duration="300ms"
+		enabled="True"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+		</explicitdelayitem>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="d7408c7d-531f-46ed-a59a-30e742bdef27"
+		sx="476"
+		sy="177"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="b545b9ac-9cc2-4a56-a569-4e1e4df88a29"
+			sourcename="Recorder">
+				<element
+				capabilities="accessible"
+				dontcache="False"
+				enabled="True"
+				flavor="msaa"
+				hasfocus="True"
+				index="2"
+				prefcap="button"
+				rect="426,167,85,22"
+				role="button"
+				snapElem=""
+				valid="True"
+				visible="True">
+					<attribute
+					name="pressed"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="text"
+					type="System.String">
+						Csv import
+					</attribute>
+					<attribute
+					name="accessibledefaultaction"
+					type="System.String">
+						Press
+					</attribute>
+					<attribute
+					name="accessiblename"
+					type="System.String">
+						Csv import
+					</attribute>
+					<attribute
+					name="accessiblerole"
+					type="System.Windows.Forms.AccessibleRole, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+						PushButton
+					</attribute>
+					<attribute
+					name="accessiblestate"
+					type="System.Windows.Forms.AccessibleStates, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+						Focused, HotTracked, Focusable
+					</attribute>
+					<attribute
+					name="accessiblevalue"
+					type="System.String">
+					</attribute>
+				</element>
+				<path>
+					/form[@automationid='Window' and @title~'Delta Shell']/list[@automationid='ListView']/container[13]/container[@caption='']/container[@controlname='MultipleFunctionView']/container[@controlname='splitContainer1']/container[@controlname='panel1']/container[@controlname='tableView1']/container[@controlname='TableViewDataToolBar']/toolbar[@controlname='toolStrip1']/button[@accessiblename='Csv import']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+			<helperscreenshot
+			guid="71adcc4a-f7f3-4c5e-9e56-5a135bd40d33">
+				/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDABwTFRgVERwYFhgfHRwhKUUtKSYmKVQ8QDJFZFhpZ2JY
+YF9ufJ6GbnWWd19giruLlqOpsbOxa4TC0MGszp6usar/2wBDAR0fHykkKVEtLVGqcmByqqqqqqqq
+qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/wAARCAECAQIDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDpKKKK
+ACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA
+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAo
+oooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACii
+igAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKK
+ACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA
+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
+30KPOi/56p/30KfRQAzzov8Anqn/AH0KPOi/56p/30KfRQAzzov+eqf99Cjzov8Anqn/AH0KfRQA
+zzov+eqf99Cjzov+eqf99Cn0UAM86L/nqn/fQqANsBCXMONxIyMnk59atUUAZhvrrJwkRH1H/wAV
+Sfb7v/nnD+Y/xrUooAzVvbkj/lgOf896X7Zc+sH+fxrRooAzftdwWDYt8jof8ml+2XPrB/n8a0aK
+AM77Zc+sH+fxpslzcSRshMGGBBwf/r1p0UAVLOREhCtIgI/2hVjzov8Anqn/AH0KfRQAzzov+eqf
+99Cjzov+eqf99Cn0UAM86L/nqn/fQo86L/nqn/fQp9FADPOi/wCeqf8AfQop9FABRRRQAUUUUAFF
+FFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUU
+UAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQ
+AUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAB
+RRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFF
+FFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUU
+UAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//Z
+			</helperscreenshot>
+		</mouseitem>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="7b69d1db-9ba8-455a-9f73-4a3ecd43d2e5"
+		sx="1173"
+		sy="840"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="6c88f1ee-d399-4e50-a365-81bd657f345d"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@controlname='WizardDialog']/?/element[@controlname='btnNext']/button
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="44c85ab5-78c3-44a6-97f9-d4036a2a6c6e"
+		sx="970"
+		sy="268"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="b9c614ce-0ca9-4081-9f29-741121eeb2f1"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@controlname='WizardDialog']//button[@controlname='buttonOpenFile']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+		<explicitdelayitem
+		duration="300ms"
+		enabled="True"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+		</explicitdelayitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		ImportProcessCSV.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

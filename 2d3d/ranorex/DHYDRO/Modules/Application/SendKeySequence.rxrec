@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="c10b77a2-00ef-4f7a-92ca-f85df475cd6b"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="SendKeySequence"
+	namespace="DHYDRO.Modules.Application">
+	</codegen>
+	<variables>
+		<var
+		id="bb687606-232a-4d23-b0ac-a0928e7d7889"
+		name="KeySequenceToSend">
+		</var>
+	</variables>
+	<recorditems>
+		<keysequenceitem
+		KeySequence="westernscheldt05{Return}"
+		duration="40ms"
+		enabled="True"
+		optional="False"
+		presstime="20ms"
+		searchpropertyid="d37075b9-88ab-430a-876b-d3c09160cf62">
+			<comment>
+			</comment>
+			<bindings>
+				<binding
+				target="KeySequence"
+				variable="KeySequenceToSend">
+				</binding>
+			</bindings>
+		</keysequenceitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		SendKeySequence.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

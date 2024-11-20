@@ -1,0 +1,6 @@
+quantity 			= initialvelocityx
+filename 			= rijn_beno19_6_v2a_waal_ucx_S16000.xyz
+filetype	 		= 7
+method				= 5
+operand   			= O
+extrapoltol			= 40

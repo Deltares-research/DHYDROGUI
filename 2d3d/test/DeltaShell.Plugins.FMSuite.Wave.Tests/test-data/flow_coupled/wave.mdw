@@ -1,0 +1,130 @@
+[WaveFileInformation]
+   FileVersion          = 02.00                        
+[General]
+   OnlyInputVerify      = false                        
+   SimMode              = stationary                   
+   DirConvention        = nautical                     
+   ReferenceDate        = 2006-12-25                   
+   ObstacleFile         = obw.obs                      
+   WindSpeed            =  0.0000000e+000              
+   WindDir              =  0.0000000e+000              
+   CurvesFile           =                              
+   TScale               = 60.0                         
+[TimePoint]
+   Time                 =  0.0000000e+000              
+   WaterLevel           =  0.0000000e+000              
+   XVeloc               =  0.0000000e+000              
+   YVeloc               =  0.0000000e+000              
+   WindSpeed            = 0.000000000000000000e+000         
+   WindDir              = 0.000000000000000000e+000         
+[TimePoint]
+   Time                 =  4.3200000e+003              
+   WaterLevel           =  1.0000000e+000              
+   XVeloc               =  0.0000000e+000              
+   YVeloc               =  0.0000000e+000              
+   WindSpeed            = 5.000000000000000000e+001         
+   WindDir              = 180.0
+[Constants]
+   WaterLevelCorrection =  0.0000000e+000              
+   Gravity              =  9.8100004e+000              
+   WaterDensity         =  1.0250000e+003              
+   NorthDir             =  9.0000000e+001              
+   MinimumDepth         =  5.0000001e-002              
+[Processes]
+   GenModePhys          = 3                            
+   Breaking             = true                         
+   BreakAlpha           =  1.0000000e+000              
+   BreakGamma           =  7.3000002e-001              
+   Triads               = false                        
+   TriadsAlpha          =  1.0000000e-001              
+   TriadsBeta           =  2.2000000e+000              
+   WaveSetup            = false                        
+   BedFriction          = jonswap                      
+   BedFricCoef          =  6.7000002e-002              
+   Diffraction          = false                        
+   DiffracCoef          =  2.0000000e-001              
+   DiffracSteps         = 5                            
+   DiffracProp          = true                         
+   WindGrowth           = false                        
+   WhiteCapping         = off                          
+   Quadruplets          = false                        
+   Refraction           = true                         
+   FreqShift            = true                         
+   WaveForces           = dissipation                  
+[Numerics]
+   DirSpaceCDD          =  5.0000000e-001              
+   FreqSpaceCSS         =  5.0000000e-001              
+   RChHsTm01            =  2.0000000e-002              
+   RChMeanHs            =  2.0000000e-002              
+   RChMeanTm01          =  2.0000000e-002              
+   PercWet              =  9.9000000e+001              
+   MaxIter              = 15                           
+[Output]
+   TestOutputLevel      = 0                            
+   TraceCalls           = false                        
+   UseHotFile           = false                        
+   WriteCOM             = true                         
+   COMWriteInterval     =  0.000000000000000000e+000         
+   COMFile              = ../fm/dflowfmoutput/wind_com.nc                
+   MapWriteNetCDF       = true                         
+   NetCDFSinglePrecision= false
+[Domain]
+   Grid                 = wave.grd                     
+   BedLevel             = wave.dep                     
+   FlowWaterLevel       = 2                            
+   FlowBedLevel         = 2                            
+   FlowVelocity         = 2                            
+   FlowWind             = 2                            
+   DirSpace             = circle                       
+   NDir                 = 90                           
+   StartDir             =  0.0000000e+000              
+   EndDir               =  0.0000000e+000              
+   FreqMin              =  5.0000001e-002              
+   FreqMax              =  1.0000000e+000              
+   NFreq                = 24                           
+   Output               = true                         
+[Boundary]
+   Name                 = Boundary 1                   
+   Definition           = orientation                  
+   Orientation          = west                         
+   SpectrumSpec         = parametric                   
+   SpShapeType          = jonswap                      
+   PeriodType           = peak                         
+   DirSpreadType        = power                        
+   PeakEnhanceFac       =  3.3000000e+000              
+   GaussSpread          =  9.9999998e-003              
+   WaveHeight           =  1.5000000e+000              
+   Period               =  5.5000000e+000              
+   Direction            =  2.7000000e+002              
+   DirSpreading         =  4.0000000e+000              
+   SpectrumSpec         = parametric                   
+[Boundary]
+   Name                 = Boundary 2                   
+   Definition           = orientation                  
+   Orientation          = north                        
+   SpectrumSpec         = parametric                   
+   SpShapeType          = jonswap                      
+   PeriodType           = peak                         
+   DirSpreadType        = power                        
+   PeakEnhanceFac       =  3.3000000e+000              
+   GaussSpread          =  9.9999998e-003              
+   WaveHeight           =  1.5000000e+000              
+   Period               =  5.5000000e+000              
+   Direction            =  2.7000000e+002              
+   DirSpreading         =  4.0000000e+000              
+   SpectrumSpec         = parametric                   
+[Boundary]
+   Name                 = Boundary 3                   
+   Definition           = orientation                  
+   Orientation          = south                        
+   SpectrumSpec         = parametric                   
+   SpShapeType          = jonswap                      
+   PeriodType           = peak                         
+   DirSpreadType        = power                        
+   PeakEnhanceFac       =  3.3000000e+000              
+   GaussSpread          =  9.9999998e-003              
+   WaveHeight           =  1.5000000e+000              
+   Period               =  5.5000000e+000              
+   Direction            =  2.7000000e+002              
+   DirSpreading         =  4.0000000e+000              
+   SpectrumSpec         = parametric                   
