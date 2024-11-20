@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputPath>$(SolutionDir)bin\$(Configuration)\tests</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Deltares.NET.Infrastructure.TestUtils"/>
+        <PackageReference Include="log4net"/>
+        <PackageReference Include="NSubstitute"/>
+        <PackageReference Include="NUnit"/>
+        <PackageReference Include="NUnit.Analyzers"/>
+        <PackageReference Include="NUnit3TestAdapter"/>
+        <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\DHYDRO.Common\DHYDRO.Common.csproj"/>
+        <ProjectReference Include="..\DHYDRO.Common.TestUtils\DHYDRO.Common.TestUtils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="log4net.config">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+</Project>

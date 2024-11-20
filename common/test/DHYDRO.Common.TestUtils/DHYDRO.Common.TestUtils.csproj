@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputPath>$(SolutionDir)bin\$(Configuration)\tests</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\DHYDRO.Common\DHYDRO.Common.csproj" />
+    </ItemGroup>
+</Project>
