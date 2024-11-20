@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="DeltaShell.Plugins.NetworkEditor.Gui"
+                   assembly="DeltaShell.Plugins.NetworkEditor.Gui"
+                   auto-import="false">
+  <subclass name="DeltaShell.Plugins.NetworkEditor.Gui.Layers.HydroRegionMapLayer, DeltaShell.Plugins.NetworkEditor.Gui"
+            discriminator-value="hydroregionmaplayer"
+            extends="SharpMap.Layers.GroupLayer, SharpMap"
+            lazy="false">
+
+  </subclass>
+</hibernate-mapping>

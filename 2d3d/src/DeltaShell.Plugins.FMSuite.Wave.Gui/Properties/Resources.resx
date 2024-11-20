@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="domain" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\domain.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="compass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\compass.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Grid2D" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Grid2D.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="folder_domain" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder_domain.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wall_brick" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\wall_brick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hurricane2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hurricane2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WaveBoundaryNodePresenter_GetContextMenu_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="WaveDomainNodePresenter_CreateAddSuperDomainMenuItem_Add_Exterior_Domain___" xml:space="preserve">
+    <value>Add Exterior Domain...</value>
+  </data>
+  <data name="WaveDomainNodePresenter_CreateAddDomainMenuItem_Add_Interior_Domain___" xml:space="preserve">
+    <value>Add Interior Domain...</value>
+  </data>
+  <data name="WaveDomainNodePresenter_CreateDeleteDomainMenuItem_Delete_Domain" xml:space="preserve">
+    <value>Delete Domain</value>
+  </data>
+  <data name="WaveModelNodePresenter_CreateValidationMenuItem_Validate___" xml:space="preserve">
+    <value>Validate...</value>
+  </data>
+  <data name="wave" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\wave.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ComFileFilter_0_" xml:space="preserve">
+    <value>Communication files|*{0}</value>
+  </data>
+  <data name="Sp2FileFilter_0_" xml:space="preserve">
+    <value>Spectrum files|*{0}</value>
+  </data>
+  <data name="WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame" xml:space="preserve">
+    <value>Online-coupling time frame</value>
+  </data>
+  <data name="WaveSettingsHelper_GetWaveSettings_Coupled_to_D_Flow_FM" xml:space="preserve">
+    <value>Coupled to D-Flow FM</value>
+  </data>
+  <data name="WaveSettingsHelper_GetWaveSettings_When_enabled__run_coupled_to_D_Flow_FM_core" xml:space="preserve">
+    <value>When enabled, run coupled to D-Flow FM core</value>
+  </data>
+  <data name="WaveSettingsHelper_GetWaveSettings_Coupling_start_time" xml:space="preserve">
+    <value>Coupling start time</value>
+  </data>
+  <data name="WaveSettingsHelper_GetWaveSettings_Start_time_within_the_coupled_model_run" xml:space="preserve">
+    <value>Start time within the coupled model run [YYYY-MM-DD HH:MM:SS]</value>
+  </data>
+  <data name="WaveSettingsHelper_GetWaveSettings_Coupling_stop_time" xml:space="preserve">
+    <value>Coupling stop time</value>
+  </data>
+  <data name="WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run" xml:space="preserve">
+    <value>Stop time within the coupled model run [YYYY-MM-DD HH:MM:SS]</value>
+  </data>
+  <data name="WaveSettingsHelper_GetWaveSettings_Coupling_time_step" xml:space="preserve">
+    <value>Coupling time step</value>
+  </data>
+  <data name="WaveSettingsHelper_GetWaveSettings_When_enabled__domain_specific_data_can_be_filled_in" xml:space="preserve">
+    <value>When enabled, domain specific data can be filled in</value>
+  </data>
+  <data name="WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run" xml:space="preserve">
+    <value>Time step within the coupled model run [Dd HH:MM:SS.ZZZ]</value>
+  </data>
+  <data name="Spectrum_Files_Filter" xml:space="preserve">
+    <value>Spectrum Files (*.sp1,*.sp2)|*.sp1;*.sp2</value>
+  </data>
+  <data name="Select_spectrum_file" xml:space="preserve">
+    <value>Select spectrum file ...</value>
+  </data>
+  <data name="FileBasedParametersView_Spectrum_File" xml:space="preserve">
+    <value>Spectrum File:</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="SpatiallyVariantFileBasedParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Spatially Varying File Based Parameters</value>
+  </data>
+  <data name="UniformFileBasedParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Uniform File Based Parameters</value>
+  </data>
+  <data name="UniformConstantParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Uniform Constant Parameters</value>
+  </data>
+  <data name="SpatiallyVariantConstantParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Spatially Varying Constant Parameters</value>
+  </data>
+  <data name="SpatiallyVariantTimeDependentParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Spatially Varying Time Dependent Parameters</value>
+  </data>
+  <data name="UniformTimeDependentParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Uniform Time Dependent Parameters</value>
+  </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File" xml:space="preserve">
+    <value>Spectrum File:</value>
+  </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_Use_SWAN_domain_boundary_from_file" xml:space="preserve">
+    <value>Use SWAN domain boundary from file</value>
+  </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name" xml:space="preserve">
+    <value>Boundaries</value>
+  </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D-Waves_boundaries_is_not_possible_Existing_2D_D-Waves_boundaries_will_be_removed" xml:space="preserve">
+    <value>When this option is selected, adding 2D D-Waves boundaries is not possible. Existing 2D D-Waves boundaries will be removed.</value>
+  </data>
+  <data name="WaveGuiPlugin_Spatially_Varying_Boundary_Editor" xml:space="preserve">
+    <value>Spatially Varying Boundary Editor</value>
+  </data>
+  <data name="WaveGuiPlugin_Boundary_Editor____0___" xml:space="preserve">
+    <value>Boundary Editor ( {0} )</value>
+  </data>
+  <data name="ForcingViewType_Constant_Description" xml:space="preserve">
+    <value>Parametrized (Constant)</value>
+  </data>
+  <data name="ForcingViewType_FileBased_Description" xml:space="preserve">
+    <value>Spectrum based (From file)</value>
+  </data>
+  <data name="ForcingViewType_TimeSeries_Description" xml:space="preserve">
+    <value>Parametrized (Time Series)</value>
+  </data>
+  <data name="DocumentHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DocumentHS.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WaveOutputDataNodePresenter_Output" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="WaveOutputDataNodePresenter_Spectra" xml:space="preserve">
+    <value>Spectra</value>
+  </data>
+  <data name="WaveOutputDataNodePresenter_Map_Files" xml:space="preserve">
+    <value>Map Files</value>
+  </data>
+  <data name="WaveOutputDataNodePresenter_His_Files" xml:space="preserve">
+    <value>His Files</value>
+  </data>
+  <data name="InputTemplateFileFilter" xml:space="preserve">
+    <value>SWAN input file|*.*</value>
+  </data>
+  <data name="WaveOutputDataNodePresenter_Swan_Input_Files" xml:space="preserve">
+    <value>SWAN input files</value>
+  </data>
+  <data name="Expected_argument_0_to_be_of_type_1_" xml:space="preserve">
+	  <value>Expected argument {0} to be of type {1}.</value>
+  </data>
+</root>

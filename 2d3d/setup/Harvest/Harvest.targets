@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<DeltaShellFilesPath Condition=" '$(DeltaShellFilesPath)' == '' ">$(SolutionDir)bin\$(Configuration)\DeltaShell\</DeltaShellFilesPath>
+	</PropertyGroup>
+	<Target Name="HarvestDeltaShellFilesTarget"  BeforeTargets="PrepareForBuild" DependsOnTargets="BeforeBuild"  >
+		<Message Text="Building the installer using the DeltaShell files at $(DeltaShellFilesPath)..." Importance="high" />
+		<CreateProperty Condition="$(DeltaShellFilesPath) != ''" Value="DeltaShellFilesPath=$(DeltaShellFilesPath);$(DefineConstants)">
+			<Output TaskParameter="Value" PropertyName="DefineConstants" />
+		</CreateProperty>
+		<HeatDirectory 
+		 OutputFile="$(ProjectDir)..\HarvestedDeltaShellFiles.wxs"
+		 Directory="$(DeltaShellFilesPath)"
+		 PreprocessorVariable="var.deltashell_gui_bin"
+		 Transforms="$(ProjectDir)..\Harvest\HarvestedFilesTransform.xsl"
+		 ComponentGroupName="HarvestedDeltaShellFilesComponent"
+		 DirectoryRefId="HarvestedDeltaShellFilesDir"
+		 AutogenerateGuids="true"
+		 GenerateGuidsNow="false"
+		 SuppressRegistry="true"
+		 SuppressCom="true"
+		 SuppressRootDirectory="true"
+		 SuppressUniqueIds="false"
+		 ToolPath="$(WixToolPath)"
+		 VerboseOutput='true'
+		 SuppressFragments='true'
+		 KeepEmptyDirectories='true'
+		 RunAsSeparateProcess="$(RunWixToolsOutOfProc)"
+		 NoLogo="false" />
+	</Target>
+	
+	<PropertyGroup>
+		<PluginsFilesPath Condition=" '$(PluginsFilesPath)' == '' ">$(SolutionDir)bin\$(Configuration)\Plugins\</PluginsFilesPath>
+	</PropertyGroup>
+	<Target Name="HarvestPluginsFilesTarget"  BeforeTargets="HarvestDeltaShellFilesTarget" DependsOnTargets="BeforeBuild"  >
+		<Message Text="Building the installer using the PluginFiles at $(PluginsFilesPath)..." Importance="high"/>
+		<CreateProperty Condition="$(PluginsFilesPath) != ''" Value="PluginsFilesPath=$(PluginsFilesPath);$(DefineConstants)">
+		<Output TaskParameter="Value" PropertyName="DefineConstants" />
+		</CreateProperty>
+		<HeatDirectory
+		OutputFile="$(ProjectDir)..\HarvestedPluginsFiles.wxs"
+		Directory="$(PluginsFilesPath)"
+		PreprocessorVariable="var.deltashell_plugins_files"
+		Transforms="$(ProjectDir)..\Harvest\HarvestedFilesStandardTransform.xsl"
+		ComponentGroupName="HarvestedPluginsFilesComponent"
+		DirectoryRefId="HarvestedPluginsFilesDir"
+		AutogenerateGuids="true"
+		GenerateGuidsNow="false"
+		SuppressRegistry="true"
+		SuppressCom="true"
+		SuppressRootDirectory="true"
+		SuppressUniqueIds="false"
+		ToolPath="$(WixToolPath)"
+		VerboseOutput='true'
+		SuppressFragments='true'
+		KeepEmptyDirectories='true'
+		RunAsSeparateProcess="$(RunWixToolsOutOfProc)"
+		NoLogo="false" />
+	</Target>
+ </Project>

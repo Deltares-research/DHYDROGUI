@@ -1,0 +1,1 @@
+﻿Richardsononoutput;	Checked;	bool;	true

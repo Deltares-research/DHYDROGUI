@@ -1,0 +1,45 @@
+#,,,,,,,,,,,,,,,
+GUIGroups,(order determines order of appearance),,,,,,,,,,,,,,
+sediment,Sediment,,,,,,,,,,,,,,
+misc,Miscellaneous,,,,,,,,,,,,,, #default for MorFile, SedFile, Sedimentmodelnr
+morphology,Morphology,,,,,,,,,,,,,,
+
+MduGroups,(order determines order in written mdu file),,,,,,,,,,,,,,
+sediment,,,,,,,,,,,,,,,
+
+MduGroup,MduName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MduOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description,Unit
+sediment,MorFile,,,,FileName,,,,TRUE,,,,,,Morphology file *mor.nc,
+sediment,SedFile,,,,FileName,,,,TRUE,,,,,,Sediment descriptions file *sed.nc,
+sediment,Sedimentmodelnr,,,Sediment model number:No|Krone|SvR2007|E-H|MorphologyModule,0|1|2|3|4,0,0,4,TRUE,,,,,,"Sediment model nr, (0=no, 1=Krone, 2=SvR2007, 3=E-H, 4=MorphologyModule)",
+
+morphology,MorFac,morphology,General,Morphological scale factor,Double,1,1e-36,,FALSE,,,,,,Morphological scale factor,-
+morphology,MorStt,morphology,General,Spin-up before morphological changes,Double,720,0,,FALSE,,,,,,Spin-up interval from TStart till start of morphological changes,s
+morphology,Thresh,morphology,Sediment transport parameters,Threshold sediment thickness,Double,0.05,1e-36,10000,FALSE,,,,,,Threshold sediment thickness for transport and erosion reduction,m
+morphology,SedThr,morphology,General,Minimum depth for sediment computations,Double,0.1,0.0,,FALSE,,,,,,Minimum water depth for sediment computations,m
+morphology,DensIn,morphology,General,Include sediment concentration on density,1|0,0,,,FALSE,,,,,,Include effect of sediment concentration on fluid density,
+morphology,BedUpd,morphology,General,Update bed levels during simulation,0|1,1,,,FALSE,,,,,,Update bed levels during simulation,
+morphology,CmpUpd,morphology,General,Update bed composition during simulation,0|1,1,,,FALSE,,,,,,Update bed composition during simulation,
+morphology,BcFil,morphology,General,Morphology boundary condition file,String,,,,FALSE,FALSE,FALSE,,,,Morphology boundary conditions file,
+
+morphology,ISlope,morphology,Bed load transport,Bed slope formulation: No bed slope|Bagnold formulation|Koch & Flokstra formulation|Parker & Andrews formulation,1|2|3|4,2,1,4,FALSE,,,,,,"Bed slope formulation (1:no bed slope, 2:Bagnold formulation, 3:Koch & Flokstra formulation, 4:Parker & Andrews formulation)",
+morphology,AlfaBs,morphology,Bed load transport,Streamwise bed gradient factor,Double,1,0.0,,FALSE,,ISlope=2|3|4,,,,"Streamwise bed gradient factor for bed load transport (if ISlope>=2)",-
+morphology,AlfaBn,morphology,Bed load transport,Transverse bed gradient factor,Double,1.5,0.0,,FALSE,,ISlope=2,,,,"Transverse bed gradient factor for bed load transport (if ISlope=2)",-
+morphology,Ashld,morphology,Bed load transport,Ashld,Double,0.85,0.0,,FALSE,,ISlope=3,,,,"Bed load transport direction calibration coefficient (if ISlope=3)",-
+morphology,Bshld,morphology,Bed load transport,Bshld,Double,0.5,0,,FALSE,,ISlope=3,,,,"Bed load transport direction power of Shields parameter (if ISlope=3)",-
+morphology,Cshld,morphology,Bed load transport,Cshld,Double,0,0,,FALSE,,ISlope=3,,,,"Bed load transport direction power of specific grainsize / waterdepth ratio (if ISlope=3)",-
+morphology,Dshld,morphology,Bed load transport,Dshld,Double,0,0,,FALSE,,ISlope=3,,,,"Bed load transport direction power of specific grainsize / mean grainsize ratio (if ISlope=3)",-
+morphology,CoulFri,morphology,Bed load transport,CoulFri,Double,0,0,,FALSE,,ISlope=4,,,,"Coulomb friction coefficient (if ISlope=4)",-
+morphology,FlFdRat,morphology,Bed load transport,FlFdRat,Double,0,0,,FALSE,,ISlope=4,,,,"Ratio of lift and drag forces (if ISlope=4)",-
+morphology,ThetaCr,morphology,Bed load transport,ThetaCr,Double,0,0,,FALSE,,ISlope=4,,,,"Critical Shields parameter for bed load transport direction (if ISlope=4)",-
+
+morphology,IHidExp,morphology,Hiding and exposure formulation,Hiding and exposure formulation: No hiding and exposure|Egiazaroff formulation|Ashida & Michiue formulation|Parker et al formulation|Wu Wang & Jia formulation,1|2|3|4|5,1,1,5,FALSE,,,,,,"Hiding and exposure formulation (1=no hiding and exposure 2=Egiazaroff formulation 3=Ashida & Michiue formulation 4=Parker et al. formulation 5=Wu Wang & Jia formulation)",
+morphology,ASKLHE,morphology,Hiding and exposure formulation,ASKLHE,Double,1,0.0,,FALSE,,IHidExp=4,,,,"parameter for Parker et al. hiding & exposure formulation (if IHidExp=4)",-
+morphology,MWWJHE,morphology,Hiding and exposure formulation,MWWJHE,Double,1,0.0,,FALSE,,IHidExp=5,,,,"parameter for Wu Wang & Jia hiding & exposure formulation (if IHidExp=5)",-
+
+morphology,Espir,morphology,Multiplication (calibration) factors,Effect of secondary flow on bed load direction,Double,0.5,0.0,,FALSE,,,,,,Effect of secondary flow on bed load direction,-
+morphology,Sus,morphology,Multiplication (calibration) factors,Current related reference concentration factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for suspended sediment reference concentration,-
+morphology,Bed,morphology,Multiplication (calibration) factors,Current related bedload transport factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for bedload transport vector magnitude,-
+morphology,SusW,morphology,Multiplication (calibration) factors,Wave-related suspended transport factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for wave-related suspended transport reference concentration,-
+morphology,BedW,morphology,Multiplication (calibration) factors,Wave-related bedload transport factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for wave-related bedload transport vector magnitude,-
+morphology,ThetSD,morphology,Multiplication (calibration) factors,Factor for erosion of adjacent dry cells,Double,0.0,0.0,,FALSE,,,,,,Factor for erosion of adjacent dry cells,-
+morphology,HMaxTH,morphology,Multiplication (calibration) factors,HMaxTH,Double,1.5,0.0,,FALSE,,,,,,Max depth for variable THETSD. Set < SEDTHR to use global value only,m

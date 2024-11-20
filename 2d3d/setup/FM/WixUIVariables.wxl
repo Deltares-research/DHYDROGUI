@@ -1,0 +1,94 @@
+<?xml version='1.0'?>
+<WixLocalization Culture='en-us' xmlns='http://schemas.microsoft.com/wix/2006/localization'>
+  
+  <!-- 
+        Override internal strings for custom installer text
+        
+        For a list of overridable strings see here:
+        http://wix.cvs.sourceforge.net/viewvc/wix/wix/src/ext/UIExtension/wixlib/WixUI_en-us.wxl?revision=1.12&view=markup
+    -->
+  <String Id="SetupTypeDlgTypicalText">Installs the most common program features, including Hydrodynamics and Control. Recommended for most users.</String>
+  <String Id="LanguageName" Overridable="yes">en-US</String>
+
+
+  <String Id="AdvancedWelcomeEulaDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="BrowseDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="CustomizeDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="DiskCostDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="FeaturesDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="FilesInUseBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="InstallDirDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="InstallScopeDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="LicenseAgreementDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="MaintenanceTypeDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="MsiRMFilesInUseBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="OutOfDiskDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="OutOfRbDiskDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="ProgressDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="SetupTypeDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="VerifyReadyDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+
+  <String Id="ExitDialogBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="FatalErrorBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="MaintenanceWelcomeDlgBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="PrepareDlgBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="ResumeDlgBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="UserExitBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="WelcomeDlgBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="WelcomeEulaDlgBitmap" Overridable="yes">UIDialogBmp</String>
+
+  <String Id="WindowLayoutFile" Overridable="yes">WindowLayout_normal.en-US.xml</String>
+  <String Id="StartUpImage" Overridable="yes">setup_start.jpg</String> <!--Setting in Product.wxs-->
+
+  
+  
+  <!-- for long title names use 125 else e.g. morphan 88.-->
+  <String Id="TitleXPosition" Overridable="yes">88</String>
+  <String Id="DescriptionXPosition" Overridable="yes">88</String>
+  
+  <!--Set X to 40 when only Deltares logo is displayed, set to 24 when also Rijkswaterstaat logo is displayed-->
+  <String Id='DescriptionBeforeLogosX' Overridable='yes'>40</String>
+  <!--Set Width to 220 when only Deltares logo is displayed, set to 136 when also Rijkswaterstaat logo is displayed-->
+  <String Id='DescriptionBeforeLogosWidth' Overridable='yes'>220</String>
+
+  <UI Dialog="ExitDialogDeltares" Control="OptionalCheckBox" X="10" Y="243" Height="17" Width="170" />
+  <UI Dialog="ExitDialogDeltares" Control="Title" Y="186"/>
+
+
+  <String Id='Advanced_Font_FaceName' Overridable='yes'>Arial</String>
+  <String Id='Advanced_Font_Title_Size' Overridable='yes'>10</String>
+  <String Id='Advanced_Font_Description_Size' Overridable='yes'>8</String>
+  
+  
+  <String Id="IntroDlgTitle" Overridable='yes'></String>
+  <String Id="IntroDlgDescription" Overridable='yes'>The Setup Wizard will install [ProductName] on your computer. Click Next to continue or Cancel to exit the Setup Wizard.</String>
+  <String Id="IntroUpdateDlgDescriptionUpdate" Overridable='yes'></String>
+
+  <String Id="WelcomeUpdateDlgDescriptionUpdate" Overridable='yes'></String>
+  <String Id="WelcomeDlgDescription" Overridable='yes'>The Setup Wizard will install [ProductName] on your computer. Click Next to continue or Cancel to exit the Setup Wizard.</String>
+  <String Id="WelcomeDlgTitle" Overridable='yes'></String>
+
+  <String Id="NewAdvancedWelcomeEulaDlgTitle" Overridable='yes'>{\WixUI_Font_Title}Please read the End-User License Agreement</String>
+
+  <String Id="NewMaintenanceWelcomeDlgTitle" Overridable ="yes"></String>
+  <String Id="NewMaintenanceWelcomeDlgDescription" Overridable ="yes">To Remove, Repair or Change the installation of [ProductName]. Click Next to continue or Cancel to exit the Setup Wizard.</String>
+
+  <String Id="NewMaintenanceTypeDlgDescription" Overridable="yes">{\WixUI_Font_Banner_Description}Select the operation you wish to perform.</String>
+  <String Id="NewBrowseDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Browse to the destination folder</String>
+  <String Id="NewCustomizeDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Select the way you want features to be installed.</String>
+  <String Id="NewFeaturesDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Select the way you want features to be installed.</String>
+
+  <String Id="DiskCostDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}The disk space required for the installation of the selected features.</String>
+  <String Id="OutOfDiskDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Disk space required for the installation exceeds available disk space.</String>
+  <String Id="OutOfRbDiskDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Disk space required for the installation exceeds available disk space.</String>
+  <String Id="SetupTypeDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Choose the setup type that best suits your needs</String>
+  <String Id="LicenseAgreementDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Please read the following license agreement carefully</String>
+  <String Id="FullProductName" Overridable="yes">!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)</String>
+  <String Id="PublicReleaseVersion">2025.02</String>
+  <String Id="ReleaseVersion">4.17.0</String> <!--Need to discuss with the team-->
+  <String Id="ProductName">!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)</String>
+  <String Id="SupportPhone">+31 (0)88 335 8100</String>
+  <String Id="DeltaShellFeatureName">DeltaShell</String>
+  <String Id="DeltaShellFeatureDescription">The framework enables to develop a range of modeling suites, each distinguished by the components and — most significantly — the (numerical) modules, which are plugged in.</String>
+  <String Id="PluginFeatureName">!(loc.DistributionName) components</String>
+</WixLocalization>

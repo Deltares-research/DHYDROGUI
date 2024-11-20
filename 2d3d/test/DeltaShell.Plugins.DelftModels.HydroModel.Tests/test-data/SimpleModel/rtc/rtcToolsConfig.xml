@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcToolsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews C:\D-HYDRO-test\_SimpleModel\export\rtc\rtcToolsConfig.xsd">
+  <general>
+    <description>RTC Model DeltaShell</description>
+    <poolRoutingScheme>Theta</poolRoutingScheme>
+    <theta>0.5</theta>
+  </general>
+  <rules>
+    <rule>
+      <timeAbsolute id="[TimeRule]Maeslantkering/ts_Maeslant_GateOpeningWidth">
+        <input>
+          <x>Maeslantkering/ts_Maeslant_GateOpeningWidth</x>
+        </input>
+        <output>
+          <y>[Output]NW_1026.34_C_SK_Maeslantkering/GateOpeningWidth</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="[TimeRule]Maeslantkering/ts_Maeslant_GateLowerEdgeLevel">
+        <input>
+          <x>Maeslantkering/ts_Maeslant_GateLowerEdgeLevel</x>
+        </input>
+        <output>
+          <y>[Output]NW_1026.34_C_SK_Maeslantkering/GateLowerEdgeLevel</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="[TimeRule]Hartelkering/ts_HartelkeringZ_GateLowerEdgeLevel">
+        <input>
+          <x>Hartelkering/ts_HartelkeringZ_GateLowerEdgeLevel</x>
+        </input>
+        <output>
+          <y>[Output]HK_1.67_C_SK_HartelkeringZ/GateLowerEdgeLevel</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="[TimeRule]Hartelkering/ts_HartelkeringN_GateLowerEdgeLevel">
+        <input>
+          <x>Hartelkering/ts_HartelkeringN_GateLowerEdgeLevel</x>
+        </input>
+        <output>
+          <y>[Output]HK_1.67_R_SK_HartelkeringN/GateLowerEdgeLevel</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="[TimeRule]Volkerakdam/ts_Volkerak1_GateLowerEdgeLevel">
+        <input>
+          <x>Volkerakdam/ts_Volkerak1_GateLowerEdgeLevel</x>
+        </input>
+        <output>
+          <y>[Output]HD_998.75_L_US_Volkeraksluizen/GateLowerEdgeLevel</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+  </rules>
+</rtcToolsConfig>

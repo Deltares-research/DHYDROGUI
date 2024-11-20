@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcDataConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews C:\Users\carlo\Desktop\MouseWithoutBorders\Project1.dsproj_data\Integrated_Model_output\rtc\rtcDataConfig.xsd">
+  <importSeries>
+    <PITimeSeriesFile>
+      <timeSeriesFile>timeseries_import.xml</timeSeriesFile>
+      <useBinFile>false</useBinFile>
+    </PITimeSeriesFile>
+    <timeSeries id="[Input]ObservationPoint01/water_level">
+      <OpenMIExchangeItem>
+        <elementId>ObservationPoint01</elementId>
+        <quantityId>water_level</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="Control Group 1/rule01">
+      <PITimeSeries>
+        <locationId>[TimeRule]Control Group 1/rule01</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="Control Group 2/rule01">
+      <PITimeSeries>
+        <locationId>[TimeRule]Control Group 2/rule01</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+  </importSeries>
+  <exportSeries>
+    <CSVTimeSeriesFile decimalSeparator="." delimiter="," adjointOutput="false"></CSVTimeSeriesFile>
+    <PITimeSeriesFile>
+      <timeSeriesFile>timeseries_export.xml</timeSeriesFile>
+      <useBinFile>false</useBinFile>
+    </PITimeSeriesFile>
+    <timeSeries id="[Output]structure01/CrestLevel">
+      <OpenMIExchangeItem>
+        <elementId>structure01</elementId>
+        <quantityId>CrestLevel</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Status]Control Group 1/condition01" />
+    <timeSeries id="[Output]structure02/CrestLevel">
+      <OpenMIExchangeItem>
+        <elementId>structure02</elementId>
+        <quantityId>CrestLevel</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Status]Control Group 2/condition01" />
+  </exportSeries>
+</rtcDataConfig>

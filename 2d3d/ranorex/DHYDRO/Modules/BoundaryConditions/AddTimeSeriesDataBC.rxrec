@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="9942d7b6-1ade-4d2f-a423-248b28111a73"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="AddTimeSeriesDataBC"
+	namespace="DHYDRO.Modules.BoundaryConditions">
+	</codegen>
+	<variables>
+		<var
+		id="0f0c78b3-10f8-47ce-b09f-27265323b717"
+		name="ParameterValue">
+		</var>
+	</variables>
+	<recorditems>
+		<userrecorditem
+		classname="AddTimeSeriesDataBC"
+		enabled="True"
+		isexternaltestmethod="False"
+		methodname="FillInParameterValue"
+		namespace="DHYDRO.Modules.BoundaryConditions"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<arguments
+			id="9a2de0f6-b2b1-4f21-bd28-f39aac61f374">
+				<argument
+				argname="cellInfo"
+				id="75105e47-b028-4b0f-979f-586c4b225bf1">
+					<argvaluetype>
+						Ranorex.Core.Repository.RepoItemInfo, Ranorex.Core, Culture=neutral
+					</argvaluetype>
+					<argvalue>
+					</argvalue>
+					<info
+					id="269c6bb0-63f5-477d-be15-edae112b1adc"
+					sourcename="ItemRecorderEditor">
+						<path>
+							/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblename='NewItem Row']/cell[@accessiblename&gt;$ParameterName]
+						</path>
+						<robustPath>
+						</robustPath>
+					</info>
+				</argument>
+			</arguments>
+		</userrecorditem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		AddTimeSeriesDataBC.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

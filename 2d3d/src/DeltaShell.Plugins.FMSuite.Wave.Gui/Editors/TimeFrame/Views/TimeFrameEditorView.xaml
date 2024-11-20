@@ -1,0 +1,114 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.Views.TimeFrameEditorView"
+             x:Name="TimeFrameEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:timeFrame="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.TimeFrame;assembly=DeltaShell.Plugins.FMSuite.Wave"
+             xmlns:components="clr-namespace:DeltaShell.NGHS.Common.Gui.Components;assembly=DeltaShell.NGHS.Common.Gui"
+             xmlns:timeFrameEditor="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.Views.TimeFrameEditor"
+             xmlns:convertersTimeFrame="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.Converters"
+             xmlns:table="clr-namespace:DelftTools.Controls.Swf.Table;assembly=DelftTools.Controls.Swf"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
+            <converters:EnumToVisibilityConverter x:Key="HydrodynamicsToVisibilityConverter" CollapseHidden="True" InvertVisibility="False" />
+            <converters:EnumToVisibilityConverter x:Key="WindToVisibilityConverter" CollapseHidden="True" InvertVisibility="False" />
+            <convertersTimeFrame:ColumnVisibilitiesConverter x:Key="ColumnVisibilitiesConverter"/>
+
+            <DataTemplate x:Key="EnumLabeledComboBoxTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="HydroDynamicsInputDataTypes"
+                                MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="timeFrame:HydrodynamicsInputDataType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="WindInputDataTypes"
+                                MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="timeFrame:WindInputDataType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Column="0" 
+                  Header="Time Points">
+            <WindowsFormsHost timeFrameEditor:TableViewWindowsFormsHostMap.Data="{Binding Path=DataFunctionBindingList}"
+                              x:Name="WindowsFormsHost">
+
+                <timeFrameEditor:TableViewWindowsFormsHostMap.ColumnVisibilities>
+                    <MultiBinding Converter="{StaticResource ColumnVisibilitiesConverter}">
+                        <Binding Path="HydrodynamicsInputDataType"/>
+                        <Binding Path="WindInputDataType"/>
+                    </MultiBinding>
+                </timeFrameEditor:TableViewWindowsFormsHostMap.ColumnVisibilities>
+
+                <WindowsFormsHost.Child>
+                    <table:TableView x:Name="TableView"/>
+                </WindowsFormsHost.Child>
+            </WindowsFormsHost>
+        </GroupBox>
+
+        <StackPanel Grid.Column="1" 
+                    Orientation="Vertical">
+            <GroupBox Header="Hydrodynamics">
+                <StackPanel Margin="10">
+                    <!--Use a different more suitable combo box for these.-->
+                    <components:LabeledComboBoxRow
+                        Label="Input Type:"
+                        SelectedItem="{Binding Path=HydrodynamicsInputDataType}"
+                        ItemsSource="{Binding Source={StaticResource HydroDynamicsInputDataTypes}}"
+                        ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
+
+                    <timeFrameEditor:HydrodynamicsConstantsView 
+                        Visibility="{Binding 
+                                     ElementName=TimeFrameEditorControl,
+                                     Path=DataContext.HydrodynamicsInputDataType, 
+                                     Converter={StaticResource HydrodynamicsToVisibilityConverter},
+                                     ConverterParameter={x:Static timeFrame:HydrodynamicsInputDataType.Constant}}"
+                        DataContext="{Binding Path=HydrodynamicsConstantsViewModel}"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Wind">
+                <StackPanel Margin="10">
+                    <components:LabeledComboBoxRow 
+                        Label="Input Type:"
+                        SelectedItem="{Binding Path=WindInputDataType}"
+                        ItemsSource="{Binding Source={StaticResource WindInputDataTypes}}"
+                        ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
+
+                    <timeFrameEditor:WindConstantsView
+                        Visibility="{Binding 
+                                     ElementName=TimeFrameEditorControl,
+                                     Path=DataContext.WindInputDataType, 
+                                     Converter={StaticResource WindToVisibilityConverter},
+                                     ConverterParameter={x:Static timeFrame:WindInputDataType.Constant}}"
+                        DataContext="{Binding Path=WindConstantsViewModel}"/>
+
+                    <timeFrameEditor:WindFilesView
+                        Visibility="{Binding 
+                                     ElementName=TimeFrameEditorControl,
+                                     Path=DataContext.WindInputDataType, 
+                                     Converter={StaticResource WindToVisibilityConverter},
+                                     ConverterParameter={x:Static timeFrame:WindInputDataType.FileBased}}"
+                        DataContext="{Binding Path=WindFilesViewModel}"/>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
+</UserControl>

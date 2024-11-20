@@ -1,0 +1,704 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SubFileImporter_File_not_found" xml:space="preserve">
+    <value>No sub file was imported: the selected sub file does not exist</value>
+  </data>
+  <data name="SubFileImporter_Name_Substance_and_Process_Library" xml:space="preserve">
+    <value>Substance and Process Library</value>
+  </data>
+  <data name="SubFileImporter_Path_not_set" xml:space="preserve">
+    <value>No sub file was imported: no file selection was made</value>
+  </data>
+  <data name="SubFileImporter_Substance_process_library_not_set" xml:space="preserve">
+    <value>Substance process library is not set</value>
+  </data>
+  <data name="SubstanceProcessLibrary_OutputParameters_Rad" xml:space="preserve">
+    <value>Rad</value>
+  </data>
+  <data name="SubstanceProcessLibrary_OutputParameters_Rad_description" xml:space="preserve">
+    <value>Solar radiation (W/m2)</value>
+  </data>
+  <data name="SubstanceProcessLibrary_OutputParameters_Surf" xml:space="preserve">
+    <value>Surf</value>
+  </data>
+  <data name="SubstanceProcessLibrary_OutputParameters_Surf_description" xml:space="preserve">
+    <value>Horizontal surface area of a DELWAQ segment (m2)</value>
+  </data>
+  <data name="SubstanceProcessLibrary_OutputParameters_Temp" xml:space="preserve">
+    <value>Temp</value>
+  </data>
+  <data name="SubstanceProcessLibrary_OutputParameters_Temp_description" xml:space="preserve">
+    <value>Water temperature (oC)</value>
+  </data>
+  <data name="SubstanceProcessLibrary_OutputParameters_Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="SubstanceProcessLibrary_OutputParameters_Volume_description" xml:space="preserve">
+    <value>Volume of computational cell (m3)</value>
+  </data>
+  <data name="TemplateInpFile" xml:space="preserve">
+    <value>512 80 ';'
+;DELWAQ_VERSION_4.910                               ; Delwaq version number
+;PRINT_OUTPUT_OPTION_9                              ; Debug level
+
+; TEMPLATE FILE FOR WATER QUALITY CALCULATION
+; First input block
+'Water quality calculation'
+' '
+' '
+INCLUDE 'includes_deltashell/B1_t0.inc'             ; From UI: Time stamp
+INCLUDE 'includes_deltashell/B1_sublist.inc'        ; From UI: Substance list
+#1;
+
+;###############################################################################
+; Second input block
+INCLUDE 'includes_deltashell/B2_sysclock.inc'       ; From UI: System clock
+INCLUDE 'includes_deltashell/B2_numsettings.inc'    ; From UI: Simulation timers
+INCLUDE 'includes_deltashell/B2_simtimers.inc'      ; From UI: Simulation timers
+ 1                                                  ; Monitoring areas in this file
+INCLUDE 'includes_deltashell/B2_outlocs.inc'        ; From UI: Definition of output locations
+ 2                                                  ; No monitoring cross areas
+INCLUDE 'includes_deltashell/B2_outputtimers.inc'   ; From UI: Simulation timers
+
+#2;
+;###############################################################################
+; Third input block
+INCLUDE 'includes_deltashell/B3_ugrid.inc'          ; Reference to the waqgeom file for UGRID NetCDF output
+INCLUDE '{0}B3_nrofseg.inc'        ; From UI: Nr of segments
+ 2                                                  ; Structure matrix not used
+ 0                                                  ; Features of the computational elements
+ 0
+ 
+; Volumes from binary files
+-2                                                  ; No online Flow-WAQ, interpolate Volume
+'{0}volume.dat'
+#3;
+;###############################################################################
+; Fourth input block
+INCLUDE '{0}B4_nrofexch.inc'       ; From UI: Nr of exchanges
+ 1                                                  ; Number of dispersion arrays
+INCLUDE 'includes_deltashell/B4_dispersion.inc'     ; From UI: Dispersion to all substances
+ 0                                                  ; Number of velocity arrays
+ 1                                                  ; Input format of the pointers
+
+-1                                                  ; Pointers from Auxilary file
+'{0}B4_pointer.inc'                ; From UI: Pointers
+
+; START TODO
+     1                                              ; Dispersions in this file
+     1.0 1.0 1.0                                    ; Scale factors for 3 directions
+       0 0.0 0.0                                    ; Values (m2/s) for 3 directions
+; END TODO       		   			
+
+INCLUDE 'includes_deltashell/B4_dispx.inc'          ; From UI: Dispersion(x)
+
+-2                                                  ; No online Flow-WAQ, interpolate Area
+'{0}area.dat'
+
+; FLOWS from binary files
+-2                                                  ; No online Flow-WAQ, interpolate FLOW
+'{0}flow.dat'
+
+; Lenght from binary files
+1                                                   ; Vary in space
+0                                                   ; From binary file
+ '{0}length.dat'
+
+#4;
+;###############################################################################
+; Fifth input block, water quality calculation
+
+; Boundary list
+INCLUDE 'includes_deltashell/B5_boundlist.inc'      ; From UI: Boundary data
+
+0                                                   ; No Tatcher-Harleman time lags
+
+; Boundary data (dummy value)
+INCLUDE 'includes_deltashell/B5_bounddata.inc'      ; From UI: Boundary data
+
+
+#5;
+;###############################################################################
+; Sixth input block, Dry Waste Loads block
+; Number of loads (dummy value)
+0                                                   ; Number of loads
+
+#6;
+;###############################################################################
+; Seventh input block
+
+CONSTANTS 'CLOSE_ERR'	DATA	1
+CONSTANTS  'ONLY_ACTIVE' 	DATA	0               ; Only active processes
+CONSTANTS  'Nothreads' 		DATA	0               ; Multicore
+CONSTANTS  'Iteration report' 	DATA	0		          
+
+INCLUDE 'includes_deltashell/B7_processes.inc'      ; From UI: Processes
+INCLUDE 'includes_deltashell/B7_constants.inc'      ; From UI: Constants
+INCLUDE 'includes_deltashell/B7_functions.inc'      ; From UI: Functions
+INCLUDE 'includes_deltashell/B7_parameters.inc'     ; From UI: Parameters
+
+SEG_FUNCTIONS
+'Chezy'
+ALL
+BINARY_FILE '{0}chezy.dat'
+
+SEG_FUNCTIONS
+'Surf'
+ALL
+BINARY_FILE '{0}surface.dat'
+
+SEG_FUNCTIONS
+'Velocity'
+ALL
+BINARY_FILE '{0}velocity.dat'
+
+SEG_FUNCTIONS
+'Width'
+ALL
+BINARY_FILE '{0}width.dat'
+
+#7
+;###############################################################################
+; Eighth input block
+
+INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
+
+#8
+;###############################################################################
+; Ninth input block
+ 1                                                  ; Conditions follow in this file
+ 1                                                  ; Monitor-file
+ 0                                                  ; Grid-file
+ INCLUDE 'includes_deltashell/B9_Hisvar.inc'        ; History-file
+ INCLUDE 'includes_deltashell/B9_Mapvar.inc'        ; Map-file
+                                                    ; Binary/Nefis and History/Map
+ 0                                                  ; Switch on binary History file
+ 0                                                  ; Switch on binary Map file
+ 1                                                  ; Switch off Nefis History file
+ 1                                                  ; Switch off Nefis Map file
+#9
+;###############################################################################
+; Tenth input block
+#10</value>
+  </data>
+  <data name="TemplateInpFileHybrid" xml:space="preserve">
+    <value>512 80 ';'
+;DELWAQ_VERSION_4.910                               ; Delwaq version number
+;PRINT_OUTPUT_OPTION_9                              ; Debug level
+
+; TEMPLATE FILE FOR WATER QUALITY CALCULATION
+; First input block
+'Water quality calculation'
+' '
+' '
+INCLUDE 'includes_deltashell/B1_t0.inc'             ; From UI: Time stamp
+INCLUDE 'includes_deltashell/B1_sublist.inc'        ; From UI: Substance list
+#1;
+
+;###############################################################################
+; Second input block
+INCLUDE 'includes_deltashell/B2_sysclock.inc'       ; From UI: System clock
+INCLUDE 'includes_deltashell/B2_numsettings.inc'    ; From UI: Simulation timers
+INCLUDE 'includes_deltashell/B2_simtimers.inc'      ; From UI: Simulation timers
+ 1                                                  ; Monitoring areas in this file
+INCLUDE 'includes_deltashell/B2_outlocs.inc'        ; From UI: Definition of output locations
+ 2                                                  ; No monitoring cross areas
+INCLUDE 'includes_deltashell/B2_outputtimers.inc'   ; From UI: Simulation timers
+
+#2;
+;###############################################################################
+; Third input block
+INCLUDE 'includes_deltashell/B3_ugrid.inc'          ; Reference to the waqgeom file for UGRID NetCDF output
+INCLUDE '{0}B3_nrofseg.inc'        ; From UI: Nr of segments
+ 2                                                  ; Structure matrix not used
+ 0                                                  ; Features of the computational elements
+ 0
+ 
+; Volumes (dummy values)
+ 1                                                  ; Volumes in this file
+ 2                                                  ; Constants with defaults
+ 1.0 1.0E008                                        ; Scale factor and default value
+ 0                                                  ; Number of overrides
+; Volumes added by Model API
+
+#3;
+;###############################################################################
+; Fourth input block
+INCLUDE '{0}B4_nrofexch.inc'       ; From UI: Nr of exchanges
+ 1                                                  ; Number of dispersion arrays
+INCLUDE 'includes_deltashell/B4_dispersion.inc'     ; From UI: Dispersion to all substances
+ 0                                                  ; Number of velocity arrays
+ 1                                                  ; Input format of the pointers
+
+-1                                                  ; Pointers from Auxilary file
+'{0}B4_pointer.inc'                ; From UI: Pointers
+
+; START TODO
+     1                                              ; Dispersions in this file
+     1.0 1.0 1.0                                    ; Scale factors for 3 directions
+       0 0.0 0.0                                    ; Values (m2/s) for 3 directions
+; END TODO       		   			
+
+INCLUDE 'includes_deltashell/B4_dispx.inc'          ; From UI: Dispersion(x)
+
+; Areas (dummy values)
+ 1                                                  ; Areas in this file
+ 2                                                  ; Constants with defaults
+ 1.0 1.0E004                                        ; Scale factor and default value
+ 0                                                  ; Number of overrides
+; Areas added by Model API
+
+; Flows (dummy values)
+ 1                                                  ; Flows in this file
+ 2                                                  ; Constants with defaults
+ 1.0 0.2E004                                        ; Scale factor and default value
+ 0                                                  ; Number of overrides
+; Flows added by Model API
+
+; Lenght from binary files
+1                                                   ; Vary in space
+0                                                   ; From binary file
+ '{0}length.dat'
+
+#4;
+;###############################################################################
+; Fifth input block, water quality calculation
+
+; Boundary list
+INCLUDE 'includes_deltashell/B5_boundlist.inc'      ; From UI: Boundary data
+
+0                                                   ; No Tatcher-Harleman time lags
+
+; Boundary data (dummy value)
+INCLUDE 'includes_deltashell/B5_bounddata.inc'      ; From UI: Boundary data
+
+
+#5;
+;###############################################################################
+; Sixth input block, Dry Waste Loads block
+; Number of loads (dummy value)
+0                                                   ; Number of loads
+
+#6;
+;###############################################################################
+; Seventh input block
+
+CONSTANTS 'CLOSE_ERR'	DATA	1
+CONSTANTS  'ONLY_ACTIVE' 	DATA	0               ; Only active processes
+CONSTANTS  'Nothreads' 		DATA	0               ; Multicore
+CONSTANTS  'Iteration report' 	DATA	0		          
+
+INCLUDE 'includes_deltashell/B7_processes.inc'      ; From UI: Processes
+INCLUDE 'includes_deltashell/B7_constants.inc'      ; From UI: Constants
+INCLUDE 'includes_deltashell/B7_functions.inc'      ; From UI: Functions
+INCLUDE 'includes_deltashell/B7_parameters.inc'     ; From UI: Parameters
+
+; Segment functions (dummy values)
+INCLUDE 'includes_deltashell/B7_chezy.inc'          ; Chezy
+INCLUDE 'includes_deltashell/B7_surf.inc'           ; Surface
+INCLUDE 'includes_deltashell/B7_velocity.inc'       ; Velocity
+INCLUDE 'includes_deltashell/B7_width.inc'          ; Width
+; Values added by Model API
+
+#7
+;###############################################################################
+; Eighth input block
+
+INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
+
+#8
+;###############################################################################
+; Ninth input block
+ 1                                                  ; Conditions follow in this file
+ 1                                                  ; Monitor-file
+ 0                                                  ; Grid-file
+ INCLUDE 'includes_deltashell/B9_Hisvar.inc'        ; History-file
+ INCLUDE 'includes_deltashell/B9_Mapvar.inc'        ; Map-file
+                                                    ; Binary/Nefis and History/Map
+ 0                                                  ; Switch on binary History file
+ 0                                                  ; Switch on binary Map file
+ 1                                                  ; Switch off Nefis History file
+ 1                                                  ; Switch off Nefis Map file
+#9
+;###############################################################################
+; Tenth input block
+#10</value>
+  </data>
+  <data name="WaterQualityBoundaryData_Constant_post_fix" xml:space="preserve">
+    <value>- Constant</value>
+  </data>
+  <data name="WaterQualityBoundaryData_SetConstFunction_Constant" xml:space="preserve">
+    <value>Constant</value>
+  </data>
+  <data name="WaterQualityBoundaryData_SetConstFunction_Substance" xml:space="preserve">
+    <value>Substance</value>
+  </data>
+  <data name="WaterQualityBoundaryData_Time_series_post_fix" xml:space="preserve">
+    <value>- Time series</value>
+  </data>
+  <data name="WaterQualityModelValidate_CheckTimers_Linked_flow" xml:space="preserve">
+    <value>linked flow</value>
+  </data>
+  <data name="WaterQualityModelValidate_CheckTimers_Period_should_be_correctly_bounded" xml:space="preserve">
+    <value>The {0} period of the model ({1} - {2}) should be bounded by the {3} period of the {4}model ({5} - {6})</value>
+  </data>
+  <data name="WaterQualityModelValidate_CheckTimers_Start_time_cannot_be_after_stop_time" xml:space="preserve">
+    <value>The {0} start time cannot be after the {0} stop time</value>
+  </data>
+  <data name="WaterQualityModelValidate_CheckTimers_Start_time_must_be_aligned_with_sample" xml:space="preserve">
+    <value>The {0} start time must be expressed as "{1} + N * {2}" (N must be an integer)</value>
+  </data>
+  <data name="WaterQualityModelValidate_CheckTimers_Stop_time_must_be_aligned_with_sample" xml:space="preserve">
+    <value>The {0} stop time must be expressed as "{1} + N * {2}" (N must be an integer)</value>
+  </data>
+  <data name="WaterQualityModelValidate_CheckTimers_Time_step_cannot_be_greater_than_difference_start_and_stop_time" xml:space="preserve">
+    <value>The {0} time step cannot be larger than the difference between the {0} start and stop time ({1})</value>
+  </data>
+  <data name="WaterQualityModelValidate_CheckTimers_Time_step_must_be_greater_than_0" xml:space="preserve">
+    <value>The {0} time step must be greater than 0</value>
+  </data>
+  <data name="WaterQualityModelValidate_CheckTimers_Time_step_must_be_integer_positive_non_zero_multiple" xml:space="preserve">
+    <value>The {0} time step must be an integer positive non-zero multiple {1}of the {2} time step ({3})</value>
+  </data>
+  <data name="WaterQualityModelValidate_CheckTimers_Time_step_must_be_result_of_integer_division" xml:space="preserve">
+    <value>or the result of an integer division</value>
+  </data>
+  <data name="No_working_directory_specified" xml:space="preserve">
+    <value>No working directory specified. Working directory set to '{0}'</value>
+  </data>
+  <data name="Could_not_create_working_directory" xml:space="preserve">
+    <value>Could not create working directory '{0}'. Working directory set to '{1}'</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="hydFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\hydfile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TemplateInpFileNew" xml:space="preserve">
+    <value>1000 80 ';'
+;DELWAQ_VERSION_4.910                               ; Delwaq version number
+;PRINT_OUTPUT_OPTION_4                              ; Debug level
+
+; TEMPLATE FILE FOR WATER QUALITY CALCULATION
+; First input block
+'Water quality calculation'
+' '
+' '
+INCLUDE 'includes_deltashell/B1_t0.inc'             ; From UI: Time stamp
+INCLUDE 'includes_deltashell/B1_sublist.inc'        ; From UI: Substance list
+#1;
+
+;###############################################################################
+; Second input block
+86400 'DDHHMMSS' 'DDHHMMSS'                         ; system clock
+INCLUDE 'includes_deltashell/B2_numsettings.inc'    ; From UI: Simulation timers
+INCLUDE 'includes_deltashell/B2_simtimers.inc'      ; From UI: Simulation timers
+ 1                                                  ; Monitoring areas in this file
+INCLUDE 'includes_deltashell/B2_outlocs.inc'        ; From UI: Definition of output locations
+ 2                                                  ; No monitoring cross areas
+INCLUDE 'includes_deltashell/B2_outputtimers.inc'   ; From UI: Simulation timers
+
+#2;
+;###############################################################################
+; Third input block
+INCLUDE 'includes_deltashell/B3_ugrid.inc'          ; Reference to the waqgeom file for UGRID NetCDF output
+INCLUDE 'includes_deltashell/B3_nrofseg.inc'        ; From UI: Nr of segments (multiply number-water-quality-segments-per-layer and number-water-quality-layers from HYD)
+ 2                                                  ; Structure matrix not used
+
+INCLUDE 'includes_deltashell/B3_attributes.inc'     ; From UI: attributes file
+
+INCLUDE 'includes_deltashell/B3_volumes.inc'        ; From UI: volumes-file
+#3;
+;###############################################################################
+; Fourth input block
+INCLUDE 'includes_deltashell/B4_nrofexch.inc'       ; From UI: Nr of exchanges (number-horizontal-exchanges  followed by a zero and number-vertical-exchanges from HYD)
+ 0                                                  ; Number of dispersion arrays (this is different when spatial dispersion is implemented)
+ 0                                                  ; Number of velocity arrays
+ 1                                                  ; Input format of the pointers.
+
+INCLUDE 'includes_deltashell/B4_pointers.inc'       ; From UI: Pointers (pointers file from hyd file)
+
+     1                                              ; Dispersions in this file
+     1.0 1.0 1.0                                    ; Scale factors for 3 directions
+INCLUDE 'includes_deltashell/B4_cdispersion.inc'    ; From UI: constant dispersion (horizontal zero vertical)
+
+INCLUDE 'includes_deltashell/B4_area.inc'           ; From UI: Area file from hyd file
+
+INCLUDE 'includes_deltashell/B4_flows.inc'          ; From UI: flows file from hyd-file
+
+1                                                   ; Vary in space
+INCLUDE 'includes_deltashell/B4_length.inc'         ; From UI: length file from hyd-file
+
+#4;
+;###############################################################################
+; Fifth input block, water quality calculation
+
+; Boundary list
+INCLUDE 'includes_deltashell/B5_boundlist.inc'      ; From UI: Boundary segments
+
+0                                                   ; No Tatcher-Harleman time lags
+
+INCLUDE 'includes_deltashell/B5_boundaliases.inc'   ; From UI: Boundary location aliases
+INCLUDE 'includes_deltashell/B5_bounddata.inc'      ; From UI: Boundary data
+
+
+#5;
+;###############################################################################
+; Sixth input block, Dry Waste Loads block
+INCLUDE 'includes_deltashell/B6_loads.inc'          ; From UI: dry waste load definitions
+INCLUDE 'includes_deltashell/B6_loads_aliases.inc'  ; From UI: dry waste load location aliases
+INCLUDE 'includes_deltashell/B6_loads_data.inc'     ; From UI: dry waste load data
+
+#6;
+;###############################################################################
+; Seventh input block
+
+CONSTANTS  'ONLY_ACTIVE' 	DATA	0               ; Only active processes
+
+INCLUDE 'includes_deltashell/B7_processes.inc'      ; From UI: Processes
+INCLUDE 'includes_deltashell/B7_constants.inc'      ; From UI: Constants
+INCLUDE 'includes_deltashell/B7_functions.inc'      ; From UI: Functions
+INCLUDE 'includes_deltashell/B7_parameters.inc'     ; From UI: Parameters
+INCLUDE 'includes_deltashell/B7_dispersion.inc'     ; FROM UI: Spatial dispersion
+INCLUDE 'includes_deltashell/B7_vdiffusion.inc'     ; FROM UI: Vertical diffusion
+
+INCLUDE 'includes_deltashell/B7_segfunctions.inc'   ; FROM UI: SEG_FUNCTION blocks
+INCLUDE 'includes_deltashell/B7_numerical_options.inc'   ; FROM UI: numerical options
+
+#7
+;###############################################################################
+; Eighth input block
+
+INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
+
+#8
+;###############################################################################
+; Ninth input block
+ 1                                                  ; Conditions follow in this file
+ 1                                                  ; Default monitor-file
+ 0                                                  ; No grid-file
+ INCLUDE 'includes_deltashell/B9_Hisvar.inc'        ; From UI: History-file
+ INCLUDE 'includes_deltashell/B9_Mapvar.inc'        ; From UI: Map-file
+                                                    ; Binary/Nefis and History/Map
+ 0                                                  ; Switch on binary History file
+ 0                                                  ; Switch on binary Map file
+ 1                                                  ; Switch off Nefis History file
+ 1                                                  ; Switch off Nefis Map file
+#9
+;###############################################################################
+; Tenth input block
+#10</value>
+  </data>
+  <data name="weight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\weight.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Observation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\observation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DataTableCsvFileReader_CreateDataTableCsvContents_Line__0__contains_wrong_substance_value___1_" xml:space="preserve">
+    <value>Line {0} contains wrong substance value: {1}</value>
+  </data>
+  <data name="WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simulation_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_simulation_period_" xml:space="preserve">
+    <value>Timers for {0} are not equal to the simulation period of the model ({1}, {2}). Please verify that they overlap with the simulation period.</value>
+  </data>
+  <data name="WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___" xml:space="preserve">
+    <value>Output timers ({0}) have been synchronized to match the Simulation {0} ({1}).</value>
+  </data>
+  <data name="SubFileImporter_Import_Sub_file_successfully_imported_from___0_" xml:space="preserve">
+    <value>Sub file successfully imported from: {0}</value>
+  </data>
+  <data name="WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_" xml:space="preserve">
+    <value>The coordinate system of the model: {0} has been set to {1}</value>
+  </data>
+  <data name="WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_" xml:space="preserve">
+    <value>The process coefficient {0} has been updated with the latest Hydrodynamic data file.</value>
+  </data>
+  <data name="WaqValidationRulesExtension_ConstantProcessWithinRuleLimits_No_rules_found_for__0__" xml:space="preserve">
+    <value>No rules found for {0}.</value>
+  </data>
+  <data name="WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does_not_contain_the_given_parameter__0__" xml:space="preserve">
+    <value>The Substance library does not contain the given parameter {0}.</value>
+  </data>
+  <data name="WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_" xml:space="preserve">
+    <value>No process coefficient rules have been loaded. Therefore they cannot be validated.</value>
+  </data>
+  <data name="DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import" xml:space="preserve">
+    <value>File '{0}' already exists within the database. The file that is being imported will be renamed to '{1}'. Note that your results may be affected by the new import</value>
+  </data>
+  <data name="WaqProcessesRules_ReadValidationCsv_File__0__not_found_in_the_path__1___No_validations_will_be_done_for_the_coefficients_" xml:space="preserve">
+    <value>File {0} not found in the path {1}. No validations will be done for the coefficients.</value>
+  </data>
+  <data name="WaqValidationRulesExtension_GetWaqProcessValidationRuleAsString_Process_coefficient__0___value__1____2__3__" xml:space="preserve">
+    <value>Process coefficient {0} (value:{1}) {2}{3}.</value>
+  </data>
+  <data name="LazyMapFileFunctionStore_GetArgumentValues_Filters_of_type___0___can_only_filter_on_functions_with_value_type___1___" xml:space="preserve">
+    <value>Filters of type &lt;{0}&gt; can only filter on functions with value type &lt;{1}&gt;.</value>
+  </data>
+  <data name="WaqFileBasedProcessor_AddOutput_work_directory_is_empty" xml:space="preserve">
+    <value>Could not add output because work directory is empty.</value>
+  </data>
+  <data name="WaqFileBasedProcessor_AddOutput_Could_not_read_output_files" xml:space="preserve">
+    <value>Could not read output files : {0}</value>
+  </data>
+  <data name="WaqProcessorHelper_ParseHisFileData_Invalid_file_format" xml:space="preserve">
+    <value>File is not recognized as a valid format for history files: {0}</value>
+  </data>
+  <data name="WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file" xml:space="preserve">
+    <value>An error occurred while reading file {0}: check the textual output files for more information.</value>
+  </data>
+  <data name="NetCdfFileReaderHelper_GetDateTimes_Time_variable_not_found" xml:space="preserve">
+    <value>Time series data could not be read because variable with standard name '{0}' was not found in file {1}.</value>
+  </data>
+  <data name="DelwaqNetCdfHistoryFileReader_Read_History_file_not_found" xml:space="preserve">
+    <value>History file was not found at {0}.</value>
+  </data>
+  <data name="DelwaqNetCdfMapFileReader_Map_file_not_found" xml:space="preserve">
+    <value>Map file was not found at {0}.</value>
+  </data>
+  <data name="WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard" xml:space="preserve">
+    <value>File &lt;{0}&gt; does not meet supported UGRID 1.0 or newer standard.</value>
+  </data>
+  <data name="WaqInitializationDataVerifier_GridFile does_not_meet_supported_UGRID_1_0" xml:space="preserve">
+    <value>File &lt;{0}&gt; does not meet supported UGRID 1.0 or newer standard. Your NetCDF output file may not be properly viewed in the User Interface.</value>
+  </data>
+  <data name="WaqInitializationDataVerifier_Grid_file_was_not_found" xml:space="preserve">
+    <value>Grid file was not found at {0}.</value>
+  </data>
+  <data name="WaterQualityModelValidator_hyd_file_doesnt_exist" xml:space="preserve">
+    <value>The hyd file with location {0} doesn't exist.</value>
+  </data>
+  <data name="SubFileImporter_DefaultOutputParameters_Name" xml:space="preserve">
+    <value>default output parameters</value>
+  </data>
+  <data name="SubFileImporter_OutputParameters_Name" xml:space="preserve">
+    <value>output parameters</value>
+  </data>
+  <data name="SubFileImporter_Substances_Name" xml:space="preserve">
+    <value>substances</value>
+  </data>
+  <data name="SubFileImporter_Parameters_Name" xml:space="preserve">
+    <value>parameters</value>
+  </data>
+  <data name="SubFileImporter_Processes_Name" xml:space="preserve">
+    <value>processes</value>
+  </data>
+  <data name="WaqHistoryFileParser_SetDataOnObservationVariableOutput_Time_steps_are_inconsistent_for_the_data_related_to_variable__0__" xml:space="preserve">
+    <value>Time steps are inconsistent for the data related to variable {0}.</value>
+  </data>
+</root>

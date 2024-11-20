@@ -1,0 +1,1007 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcDataConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews D:\sluis_pa\Documents\WORK\ExportNew\rtc\rtcDataConfig.xsd">
+  <importSeries>
+    <PITimeSeriesFile>
+      <timeSeriesFile>timeseries_import.xml</timeSeriesFile>
+      <useBinFile>false</useBinFile>
+    </PITimeSeriesFile>
+    <timeSeries id="[TimeRule]Maeslantkering/timeseries drempel width">
+      <PITimeSeries>
+        <locationId>Maeslantkering/timeseries drempel width</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]Maeslantkering/timeseries schuif width">
+      <PITimeSeries>
+        <locationId>Maeslantkering/timeseries schuif width</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]Maeslantkering/timeseries overstort width">
+      <PITimeSeries>
+        <locationId>Maeslantkering/timeseries overstort width</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]Maeslantkering/timeseries schuif crest">
+      <PITimeSeries>
+        <locationId>Maeslantkering/timeseries schuif crest</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]Maeslantkering/timeseries overstort crest">
+      <PITimeSeries>
+        <locationId>Maeslantkering/timeseries overstort crest</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]Hartelkering/timeseries breed onder">
+      <PITimeSeries>
+        <locationId>Hartelkering/timeseries breed onder</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]Hartelkering/timeseries smal onder">
+      <PITimeSeries>
+        <locationId>Hartelkering/timeseries smal onder</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]Hartelkering/hartel smal over">
+      <PITimeSeries>
+        <locationId>Hartelkering/hartel smal over</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]Hartelkering/hartel breed over">
+      <PITimeSeries>
+        <locationId>Hartelkering/hartel breed over</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]HolIJsselkering/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>HolIJsselkering</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Input]KRIMPADIJSL/Water level (op)">
+      <OpenMIExchangeItem>
+        <elementId>KRIMPADIJSL</elementId>
+        <quantityId>Water level (op)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Input]HolIJsselkering/Discharge (s)">
+      <OpenMIExchangeItem>
+        <elementId>HolIJsselkering</elementId>
+        <quantityId>Discharge (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HollandscheIJsselkering/HYK_switch">
+      <PITimeSeries>
+        <locationId>HollandscheIJsselkering/HYK_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HollandscheIJsselkering/Kenteringsluiting">
+      <PITimeSeries>
+        <locationId>HollandscheIJsselkering/Kenteringsluiting</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Output]HolIJsselkering/Gate lower edge level (s)[AsInputFor]HY_dicht_peil">
+      <OpenMIExchangeItem>
+        <elementId>HolIJsselkering</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]HolIJsselkering/Gate lower edge level (s)[AsInputFor]HY_open">
+      <OpenMIExchangeItem>
+        <elementId>HolIJsselkering</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HollandscheIJsselkering/HYK_timeseries">
+      <PITimeSeries>
+        <locationId>HollandscheIJsselkering/HYK_timeseries</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Output]HolIJsselkering/Gate lower edge level (s)[AsInputFor]HY_dicht_kent">
+      <OpenMIExchangeItem>
+        <elementId>HolIJsselkering</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeRule]Volkerakdam/Volkerak_over_crest">
+      <PITimeSeries>
+        <locationId>Volkerakdam/Volkerak_over_crest</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]Volkerakdam/Volkerak_schuiven_gate">
+      <PITimeSeries>
+        <locationId>Volkerakdam/Volkerak_schuiven_gate</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet1/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet1</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_01/HVSL_01_switch">
+      <PITimeSeries>
+        <locationId>HVSL_01/HVSL_01_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_01/HVSL_01">
+      <PITimeSeries>
+        <locationId>HVSL_01/HVSL_01</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_01/HVSL_01_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_01/HVSL_01_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet2/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet2</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_02/HVSL_02_switch">
+      <PITimeSeries>
+        <locationId>HVSL_02/HVSL_02_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_02/HVSL_02">
+      <PITimeSeries>
+        <locationId>HVSL_02/HVSL_02</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_02/HVSL_02_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_02/HVSL_02_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet3/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet3</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_03/HVSL_03_switch">
+      <PITimeSeries>
+        <locationId>HVSL_03/HVSL_03_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_03/HVSL_03">
+      <PITimeSeries>
+        <locationId>HVSL_03/HVSL_03</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_03/HVSL_03_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_03/HVSL_03_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet4/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet4</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_04/HVSL_04_switch">
+      <PITimeSeries>
+        <locationId>HVSL_04/HVSL_04_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_04/HVSL_04">
+      <PITimeSeries>
+        <locationId>HVSL_04/HVSL_04</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_04/HVSL_04_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_04/HVSL_04_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet5/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet5</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_05/HVSL_05_switch">
+      <PITimeSeries>
+        <locationId>HVSL_05/HVSL_05_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_05/HVSL_05">
+      <PITimeSeries>
+        <locationId>HVSL_05/HVSL_05</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_05/HVSL_05_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_05/HVSL_05_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet6/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet6</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_06/HVSL_06_switch">
+      <PITimeSeries>
+        <locationId>HVSL_06/HVSL_06_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_06/HVSL_06">
+      <PITimeSeries>
+        <locationId>HVSL_06/HVSL_06</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_06/HVSL_06_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_06/HVSL_06_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet7/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet7</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_07/HVSL_07_switch">
+      <PITimeSeries>
+        <locationId>HVSL_07/HVSL_07_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_07/HVSL_07">
+      <PITimeSeries>
+        <locationId>HVSL_07/HVSL_07</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_07/HVSL_07_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_07/HVSL_07_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet8/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet8</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_08/HVSL_08_switch">
+      <PITimeSeries>
+        <locationId>HVSL_08/HVSL_08_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_08/HVSL_08">
+      <PITimeSeries>
+        <locationId>HVSL_08/HVSL_08</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_08/HVSL_08_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_08/HVSL_08_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet9/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet9</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_09/HVSL_09_switch">
+      <PITimeSeries>
+        <locationId>HVSL_09/HVSL_09_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_09/HVSL_09">
+      <PITimeSeries>
+        <locationId>HVSL_09/HVSL_09</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_09/HVSL_09_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_09/HVSL_09_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet10/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet10</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_10/HVSL_10_switch">
+      <PITimeSeries>
+        <locationId>HVSL_10/HVSL_10_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_10/HVSL_10">
+      <PITimeSeries>
+        <locationId>HVSL_10/HVSL_10</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_10/HVSL_10_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_10/HVSL_10_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet11/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet11</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_11/HVSL_11_switch">
+      <PITimeSeries>
+        <locationId>HVSL_11/HVSL_11_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_11/HVSL_11">
+      <PITimeSeries>
+        <locationId>HVSL_11/HVSL_11</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_11/HVSL_11_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_11/HVSL_11_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet12/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet12</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_12/HVSL_12_switch">
+      <PITimeSeries>
+        <locationId>HVSL_12/HVSL_12_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_12/HVSL_12">
+      <PITimeSeries>
+        <locationId>HVSL_12/HVSL_12</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_12/HVSL_12_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_12/HVSL_12_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet13/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet13</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_13/HVSL_13_switch">
+      <PITimeSeries>
+        <locationId>HVSL_13/HVSL_13_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_13/HVSL_13">
+      <PITimeSeries>
+        <locationId>HVSL_13/HVSL_13</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_13/HVSL_13_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_13/HVSL_13_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet14/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet14</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_14/HVSL_14_switch">
+      <PITimeSeries>
+        <locationId>HVSL_14/HVSL_14_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_14/HVSL_14">
+      <PITimeSeries>
+        <locationId>HVSL_14/HVSL_14</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_14/HVSL_14_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_14/HVSL_14_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet15/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet15</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_15/HVSL_15_switch">
+      <PITimeSeries>
+        <locationId>HVSL_15/HVSL_15_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_15/HVSL_15">
+      <PITimeSeries>
+        <locationId>HVSL_15/HVSL_15</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_15/HVSL_15_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_15/HVSL_15_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet16/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet16</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_16/HVSL_16_switch">
+      <PITimeSeries>
+        <locationId>HVSL_16/HVSL_16_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_16/HVSL_16">
+      <PITimeSeries>
+        <locationId>HVSL_16/HVSL_16</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_16/HVSL_16_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_16/HVSL_16_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]Haringvliet17/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet17</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]HVSL_17/HVSL_17_switch">
+      <PITimeSeries>
+        <locationId>HVSL_17/HVSL_17_switch</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_17/HVSL_17">
+      <PITimeSeries>
+        <locationId>HVSL_17/HVSL_17</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]HVSL_17/HVSL_17_sluithoogte">
+      <PITimeSeries>
+        <locationId>HVSL_17/HVSL_17_sluithoogte</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]HEESBN/Water level (op)">
+      <OpenMIExchangeItem>
+        <elementId>HEESBN</elementId>
+        <quantityId>Water level (op)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[TimeCondition]KrommeNolkering/SwitchMethods">
+      <PITimeSeries>
+        <locationId>KrommeNolkering/SwitchMethods</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>BLOCK</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]KrommeNolkering/Open the gate">
+      <PITimeSeries>
+        <locationId>KrommeNolkering/Open the gate</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[TimeRule]KrommeNolkering/Close the gate">
+      <PITimeSeries>
+        <locationId>KrommeNolkering/Close the gate</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="[Input]zwd_bathsespui/Water level (op)">
+      <OpenMIExchangeItem>
+        <elementId>zwd_bathsespui</elementId>
+        <quantityId>Water level (op)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Input]zwd_BathseSpuisl/Head Difference (s)">
+      <OpenMIExchangeItem>
+        <elementId>zwd_BathseSpuisl</elementId>
+        <quantityId>Head Difference (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+  </importSeries>
+  <exportSeries>
+    <CSVTimeSeriesFile decimalSeparator="." delimiter="," adjointOutput="false"></CSVTimeSeriesFile>
+    <PITimeSeriesFile>
+      <timeSeriesFile>timeseries_export.xml</timeSeriesFile>
+      <useBinFile>false</useBinFile>
+    </PITimeSeriesFile>
+    <timeSeries id="[Output]Maeslant_drempel/Crest width (s)">
+      <OpenMIExchangeItem>
+        <elementId>Maeslant_drempel</elementId>
+        <quantityId>Crest width (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Maeslant_schuif/Crest width (s)">
+      <OpenMIExchangeItem>
+        <elementId>Maeslant_schuif</elementId>
+        <quantityId>Crest width (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Maeslant_schuif/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Maeslant_schuif</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Maeslant_over/Crest level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Maeslant_over</elementId>
+        <quantityId>Crest level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Maeslant_over/Crest width (s)">
+      <OpenMIExchangeItem>
+        <elementId>Maeslant_over</elementId>
+        <quantityId>Crest width (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Hartel_breed/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Hartel_breed</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Hartel_smal/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Hartel_smal</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Hartel_breed_ovl/Crest level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Hartel_breed_ovl</elementId>
+        <quantityId>Crest level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Hartel_smal_ovl/Crest level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Hartel_smal_ovl</elementId>
+        <quantityId>Crest level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]HolIJsselkering/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>HolIJsselkering</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HollandscheIJsselkering/HYK_waterstand" />
+    <timeSeries id="[StandardCondition][Status]HollandscheIJsselkering/HYK Verval" />
+    <timeSeries id="[TimeCondition][Status]HollandscheIJsselkering/HYK_switch" />
+    <timeSeries id="[StandardCondition][Status]HollandscheIJsselkering/Q(t)" />
+    <timeSeries id="[TimeCondition][Status]HollandscheIJsselkering/Kenteringsluiting" />
+    <timeSeries id="[RelativeTimeRule]HollandscheIJsselkering/HY_dicht_peil" />
+    <timeSeries id="[RelativeTimeRule]HollandscheIJsselkering/HY_open" />
+    <timeSeries id="[RelativeTimeRule]HollandscheIJsselkering/HY_dicht_kent" />
+    <timeSeries id="[Output]Volkerak_over/Crest level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Volkerak_over</elementId>
+        <quantityId>Crest level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Volkerak_schuiven/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Volkerak_schuiven</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Haringvliet1/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet1</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_01/HVSL_01_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_01/HVSL_01_switch" />
+    <timeSeries id="[Output]Haringvliet2/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet2</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_02/HVSL_02_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_02/HVSL_02_switch" />
+    <timeSeries id="[Output]Haringvliet3/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet3</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_03/HVSL_03_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_03/HVSL_03_switch" />
+    <timeSeries id="[Output]Haringvliet4/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet4</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_04/HVSL_04_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_04/HVSL_04_switch" />
+    <timeSeries id="[Output]Haringvliet5/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet5</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_05/HVSL_05_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_05/HVSL_05_switch" />
+    <timeSeries id="[Output]Haringvliet6/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet6</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_06/HVSL_06_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_06/HVSL_06_switch" />
+    <timeSeries id="[Output]Haringvliet7/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet7</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_07/HVSL_07_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_07/HVSL_07_switch" />
+    <timeSeries id="[Output]Haringvliet8/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet8</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_08/HVSL_08_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_08/HVSL_08_switch" />
+    <timeSeries id="[Output]Haringvliet9/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet9</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_09/HVSL_09_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_09/HVSL_09_switch" />
+    <timeSeries id="[Output]Haringvliet10/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet10</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_10/HVSL_10_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_10/HVSL_10_switch" />
+    <timeSeries id="[Output]Haringvliet11/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet11</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_11/HVSL_11_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_11/HVSL_11_switch" />
+    <timeSeries id="[Output]Haringvliet12/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet12</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_12/HVSL_12_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_12/HVSL_12_switch" />
+    <timeSeries id="[Output]Haringvliet13/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet13</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_13/HVSL_13_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_13/HVSL_13_switch" />
+    <timeSeries id="[Output]Haringvliet14/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet14</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_14/HVSL_14_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_14/HVSL_14_switch" />
+    <timeSeries id="[Output]Haringvliet15/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet15</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_15/HVSL_15_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_15/HVSL_15_switch" />
+    <timeSeries id="[Output]Haringvliet16/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet16</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_16/HVSL_16_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_16/HVSL_16_switch" />
+    <timeSeries id="[Output]Haringvliet17/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Haringvliet17</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]HVSL_17/HVSL_17_HeadDifference" />
+    <timeSeries id="[TimeCondition][Status]HVSL_17/HVSL_17_switch" />
+    <timeSeries id="[Output]Kromme Nolkering/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Kromme Nolkering</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]KrommeNolkering/ClosingCondition" />
+    <timeSeries id="[TimeCondition][Status]KrommeNolkering/SwitchMethods" />
+    <timeSeries id="[Output]zwd_BathseSpuisl/Gate lower edge level (s)">
+      <OpenMIExchangeItem>
+        <elementId>zwd_BathseSpuisl</elementId>
+        <quantityId>Gate lower edge level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[StandardCondition][Status]CNTL_Bathsesluis/H_channel" />
+    <timeSeries id="[StandardCondition][Status]CNTL_Bathsesluis/Headdifference" />
+    <timeSeries id="[RelativeTimeRule]CNTL_Bathsesluis/Spui_naar_Westerschelde" />
+    <timeSeries id="[RelativeTimeRule]CNTL_Bathsesluis/CloseSluis" />
+  </exportSeries>
+</rtcDataConfig>

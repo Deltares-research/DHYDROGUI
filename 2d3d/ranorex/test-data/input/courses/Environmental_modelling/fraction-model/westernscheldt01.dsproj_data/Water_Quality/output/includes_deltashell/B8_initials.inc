@@ -1,0 +1,15 @@
+MASS/M2
+INITIALS
+'SeaBoundary01'
+'RiverBoundary01'
+'Vlissingen'
+'Hansweert'
+'Terneuzen'
+'Initial'
+DEFAULTS
+0
+0
+0
+0
+0
+1

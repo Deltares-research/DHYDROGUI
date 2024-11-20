@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  <copyright file="WixUI_Advanced.wxs" company="Outercurve Foundation">
+    Copyright (c) 2004, Outercurve Foundation.
+    This software is released under Microsoft Reciprocal License (MS-RL).
+    The license and further copyright text can be found in the file
+    LICENSE.TXT at the root directory of the distribution.
+  </copyright>
+-->
+
+<!--
+WixUI_Advanced offers a two-click install (EULA checkbox and Install button)
+and offers an Advanced button that lets users choose per-machine or per-user
+installs, install path, and features.
+
+WiX variables used:
+ - WixUISupportPerMachine
+ - WixUISupportPerUser
+ 
+Todo:
+ - Clicking Install doesn't work! - APPLICATIONFOLDER isn't set; need to accept another "incoming" property.
+ - Replace this dialog set UI fragment with the UI extension.
+ = This set is still in active development.
+ = Future releases are likely to be incompatible.
+ = Future releases are likely to be much easier to use.
+ = Use at your own risk.
+
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
+        <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
+        
+        <PropertyRef Id="ApplicationFolderName" />
+        
+        <CustomAction Id="DeltaresWixSetDefaultPerUserFolder" Property="WixPerUserFolder" Value="[LocalAppDataFolder]Apps\[ApplicationFolderName]" Execute="immediate" />
+        <CustomAction Id="DeltaresWixSetDefaultPerMachineFolder" Property="WixPerMachineFolder" Value="[ProgramFiles64Folder][ApplicationFolderName]" Execute="immediate" />
+        <CustomAction Id="DeltaresWixSetPerUserFolder" Property="APPLICATIONFOLDER" Value="[WixPerUserFolder]" Execute="immediate" />
+        <CustomAction Id="DeltaresWixSetPerMachineFolder" Property="APPLICATIONFOLDER" Value="[WixPerMachineFolder]" Execute="immediate" />
+
+        <InstallExecuteSequence>
+            <Custom Action="DeltaresWixSetDefaultPerUserFolder" Before="CostFinalize" />
+            <Custom Action="DeltaresWixSetDefaultPerMachineFolder" After="DeltaresWixSetDefaultPerUserFolder" />
+            <Custom Action="DeltaresWixSetPerUserFolder" After="DeltaresWixSetDefaultPerMachineFolder">ACTION="INSTALL" AND APPLICATIONFOLDER="" AND (ALLUSERS="" OR (ALLUSERS=2 AND (NOT Privileged)))</Custom>
+            <Custom Action="DeltaresWixSetPerMachineFolder" After="DeltaresWixSetPerUserFolder">ACTION="INSTALL" AND APPLICATIONFOLDER="" AND (ALLUSERS=1 OR (ALLUSERS=2 AND Privileged))</Custom>
+        </InstallExecuteSequence>
+        <InstallUISequence>
+            <Custom Action="DeltaresWixSetDefaultPerUserFolder" Before="CostFinalize" />
+            <Custom Action="DeltaresWixSetDefaultPerMachineFolder" After="DeltaresWixSetDefaultPerUserFolder" />
+            <Custom Action="DeltaresWixSetPerUserFolder" After="DeltaresWixSetDefaultPerMachineFolder">ACTION="INSTALL" AND APPLICATIONFOLDER="" AND (ALLUSERS="" OR (ALLUSERS=2 AND (NOT Privileged)))</Custom>
+            <Custom Action="DeltaresWixSetPerMachineFolder" After="DeltaresWixSetPerUserFolder">ACTION="INSTALL" AND APPLICATIONFOLDER="" AND (ALLUSERS=1 OR (ALLUSERS=2 AND Privileged))</Custom>
+        </InstallUISequence>
+      
+        <UI Id="WixUI_Deltares">
+            <TextStyle Id="WixUI_Font_Normal" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Normal_Size)" />
+            <TextStyle Id="WixUI_Font_Bigger" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Bigger_Size)" />
+            <TextStyle Id="WixUI_Font_Title" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Title_Size)" Bold="yes" Red="255" Green="255" Blue="255" />
+            <TextStyle Id="WixUI_Font_Emphasized" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Emphasized_Size)" />
+            <TextStyle Id="WixUI_Font_Banner_Description" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Description_Size)" Bold="yes" Red="255" Green="255" Blue="255" />
+          
+          <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+            <Property Id="WixUI_Mode" Value="Advanced" />
+
+            <DialogRef Id="BrowseDlgDeltares" />
+            <DialogRef Id="DiskCostDlgDeltares" />
+            <DialogRef Id="ErrorDlgDeltares" />
+            <DialogRef Id="FatalErrorDeltares" />
+            <DialogRef Id="FilesInUse" />
+            <DialogRef Id="MsiRMFilesInUseDeltares" />
+            <DialogRef Id="PrepareDlgDeltares" />
+            <DialogRef Id="ProgressDlgDeltares" />
+            <DialogRef Id="ResumeDlgDeltares" />
+            <DialogRef Id="UserExitDeltares" />
+            <DialogRef Id="WelcomeDlgDeltares"/>
+
+            <Publish Dialog="ExitDialogDeltares" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+            
+            
+
+            <Publish Dialog="BrowseDlgDeltares" Control="OK" Event="DoAction" Value="WixUIValidatePath" Order="1">1</Publish>
+            <Publish Dialog="BrowseDlgDeltares" Control="OK" Event="SpawnDialog" Value="InvalidDirDlgDeltares" Order="2"><![CDATA[WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+              
+            <Publish Dialog="IntroDlgDeltares" Control="Next" Event="NewDialog" Value="AdvancedWelcomeEulaDlgDeltares">1</Publish>
+
+            <Publish Dialog="AdvancedWelcomeEulaDlgDeltares" Control="Advanced" Event="NewDialog" Value="InstallScopeDlgDeltares" Order="1">!(wix.WixUISupportPerMachine) AND !(wix.WixUISupportPerUser)</Publish>
+            <Publish Dialog="AdvancedWelcomeEulaDlgDeltares" Control="Advanced" Event="NewDialog" Value="FeaturesDlgDeltares" Order="2">NOT !(wix.WixUISupportPerMachine)</Publish>
+            <Publish Dialog="AdvancedWelcomeEulaDlgDeltares" Control="Advanced" Event="NewDialog" Value="InstallDirDlgDeltares" Order="3">!(wix.WixUISupportPerMachine) AND NOT !(wix.WixUISupportPerUser)</Publish>
+            <Publish Dialog="AdvancedWelcomeEulaDlgDeltares" Control="Back" Event="NewDialog" Value="IntroDlgDeltares">1</Publish>
+
+            <Publish Dialog="InstallScopeDlgDeltares" Control="Next" Event="DoAction" Value="DeltaresWixSetDefaultPerMachineFolder" Order="3">DeltaresWixAppFolder = "WixPerMachineFolder"</Publish>
+	    <Publish Dialog="InstallScopeDlgDeltares" Control="Next" Event="DoAction" Value="DeltaresWixSetDefaultPerUserFolder" Order="3">DeltaresWixAppFolder = "WixPerUserFolder"</Publish>
+
+            <Publish Dialog="InstallScopeDlgDeltares" Control="Back" Event="NewDialog" Value="AdvancedWelcomeEulaDlgDeltares">1</Publish>
+            
+            <!-- override default WixAppFolder of WixPerMachineFolder as standard user won't be shown the radio group to set WixAppFolder -->
+            <Publish Dialog="InstallScopeDlgDeltares" Control="Next" Property="DeltaresWixAppFolder" Value="WixPerUserFolder" Order="1">!(wix.WixUISupportPerUser) AND NOT Privileged</Publish>
+            <Publish Dialog="InstallScopeDlgDeltares" Control="Next" Property="MSIINSTALLPERUSER" Value="1" Order="3">DeltaresWixAppFolder = "WixPerUserFolder"</Publish>
+            <Publish Dialog="InstallScopeDlgDeltares" Control="Next" Property="MSIINSTALLPERUSER" Value="{}" Order="2">DeltaresWixAppFolder = "WixPerMachineFolder"</Publish>
+                        
+            <Publish Dialog="InstallScopeDlgDeltares" Control="Next" Property="APPLICATIONFOLDER" Value="[WixPerUserFolder]" Order="4">DeltaresWixAppFolder = "WixPerUserFolder"</Publish>
+            <Publish Dialog="InstallScopeDlgDeltares" Control="Next" Property="APPLICATIONFOLDER" Value="[WixPerMachineFolder]" Order="5">DeltaresWixAppFolder = "WixPerMachineFolder"</Publish>
+            <Publish Dialog="InstallScopeDlgDeltares" Control="Next" Event="NewDialog" Value="FeaturesDlgDeltares" Order="6">DeltaresWixAppFolder = "WixPerUserFolder"</Publish>
+            <Publish Dialog="InstallScopeDlgDeltares" Control="Next" Event="NewDialog" Value="InstallDirDlgDeltares" Order="7">DeltaresWixAppFolder = "WixPerMachineFolder"</Publish>
+
+            <Publish Dialog="InstallDirDlgDeltares" Control="Back" Event="NewDialog" Value="InstallScopeDlgDeltares">!(wix.WixUISupportPerUser)</Publish>
+            <Publish Dialog="InstallDirDlgDeltares" Control="Back" Event="NewDialog" Value="AdvancedWelcomeEulaDlgDeltares">NOT !(wix.WixUISupportPerUser)</Publish>
+            <Publish Dialog="InstallDirDlgDeltares" Control="Next" Event="SetTargetPath" Value="[DELTARES_WIXUI_INSTALLDIR]" Order="1">1</Publish>
+            <Publish Dialog="InstallDirDlgDeltares" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">NOT WIXUI_DONTVALIDATEPATH</Publish>
+            <Publish Dialog="InstallDirDlgDeltares" Control="Next" Event="SpawnDialog" Value="InvalidDirDlgDeltares" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+            <Publish Dialog="InstallDirDlgDeltares" Control="Next" Event="NewDialog" Value="FeaturesDlgDeltares" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
+            <Publish Dialog="InstallDirDlgDeltares" Control="ChangeFolder" Property="_BrowseProperty" Value="[DELTARES_WIXUI_INSTALLDIR]" Order="1">1</Publish>
+            <Publish Dialog="InstallDirDlgDeltares" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlgDeltares" Order="2">1</Publish>
+
+            <Publish Dialog="FeaturesDlgDeltares" Control="Back" Event="NewDialog" Value="InstallScopeDlgDeltares">NOT Installed AND DeltaresWixAppFolder = "WixPerUserFolder"</Publish>
+            <Publish Dialog="FeaturesDlgDeltares" Control="Back" Event="NewDialog" Value="InstallDirDlgDeltares">NOT Installed AND DeltaresWixAppFolder = "WixPerMachineFolder"</Publish>
+            <Publish Dialog="FeaturesDlgDeltares" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlgDeltares">Installed</Publish>
+
+            <Publish Dialog="MaintenanceWelcomeDlgDeltares" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlgDeltares">1</Publish>
+
+            <Publish Dialog="MaintenanceTypeDlgDeltares" Control="ChangeButton" Event="NewDialog" Value="FeaturesDlgDeltares">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlgDeltares" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlgDeltares">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlgDeltares" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlgDeltares">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlgDeltares" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlgDeltares">1</Publish>
+
+            <Publish Dialog="VerifyReadyDlgDeltares" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlgDeltares" Order="2">Installed AND NOT PATCH</Publish>
+            <Publish Dialog="VerifyReadyDlgDeltares" Control="Back" Event="NewDialog" Value="WelcomeDlgDeltares" Order="3">Installed AND PATCH</Publish>
+
+            <Publish Dialog="WelcomeDlgDeltares" Control="Next" Event="NewDialog" Value="VerifyReadyDlgDeltares">Installed AND PATCH</Publish>
+        </UI>
+
+        <InstallUISequence>
+            <Show Dialog="WelcomeDlgDeltares" Before="AdvancedWelcomeEulaDlgDeltares" >Installed AND PATCH</Show>
+            <Show Dialog="IntroDlgDeltares" Before="AdvancedWelcomeEulaDlgDeltares" >Not Installed</Show>
+        </InstallUISequence>
+
+        <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONFOLDER" />
+        <UIRef Id="WixUI_Common" />
+    </Fragment>
+</Wix>

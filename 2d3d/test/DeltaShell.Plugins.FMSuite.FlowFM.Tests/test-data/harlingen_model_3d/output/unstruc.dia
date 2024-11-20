@@ -1,0 +1,35 @@
+** INFO   : Opened file : ISOCOLOUR.hls
+** INFO   : Using Local FileISOCOLOUR.hls
+** INFO   : Closed file : ISOCOLOUR.hls
+** INFO   : Opened file : ISOCOLOUR.hls
+** INFO   : Using Local FileISOCOLOUR.hls
+** INFO   : Closed file : ISOCOLOUR.hls
+* Deltares, D-Flow FM Version 1.1.72.000000, Jul 29 2013, 15:22:52
+* File creation date: 15:53:54, 31-07-2013                                      
+** INFO   :  MAXIMUM NUMBER OF LINKS         :            2
+** INFO   :  MAXIMUM NUMBER OF NODES         :            0
+** INFO   :  RESOLUTION GRAPHICS SCREEN      :         1200         900
+** INFO   :  RESOLUTION TEXT     SCREEN      :          120          45
+** INFO   :  NUMBER OF COLOURS AVAILABLE     :          256
+** INFO   :              0        100002 NOD(KMAX)
+** INFO   :              6        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** INFO   :              6         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** INFO   :              6         50000 xlan(maxlan)
+** INFO   :              7         50000 ylan(maxlan)
+** INFO   :              7         50000 zlan(maxlan)
+** INFO   :              7         25000 nclan(maxlan)
+** INFO   : File not found: 'har.mdu'. Ignoring this commandline argument.
+** INFO   : Load MDU-file                    (*.mdu)
+** INFO   : Opened file : har.mdu
+** INFO   : Closed file : har.mdu
+** INFO   :              8        100002 NOD(KMAX)
+** INFO   :             14        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** INFO   :             14          1440 xsp(maxspl, maxsplen)
+** INFO   :             14          1440 ysp(maxspl, maxsplen)
+** INFO   :             14          1440 xsp2(maxspl, maxsplen)
+** INFO   :             14          1440 ysp2(maxspl, maxsplen)
+** INFO   :             14         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** INFO   :             14         60000 xlan(maxlan)
+** INFO   :             15         60000 ylan(maxlan)
+** INFO   :             15         60000 zlan(maxlan)
+** INFO   :             16         30000 nclan(maxlan)

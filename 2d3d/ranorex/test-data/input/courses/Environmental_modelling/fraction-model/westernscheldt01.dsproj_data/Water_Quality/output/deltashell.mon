@@ -1,0 +1,2817 @@
+ Deltares, DELWAQ Version 5.10.00.69672M, Sep 01 2021, 16:08:26
+ Execution start: 2022/02/03 13:46:16 
+
+ Parallel processing with   2 processor(s)
+
+ total real      array space:    2589719
+ total integer   array space:     295789
+ total character array space:       1170
+ grand total in 4-byte words:    2886678 =   0-GB  11-MB 546-KB 712-Byte.
+                     Water quality calculation               
+                                                             
+
+                                                             
+                     T0: 2001.01.01 00:00:00  (scu=       1s)
+
+                     Initialisation from system file completed.
+ partit: noseg,nolay=        8355           1 , nseghr=        8355
+ partit: npart=  1, assigning all segments to part "npart", none to other parts
+ 
+ CONSTANT ON UNIT:        26, READING: R:/input/courses/Environmental_modelling/flow-model/westernscheldt01.len                                                                                                                                                                                       
+ SIMULATION TIME : 4748D  0H  0M  0S ! 
+ TIME IN FILE    :    0D  4H 27M 51S ! 
+  Closure error correction enabled
+ 
+ Initialising numerical options for method 15...18
+ 
+ Preconditioner switch not found, using default
+ switch = 3, corrections based on lower and upper 
+ 
+ Maximum number of iterations found in input
+ Maximum number of iterations set to :   100
+ Maximum number of vectors is:    50
+ 
+ Relative tolerance found in input
+ Relative tolerance set to : 0.100E-06
+ 
+ Scaling switch not found, using default
+ switch = 1, scaling is switched on
+ 
+ Iteration report switch found in input
+ switch = 0, iteration report is switched off
+ 
+ Extra functionality DLWQTR
+ End extra functionality DLWQTR
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+   0.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 5.1159E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+
+ NetCDF version: 4.6.1 of Mar 16 2018 14:16:08 $
+
+ Mesh used for Delwaq output: mesh2d
+   0.60% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  1H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.9798E+08 9.0000E+06 3.6001E+04 1.0803E+04 1.8001E+04 5.1159E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.9798E+08 9.0000E+06 3.6000E+04 1.0802E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   1.19% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  2H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.5726E+08 1.8000E+07 7.2001E+04 2.1605E+04 3.6001E+04 5.1151E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     6.3417E+07 9.0000E+06 3.6000E+04 1.0802E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.1347E+06 9.2691E-08 8.9719E-08 1.3717E-06 1.3871E-06 7.8089E+05
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   1.79% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  3H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.7573E+08 2.7000E+07 1.0800E+05 3.2407E+04 5.4001E+04 5.0292E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0802E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.8153E+08 0.0000E+00 2.0044E+00 3.3677E-03 3.3732E-03 8.5933E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+   2.38% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  4H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1029E+08 3.6000E+07 1.4386E+05 4.3208E+04 7.1998E+04 4.8027E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0802E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.6543E+08 1.0497E-02 1.3819E+02 2.1488E-02 2.3046E+00 2.2649E+08
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   2.98% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  5H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.1304E+08 4.5000E+07 2.1351E+05 6.4398E+04 1.0724E+05 4.4956E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 7.0629E+04 2.1192E+04 3.5314E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    9.7252E+07 6.7874E-02 9.8301E+02 8.4920E-01 6.7649E+01 3.0713E+08
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   3.57% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  6H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 6.9135E+07 5.4000E+07 2.6086E+05 7.9155E+04 1.3164E+05 4.2389E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.9200E+04 1.4762E+04 2.4600E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.3907E+07 1.3490E-01 1.8482E+03 3.2070E+00 2.0543E+02 2.5664E+08
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   4.17% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  7H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 6.9055E+07 6.3000E+07 2.9637E+05 8.9956E+04 1.4953E+05 4.1696E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     8.0571E+06 9.0000E+06 3.6000E+04 1.0801E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    8.1367E+06 5.8700E-02 4.9012E+02 1.4250E+00 1.0846E+02 6.9324E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+   4.76% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  8H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.3340E+08 7.2000E+07 3.3237E+05 1.0076E+05 1.6753E+05 4.1696E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.6435E+08 9.0000E+06 3.6000E+04 1.0801E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   5.36% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  9H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.8429E+08 8.1000E+07 3.6837E+05 1.1156E+05 1.8553E+05 4.1696E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.5089E+08 9.0000E+06 3.6000E+04 1.0801E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   5.95% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 10H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.0305E+09 9.0000E+07 4.0437E+05 1.2236E+05 2.0353E+05 4.1696E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.4617E+08 9.0000E+06 3.6000E+04 1.0801E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   6.55% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 11H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.4704E+09 9.9000E+07 4.7517E+05 1.4360E+05 2.3893E+05 4.1696E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.3991E+08 9.0000E+06 7.0800E+04 2.1242E+04 3.5400E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+   7.14% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 12H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7931E+09 1.0800E+08 5.4717E+05 1.6520E+05 2.7493E+05 4.1696E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.2273E+08 9.0000E+06 7.2000E+04 2.1602E+04 3.6000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   7.74% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 13H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.8700E+09 1.1700E+08 6.1917E+05 1.8680E+05 3.1093E+05 4.1696E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     7.8870E+07 9.0000E+06 7.2000E+04 2.1602E+04 3.6000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.9827E+06 0.0000E+00 3.7932E-03 7.6531E-06 1.0267E-03 5.3269E+03
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   8.33% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 14H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6572E+09 1.2600E+08 6.9112E+05 2.0841E+05 3.4693E+05 4.1670E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 7.2000E+04 2.1602E+04 3.6000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.1277E+08 1.4298E-02 4.8052E+01 5.6404E-02 8.6714E-01 2.6346E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+   8.93% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 15H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.2604E+09 1.3500E+08 7.6176E+05 2.3000E+05 3.8284E+05 4.1318E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 7.2000E+04 2.1602E+04 3.6000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.9684E+08 1.2698E-01 1.3574E+03 2.2078E+00 8.5193E+01 3.5192E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+   9.52% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 16H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.8328E+08 1.4400E+08 8.2650E+05 2.5158E+05 4.1802E+05 4.0273E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 7.2000E+04 2.1601E+04 3.6000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.7710E+08 5.9935E-01 7.2663E+03 2.0835E+01 8.1984E+02 1.0450E+08
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  10.12% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 17H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 6.2329E+08 1.5300E+08 8.8281E+05 2.7311E+05 4.5169E+05 3.8794E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 7.2000E+04 2.1601E+04 3.6000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.5999E+08 2.0048E+00 1.5681E+04 7.0309E+01 2.3281E+03 1.4792E+08
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  10.71% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 18H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.7574E+08 1.6200E+08 9.0680E+05 2.8560E+05 4.6950E+05 3.7462E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.2000E+04 1.2601E+04 2.1000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.4756E+08 3.0437E+00 1.8009E+04 1.1085E+02 3.1941E+03 1.3314E+08
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  11.31% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 19H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.2574E+08 1.7100E+08 9.3486E+05 2.9634E+05 4.8548E+05 3.6850E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     7.8257E+05 9.0000E+06 3.6000E+04 1.0800E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    5.0776E+07 1.9942E+00 7.9497E+03 6.7340E+01 2.0163E+03 6.1204E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  11.90% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 20H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.2148E+08 1.8000E+08 9.7086E+05 3.0714E+05 5.0348E+05 3.6850E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     9.5737E+07 9.0000E+06 3.6000E+04 1.0800E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  12.50% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 21H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.1290E+08 1.8900E+08 1.0069E+06 3.1794E+05 5.2148E+05 3.6850E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.9142E+08 9.0000E+06 3.6000E+04 1.0800E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  13.10% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 22H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.2287E+09 1.9800E+08 1.0429E+06 3.2874E+05 5.3948E+05 3.6850E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.1582E+08 9.0000E+06 3.6000E+04 1.0800E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  13.69% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 23H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6784E+09 2.0700E+08 1.0789E+06 3.3954E+05 5.5748E+05 3.6850E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.4971E+08 9.0000E+06 3.6000E+04 1.0800E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  14.29% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.0593E+09 2.1600E+08 1.1149E+06 3.5033E+05 5.7548E+05 3.6850E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.8091E+08 9.0000E+06 3.6000E+04 1.0800E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  14.88% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  1H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.2417E+09 2.2500E+08 1.1509E+06 3.6112E+05 5.9348E+05 3.6850E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.8241E+08 9.0000E+06 3.6000E+04 1.0781E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.6633E+03 8.8675E-09 9.6057E-07 1.8043E-08 3.3412E-06 3.6766E-01
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  15.48% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  2H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1478E+09 2.3400E+08 1.1868E+06 3.7186E+05 6.1148E+05 3.6848E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     5.1520E+05 9.0000E+06 3.6000E+04 1.0743E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    9.4491E+07 5.2842E-03 4.8257E+01 1.5160E-01 1.0741E+00 1.8366E+05
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  16.07% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  3H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7986E+09 2.4300E+08 1.2202E+06 3.8255E+05 6.2927E+05 3.6757E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0706E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.4918E+08 3.8468E-01 2.5741E+03 1.4097E+01 2.1085E+02 9.1724E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  16.67% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  4H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3687E+09 2.5200E+08 1.2412E+06 3.9308E+05 6.4480E+05 3.6252E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0668E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.2992E+08 7.1909E+00 1.4992E+04 1.3450E+02 2.4609E+03 5.0444E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  17.26% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  5H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.0209E+09 2.6100E+08 1.2432E+06 4.0327E+05 6.5571E+05 3.5269E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0631E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.4778E+08 4.6158E+01 3.4036E+04 4.3781E+02 7.0904E+03 9.8270E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  17.86% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  6H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 7.9348E+08 2.7000E+08 1.2350E+06 4.1313E+05 6.6355E+05 3.4156E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0593E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.2741E+08 1.1763E+02 4.4179E+04 7.3138E+02 1.0163E+04 1.1130E+08
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  18.45% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  7H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 6.8176E+08 2.7900E+08 1.2401E+06 4.2306E+05 6.7342E+05 3.3398E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0556E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.1172E+08 1.2652E+02 3.0940E+04 6.2793E+02 8.1302E+03 7.5823E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  19.05% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  8H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 7.0083E+08 2.8800E+08 1.2721E+06 4.3346E+05 6.8961E+05 3.3267E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.3958E+07 9.0000E+06 3.6000E+04 1.0518E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.4885E+07 3.0569E+01 3.9784E+03 1.2287E+02 1.8104E+03 1.3105E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  19.64% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  9H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 9.1630E+08 2.9700E+08 1.3081E+06 4.4394E+05 7.0761E+05 3.3267E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.1547E+08 9.0000E+06 3.6000E+04 1.0481E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  20.24% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 10H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.2901E+09 3.0600E+08 1.3441E+06 4.5438E+05 7.2561E+05 3.3267E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.7385E+08 9.0000E+06 3.6000E+04 1.0443E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  20.83% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 11H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7372E+09 3.1500E+08 1.3801E+06 4.6478E+05 7.4360E+05 3.3267E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.4710E+08 9.0000E+06 3.6000E+04 1.0406E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  21.43% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 12H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1614E+09 3.2400E+08 1.4161E+06 4.7515E+05 7.6160E+05 3.3267E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.2417E+08 9.0000E+06 3.6000E+04 1.0368E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  22.02% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 13H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.4429E+09 3.3300E+08 1.4521E+06 4.8548E+05 7.7960E+05 3.3267E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.8145E+08 9.0000E+06 3.6000E+04 1.0331E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  22.62% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 14H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.4696E+09 3.4200E+08 1.4881E+06 4.9577E+05 7.9760E+05 3.3267E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.2233E+07 9.0000E+06 3.6000E+04 1.0293E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.5469E+07 3.4950E-03 2.3174E+00 2.2730E-02 3.5377E-01 5.9863E+03
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  23.21% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 15H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.2125E+09 3.5100E+08 1.5226E+06 5.0601E+05 8.1548E+05 3.3247E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0256E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.5711E+08 2.9658E+00 1.4642E+03 1.8493E+01 1.2510E+02 1.9649E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  23.81% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 16H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7848E+09 3.6000E+08 1.5441E+06 5.1594E+05 8.3082E+05 3.3016E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0218E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.2776E+08 1.0333E+02 1.4569E+04 2.8898E+02 2.6576E+03 2.3171E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  24.40% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 17H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3773E+09 3.6900E+08 1.5389E+06 5.2499E+05 8.3875E+05 3.2355E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0181E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.0745E+08 7.6952E+02 4.1176E+04 1.1291E+03 1.0065E+04 6.6087E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  25.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 18H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.0809E+09 3.7800E+08 1.5131E+06 5.3305E+05 8.4011E+05 3.1423E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0143E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.9637E+08 2.1741E+03 6.1754E+04 2.0824E+03 1.6639E+04 9.3192E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  25.60% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 19H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 9.0643E+08 3.8699E+08 1.4930E+06 5.4096E+05 8.4193E+05 3.0605E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 1.0106E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.7451E+08 2.9772E+03 5.6131E+04 2.1999E+03 1.6187E+04 8.1803E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  26.19% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 20H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.5815E+08 3.9599E+08 1.5104E+06 5.5007E+05 8.5265E+05 3.0285E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.5908E+06 9.0000E+06 3.6000E+04 1.0068E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    5.1871E+07 1.5436E+03 1.8638E+04 9.4871E+02 7.2747E+03 3.1963E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  26.79% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 21H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 9.8774E+08 4.0499E+08 1.5464E+06 5.6011E+05 8.7065E+05 3.0285E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.2959E+08 9.0000E+06 3.6000E+04 1.0031E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  27.38% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 22H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3044E+09 4.1399E+08 1.5824E+06 5.7010E+05 8.8865E+05 3.0285E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.1665E+08 9.0000E+06 3.6000E+04 9.9931E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  27.98% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D 23H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7321E+09 4.2299E+08 1.6184E+06 5.8005E+05 9.0665E+05 3.0285E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.2766E+08 9.0000E+06 3.6000E+04 9.9556E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  28.57% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1783E+09 4.3199E+08 1.6544E+06 5.8997E+05 9.2465E+05 3.0285E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.4621E+08 9.0000E+06 3.6000E+04 9.9181E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  29.17% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D  1H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.5367E+09 4.4099E+08 1.6904E+06 5.9985E+05 9.4265E+05 3.0285E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.5840E+08 9.0000E+06 3.6000E+04 9.8806E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  29.76% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D  2H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.6779E+09 4.4999E+08 1.7264E+06 6.0969E+05 9.6065E+05 3.0285E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.4137E+08 9.0000E+06 3.6000E+04 9.8431E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.7876E+05 1.1944E-03 1.1675E-02 1.0831E-03 2.5619E-02 1.2726E+02
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  30.36% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D  3H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.5377E+09 4.5899E+08 1.7620E+06 6.1949E+05 9.7862E+05 3.0282E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.8056E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.4019E+08 6.8348E+00 3.3515E+02 7.5177E+00 3.0448E+01 2.6983E+05
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  30.95% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D  4H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1570E+09 4.6799E+08 1.7892E+06 6.2897E+05 9.9501E+05 3.0194E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.7681E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.8068E+08 5.0215E+02 8.8604E+03 2.9387E+02 1.6126E+03 8.8465E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  31.55% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D  5H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7152E+09 4.7699E+08 1.7882E+06 6.3703E+05 1.0032E+06 2.9780E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.7306E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.4173E+08 5.0117E+03 3.6984E+04 1.6632E+03 9.8026E+03 4.1379E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  32.14% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D  6H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3581E+09 4.8597E+08 1.7563E+06 6.4308E+05 1.0009E+06 2.9029E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.6931E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.5718E+08 1.6162E+04 6.7836E+04 3.6447E+03 2.0281E+04 7.5118E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  32.74% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D  7H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.1217E+09 4.9494E+08 1.7168E+06 6.4817E+05 9.9522E+05 2.8218E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.6556E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.3634E+08 2.6128E+04 7.5569E+04 4.5616E+03 2.3697E+04 8.1139E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  33.33% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D  8H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.0122E+09 5.0392E+08 1.7079E+06 6.5471E+05 9.9755E+05 2.7717E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.6181E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.0949E+08 2.0618E+04 4.4891E+04 3.0754E+03 1.5669E+04 5.0074E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  33.93% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D  9H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.0568E+09 5.1292E+08 1.7404E+06 6.6397E+05 1.0138E+06 2.7668E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     5.3138E+07 9.0000E+06 3.6000E+04 9.5806E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    8.5402E+06 2.5501E+03 3.4582E+03 3.2176E+02 1.7457E+03 4.8828E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  34.52% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 10H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3024E+09 5.2192E+08 1.7764E+06 6.7352E+05 1.0318E+06 2.7668E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.4560E+08 9.0000E+06 3.6000E+04 9.5431E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  35.12% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 11H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6939E+09 5.3092E+08 1.8124E+06 6.8302E+05 1.0498E+06 2.7668E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.9148E+08 9.0000E+06 3.6000E+04 9.5056E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  35.71% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 12H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1439E+09 5.3992E+08 1.8484E+06 6.9249E+05 1.0678E+06 2.7668E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.4998E+08 9.0000E+06 3.6000E+04 9.4681E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  36.31% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 13H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.5546E+09 5.4892E+08 1.8844E+06 7.0192E+05 1.0858E+06 2.7668E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.1069E+08 9.0000E+06 3.6000E+04 9.4306E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  36.90% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 14H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.8008E+09 5.5792E+08 1.9204E+06 7.1131E+05 1.1038E+06 2.7668E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.4623E+08 9.0000E+06 3.6000E+04 9.3931E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  37.50% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 15H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.7824E+09 5.6692E+08 1.9564E+06 7.2066E+05 1.1218E+06 2.7668E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.0251E+07 9.0000E+06 3.6000E+04 9.3556E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.8705E+07 2.8016E+00 2.0054E+01 7.3501E-01 3.2324E+00 1.5048E+04
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  38.10% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 16H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.4857E+09 5.7592E+08 1.9889E+06 7.2982E+05 1.1392E+06 2.7643E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.3181E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.9669E+08 9.5136E+02 3.5330E+03 1.6087E+02 6.0681E+02 2.4878E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  38.69% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 17H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.0424E+09 5.8490E+08 1.9984E+06 7.3747E+05 1.1500E+06 2.7417E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.2806E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.4331E+08 1.5311E+04 2.6482E+04 1.6304E+03 7.1913E+03 2.2592E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  39.29% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 18H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6344E+09 5.9384E+08 1.9702E+06 7.4202E+05 1.1475E+06 2.6849E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.2431E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.0791E+08 6.1931E+04 6.4140E+04 4.6929E+03 2.0490E+04 5.6847E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  39.88% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 19H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3385E+09 6.0272E+08 1.9197E+06 7.4424E+05 1.1365E+06 2.6097E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.2056E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.9596E+08 1.1656E+05 8.6537E+04 6.9837E+03 2.8996E+04 7.5141E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  40.48% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 20H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.1687E+09 6.1160E+08 1.8852E+06 7.4723E+05 1.1297E+06 2.5484E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 9.1681E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.6983E+08 1.1992E+05 7.0540E+04 6.1793E+03 2.4805E+04 6.1276E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  41.07% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 21H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.1389E+09 6.2056E+08 1.9039E+06 7.5440E+05 1.1394E+06 2.5299E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     9.1693E+06 9.0000E+06 3.6000E+04 9.1306E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.8967E+07 4.3968E+04 1.7239E+04 1.9590E+03 8.3545E+03 1.8564E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  41.67% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 22H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3016E+09 6.2956E+08 1.9399E+06 7.6349E+05 1.1574E+06 2.5299E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.6279E+08 9.0000E+06 3.6000E+04 9.0931E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  42.26% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   5D 23H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6415E+09 6.3856E+08 1.9759E+06 7.7255E+05 1.1753E+06 2.5299E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.3988E+08 9.0000E+06 3.6000E+04 9.0556E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  42.86% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.0787E+09 6.4756E+08 2.0119E+06 7.8156E+05 1.1933E+06 2.5299E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.3713E+08 9.0000E+06 3.6000E+04 9.0181E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  43.45% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D  1H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.5187E+09 6.5656E+08 2.0479E+06 7.9052E+05 1.2113E+06 2.5299E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.4007E+08 9.0000E+06 3.6000E+04 8.9612E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  44.05% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D  2H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.8512E+09 6.6556E+08 2.0839E+06 7.9941E+05 1.2293E+06 2.5299E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.3247E+08 9.0000E+06 3.6000E+04 8.8862E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  44.64% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D  3H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.9501E+09 6.7456E+08 2.1199E+06 8.0822E+05 1.2473E+06 2.5299E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     9.9624E+07 9.0000E+06 3.6000E+04 8.8112E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    7.5700E+05 4.2292E-01 1.8238E-01 2.9333E-02 2.4790E-01 5.3462E+02
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  45.24% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D  4H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.7640E+09 6.8356E+08 2.1550E+06 8.1691E+05 1.2652E+06 2.5294E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 8.7362E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.8607E+08 7.4007E+02 8.8529E+02 4.8145E+01 1.3615E+02 4.6216E+05
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  45.83% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D  5H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.3576E+09 6.9253E+08 2.1758E+06 8.2445E+05 1.2793E+06 2.5194E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 8.6612E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.0635E+08 2.4983E+04 1.5203E+04 1.1187E+03 3.9044E+03 1.0057E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  46.43% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D  6H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.9147E+09 7.0139E+08 2.1585E+06 8.2826E+05 1.2799E+06 2.4803E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 8.5862E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.4290E+08 1.4381E+05 5.3324E+04 4.7749E+03 1.7445E+04 3.9068E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  47.02% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D  7H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5628E+09 7.1007E+08 2.1062E+06 8.2805E+05 1.2668E+06 2.4154E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 8.5112E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.5196E+08 3.2392E+05 8.8321E+04 8.7249E+03 3.1019E+04 6.4878E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  47.62% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D  8H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3335E+09 7.1866E+08 2.0521E+06 8.2699E+05 1.2522E+06 2.3499E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 8.4362E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.2931E+08 4.0649E+05 9.0101E+04 9.4965E+03 3.2671E+04 6.5542E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  48.21% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D  9H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.2385E+09 7.2741E+08 2.0427E+06 8.3000E+05 1.2517E+06 2.3145E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.0252E+05 9.0000E+06 3.6000E+04 8.3612E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    9.5041E+07 2.5292E+05 4.5358E+04 5.3487E+03 1.8512E+04 3.5328E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  48.81% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 10H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3131E+09 7.3640E+08 2.1058E+06 8.4457E+05 1.2831E+06 2.3137E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     7.6462E+07 9.0000E+06 6.3900E+04 1.4702E+04 3.1950E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.8969E+06 7.3102E+03 8.5471E+02 1.3487E+02 4.9493E+02 8.5063E+05
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  49.40% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 11H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5871E+09 7.4540E+08 2.1778E+06 8.6099E+05 1.3191E+06 2.3137E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.7399E+08 9.0000E+06 7.2000E+04 1.6422E+04 3.6000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  50.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 12H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.9940E+09 7.5440E+08 2.2324E+06 8.7334E+05 1.3464E+06 2.3137E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.0693E+08 9.0000E+06 5.4600E+04 1.2349E+04 2.7300E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  50.60% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 13H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.4446E+09 7.6340E+08 2.2684E+06 8.8140E+05 1.3644E+06 2.3137E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.5058E+08 9.0000E+06 3.6000E+04 8.0612E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  51.19% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 14H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.8384E+09 7.7240E+08 2.3044E+06 8.8938E+05 1.3824E+06 2.3137E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.9380E+08 9.0000E+06 3.6000E+04 7.9863E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  51.79% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 15H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.0467E+09 7.8140E+08 2.3404E+06 8.9729E+05 1.4004E+06 2.3137E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.0825E+08 9.0000E+06 3.6000E+04 7.9112E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  52.38% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 16H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.9825E+09 7.9040E+08 2.3763E+06 9.0512E+05 1.4184E+06 2.3136E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.4816E+06 9.0000E+06 3.6000E+04 7.8362E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    6.6659E+07 1.8613E+02 8.7193E+01 5.6664E+00 1.5088E+01 3.9925E+04
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  52.98% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 17H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.6497E+09 7.9938E+08 2.4059E+06 9.1236E+05 1.4349E+06 2.3103E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 7.7613E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.3273E+08 2.2912E+04 6.4050E+03 5.2254E+02 1.5044E+03 3.3519E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  53.57% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 18H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1973E+09 8.0815E+08 2.4037E+06 9.1615E+05 1.4405E+06 2.2868E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 7.6862E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.5248E+08 2.2047E+05 3.8128E+04 3.8959E+03 1.2434E+04 2.3500E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  54.17% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 19H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7960E+09 8.1652E+08 2.3576E+06 9.1444E+05 1.4287E+06 2.2347E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 7.6112E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.0125E+08 6.3422E+05 8.2120E+04 9.3226E+03 2.9736E+04 5.2099E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  54.76% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 20H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5092E+09 8.2457E+08 2.2912E+06 9.0971E+05 1.4086E+06 2.1706E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 7.5363E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.8679E+08 9.5015E+05 1.0238E+05 1.2261E+04 3.8152E+04 6.4065E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  55.36% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 21H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3527E+09 8.3276E+08 2.2520E+06 9.0761E+05 1.3972E+06 2.1229E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6000E+04 7.4612E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.5649E+08 8.0770E+05 7.5223E+04 9.5586E+03 2.9408E+04 4.7741E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  55.95% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 22H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3481E+09 8.4155E+08 2.2982E+06 9.1769E+05 1.4199E+06 2.1121E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2644E+07 9.0000E+06 6.0000E+04 1.2302E+04 3.0000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.7315E+07 2.0800E+05 1.3853E+04 2.2276E+03 7.2385E+03 1.0804E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  56.55% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   6D 23H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5432E+09 8.5055E+08 2.3702E+06 9.3231E+05 1.4559E+06 2.1121E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.9510E+08 9.0000E+06 7.2000E+04 1.4623E+04 3.6000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  57.14% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.9044E+09 8.5955E+08 2.4398E+06 9.4630E+05 1.4907E+06 2.1121E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.6120E+08 9.0000E+06 6.9600E+04 1.3992E+04 3.4800E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  57.74% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D  1H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.3484E+09 8.6855E+08 2.4761E+06 9.5358E+05 1.5087E+06 2.1121E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.4402E+08 9.0000E+06 3.6388E+04 7.2775E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  58.33% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D  2H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.7796E+09 8.7755E+08 2.5133E+06 9.6101E+05 1.5267E+06 2.1121E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.3125E+08 9.0000E+06 3.7138E+04 7.4275E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  58.93% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D  3H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.0823E+09 8.8655E+08 2.5512E+06 9.6858E+05 1.5447E+06 2.1121E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.0271E+08 9.0000E+06 3.7888E+04 7.5775E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  59.52% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D  4H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.1380E+09 8.9555E+08 2.5898E+06 9.7631E+05 1.5627E+06 2.1121E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     6.1518E+07 9.0000E+06 3.8638E+04 7.7275E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    5.8897E+06 1.3504E+01 1.4838E+00 2.0788E-01 9.0960E-01 1.3948E+03
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  60.12% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D  5H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.9074E+09 9.0454E+08 2.6273E+06 9.8403E+05 1.5803E+06 2.1113E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.9388E+04 7.8775E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.3055E+08 1.1532E+04 1.8598E+03 1.5520E+02 3.7672E+02 7.5667E+05
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  60.71% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D  6H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.4804E+09 9.1332E+08 2.6446E+06 9.8960E+05 1.5913E+06 2.0998E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.0138E+04 8.0275E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.2703E+08 2.2662E+05 2.2914E+04 2.4592E+03 7.0134E+03 1.1558E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  61.31% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D  7H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.0413E+09 9.2139E+08 2.6156E+06 9.8924E+05 1.5841E+06 2.0620E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.0888E+04 8.1775E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.3911E+08 9.2767E+05 6.9808E+04 8.5378E+03 2.5247E+04 3.7784E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  61.90% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D  8H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6997E+09 9.2870E+08 2.5504E+06 9.8377E+05 1.5617E+06 2.0045E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.1638E+04 8.3275E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.4160E+08 1.6861E+06 1.0690E+05 1.3795E+04 4.0357E+04 5.7476E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  62.50% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D  9H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.4834E+09 9.3591E+08 2.4919E+06 9.7870E+05 1.5406E+06 1.9506E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.2388E+04 8.4775E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.1628E+08 1.7950E+06 1.0089E+05 1.3543E+04 3.9090E+04 5.3880E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  63.10% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 10H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.4084E+09 9.4401E+08 2.4935E+06 9.8101E+05 1.5399E+06 1.9262E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.5359E+06 9.0000E+06 4.3138E+04 8.6275E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    7.6546E+07 8.9492E+05 4.1496E+04 6.3157E+03 1.8691E+04 2.4470E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  63.69% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 11H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5161E+09 9.5301E+08 2.5374E+06 9.8979E+05 1.5579E+06 1.9262E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.0768E+08 9.0000E+06 4.3888E+04 8.7775E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  64.29% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 12H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.8165E+09 9.6201E+08 2.5820E+06 9.9872E+05 1.5759E+06 1.9262E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.0049E+08 9.0000E+06 4.4638E+04 8.9275E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  64.88% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 13H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.2368E+09 9.7101E+08 2.6274E+06 1.0078E+06 1.5939E+06 1.9262E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.2021E+08 9.0000E+06 4.5388E+04 9.0775E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  65.48% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 14H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.6855E+09 9.8001E+08 2.6736E+06 1.0170E+06 1.6119E+06 1.9262E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.4879E+08 9.0000E+06 4.6138E+04 9.2275E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  66.07% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 15H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.0589E+09 9.8901E+08 2.7204E+06 1.0264E+06 1.6299E+06 1.9262E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.7340E+08 9.0000E+06 4.6888E+04 9.3775E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  66.67% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 16H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.2271E+09 9.9801E+08 2.7681E+06 1.0359E+06 1.6479E+06 1.9262E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.6820E+08 9.0000E+06 4.7638E+04 9.5275E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    6.5676E+04 1.5108E-01 5.1579E-03 1.4084E-03 6.6245E-03 7.8572E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  67.26% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 17H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.1168E+09 1.0070E+09 2.8162E+06 1.0456E+06 1.6659E+06 1.9261E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.8388E+04 9.6775E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.1028E+08 2.6699E+03 2.8248E+02 2.3624E+01 5.2897E+01 9.3389E+04
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  67.86% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 18H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.7516E+09 1.0159E+09 2.8543E+06 1.0543E+06 1.6809E+06 1.9217E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.9138E+04 9.8275E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.6518E+08 1.5640E+05 1.0977E+04 1.1575E+03 2.9819E+03 4.3891E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  68.45% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 19H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.2951E+09 1.0238E+09 2.8511E+06 1.0576E+06 1.6802E+06 1.8975E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.9888E+04 9.9775E+03 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.5655E+08 1.0449E+06 5.3164E+04 6.6719E+03 1.8648E+04 2.4194E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  69.05% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 20H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.9038E+09 1.0304E+09 2.7984E+06 1.0538E+06 1.6592E+06 1.8498E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 5.0638E+04 1.0128E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.9122E+08 2.4157E+06 1.0333E+05 1.3877E+04 3.9028E+04 4.7705E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  69.64% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 21H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6301E+09 1.0363E+09 2.7300E+06 1.0475E+06 1.6311E+06 1.7953E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 5.1388E+04 1.0278E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.7372E+08 3.1157E+06 1.1974E+05 1.6602E+04 4.6133E+04 5.4498E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  70.24% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 22H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.4911E+09 1.0430E+09 2.7039E+06 1.0464E+06 1.6172E+06 1.7587E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 5.2138E+04 1.0428E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.3899E+08 2.2689E+06 7.8263E+04 1.1478E+04 3.1922E+04 3.6566E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  70.83% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   7D 23H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5147E+09 1.0516E+09 2.7470E+06 1.0552E+06 1.6300E+06 1.7532E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.0334E+07 9.0000E+06 5.2888E+04 1.0578E+04 1.8000E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.6722E+07 3.7558E+05 9.8077E+03 1.7749E+03 5.1519E+03 5.5081E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  71.43% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7409E+09 1.0606E+09 2.8538E+06 1.0766E+06 1.6659E+06 1.7532E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2619E+08 9.0000E+06 1.0683E+05 2.1366E+04 3.5850E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  72.02% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D  1H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1212E+09 1.0696E+09 2.9493E+06 1.0957E+06 1.6977E+06 1.7532E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.8026E+08 9.0000E+06 9.5539E+04 1.9139E+04 3.1794E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  72.62% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D  2H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.5696E+09 1.0786E+09 3.0028E+06 1.1065E+06 1.7154E+06 1.7532E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.4837E+08 9.0000E+06 5.3431E+04 1.0743E+04 1.7716E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  73.21% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D  3H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.9894E+09 1.0876E+09 3.0558E+06 1.1172E+06 1.7329E+06 1.7532E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.1982E+08 9.0000E+06 5.3056E+04 1.0706E+04 1.7528E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  73.81% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D  4H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.2589E+09 1.0966E+09 3.1085E+06 1.1278E+06 1.7502E+06 1.7532E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.6948E+08 9.0000E+06 5.2681E+04 1.0668E+04 1.7341E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  74.40% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D  5H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.2699E+09 1.1056E+09 3.1608E+06 1.1385E+06 1.7674E+06 1.7532E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.4498E+07 9.0000E+06 5.2306E+04 1.0631E+04 1.7153E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.3494E+07 1.9333E+02 1.0930E+01 1.1925E+00 3.3961E+00 4.2990E+03
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  75.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D  6H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.9976E+09 1.1146E+09 3.2090E+06 1.1487E+06 1.7835E+06 1.7520E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 5.1931E+04 1.0593E+04 1.6966E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.7228E+08 6.8188E+04 3.7273E+03 3.7138E+02 8.6758E+02 1.1636E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  75.60% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D  7H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.5547E+09 1.1227E+09 3.2261E+06 1.1550E+06 1.7890E+06 1.7391E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 5.1556E+04 1.0556E+04 1.6778E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.4288E+08 8.8888E+05 3.4441E+04 4.2543E+03 1.1248E+04 1.2926E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  76.19% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D  8H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1229E+09 1.1288E+09 3.1855E+06 1.1531E+06 1.7719E+06 1.7031E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 5.1181E+04 1.0518E+04 1.6591E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.3185E+08 2.8565E+06 9.1833E+04 1.2422E+04 3.3668E+04 3.6012E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  76.79% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D  9H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7945E+09 1.1333E+09 3.1058E+06 1.1454E+06 1.7395E+06 1.6528E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 5.0806E+04 1.0481E+04 1.6403E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.2839E+08 4.4771E+06 1.3043E+05 1.8178E+04 4.8841E+04 5.0335E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  77.38% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 10H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5946E+09 1.1381E+09 3.0431E+06 1.1396E+06 1.7124E+06 1.6093E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 5.0431E+04 1.0443E+04 1.6216E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.9990E+08 4.1978E+06 1.1322E+05 1.6255E+04 4.3313E+04 4.3501E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  77.98% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 11H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5429E+09 1.1455E+09 3.0924E+06 1.1512E+06 1.7229E+06 1.5934E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     5.3400E+06 9.0000E+06 8.5056E+04 1.7686E+04 2.7228E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    5.7037E+07 1.6389E+06 3.5714E+04 6.0428E+03 1.6700E+04 1.5859E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  78.57% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 12H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6841E+09 1.1545E+09 3.1918E+06 1.1720E+06 1.7546E+06 1.5934E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.4127E+08 9.0000E+06 9.9362E+04 2.0736E+04 3.1681E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  79.17% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 13H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.0092E+09 1.1635E+09 3.2723E+06 1.1888E+06 1.7802E+06 1.5934E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.2501E+08 9.0000E+06 8.0577E+04 1.6878E+04 2.5589E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  79.76% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 14H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.4404E+09 1.1725E+09 3.3213E+06 1.1991E+06 1.7957E+06 1.5934E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.3126E+08 9.0000E+06 4.8931E+04 1.0293E+04 1.5466E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  80.36% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 15H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.8848E+09 1.1815E+09 3.3698E+06 1.2094E+06 1.8109E+06 1.5934E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.4439E+08 9.0000E+06 4.8556E+04 1.0256E+04 1.5278E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  80.95% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 16H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.2346E+09 1.1905E+09 3.4180E+06 1.2196E+06 1.8260E+06 1.5934E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.4974E+08 9.0000E+06 4.8181E+04 1.0218E+04 1.5091E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  81.55% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 17H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.3610E+09 1.1995E+09 3.4658E+06 1.2298E+06 1.8409E+06 1.5934E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.2672E+08 9.0000E+06 4.7806E+04 1.0181E+04 1.4903E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.4129E+05 8.8362E+00 1.2946E-01 3.8941E-02 1.5421E-01 1.3342E+02
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  82.14% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 18H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.2046E+09 1.2085E+09 3.5124E+06 1.2399E+06 1.8555E+06 1.5932E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.7431E+04 1.0143E+04 1.4716E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.5645E+08 1.6754E+04 7.9272E+02 7.1549E+01 1.5286E+02 1.8917E+05
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  82.74% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 19H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.8111E+09 1.2169E+09 3.5409E+06 1.2478E+06 1.8648E+06 1.5878E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.7056E+04 1.0106E+04 1.4528E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.9347E+08 5.5568E+05 1.8579E+04 2.1207E+03 5.2167E+03 5.4596E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  83.33% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 20H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.3549E+09 1.2231E+09 3.5131E+06 1.2481E+06 1.8537E+06 1.5636E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.6681E+04 1.0068E+04 1.4341E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.5619E+08 2.7965E+06 7.4505E+04 9.7688E+03 2.5400E+04 2.4167E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  83.93% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 21H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.9761E+09 1.2266E+09 3.4275E+06 1.2401E+06 1.8208E+06 1.5208E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.6306E+04 1.0031E+04 1.4153E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.7879E+08 5.5128E+06 1.3192E+05 1.8094E+04 4.7045E+04 4.2794E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  84.52% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 22H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7181E+09 1.2293E+09 3.3313E+06 1.2301E+06 1.7836E+06 1.4754E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.5931E+04 9.9931E+03 1.3966E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.5806E+08 6.3406E+06 1.4212E+05 1.9924E+04 5.1215E+04 4.5365E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  85.12% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   8D 23H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5994E+09 1.2343E+09 3.2962E+06 1.2280E+06 1.7661E+06 1.4486E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.5556E+04 9.9556E+03 1.3778E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.1865E+08 3.9737E+06 8.0604E+04 1.2086E+04 3.1246E+04 2.6870E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  85.71% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6532E+09 1.2430E+09 3.3369E+06 1.2371E+06 1.7774E+06 1.4467E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     6.0422E+07 9.0000E+06 4.5181E+04 9.9181E+03 1.3591E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    6.6745E+06 2.9453E+05 4.4883E+03 8.5012E+02 2.2942E+03 1.8456E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  86.31% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D  1H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.9089E+09 1.2520E+09 3.4004E+06 1.2511E+06 1.7964E+06 1.4467E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.5575E+08 9.0000E+06 6.3430E+04 1.3993E+04 1.8965E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  86.90% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D  2H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.3061E+09 1.2610E+09 3.4722E+06 1.2670E+06 1.8178E+06 1.4467E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.9715E+08 9.0000E+06 7.1875E+04 1.5917E+04 2.1387E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  87.50% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D  3H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.7565E+09 1.2700E+09 3.5163E+06 1.2768E+06 1.8308E+06 1.4467E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.5046E+08 9.0000E+06 4.4056E+04 9.8056E+03 1.3028E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  88.10% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D  4H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.1617E+09 1.2790E+09 3.5600E+06 1.2866E+06 1.8436E+06 1.4467E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.0519E+08 9.0000E+06 4.3681E+04 9.7681E+03 1.2841E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  88.69% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D  5H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.3950E+09 1.2880E+09 3.6033E+06 1.2963E+06 1.8563E+06 1.4467E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.3323E+08 9.0000E+06 4.3306E+04 9.7306E+03 1.2653E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  89.29% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D  6H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.3605E+09 1.2970E+09 3.6462E+06 1.3060E+06 1.8687E+06 1.4467E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.2523E+07 9.0000E+06 4.2931E+04 9.6931E+03 1.2466E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.6946E+07 1.5650E+03 5.7858E+01 5.4374E+00 1.2410E+01 1.2760E+04
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  89.88% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D  7H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.0500E+09 1.3058E+09 3.6814E+06 1.3149E+06 1.8793E+06 1.4450E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.2556E+04 9.6556E+03 1.2278E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.1056E+08 2.3902E+05 7.3433E+03 7.6205E+02 1.7272E+03 1.6703E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  90.48% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D  8H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.5960E+09 1.3125E+09 3.6719E+06 1.3180E+06 1.8752E+06 1.4311E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.2181E+04 9.6181E+03 1.2091E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.5396E+08 2.2205E+06 5.1640E+04 6.5364E+03 1.6174E+04 1.3878E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  91.07% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D  9H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1741E+09 1.3156E+09 3.5938E+06 1.3111E+06 1.8460E+06 1.3977E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.1806E+04 9.5806E+03 1.1903E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    4.2189E+08 5.9064E+06 1.1996E+05 1.6441E+04 4.1096E+04 3.3414E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  91.67% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 10H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.8610E+09 1.3164E+09 3.4788E+06 1.2985E+06 1.8033E+06 1.3547E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.1431E+04 9.5431E+03 1.1716E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.1315E+08 8.2504E+06 1.5643E+05 2.2088E+04 5.4468E+04 4.3074E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  92.26% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 11H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6798E+09 1.3185E+09 3.3969E+06 1.2900E+06 1.7708E+06 1.3206E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 4.1056E+04 9.5056E+03 1.1528E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.8114E+08 6.9070E+06 1.2288E+05 1.7999E+04 4.3994E+04 3.4074E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  92.86% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 12H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6542E+09 1.3255E+09 3.4392E+06 1.3013E+06 1.7775E+06 1.3112E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.3027E+07 9.0000E+06 7.0138E+04 1.6329E+04 1.9544E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    3.8700E+07 2.0057E+06 2.7910E+04 5.0301E+03 1.2814E+04 9.3522E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  93.45% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 13H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.8284E+09 1.3345E+09 3.5198E+06 1.3202E+06 1.7998E+06 1.3112E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.7423E+08 9.0000E+06 8.0612E+04 1.8861E+04 2.2306E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  94.05% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 14H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1760E+09 1.3435E+09 3.5996E+06 1.3390E+06 1.8218E+06 1.3112E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.4758E+08 9.0000E+06 7.9862E+04 1.8786E+04 2.1931E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  94.64% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 15H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.6158E+09 1.3525E+09 3.6408E+06 1.3487E+06 1.8330E+06 1.3112E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.3987E+08 9.0000E+06 4.1212E+04 9.7462E+03 1.1231E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  95.24% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 16H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.0531E+09 1.3615E+09 3.6800E+06 1.3581E+06 1.8436E+06 1.3112E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.3728E+08 9.0000E+06 3.9181E+04 9.3181E+03 1.0591E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  95.83% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 17H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.3756E+09 1.3705E+09 3.7188E+06 1.3673E+06 1.8540E+06 1.3112E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.2254E+08 9.0000E+06 3.8806E+04 9.2806E+03 1.0403E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  96.43% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 18H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.4595E+09 1.3795E+09 3.7573E+06 1.3766E+06 1.8642E+06 1.3112E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     8.5150E+07 9.0000E+06 3.8431E+04 9.2431E+03 1.0216E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    1.2751E+06 6.8818E+01 7.3520E-01 1.9299E-01 6.5527E-01 4.4884E+02
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  97.02% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 19H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.2575E+09 1.3884E+09 3.7934E+06 1.3856E+06 1.8739E+06 1.3109E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.8056E+04 9.2056E+03 1.0028E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    2.0203E+08 6.4638E+04 1.8685E+03 1.7959E+02 3.6817E+02 3.3559E+05
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  97.62% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 20H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.8405E+09 1.3960E+09 3.8024E+06 1.3913E+06 1.8756E+06 1.3045E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.7681E+04 9.1681E+03 9.8406E+03 0.0000E+00
+ BOUNDARY OUTFLOWS    4.1701E+08 1.3606E+06 2.8742E+04 3.5169E+03 8.0784E+03 6.4095E+06
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  98.21% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 21H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.3883E+09 1.3996E+09 3.7438E+06 1.3870E+06 1.8538E+06 1.2811E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.7306E+04 9.1306E+03 9.6531E+03 0.0000E+00
+ BOUNDARY OUTFLOWS    4.5215E+08 5.4402E+06 9.5914E+04 1.3342E+04 3.1499E+04 2.3350E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  98.81% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 22H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.0238E+09 1.3992E+09 3.6275E+06 1.3738E+06 1.8111E+06 1.2436E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6931E+04 9.0931E+03 9.4656E+03 0.0000E+00
+ BOUNDARY OUTFLOWS    3.6457E+08 9.4460E+06 1.5325E+05 2.2360E+04 5.2145E+04 3.7488E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+  99.40% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   9D 23H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7833E+09 1.3983E+09 3.5128E+06 1.3601E+06 1.7682E+06 1.2068E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 9.0000E+06 3.6556E+04 9.0556E+03 9.2781E+03 0.0000E+00
+ BOUNDARY OUTFLOWS    2.4048E+08 9.8433E+06 1.5121E+05 2.2741E+04 5.2169E+04 3.6826E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+
+ REWIND ON           UNIT:  20, READING: R:/input/courses/Environmental_modelling/flow-model/westernscheldt01.vol
+ AT SIMULATION TIME: 4755D  0H  0M  0S !
+ TIME IN FILE:       4755D  0H  0M  0S !
+Performing closure error correction
+Total volume before rewind:     0.4283259674771E+10
+Total volume after rewind :     0.5115898969413E+10
+Total correction factor   :     0.1194393839707E+01
+
+ REWIND ON           UNIT:  23, READING: R:/input/courses/Environmental_modelling/flow-model/westernscheldt01.are
+ AT SIMULATION TIME: 4755D  0H  0M  0S !
+ TIME IN FILE:       4755D  0H  0M  0S !
+
+ REWIND ON           UNIT:  24, READING: R:/input/courses/Environmental_modelling/flow-model/westernscheldt01.flo
+ AT SIMULATION TIME: 4755D  0H  0M  0S !
+ TIME IN FILE:       4755D  0H  0M  0S !
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+ 100.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y  10D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.9897E+09 1.7056E+09 4.2292E+06 1.6306E+06 2.0869E+06 1.4130E+09
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.9915E+05 9.0000E+06 4.5492E+04 1.1344E+04 1.1421E+04 0.0000E+00
+ BOUNDARY OUTFLOWS    9.6378E+07 5.2283E+06 7.1799E+04 1.1816E+04 2.7298E+04 1.8733E+07
+                      SeaBoundar RiverBound Vlissingen Hansweert  Terneuzen  Initial    
+                      y01        ary01                                                  
+ CONCENTRATION                           
+ 
+ 
+ Simulation ended normal
+ Execution stop : 2022/02/03 13:46:24 

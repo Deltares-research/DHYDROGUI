@@ -1,0 +1,279 @@
+#,,,,,,,,,,,,,,,
+GUIGroups,(order determines order of appearance),,,,,,,,,,,,,,
+id,caption,,,,,,,,,,,,,,
+general,General,,,,,,,,,,,,,,
+timeframe,Time Frame,,,,,,,,,,,,,,
+processes,Processes,,,,,,,,,,,,,,
+initial,Initial Conditions,,,,,,,,,,,,,,
+physics,Physical Parameters,,,,,,,,,,,,,,
+wind,Wind,,,,,,,,,,,,,,
+numerics,Numerical Parameters,,,,,,,,,,,,,,
+output,Output Parameters,,,,,,,,,,,,,,
+#trachytopes,Trachytopes,,,,,,,,,,,,,,
+advanced,Advanced,,,,,,,,,,,,,,
+misc,Miscellaneous,,,,,,,,,,,,,,
+3dlayers,3D Layers,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+MduGroups,(order determines order in written mdu file),,,,,,,,,,,,,,
+General,,,,,,,,,,,,,,,
+geometry,,,,,,,,,,,,,,,
+numerics,,,,,,,,,,,,,,,
+physics,,,,,,,,,,,,,,,
+wind,,,,,,,,,,,,,,,
+waves,,,,,,,,,,,,,,,
+time,,,,,,,,,,,,,,,
+restart,,,,,,,,,,,,,,,
+external forcing,,,,,,,,,,,,,,,
+equatorial,,,,,,,,,,,,,,,
+output,,,,,,,,,,,,,,,
+trachytopes,,,,,,,,,,,,,,,
+MduGroup,MduName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MduOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description,Unit
+General,Program,,,,String,D-Flow FM,,,TRUE,,,,,,Program name
+General,Version,,,,String,,,,TRUE,,,,,,FM kernel Version
+General,FileVersion,,,,String,1.02,,,TRUE,,,,,,File format version (do not edit this)
+General,GuiVersion,,,,String,,,,TRUE,,,,,,DeltaShell FM suite version
+General,AutoStart,,,AutoStart:0|1|2,0|1|2,0,0,2,TRUE,,,,,,"Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)"
+General,PathsRelativeToParent,,,,0|1,0,,,TRUE,,,,,,"Default: 0. Whether or not (1/0) to resolve file names (e.g. inside the *.ext file) relative to their direct parent, instead of to the toplevel MDU working dir"
+geometry,NetFile,,,,FileName,,,,TRUE,,,,,,Unstructured grid file *_net.nc
+geometry,BathymetryFile,,,,FileName,,,,TRUE,,,,,,Bathymetry points file *.xyb
+geometry,DryPointsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)"
+geometry,GridEnclosureFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Enclosure polygon file *.pol (third column 1/-1: inside/outside)"
+geometry,WaterLevIniFile,,,,FileName,,,,TRUE,,,,,,Initial water levels sample file *.xyz
+geometry,LandBoundaryFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Land boundaries file *.ldb, used for visualization"
+geometry,ThinDamFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Polyline file *_thd.pli, containing thin dams"
+geometry,FixedWeirFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Polyline file *_fxw.pliz, containing fixed weirs with rows x, y, crest level, left ground level, right ground level"
+geometry,PillarFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Polyline file *.pliz, containing bridge pillars with rows x, y, drag coefficient and diameter"
+geometry,StructureFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"File *.ini containing list of structures (pumps, weirs, gates and general structures)"
+geometry,VertplizFile,,,,FileName,,,,TRUE,,,,,,"Vertical layering file *_vlay.pliz with rows x, y, Z, first Z, nr of layers, second Z, layer type"
+geometry,ProflocFile,,,,FileName,,,,TRUE,,,,,,"Channel profile location file *_proflocation.xyz with rows x, y, z, profile number ref"
+geometry,ProfdefFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file *_profdefinition.def with definition for all profile numbers"
+geometry,ProfdefxyzFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file _profdefinition.def with definition for all profile numbers"
+geometry,IniFieldFile,,,,FileName,,,,TRUE,,,,,,,,Initial values and parameter fields file,,,
+geometry,Uniformwidth1D,,,Default 1D channel width,Double,2,,,TRUE,,,,,,"Uniform width for channel profiles not specified by profloc"
+geometry,ManholeFile,,,,FileName,,,,TRUE,,,,,,"File *.ini containing manholes"
+geometry,WaterLevIni,initial,Water level,Initial water level,Double,0,,,FALSE,,,,,,"Initial water level at missing s0 values", m
+geometry,Bedlevuni,physics,Bed level,Uniform bed level,Double,-5,,,FALSE,,,,,,"Uniform bed level used at missing z values if BedlevType > 2", m
+geometry,Bedslope,physics,Bed level,Bed slope,Double,0,0,,FALSE,,,,,,"Bed slope inclination if BedlevType > 2",-
+geometry,BedlevType,physics,Bed level,Bed level locations:faces (cell centers)|cell edges|nodes/MeanLev|nodes/MinLev|nodes/MaxLev|faces/MeanLevFromNodes,1|2|3|4|5|6,3,1,6,FALSE,,,,,,"Bathymetry specification (1: at cell centers (from BathymetryFile), 2: at cell interfaces (from BathymetryFile), 3: at nodes, face levels mean of node values, 4: at nodes, face levels min. of node values, 5: at nodes, face levels max. of node values, 6: at cell centers, cell levels mean of node values)"
+geometry,Blmeanbelow,,,,Double,-999,,,TRUE,,,,,,"If not -999d0, below this level the cell center bed level is the mean of surrouding net nodes"
+geometry,Blminabove,,,,Double,-999,,,TRUE,,,,,,"If not -999d0, above this level the cell center bed level is the min. of surrouding net nodes"
+geometry,PartitionFile,,,,FileName,,,,TRUE,,,,,,Domain partition polygon file *_part.pol for parallel run
+geometry,AngLat,general,Global Position,Angle of latitude,Double,0,-90,90,FALSE,,,,,,"Angle of latitude S-N, 0: no Coriolis", deg
+geometry,AngLon,general,Global Position,Angle of longitude,Double,0,-180,180,FALSE,,,,,,"Angle of longitude E-W, 0: Greenwich, used in solar heat flux computation.", deg
+geometry,Conveyance2D,numerics,Numerical Parameters,Conveyance-2D type:R=HU|R=H|R=A/P|K=analytic-1D conv|K=analytic-2D conv,-1|0|1|2|3,-1,-1,3,FALSE,,,,,,"-1: R=HU,0: R=H, 1: R=A/P, 2: K=analytic-1D conv, 3: K=analytic-2D conv"
+geometry,Nonlin2D,,,,0|1,0,,,TRUE,,,,,,"Non-linear 2D volumes, only used if ibedlevtype=3 and Conveyance2D>=1"
+geometry,Sillheightmin,,,Weir treatment threshold,Double,0,0,,TRUE,,,,,,Weir treatment only if both sills larger than this value, [m]
+geometry,Makeorthocenters,,,From circum- to orthocentres?,0|1,0,0,1,TRUE,,,,,,"Switch from circumcentres to orthocentres in geominit (1: yes, 0: no)"
+geometry,Dcenterinside,,,Limit cell center,Double,1,0,,TRUE,,,,,,"Limit cell center (1.0: in cell, 0.0: on c/g)"
+geometry,Bamin,,,,Double,1.d-6,,,TRUE,,,,,,"Minimum grid cell area, in combination with cut cells"
+geometry,OpenBoundaryTolerance,,,,Double,3,,,TRUE,,,,,,"Search tolerance factor between boundary polyline and grid cells, in cell size units"
+geometry,RenumberFlowNodes,,,Renumber Flow Nodes?,0|1,1,0,1,TRUE,,,,,,"Renumber the flow nodes (1: yes, 0: no)"
+geometry,Kmx,3dlayers,Layers,Kmx,Integer,0,0,99,FALSE,,,,,,Number of vertical layers use 0 for 2D
+geometry,Layertype,3dlayers,Layers,Layer type:Sigma|Z,1|2,1,1,2,FALSE,,,,,,"Vertical layer type (1: all sigma, 2: all z)"
+geometry,DzTop,3dlayers,Layers,DzTop,Double,1,,,FALSE,kmx>0&&layertype=2,kmx>0&&layertype=2,,,,z-layer thickness of layers above level DzTopUniAboveZ
+geometry,FloorLevTopLay,3dlayers,Layers,FloorLevTopLay,Double,-1.0,,,FALSE,kmx>0&&layertype=2,kmx>0&&layertype=2,,,,The floor level of the top layer
+geometry,DzTopUniAboveZ,3dlayers,Layers,DzTopUniAboveZ,Double,-5.0,,,FALSE,kmx>0&&layertype=2,kmx>0&&layertype=2,,,,The level above which the layers will have a uniform thickness of DzTop
+geometry,NumTopSig,3dlayers,Layers,NumTopSig,Integer,0,,,FALSE,kmx>0&&layertype=2,kmx>0&&layertype=2,,,,Number of sigma-layers on top of z-layers
+geometry,NumTopSigUniform,3dlayers,Layers,NumTopSigUniform,Integer,0,0,1,FALSE,kmx>0&&layertype=2,kmx>0&&layertype=2,,,,Indicating whether the number of sigma-layers is 0=constant or 1=decreasing
+geometry,SigmaGrowthFactor,3dlayers,Layers,SigmaGrowthFactor,Double,1.2,1,,FALSE,kmx>0&&layertype=2,kmx>0&&layertype=2,,,,Layer thickness growth factor from DzTopUniAboveZ downwards
+numerics,CFLMax,timeframe,Time Frame,Max Courant nr,Double,0.7,0,,FALSE,,,,,,Maximum Courant number, -
+numerics,AdvecType,numerics,Numerical Parameters,Advection type:None|Wenneker|Wenneker/q(uio-u)|Perot q(uio-u)|Perot q(ui-u)|Perot/q(ui-u)-without itself|Perot q(uio-u) fast,0|1|2|3|4|5|33,33,0,33,FALSE,,,,,,"Advection type (0: none, 1: Wenneker, 2: Wenneker q(uio-u), 3: Perot q(uio-u), 4: Perot q(ui-u), 5: Perot q(ui-u) without itself, 33: Perot q(uio-u) fast"
+numerics,TimeStepType,,,Time step type:Transport|Transport+vel.update|full impl. step reduce|Step Jacobi|explicit,0|1|2|3|4,2,0,4,FALSE,,,,,,"Time step handling (0: only transport, 1: transport + velocity update, 2: full implicit step-reduce, 3: step-Jacobi, 4: explicit)"
+numerics,Limtyphu,advanced,Advanced,Water depth limiter type:None|MinMod|Van Leer|Koren|Monotone Central,0|1|2|3|4,0,0,4,FALSE,,,,,,"Limiter type for waterdepth in continuity eqn. (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)"
+numerics,Limtypmom,advanced,Advanced,Advection velocity limiter type:None|MinMod|Van Leer|Koren|Monotone Central,0|1|2|3|4,4,0,4,FALSE,,,,,,"Limiter type for cell center advection velocity (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)"
+numerics,Limtypsa,advanced,Advanced,Salinity transport limiter type:None|MinMod|Van Leer|Koren|Monotone Central,0|1|2|3|4,4,0,4,FALSE,Salinity,,,,,"Limiter type for salinity transport (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)"
+numerics,Icgsolver,advanced,Advanced,Solver type:sobekGS_OMP|sobekGS_OMPthreadsafe|sobekGS|sobekGS + Saadilud|parallel/Uniform Saad|parallel/Petsc|parallel/GS,1|2|3|4|5|6|7,4,1,7,FALSE,,,,,,"Solver type (1: sobekGS_OMP, 2: sobekGS_OMPthreadsafe, 3: sobekGS, 4: sobekGS + Saadilud, 5: parallel/global Saad, 6: parallel/Petsc, 7: parallel/GS)"
+numerics,Maxdegree,advanced,Advanced,Max degree in Gauss elimination,Integer,6,0,,FALSE,,,,,,Maximum degree in Gauss elimination
+numerics,FixedWeirScheme,numerics,Fixed weir parameters,Fixed weir scheme:None|Numerical|Tabellenboek|Villemonte,0|6|8|9,9,0,9,FALSE,,,,,,"Fixed weir scheme (0: None, 6: Numerical, 8: Tabellenboek, 9: Villemonte)"
+numerics,FixedWeirContraction,numerics,Fixed weir parameters,Fixed weir contraction,Double,1,0,,FALSE,,,,,,Fixed weir flow width contraction factor,-
+numerics,FixedWeirRelaxationcoef,numerics,Fixed weir parameters,Fixed weir relaxation coefficient,Double,0.6,0.0,1.0,FALSE,,,,,,Fixed weir relaxation coefficient for the computation of energy loss (0 <= coefficient <= 1),-
+numerics,Izbndpos,numerics,Numerical Parameters,Position of z boundary:Delft3D-FLOW|On net boundary|On specified polyline,0|1|2,0,0,2,TRUE,,,,,,"Position of z boundary (0: Delft3D-FLOW, 1: on net boundary, 2: on specifiend polyline)"
+numerics,Tlfsmo,numerics,Numerical Parameters,Boundary smoothing time,Double,3600,0,,FALSE,,,,,,Fourier smoothing time on water level boundaries, s
+numerics,Slopedrop2D,advanced,Advanced,Drop losses threshold,Double,0,0,,FALSE,,,,,,"Apply drop losses only if local bed slope > Slopedrop2D, (<=0: no drop losses)",-
+numerics,Chkadvd,advanced,Advanced,Advection checks depth,Double,0.1,0,,FALSE,,,,,,"Check advection terms if depth < chkadvdp, => less setbacks",-
+numerics,Teta0,advanced,Advanced,Time integration theta,Double,0.55,0.5,1,FALSE,,,,,,Theta of time integration (0.5 < theta < 1),-
+numerics,Qhrelax,advanced,Advanced,Relaxation on h(Q) boundaries,Double,1.d-2,0,1,FALSE,,,,,,Relaxation on Q-h open boundaries, -
+numerics,cstbnd,advanced,Advanced,Use Delft3D velocity handling,0|1,0,,,FALSE,,,,,,"Delft3D type velocity treatment near boundaries for small coastal models (1: yes, 0: no)"
+numerics,Maxitverticalforestersal,advanced,Advanced,Max vertical Forester iterations for salinity,Integer,0,0,,TRUE,,,,,,"Forester iterations for salinity (0: no vertical filter for salinity, > 0: max nr of iterations)"
+numerics,Maxitverticalforestertem,advanced,Advanced,Max vertical Forester iterations for temperature,Integer,0,,,TRUE,,,,,,"Forester iterations for temperature (0: no vertical filter for temperature, > 0: max nr of iterations)"
+numerics,Turbulencemodel,,,Turbulence model:None|Constant|Algebraic|k-eps|k-tau,0|1|2|3|4,3,,,FALSE,,kmx>0,,,,"Turbulence model (0: none, 1: constant, 2: algebraic, 3: k-epsilon, 4: k-tau)"
+numerics,Turbulenceadvection,,,Turbulence advection:None|horizontally explicit and vertically implicit,0|3,3,,,FALSE,,,,,,"Turbulence advection (0: none, 3: horizontally explicit and vertically implicit)"
+numerics,AntiCreep,numerics,Numerical Parameters,Use anti-creep,0|1,0,,,FALSE,,kmx>0,,,,"Include anti-creep calculation (0: no, 1: yes)"
+numerics,Maxwaterleveldiff,,,Water level threshold,Double,0,,,FALSE,,,,,,Upper bound on water level changes (<=0: no bounds),m
+numerics,Maxvelocitydiff,,,Velocity threshold,Double,0,,,FALSE,,,,,,Upper bound on velocity changes (<=0: no bounds), m/s
+numerics,Epshu,,,Dry cell threshold,Double,1.d-4,,,FALSE,,,,,,Threshold water depth for wet and dry cells,m
+physics,UnifFrictType,physics,Roughness,Uniform friction type:Chezy|Manning|White-Colebrook,0|1|2,1,0,2,FALSE,,,,,,"Uniform friction type (0: Chezy, 1: Manning, 2: White-Colebrook)"
+physics,UnifFrictCoef,physics,Roughness,Uniform friction coefficient,Double,2.3d-2,0,,FALSE,,,,,,Uniform friction coefficient (0: no friction),UnifFrictType: m(1/2)/s | s/m(1/3) | m
+physics,UnifFrictCoef1D,physics,Roughness,Uniform 1D friction coefficient,Double,2.3d-2,0,,TRUE,,,,,,Uniform friction coefficient in 1D links (0: no friction),
+physics,UnifFrictCoefLin,physics,Roughness,Uniform linear friction coefficient,Double,0,0,,FALSE,,,,,,Uniform linear friction coefficient for ocean models (0: no friction),UnifFrictType: m(1/2)/s | s/m(1/3) | m
+physics,Umodlin,physics,Roughness,Linear friction Umod,Double,0,0,1,FALSE,,,,,,"Linear friction umod, for ifrctyp=4,5,6",-
+physics,Vicouv,physics,Viscosity,Uniform horizontal eddy viscosity,Double,0.1,0,,FALSE,,,,,,Uniform horizontal eddy viscosity, m2/s
+physics,Dicouv,physics,Viscosity,Uniform horizontal eddy diffusivity,Double,0.1,0,,FALSE,,,,,,Uniform horizontal eddy diffusivity, m2/s
+physics,Vicoww,physics,Viscosity,Uniform vertical eddy viscosity,Double,1.d-6,0,,FALSE,kmx>0,,,,,Uniform vertical eddy viscosity, m2/s
+physics,Dicoww,physics,Viscosity,Uniform vertical eddy diffusivity,Double,1.d-6,0,,FALSE,kmx>0,,,,,Uniform vertical eddy diffusivity, m2/s
+physics,Vicwminb,physics,Viscosity,Minimum buoyancy viscosity,Double,0,0,,TRUE,,,,,,Minimum viscosity in prod and buoyancy term, m2/s
+physics,Smagorinsky,physics,Viscosity,Smagorinsky factor,Double,0.2,0,,FALSE,,,,,,Smagorinsky factor in horizontal turbulence,-
+physics,Elder,advanced,Advanced,Elder factor,Double,0,0,,FALSE,,,,,,Elder factor in horizontal turbulence,-
+physics,Irov,physics,Roughness,Wall behaviour:Free-slip|Partial-slip|No-slip,0|1|2,0,0,2,FALSE,,,,,,"Wall roughness type (0: free-slip, 1: partial-slip using wall_ks, 2: no-slip)"
+physics,wall_ks,physics,Roughness,Wall ks for partial slip,Double,0,0,,FALSE,Irov=1,,,,,"Nikuradse roughness for side walls",m
+physics,Rhomean,physics,Density,Default water density,Double,1000,,,FALSE,,,,,,"Average water density ", kg/m3
+physics,Idensform,physics,Density,Equation of state:Uniform|Eckart|UNESCO|Baroclinic,0|1|2|3,2,,,FALSE,,,,,,"Density calculation (0: uniform, 1: Eckart, 2: UNESCO, 3: baroclinic case)"
+physics,Ag,physics,Others,Gravity,Double,9.81,,,FALSE,,,,,,"Gravitational acceleration",m/s2
+physics,TidalForcing,processes,Processes,Tide generating forces,0|1,0,0,1,FALSE,,,,,,"Tidal forcing, if jsferic = 1 (0: no, 1: yes)"
+physics,Doodsonstart,,,Doodson start,Double,55.565,,,TRUE,,,,,,"TRIWAQ: 55.565, D3D: 57.555"
+physics,Doodsonstop,,,Doodson stop,Double,375.575,,,TRUE,,,,,,"TRIWAQ: 375.575, D3D: 275.555"
+physics,Doodsoneps,,,Doodson epsilon,Double,0,,,TRUE,,,,,,"TRIWAQ = 0.0  400 cmps , D3D = 0.03   60 cmps"
+physics,VillemonteCD1,numerics,Fixed weir parameters,,Double,1.0,,,FALSE,,,,,,Calibration coefficient CD1 for Villemonte,
+physics,VillemonteCD2,numerics,Fixed weir parameters,,Double,10.0,,,FALSE,,,,,,Calibration coefficient CD2 for Villemonte,
+physics,Salinity,processes,Processes,Salinity,0|1,0,0,1,FALSE,,,,,,"Include salinity, (0: no, 1: yes)"
+physics,InitialSalinity,initial,Salinity,Initial salinity,Double,0,0,,FALSE,Salinity,,,,,Uniform initial salinity concentration, ppt
+physics,Sal0abovezlev,physics,,Salt water level threshold,Double,-999,,,TRUE,,,,,,Vertical level above which salinity is set 0,m
+physics,DeltaSalinity,physics,,TODO,Double,-999,,,TRUE,,,,,,for testcases
+physics,Backgroundsalinity,physics,Salinity,Background salinity,Double,30,,,FALSE,Salinity=0,,,,,Background salinity for eqn. of state, ppt
+physics,InitialTemperature,initial,Temperature,Initial temperature,Double,6,,,FALSE,Temperature=1|3|5,,,,,Uniform initial water temperature, degC
+physics,Secchidepth,physics,Temperature,Secchi depth,Double,2,0,,FALSE,Temperature=5,Temperature=5,,,,Water clarity parameter, m]
+physics,Stanton,physics,Temperature,Stanton number,Double,-1,-1,1,FALSE,Temperature=5,Temperature=5,,,,Coefficient for convective heat flux
+physics,Dalton,physics,Temperature,Dalton number,Double,-1,-1,1,FALSE,Temperature=5,Temperature=5,,,,Coefficient for evaporative heat flux
+physics,Backgroundwatertemperature,physics,Temperature,Background temperature,Double,6,,,FALSE,Temperature=0,,,,,Background water temperature for eqn. of state, degC
+physics,SecondaryFlow,processes,Processes,Secondary flow,0|1,0,,,,,,,,,"Secondary flow (0: no, 1: yes)"
+physics,EffectSpiral,physics,Secondary flow,Spiral flow effect factor,Double,0,,,FALSE,SecondaryFlow,SecondaryFlow,,,,Weight factor of the spiral flow intensity on transport angle, -
+physics,BetaSpiral,physics,Secondary flow,Spiral flow beta factor,Double,0,,,FALSE,SecondaryFlow,SecondaryFlow,,,,Weight factor of the spiral flow intensity on flow dispersion stresses, -
+wind,ICdtyp,wind,Wind,Wind drag coefficient type: Constant|Smith & Banks (2 break points)|Smith & Banks (3 break points)|Charnock 1955|Whang 2005|Wuest 2005,1|2|3|4|5|6,2,1,6,FALSE,,,,,,"Wind drag coefficient type (1: constant, 2: S&B 2 breakpoints, 3: S&B 3 breakpoints, 4: Charnock constant, 5: Whang, 6: Wuest)",-
+wind,Cdbreakpoints,wind,Wind,Break points wind drag coefficient,DoubleArray,6.3d-4 7.23d-3,,,FALSE,ICdtyp=2|3|4,,,,,Wind drag coefficient break points, m/s
+wind,Windspeedbreakpoints,wind,Wind,Break points wind speed,DoubleArray,0. 100.,,,FALSE,ICdtyp=2|3,,,,,Wind speed break points, m/s
+wind,Rhoair,wind,Wind,Air density,Double,1.2,,,FALSE,,,wind,,,Air density, kg/m3
+wind,PavBnd,wind,Wind,Average air pressure on bounds,Double,0,,,FALSE,,,,,,Average air pressure on open boundaries (only applied if > 0), N/m2
+wind,PavIni,wind,Wind,Average initial air pressure,Double,0,,,FALSE,,,,,,Average air pressure for initial water level correction (only applied if > 0), N/m2
+waves,Wavemodelnr,processes,Processes,Wave model:None|Fetch/depth limited Hurdle-Stive|Young-Verhagen|SWAN,0|1|2|3,0,0,3,FALSE,,,,,,"Wave model nr. (0: none, 1: fetch/depth limited Hurdle-Stive, 2: Young-Verhagen, 3: SWAN)"
+waves,WaveNikuradse,physics,Wave,Wave friction Nikuradse ks coefficient,Double,0.01,0,,FALSE,,Wavemodelnr=3,,,,"Wave friction Nikuradse ks c , used in Krone-Swart", m
+waves,Rouwav,physics,Wave,Friction model for wave stress:None|Fredsøe (1984)|Myrhaug and Slaattelid (1990)|Huynh-Thanh and Temperville (1991)|Grant and Madsen (1979)|Davies et al. (1988)|Bijker (1967)|Christoffersen and Jonsson (1985)|O` Connor and Yoo (1988)|Van Rijn et al. (2004),No|FR84|MS90|HT91|GM79|DS88|BK67|CJ85|OY88|VR04,FR84,,,FALSE,,Wavemodelnr=3,,,,Friction model for wave induced shear stress
+waves,Gammax,physics,Wave,Max. wave/depth ratio,Double,1,,,FALSE,,,,,,Maximum wave height/water depth ratio,-
+time,RefDate,timeframe,Time Frame,Reference date,DateOnly,20010101,,,FALSE,,,,,,Reference date [YYYY-MM-DD]
+time,Tzone,timeframe,Time Frame,Time zone,Double,0,-12.0,+12.0,FALSE,,,,,,Time zone assigned to input time series, -
+time,DtUser,timeframe,Time Frame,User time step,Interval,300,0,,FALSE,,,,,,Time interval for external forcing update [Dd HH:MM:SS.ZZZ]
+time,DtNodal,timeframe,Time Frame,Nodal update interval,Interval,21600,0,,FALSE,,,,,,Time interval (s) for updating nodal factors in astronomical boundary conditions [Dd HH:MM:SS.ZZZ]
+time,DtMax,timeframe,Time Frame,Max. time step,Double,30,,,FALSE,,,,,,Maximal computation timestep, s
+time,DtInit,timeframe,Time Frame,Initial time step,Double,1,,,FALSE,,,,,,Initial computation timestep, s
+time,Tunit,,,Time unit:hours|minutes|seconds,H|M|S,S,,,TRUE,,,,,,"Time unit for start/stop times (H, M or S)"
+time,StartDateTime,timeframe,Time Frame,Start datetime,DateTime,20010101000000,,,FALSE,,,,,,Computation start datetime [yyyymmddhhmmss]
+time,StopDateTime,timeframe,Time Frame,Stop datetime,DateTime,20010102000000,,,FALSE,,,,,,Computation stop datetime [yyyymmddhhmmss]
+restart,RestartFile,,,,FileName,,,,TRUE,,,,,,"Restart netcdf-file, either *_rst.nc or *_map.nc"
+restart,RestartDateTime,,,Restart Time,DateTime,,,,TRUE,,,,,,Restart date and time when restarting from *_map.nc [YYYYMMDDHHMMSS]
+external forcing,ExtForceFile,,,,FileName,,,,TRUE,,,,,,"Old format for external forcings file *.ext, link with tim/cmp-format boundary conditions specification"
+external forcing,ExtForceFileNew,,,,FileName,,,,TRUE,,,,,,"New format for external forcings file *.ext, link with bc-format boundary conditions specification"
+trachytopes,TrtRou,,,Include trachytopes?:Yes (Y)|No (N),Y|N,N,,,TRUE,,,,,,"Include alluvial and vegetation roughness (trachytopes) (Y: yes, N: no)"
+trachytopes,TrtDef,,,,FileName,,,,TRUE,,,,,,File (*.ttd) containing trachytope definitions
+trachytopes,TrtL,,,,FileName,,,,TRUE,,,,,,File (*.arl) containing distribution of trachytope definitions
+trachytopes,DtTrt,,,,Double,60,,,TRUE,,,,,,Trachytope roughness update time interval, s
+****,,,,,,,,,,,,,,,
+*,,,,,,,,,,,,,,,
+physics,Temperature,processes,Processes,Temperature:None|Transport only|Excess temperature|Composite model,0|1|3|5,0,0,5,FALSE,,,,,,"Include temperature (0: no, 1: only transport, 3: excess model of D3D, 5: composite (ocean) model)"
+GUIOnly,UseMorSed,processes,Processes,Sediment/Morphology,0|1,0,0,1,FALSE,,,,,,Include Sediment/Morphology
+*,,,,,,,,,,,,,,,
+GUIOnly,WriteHisFile,output,History,Write His file,0|1,1,,,FALSE,,,,,,Write a history file
+GUIOnly,HisOutputDeltaT,output,History,His output Interval,Interval,,,,FALSE,,WriteHisFile,,,,Interval for writing His Output [Dd HH:MM:SS.ZZZ]
+GUIOnly,SpecifyHisStart,output,History,Specify His output start time,0|1,0,,,FALSE,,WriteHisFile,,,,Start writing his output later then start of simulation
+GUIOnly,HisOutputStartTime,output,History,His output start time,DateTime,,,,FALSE,WriteHisFile && SpecifyHisStart,WriteHisFile,,,,No his output will be written before this time stamp [YYYY-MM-DD HH:MM:SS]
+GUIOnly,SpecifyHisStop,output,History,Specify His output stop time,0|1,0,,,FALSE,WriteHisFile && SpecifyHisStart,WriteHisFile,,,,Stop writing his output before of simulation
+GUIOnly,HisOutputStopTime,output,History,His output stop time,DateTime,,,,FALSE,WriteHisFile && SpecifyHisStart && SpecifyHisStop,WriteHisFile,,,,No his output will be written after this time stamp [YYYY-MM-DD HH:MM:SS]
+*,,,,,,,,,,,,,,,
+GUIOnly,WriteMapFile,output,Map,Write Map file,0|1,1,,,FALSE,,,,,,Write a map file
+GUIOnly,MapOutputDeltaT,output,Map,Map output interval,Interval,,,,FALSE,,WriteMapFile,,,,Interval for writing Map Output [Dd HH:MM:SS.ZZZ]
+GUIOnly,SpecifyMapStart,output,Map,Specify Map output start time,0|1,0,,,FALSE,,WriteMapFile,,,,Start writing map output later then start of simulation
+GUIOnly,MapOutputStartTime,output,Map,Map output start time,DateTime,,,,FALSE,WriteMapFile && SpecifyMapStart,WriteMapFile,,,,No map output will be written before this time stamp [YYYY-MM-DD HH:MM:SS]
+GUIOnly,SpecifyMapStop,output,Map,Specify Map output stop time,0|1,0,,,FALSE,WriteMapFile && SpecifyMapStart,WriteMapFile,,,,Stop writing map output before of simulation
+GUIOnly,MapOutputStopTime,output,Map,Map output stop time,DateTime,,,,FALSE,WriteMapFile && SpecifyMapStart && SpecifyMapStop,WriteMapFile,,,,No map output will be written after this time stamp [YYYY-MM-DD HH:MM:SS]
+*,,,,,,,,,,,,,,,
+GUIOnly,WriteClassMapFile,output,Class,Write Class Map file,0|1,0,,,FALSE,,,,,,"Write a class map file"
+GUIOnly,ClassMapOutputDeltaT,output,Class,Class Map interval,Interval,,,,FALSE,,WriteClassMapFile,,,,Interval for writing Class Map Output [Dd HH:MM:SS.ZZZ]
+*,,,,,,,,,,,,,,,
+GUIOnly,WriteRstFile,output,Restart,Write Rst file,0|1,0,,,FALSE,,,,,,Write restart files
+GUIOnly,RstOutputDeltaT,output,Restart,Rst output interval,Interval,,,,FALSE,,WriteRstFile,,,,Interval for writing Rst Output [Dd HH:MM:SS.ZZZ]
+GUIOnly,SpecifyRstStart,output,Restart,Specify Rst output start time,0|1,0,,,FALSE,,WriteRstFile,,,,Start writing restart files later then start of simulation
+GUIOnly,RstOutputStartTime,output,Restart,Rst output start time,DateTime,,,,FALSE,WriteRstFile && SpecifyRstStart,WriteRstFile,,,,No restart files will be written before this time stamp [YYYY-MM-DD HH:MM:SS]
+GUIOnly,SpecifyRstStop,output,Restart,Specify Rst output stop time,0|1,0,,,FALSE,WriteRstFile && SpecifyRstStart,WriteRstFile,,,,Stop writing restart files before of simulation
+GUIOnly,RstOutputStopTime,output,Restart,Rst output stop time,DateTime,,,,FALSE,WriteRstFile && SpecifyRstStart && SpecifyRstStop,WriteRstFile,,,,No restart files will be written after this time stamp [YYYY-MM-DD HH:MM:SS]
+*,,,,,,,,,,,,,,,
+GUIOnly,SpecifyWaqOutputInterval, output, Water Quality,Specify WAQ interval output,0|1,0,,,FALSE,,,,,,"Specify WAQ interval output"
+GUIOnly,WaqOutputDeltaT,output,Water Quality,WAQ output interval,Interval,0,,,FALSE,SpecifyWaqOutputInterval,,,,,Interval (in s) between DELWAQ file outputs [Dd HH:MM:SS.ZZZ]
+output,WaqInterval,,,WAQ output interval,DoubleArray,0,0,,TRUE,,,,,,"Interval (in s) between DELWAQ file outputs"
+GUIOnly,SpecifyWaqOutputStartTime, output, Water Quality,Specify WAQ start time output,0|1,0,,,FALSE,SpecifyWaqOutputInterval,,,,,"Specify WAQ start time output"
+GUIOnly,WaqOutputStartTime, output, Water Quality,WAQ output-start-time,Datetime,,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime,,,,,WAQ Start time output [YYYY-MM-DD HH:MM:SS]
+GUIOnly,SpecifyWaqOutputStopTime, output, Water Quality,Specify WAQ stop time output,0|1,0,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime,,,,,"Specify WAQ stop time output"
+GUIOnly,WaqOutputStopTime, output, Water Quality,WAQ output-end-time,Datetime,,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime && SpecifyWaqOutputStopTime,,,,,WAQ End time output [YYYY-MM-DD HH:MM:SS]
+*,,,,,,,,,,,,,,,
+GUIOnly,WriteSnappedFeatures,output,Shape files,Write Snapped Features,0|1,0,,,FALSE,,,,,,Write generated output snapped features
+output,Wrishp_crs,output,Shape files,Write shape file for cross section,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for cross section
+output,Wrishp_weir,output,Shape files,Write shape file for weirs,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for weirs
+output,Wrishp_gate,output,Shape files,Write shape file for gates,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for gates
+output,Wrishp_fxw,output,Shape files,Write shape file for fixed weirs,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for fixed weirs
+output,Wrishp_thd,output,Shape files,Write shape file for thin dams,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for thin dams
+output,Wrishp_obs,output,Shape files,Write shape file for observation stations,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for observation stations
+output,Wrishp_emb,output,Shape files,Write shape file for embankments,0|1,0,,,TRUE,WriteSnappedFeatures,,,,,Write shape file for embankments
+output,Wrishp_dryarea,output,Shape files,Write shape file for dry area,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for dry area
+output,Wrishp_enc,output,Shape files,Write shape file for enclosure,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for enclosure
+output,Wrishp_src,output,Shape files,Write shape file for sources,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for sources
+output,Wrishp_pump,output,Shape files,Write shape file for pump,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for pump
+*,,,,,,,,,,,,,,,
+output,OutputDir,output,Others,Output directory,String,,,,TRUE,,,,,,"Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for current dir."
+output,WAQOutputDir,output,Others,WAQ output directory,String,,,,TRUE,,,,,,"Output directory of WAQ files, default: DFM_DELWAQ_<modelname>. Set to . for current dir."
+output,FlowGeomFile,,,,FileName,,,,TRUE,,,,,,Flow geometry NetCDF *_flowgeom.nc 
+output,ObsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Points file *.xyn with observation stations with rows x, y, station name"
+output,CrsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,Polyline file *_crs.pli defining observation cross sections
+output,HisFile,,,,FileName,,,,TRUE,,,,,,History output file *_his.nc in NetCDF format
+output,HisInterval,,,His output interval,DoubleArray,300,0,,TRUE,,,,,,"History output times, given as 'interval' 'start period' 'end period'"
+output,XLSInterval,,,XLS output interval,Interval,0,0,,FALSE,,,,,,Interval between XLS history [Dd HH:MM:SS.ZZZ],
+output,MapFile,,,,FileName,,,,TRUE,,,,,,Map file output file *_map.nc in NetCDF format
+output,MapInterval,,,Map output interval,DoubleArray,1200,0,,TRUE,,WriteMapFile,,,,"Map file output times, given as 'interval' 'start period' 'end period'"
+output,RstInterval,,,Restart output interval,DoubleArray,86400,0,,TRUE,,,,,,"Restart file output times, given as 'interval' 'start period' 'end period'"
+output,S1incinterval,,,,Interval,0,,,TRUE,,,,,,Interval (m) in incremental file for water levels s1, m
+*output,TimeSplitInterval,,Output,Time splitting interval,Interval,0X,,,TRUE,,,,,,"Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s."
+output,MapFormat,output,Others,Map file output format:NetCDF|Tecplot|Both|UGRID(beta),1|2|3|4,4,1,4,TRUE,,,,,,"Map file format (1: NetCDF, 2: Tecplot, 3: NetCFD and Tecplot)"
+output,Wrihis_balance,output,History,Write mass balance totals,0|1,1,,,FALSE,,WriteHisFile,,,,"Write mass balance totals to his file (1: yes, 0: no)"
+output,Wrihis_sourcesink,output,History,Write sources-sinks statistics,0|1,1,,,FALSE,,WriteHisFile,,,,"Write sources-sinks statistics to his file (1: yes, 0: no)"
+output,Wrihis_structure_gen,output,History,Write general structure parameters,0|1,1,,,FALSE,,WriteHisFile,,,,"Write general structure parameters to his file (1: yes, 0: no)"
+output,Wrihis_structure_dam,output,History,Write dam parameters,0|1,1,,,FALSE,,WriteHisFile,,,,"Write dam parameters to his file (1: yes, 0: no)"
+output,Wrihis_structure_pump,output,History,Write pump parameters,0|1,1,,,FALSE,,WriteHisFile,,,,"Write pump parameters to his file (1: yes, 0: no)"
+output,Wrihis_structure_gate,output,History,Write gate parameters,0|1,1,,,FALSE,,WriteHisFile,,,,"Write gate parameters to his file (1: yes, 0: no)"
+output,Wrihis_structure_weir,output,History,Write weir parameters,0|1,1,,,FALSE,,WriteHisFile,,,,"Write weir parameters to his file (1: yes, 0: no)"
+output,Wrihis_turbulence,output,History,"Write k, eps and vicww",0|1,1,,,FALSE,,WriteHisFile,,,,"Write k, eps and vicww to his file (1: yes, 0: no)"
+output,Wrihis_wind,output,History,Write wind velocities,0|1,1,,,FALSE,,WriteHisFile,,,,"Write wind velocities to his file (1: yes, 0: no)"
+output,Wrihis_rain,output,History,Write precipitation,0|1,1,,,FALSE,,WriteHisFile,,,,"Write precipitation to his file (1: yes, 0: no)"
+output,Wrihis_temperature,output,History,Write temperature,0|1,1,,,FALSE,,WriteHisFile,,,,"Write temperature to his file (1: yes, 0: no)"
+output,Wrihis_heat_fluxes,output,History,Write heat fluxes,0|1,1,,,FALSE,,WriteHisFile,,,,"Write heat fluxes to his file (1: yes, 0: no)"
+output,Wrihis_salinity,output,History,Write salinity,0|1,1,,,FALSE,,WriteHisFile,,,,"Write salinity to his file (1: yes, 0: no)"
+output,Wrihis_density,output,History,Write density,0|1,1,,,FALSE,,WriteHisFile,,,,"Write density to his file (1: yes, 0: no)"
+output,Wrihis_waterlevel_s1,output,History,Write water level,0|1,1,,,FALSE,,WriteHisFile,,,,"Write water level to his file (1: yes, 0: no)"
+output,Wrihis_waterdepth,output,History,Write water depth,0|1,0,,,FALSE,,WriteHisFile,,,,"Write water depth to his file (1: yes, 0: no)"
+output,Wrihis_velocity_vector,output,History,Write velocity vectors,0|1,1,,,FALSE,,WriteHisFile,,,,"Write velocity vectors to his file (1: yes, 0: no)"
+output,Wrihis_upward_velocity_component,output,History,Write upward velocity,0|1,0,,,FALSE,,WriteHisFile,,,,"Write upward velocity to his file (1: yes, 0: no)"
+output,Wrihis_sediment,output,History,Write sediment transport,0|1,1,,,FALSE,,WriteHisFile,,,,"Write sediment transport to his file (1: yes, 0: no)"
+output,Wrihis_constituents,output,History,Write tracers,0|1,1,,,FALSE,,WriteHisFile,,,,"Write tracers to his file (1: yes, 0: no)"
+output,Wrimap_waterlevel_s0,output,Map,Write water levels of previous time step,0|1,1,,,FALSE,,WriteMapFile,,,,"Write water levels of previous time step to map file (1: yes, 0: no)"
+output,Wrimap_waterlevel_s1,output,Map,Write water levels,0|1,1,,,FALSE,,WriteMapFile,,,,"Write water levels to map file (1: yes, 0: no)"
+output,Wrimap_velocity_component_u0,output,Map,Write velocity component of previous time step,0|1,1,,,FALSE,,WriteMapFile,,,,"Write velocity component of previous time step to map file (1: yes, 0: no)"
+output,Wrimap_velocity_component_u1,output,Map,Write velocity component,0|1,1,,,FALSE,,WriteMapFile,,,,"Write velocity component to map file (1: yes, 0: no)"
+output,Wrimap_velocity_vector,output,Map,Write cell-center velocity vectors,0|1,1,,,FALSE,,WriteMapFile,,,,"Write cell-center velocity vectors to map file (1: yes, 0: no)"
+output,Wrimap_upward_velocity_component,output,Map,Write upward velocity component,0|1,0,,,FALSE,,WriteMapFile,,,,"Write upward velocity component on cell interfaces (1: yes, 0: no)"
+output,Wrimap_density_rho,output,Map,Write flow density,0|1,1,,,FALSE,,WriteMapFile,,,,"Write flow density to map file (1: yes, 0: no)"
+output,Wrimap_horizontal_viscosity_viu,output,Map,Write horizontal viscosity,0|1,1,,,FALSE,,WriteMapFile,,,,"Write horizontal viscosity to map file (1: yes, 0: no)"
+output,Wrimap_horizontal_diffusivity_diu,output,Map,Write horizontal diffusivity,0|1,1,,,FALSE,,WriteMapFile,,,,"Write horizontal diffusivity to map file (1: yes, 0: no)"
+output,Wrimap_flow_flux_q1,output,Map,Write flow flux,0|1,1,,,FALSE,,WriteMapFile,,,,"Write flow flux to map file (1: yes, 0: no)"
+output,Wrimap_spiral_flow,output,Map,Write spiral flow,0|1,1,,,FALSE,,SecondaryFlow && WriteMapFile,,,,"Write spiral flow to map file (1: yes, 0: no)"
+output,Wrimap_numlimdt,output,Map,Write the number of times a cell was Courant limiting,0|1,1,,,FALSE,,WriteMapFile,,,,"Write the number times a cell was Courant limiting to map file (1: yes, 0: no)"
+output,Wrimap_taucurrent,output,Map,Write the shear stress,0|1,1,,,FALSE,,WriteMapFile,,,,"Write the shear stress to map file (1: yes, 0: no)"
+output,Wrimap_chezy,output,Map,Write the Chezy roughness,0|1,1,,,FALSE,,WriteMapFile,,,,"Write the Chezy roughness to map file (1: yes, 0: no)"
+output,Wrimap_turbulence,output,Map,Write vicww k and eps,0|1,1,,,FALSE,,WriteMapFile,,,,"Write vicww, k and eps to map-file (1: yes, 0: no)"
+output,Wrimap_wind,output,Map,Write wind velocities,0|1,1,,,FALSE,,WriteMapFile,,,,"Write wind velocities to map file (1: yes, 0: no)"
+output,Wrimap_heat_fluxes,output,Map,Write heat fluxes,0|1,0,,,FALSE,,WriteMapFile && Temperature=1|3|5,,,,"Write heat fluxes to map file (1: yes, 0: no)"
+output,MapOutputTimeVector,output,Map,Specific Map output times,FileName,,,,FALSE,,WriteMapFile,,,,File (*.mpt) containing fixed map output times w.r.t. RefDate, s
+output,FullGridOutput,output,Map,Full grid output,0|1,0,0,1,TRUE,,,,,,"Full grid output mode (0: compact, 1: full time-varying grid data)"
+output,EulerVelocities,output,Map,Full grid output,0|1,0,0,1,TRUE,,,,,,"Euler velocities output (0: GLM, 1: Euler velocities)"
+output,ClassMapFile,,,,FileName,,,,TRUE,,,,,,"Class map file *_clm.nc"
+output,WaterlevelClasses,output,Class,Water level classes,String,0.0,,,,,WriteClassMapFile,,,,"Water level classes", m
+output,WaterdepthClasses,output,Class,Water depth classes,String,0.0,,,,,WriteClassMapFile,,,,"Water depth classes", m
+output,ClassMapInterval,,,Class map interval,DoubleArray,300,0,,TRUE,,WriteClassMapFile,,,,"Class output interval [Dd HH:MM:SS.ZZZ]"
+output,StatsInterval,output,Others,Statistics output interval,Interval,0,,,FALSE,,,,,,Interval (in s) between simulation statistics output [Dd HH:MM:SS.ZZZ]
+output,TimingsInterval,output,Others,Timing statistics output interval,Interval,0,,,FALSE,,,,,,Timings statistics output interval [Dd HH:MM:SS.ZZZ]
+output,Richardsononoutput,output,Others,Write Richardson numbers?,0|1,1,,,FALSE,,,,,,"Write Richardson numbers (1: yes, 0: no)"
+geometry,UseCaching,output,Others,Use caching,0|1,1,,,FALSE,,,,,,"Use caching of flow model geometry input (1: yes, 0: no)"

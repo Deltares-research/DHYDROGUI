@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary"
+                   assembly="DeltaShell.Plugins.DelftModels.WaterQualityModel">
+
+  <class name="WaterQualitySubstance"
+         lazy="false"
+         table="wq_substance">
+
+    <id name="Id" column="substance_id" type="Int64">
+      <generator class="increment" />
+    </id>
+
+    <property name="Name" column="name" />
+    <property name="Description" column="description" />
+    <property name="Active" column="active" />
+    <property name="InitialValue" column="initial_value" />
+    <property name="ConcentrationUnit" column="concentration_unit" />
+    <property name="WasteLoadUnit" column="waste_load_unit" />
+
+  </class>
+
+  <!-- Maps and associates WaterQualitySubstance to the values of a variable -->
+  <subclass name="DelftTools.Functions.Generic.Variable`1[[WaterQualitySubstance]], DelftTools.Functions"
+            lazy="false"
+            discriminator-value="wq_substance"
+            extends="DelftTools.Functions.IVariable,DelftTools.Functions" />
+
+  <!-- Maps and associates WaterQualitySubstance to the values of a multi dimensional array -->
+  <subclass name="DelftTools.Functions.Generic.MultiDimensionalArray`1[[WaterQualitySubstance]], DelftTools.Functions"
+            lazy="false"
+            discriminator-value="wq_substance"
+            extends="DelftTools.Functions.MultiDimensionalArray, DelftTools.Functions">
+
+    <list name="Values"
+          batch-size="25"
+          cascade="save-update"
+          table="wq_md_array_substances">
+      <key column="substance_id" />
+      <index column="md_array_substances_list_index" />
+      <many-to-many class="WaterQualitySubstance" />
+    </list>
+
+  </subclass>
+
+</hibernate-mapping>

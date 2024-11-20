@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask
+      TaskName="AppendIntoFile"
+      TaskFactory="CodeTaskFactory"
+      AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+      <ParameterGroup>
+        <FilePath ParameterType="System.String" Required="true" />
+        <Text ParameterType="System.String" Required="true" />
+      </ParameterGroup>
+      <Task>
+        <Using Namespace="System" />
+        <Using Namespace="System.IO" />
+        <Code Type="Fragment" Language="cs">
+          <![CDATA[
+              using (StreamWriter sw = File.AppendText(FilePath))
+                sw.WriteLine(Text);
+              ]]>
+        </Code>
+      </Task>
+  </UsingTask>
+
+  <Target Name="GenerateIndexHtml" BeforeTargets="RenameMsi">
+    
+    <WixAssignCulture
+      Cultures="$(Cultures)"
+      Files="@(EmbeddedResource)">
+      <Output TaskParameter="CultureGroups" ItemName="MyCultureGroup" />
+    </WixAssignCulture>
+    
+    <!--delete destination base html version file (if exist)-->
+    <Delete
+      Files="$(TargetDir)\index.html"
+      ContinueOnError="WarnAndContinue"/>
+
+    <AppendIntoFile FilePath="$(TargetDir)\index.html" Text="&lt;html&gt;&lt;body&gt;&lt;pre&gt;" />
+    <!-- Build an itemgroup of outputs -->
+    <CreateItem
+      Include="$(TargetDir)%(CultureGroup.OutputFolder)$(TargetName)$(TargetExt)">
+      <Output TaskParameter="Include"
+              ItemName="_TargetPathItems"/>
+    </CreateItem>
+    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="AddTargetNameToHtml" Properties="MyMSI=%(_TargetPathItems.Identity)" />
+    <AppendIntoFile FilePath="$(TargetDir)\index.html" Text="&lt;/pre&gt;&lt;/body&gt;&lt;/html&gt;" />
+  </Target>
+
+  <Target Name="AddTargetNameToHtml" Condition="Exists($(MyMSI))" >
+    <ReadMsiPropertyValue MsiFile="$(MyMSI)" MsiProperty="FullProductName" ContinueOnError="WarnAndContinue">
+      <Output TaskParameter="MsiPropertyValue" PropertyName="MyFullProductName" />
+    </ReadMsiPropertyValue >
+    <Message Text="msi : $(MyMSI)" Importance="high"/>
+    <Message Text="product name : $(MyFullProductName).msi" Importance="high"/>
+    <!--<Message Text="poging 1:  $([System.IO.Path]::Combine(https://dpcbuild.deltares.nl/repository/download, %7Bsystem.teamcity.buildType.id%7D, %7Bteamcity.build.id%7D:id, $([MSBuild]::MakeRelative($(TargetDir), $([System.IO.Path]::GetDirectoryName('$(MyMSI)')))), installerLogs, $(MyFullProductName)_versions.html))&quot;&gt;$(MyFullProductName) version information&lt;/a&gt;" Importance="high" Condition="'$(BUILD_NUMBER)' != ''"/>-->
+    <Message Text="url:  $([System.IO.Path]::Combine(https://dpcbuild.deltares.nl/repository/download, $(BUILD_TYPE_EXT_ID) , $(BUILD_ID):id, $([MSBuild]::MakeRelative($(TargetDir), $([System.IO.Path]::GetDirectoryName('$(MyMSI)')))), installerLogs, $(MyFullProductName)_versions.html))&quot;&gt;$(MyFullProductName) version information&lt;/a&gt;" Importance="high" Condition="'$(BUILD_TYPE_EXT_ID)' != '' AND '$(BUILD_ID)' != '' "/>
+    <AppendIntoFile FilePath="$(TargetDir)\index.html" Text="&lt;a href=&quot;$([System.IO.Path]::Combine(https://dpcbuild.deltares.nl/repository/download, $(BUILD_TYPE_EXT_ID), $(BUILD_ID):id, $([MSBuild]::MakeRelative($(TargetDir), $([System.IO.Path]::GetDirectoryName('$(MyMSI)')))), installerLogs, $(MyFullProductName)_versions.html))&quot;&gt;$(MyFullProductName) version information&lt;/a&gt;" Condition="'$(BUILD_TYPE_EXT_ID)' != '' AND '$(BUILD_ID)' != '' " ContinueOnError="WarnAndContinue"/>
+    <!--<AppendIntoFile FilePath="$(TargetDir)\index.html" Text="&lt;a href=&quot;$([System.IO.Path]::Combine(https://dpcbuild.deltares.nl/repository/download, BUILD_TYPE_EXT_ID , BUILD_ID:id, $([MSBuild]::MakeRelative($(TargetDir), $([System.IO.Path]::GetDirectoryName('$(MyMSI)')))), installerLogs, $(MyFullProductName)_versions.html))&quot;&gt;$(MyFullProductName) version information&lt;/a&gt;" Condition="'$(BUILD_NUMBER)' != ''" ContinueOnError="WarnAndContinue"/>-->
+    <AppendIntoFile FilePath="$(TargetDir)\index.html" Text="&lt;a href=&quot;$([System.IO.Path]::Combine($([MSBuild]::MakeRelative($(TargetDir), $([System.IO.Path]::GetDirectoryName('$(MyMSI)')))), $(MyFullProductName)_versions.html))&quot;&gt;$(MyFullProductName) version information&lt;/a&gt;" Condition="'$(BUILD_NUMBER)' == ''" ContinueOnError="WarnAndContinue"/>
+  </Target>
+  
+</Project>

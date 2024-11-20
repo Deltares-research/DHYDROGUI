@@ -57,11 +57,33 @@ $RECYCLE.BIN/
 
 # AcceptanceModels folder containing the test data for the acceptance tests
 AcceptanceModels
+AcceptanceModelsRTCFMDimrXmlBased
+
 
 # Automatically generated
 src/DeltaShell.Dimr/drtc_xsd/rtcRuntimeConfig.cs
 src/DeltaShell.Dimr/dimr_xsd/dimr.cs
+src/DeltaShell.Plugins.DelftModels.RTCShapes/Xsd/rtcShapesConfig.cs
 .idea/
+
+# Ranorex
+[Rr]eports
+*.rxlog
+*.rxlog.data
+*.rxuser
+*.pref
+*.rximg
+ranorex/docs/main.aux
+ranorex/docs/main.log
+ranorex/docs/main.out
+ranorex/docs/main.pdf.rej
+ranorex/docs/main.synctex.gz
+ranorex/test-data
+.gitattributes
+ranorex/RanorexAutomationHelpers/packages.config
+ranorex/RanorexAutomationHelpers/Ranorex Automation Helpers.csproj
+ranorex/RanorexAutomationHelpers/packages.config
+
 
 # Installer generated
 HarvestedDeltaShellFiles.wxs

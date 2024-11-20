@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <!--WAQ-->
+  <File Id="DWater_Quality_Input_File_Description" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Input_File_Description.pdf"/>
+  <File Id="DWater_Quality_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_User_Manual.pdf"/>
+  <File Id="DWater_Quality_Mass_Balances" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Mass_Balances.pdf"/>
+  <File Id="DWater_Quality_Tools" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Tools.pdf"/>
+  <File Id="DWater_Quality_Open_Proc_Lib_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Open_Proc_Lib_User_Manual.pdf"/>
+  <File Id="DWater_Quality_Sediment_Water_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Sediment_Water_User_Manual.pdf"/>
+
+  <!-- PLCT -->
+  <File Id="DWater_Quality_Processes_Library_Tables" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Processes_Library_Tables.pdf"/>
+  <File Id="DWater_Quality_Processes_Technical_Reference_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Processes_Technical_Reference_Manual.pdf"/>
+  <File Id="DWater_Quality_PLCT_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_PLCT_User_Manual.pdf"/>
+
+  <!--DIDO-->
+  <File Id="DWater_Quality_DIDO_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_DIDO_User_Manual.pdf"/>
+
+  <!--PART-->
+  <File Id="DParticle_Tracking_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Particle_Tracking_User_Manual.pdf"/>
+
+</Include>

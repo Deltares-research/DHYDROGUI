@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Ribbon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
+             mc:Ignorable="d" Width="1004.574" Height="168" Background="White">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/Fluent;Component/Themes/generic.xaml" />
+    </UserControl.Resources>
+    <fluent:Ribbon Name="RibbonControl" x:FieldModifier="private">
+        <fluent:Ribbon.ContextualGroups>
+            <fluent:RibbonContextualTabGroup Header="GIS" Visibility="Visible" Name="geospatialContextualGroup" Background="Green" BorderBrush="Green" />
+            <fluent:RibbonContextualTabGroup Header="Cross-Sections" Visibility="Visible" Name="crossSectionContextualGroup" Background="MediumBlue" BorderBrush="MediumBlue" />
+        </fluent:Ribbon.ContextualGroups>
+
+        <fluent:RibbonTabItem Header="Map" x:Name="tabRegion" Group="{Binding ElementName=geospatialContextualGroup}" ReduceOrder="HydroRegion,HydroNetwork,DrainageBasin,NetworkCoverage,Analysis" fluent:KeyTip.Keys="M">
+
+            <fluent:RibbonGroupBox Header="Area" x:Name="Area2D" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">
+                <fluent:ToggleButton x:Name="ButtonAddNewThinDam2D" Header="Thin dam" ToolTip="Add new thin dam (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\thindam.png" Click="ButtonAddNewThinDam_Click" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddNewFixedWeir2D" Header="Fixed weir" ToolTip="Add new fixed weir (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\fixedweir.png" Click="ButtonAddNewFixedWeir_Click" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddNewObsPoint2D" Header="Observation point" ToolTip="Add new observation point (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Observation.png" Click="ButtonAddNewObsPoint2D_Click" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddNewObsCs2D" Header="Observation cross section" ToolTip="Add new observation cross section (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\observationcs2d.png" Click="ButtonAddNewObsCs2D_Click" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddNewPump2D" Header="Pump" ToolTip="Add new pump (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\PumpSmall.png" Click="ButtonAddNewPump2D_Click" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddNewWeir2D" Header="Weir" ToolTip="Add new structure (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Weir.png" Click="ButtonAddNewWeir2D_Click" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddNewLandBoundary2D" Header="Land boundary" ToolTip="Add new land boundary (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\landboundary.png" Click="ButtonAddNewLandBoundary_Click" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddNewDryPoint2D" Header="Dry point" ToolTip="Add new dry point (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\dry_point.png" Click="ButtonAddNewDryPoint_Click" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddNewDryArea2D" Header="Dry area" ToolTip="Add new dry area (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\dry_area.png" Click="ButtonAddNewDryArea_Click" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddNewEnclosure2D" Header="Enclosure" ToolTip="Add new enclosure (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\enclosure.png" Click="ButtonAddNewEnclosure_Click" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddBridgePillar" Header="Bridge Pillar" ToolTip="Add new bridge pillar" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\BridgeSmall.png" Click="ButtonAddBridgePillar_Click" SizeDefinition="Small,Small,Small" />
+
+            </fluent:RibbonGroupBox>
+        </fluent:RibbonTabItem>
+    </fluent:Ribbon>
+</UserControl>

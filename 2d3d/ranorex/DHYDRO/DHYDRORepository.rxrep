@@ -1,0 +1,3837 @@
+﻿<repository
+id="1172ad89-feac-41dc-8339-48a2c92780c2"
+name="DHYDRORepository">
+	<codegen
+	classname="DHYDRORepository"
+	namespace="DHYDRO">
+	</codegen>
+	<rootfolder
+	capname="unknown"
+	id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+	isrooted="True"
+	name="Root"
+	searchtimeout="0ms"
+	usecache="False">
+		<appfolder
+		addcaps="form,uiautomation,nativewindow"
+		capname="form"
+		id="5f493879-0a9c-4803-868d-30588b52aa76"
+		isrooted="True"
+		name="DSWindow"
+		refimgid="d67a47f6-8326-4092-8668-5bd58790d37f"
+		searchtimeout="120000ms"
+		usecache="True">
+			<folder
+			capname="container"
+			id="68071746-e297-47af-a98d-4a43baf2ca32"
+			isrooted="True"
+			name="ToolBarPanel"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="button,wpfelement,wpfgroupelement"
+				capname="button"
+				id="8d1f49a2-e25b-4cbc-b382-7738adef622b"
+				name="NewQuickAccessButton"
+				refimgid="04681a5b-8eeb-4e25-8557-7fb9eda90421"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//container[@automationid='PART_ToolBarPanel']/button[1]
+				</item>
+				<item
+				addcaps="button,wpfelement,wpfgroupelement"
+				capname="button"
+				id="78b3e34a-6de8-41b4-aad1-382393c49c84"
+				name="SaveQuickAccessButton"
+				refimgid="04681a5b-8eeb-4e25-8557-7fb9eda90421"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//container[@automationid='PART_ToolBarPanel']/button[3]
+				</item>
+				<basepath>
+					/form[@title~'Delta Shell']//container[@automationid='PART_ToolBarPanel']
+				</basepath>
+			</folder>
+			<folder
+			capname="list"
+			id="96c1634c-1c09-4060-806c-771a35700c2c"
+			isrooted="True"
+			name="RibbonTabControl"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="text,wpfelement,wpfgroupelement"
+				capname="text"
+				id="e3ec4f59-854c-446d-96e0-99ab975bb292"
+				name="GenericTab"
+				refimgid="04863fec-e9b3-4758-a399-bd736bd9f052"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/text[@caption=$TabName]
+				</item>
+				<item
+				addcaps="text,wpfelement,wpfgroupelement"
+				capname="text"
+				id="b908c2f0-e064-4dfc-8a8f-1acf77f37e86"
+				name="MapTab"
+				refimgid="04863fec-e9b3-4758-a399-bd736bd9f052"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/text[@caption='Map']
+				</item>
+				<folder
+				capname="container"
+				id="8be4c1eb-e483-44e0-9434-9d3c82fbd519"
+				isrooted="True"
+				name="Ribbon"
+				searchtimeout="30000ms"
+				usecache="False">
+					<folder
+					capname="list"
+					id="6203a48f-3ce9-4486-9c8c-d1147ac8b847"
+					isrooted="True"
+					name="FM_Region_2D___3D"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="cf3a87ac-0a92-4e3a-8b8c-d4f294c230a5"
+						name="AddBoundaryButton"
+						refimgid="5f947feb-76c1-4571-99e6-6be6d2c6c1b7"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='FM Region 2D / 3D']/button[@text='Add Flow Boundary']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='FM Region 2D / 3D']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="d8e4a152-e73c-49c8-a352-56cc2c8feaac"
+					isrooted="True"
+					name="Waves_Region_2D__3D"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="ae5ffa17-4370-42c1-a0f7-bed0a3093d81"
+						name="AddObstacleButton"
+						refimgid="5f947feb-76c1-4571-99e6-6be6d2c6c1b7"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Waves Region 2D / 3D']/button[@automationid='ButtonAddObstacle']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="87642521-76bd-485f-b82e-3ced99f7fddd"
+						name="AddBoundaryButton"
+						refimgid="856438f8-cbae-47f7-8a93-1d4c9fc068c2"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Waves Region 2D / 3D']/button[@automationid='ButtonAddBoundary']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Waves Region 2D / 3D']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="1fe1667d-bcf0-496b-9cfc-115011d9ba9b"
+					isrooted="True"
+					name="Decorations"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="button"
+						id="b8295716-abb4-47fd-8213-0a02952d4ac7"
+						name="LegendeButton"
+						refimgid="952186ce-0c11-4671-a066-8eb2fd3c2f18"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Decorations']/button[@header='Legend']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Decorations']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="62682a85-92c4-43c4-9b73-8d14a228256f"
+					isrooted="True"
+					name="Add"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="ae4d80d9-6cae-444e-99c9-5cf055705826"
+						name="NewModelButton"
+						refimgid="6591ebfe-f5bc-4dce-94cd-a7732f5b8f8f"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Add']/button[@automationid='ButtonAddModel']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="button"
+						id="f8614208-9771-46d8-9075-31ada6aaf7b8"
+						name="PolygonButton"
+						refimgid="f7cff048-97ac-4a65-a10b-517e08493070"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Add']/button[@automationid='ButtonPolygonDraw']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="ba572ca3-a430-40f9-ad29-6e6577ae5073"
+						name="ButtonImport"
+						refimgid="8ec3202a-4164-400a-9fa1-910571a2c635"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Add']/button[@automationid='ButtonImport']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Add']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="436ea7c9-2fe1-4912-a6c6-020166967255"
+					isrooted="True"
+					name="SpatialOperationsGroup"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="3fb4f3b8-e141-4027-bf2b-45cd42f8239f"
+						name="ImportSamplesButton"
+						refimgid="9eeab777-0449-4ef4-8352-1e9d0b9aa835"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']/button[@automationid='ButtonImportSamples']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="button"
+						id="a3bc1a5d-dbbd-4bef-ba2d-e16a9f601100"
+						name="InterpolateButton"
+						refimgid="5545c9e7-fab5-43b4-8955-62763c37f6d3"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']/button[@automationid='DropDownButtonInterpolate']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="button"
+						id="86bf156a-f81d-46a2-acd9-f4eac1a2c9f9"
+						name="SetValueButton"
+						refimgid="bdf27d3d-6678-46b3-82fc-efec892ad8b7"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']/button[@text='Set Value']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Spatial Operations']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="5b61846c-63ea-42bf-ad55-873c0e54542b"
+					isrooted="True"
+					name="Area"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="9c6f8de4-a19e-47d0-b5cc-af7794df9c56"
+						name="AddObservationCrossSectionButton"
+						refimgid="b40ab5b0-e17a-41aa-9041-818fd23ef65f"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Area']/button[@automationid='ButtonAddNewObsCs2D']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="b4c03b6b-e716-4ec6-b4de-88bf12bed252"
+						name="AddObservationPointButton"
+						refimgid="86c714a1-c66f-4671-9332-038ea57c8640"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Area']/button[@automationid='ButtonAddNewObsPoint2D']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Area']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="ae76ad76-d4bd-4ec6-b9da-f3c0db4b39f4"
+					isrooted="True"
+					name="Tools"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="menubar,wpfelement,wpfgroupelement"
+						capname="button"
+						id="21ece29f-b279-416c-92ee-f9acca7a2060"
+						name="MainWindowRibbon"
+						refimgid="977c867c-c6e6-422c-8121-10f39e946926"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@automationid='ButtonMapZoomUsingRectangle']
+						</item>
+						<item
+						addcaps="tree,wpfelement,wpfgroupelement"
+						capname="button"
+						id="d5305c70-3765-4c71-ad36-e30899fb85e8"
+						name="ZoomToExtentButtom"
+						refimgid="4d8b2cab-0e1c-4686-82e6-687d8c88532a"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@automationid='ButtonMapZoomToExtent']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="adda2eda-1125-4082-a3e7-ac9dbab5c7e5"
+						name="SelectButton"
+						refimgid="6a52ea6e-1fc6-4451-893c-07ba4a4e2c43"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@header='Select']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="button"
+						id="a0d39bda-0b34-4cce-9eee-5a71b11de28b"
+						name="QueryTimeSeries"
+						refimgid="751b2ab7-1ea6-4358-8d88-4dc8fe93c7e6"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']/button[@header='Query Time Series']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Tools']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="99978f5f-e622-4698-88fe-8eecc8146c36"
+					isrooted="True"
+					name="Edit"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="abbc5b90-1546-4cf4-b2b9-f5d1c4f633a0"
+						name="SpatialLayerCombobox"
+						refimgid="ebd1af5e-4935-48e0-8ee5-0bc7d9ffefd6"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Edit']//combobox
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Edit']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="46f2b061-1724-494f-8fe4-fdb998ef4d14"
+					isrooted="True"
+					name="Water_Quality"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="button"
+						id="48fd1fc1-589e-4f55-861f-327aaac5b839"
+						name="AddLoadButton"
+						refimgid="304361bf-d378-4cc8-8579-e1f652abb998"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Water Quality']/button[@automationid='ButtonAddLoad']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container/list[@header='Water Quality']
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']/container
+					</basepath>
+				</folder>
+				<basepath>
+					/form[@title~'Delta Shell']//list[@name='PART_RibbonTabControl']
+				</basepath>
+			</folder>
+			<folder
+			capname="list"
+			id="520b4907-8937-43dd-96c3-3011ef75726a"
+			isrooted="True"
+			name="BackstageTabControl"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="text,wpfelement,wpfgroupelement"
+				capname="text"
+				id="a68fb73a-7efc-4c61-9b11-a931d9c30d45"
+				name="FileTab"
+				refimgid="a3c1ea64-ccb4-47c9-b13d-93837e2fd979"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/text[@caption='File']
+				</item>
+				<item
+				addcaps="text,wpfelement,wpfgroupelement"
+				capname="button"
+				id="824b9629-3609-4dd7-91f1-f7ec431fac1b"
+				name="SaveAsButton"
+				refimgid="42dff791-6678-40bb-9a6e-ad26633b7a5e"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/button[@automationid='ButtonMenuFileSaveProjectAs']
+				</item>
+				<item
+				addcaps="text,wpfelement,wpfgroupelement"
+				capname="button"
+				id="2e717603-c5e8-4478-9c0f-b1b6cc77c845"
+				name="CloseButton"
+				refimgid="f6627f6d-1966-4dae-a6a0-8e442d2342d9"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/button[@automationid='ButtonMenuFileCloseProject']
+				</item>
+				<item
+				addcaps="container,wpfelement,wpfgroupelement"
+				capname="container"
+				id="dc98ff1c-2a46-470e-a0e1-e039f6cb2fbb"
+				name="OpenButton"
+				refimgid="8f53eff6-7004-4bae-9df8-0174e0b1a09e"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']/container[@caption='Open']
+				</item>
+				<folder
+				capname="container"
+				id="c17b5989-b70d-4afd-8881-405d3f19c9c8"
+				isrooted="True"
+				name="BackstageContentControl"
+				refimgid="243cc397-a2e5-4afc-9954-f2970d6933c2"
+				searchtimeout="30000ms"
+				usecache="False">
+					<item
+					addcaps="text,wpfelement,wpfgroupelement"
+					capname="text"
+					id="5bff030b-d5c6-4f52-88de-075eeb0a107e"
+					name="BrowseButton"
+					refimgid="5ecc29b0-060b-41c4-9426-351d77b32a24"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']//container[@automationid='PART_SelectedContentGrid']//text[@caption='Browse']
+					</item>
+					<basepath>
+						/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']//container[@automationid='PART_SelectedContentGrid']
+					</basepath>
+				</folder>
+				<basepath>
+					/form[@title~'Delta Shell']//list[@automationid='BackstageTabControl']
+				</basepath>
+			</folder>
+			<folder
+			capname="list"
+			id="e4ccab27-b381-4c73-8926-25868eeac74b"
+			isrooted="True"
+			name="StartScreenTabControl"
+			refimgid="b1495b95-e16d-4bb1-818e-c637535a8383"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="button,wpfelement,wpfgroupelement"
+				capname="button"
+				id="938a7dc3-c4ba-420f-91e0-f332c923eba3"
+				name="BackButton"
+				refimgid="6f4079be-ab94-4c37-8197-253a65add19f"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//list[@automationid='StartScreenTabControl']/container[@automationid='PART_LeftContentGrid']/button[1]
+				</item>
+				<basepath>
+					/form[@title~'Delta Shell']//list[@automationid='StartScreenTabControl']
+				</basepath>
+			</folder>
+			<folder
+			capname="form"
+			id="f2ece247-7d3d-4c92-bb8a-86bdaad9af77"
+			isrooted="True"
+			name="DocumentsPaneLeft"
+			searchtimeout="30000ms"
+			usecache="True">
+				<folder
+				capname="tree"
+				id="253da277-463e-47ff-83b9-2a4b09e9f827"
+				isrooted="True"
+				name="ProjectTree"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="treeitem"
+					id="4926a31b-1fe7-4a0a-8b0e-499a6063c231"
+					isrooted="True"
+					name="RootTreeItem"
+					searchtimeout="30000ms"
+					usecache="False">
+						<folder
+						capname="treeitem"
+						id="ed768f7b-76fa-421b-b8fa-59fcd7e7ca4f"
+						isrooted="True"
+						name="Model"
+						searchtimeout="30000ms"
+						usecache="False">
+							<folder
+							capname="treeitem"
+							id="a296d5fa-9ba8-463e-8284-d939a0ab8235"
+							isrooted="True"
+							name="BoundaryConditions"
+							searchtimeout="30000ms"
+							usecache="False">
+								<item
+								addcaps="treeitem,accessible,accessibletreeitem"
+								capname="treeitem"
+								id="c50e5b83-3150-4f34-b001-391b203abe2a"
+								name="Boundary"
+								refimgid="24a271d7-2b20-4e14-bb40-77e268ce2ebc"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem/treeitem[@accessiblename='Boundary Conditions']/treeitem[@accessiblename=$boundaryName]
+								</item>
+								<basepath>
+									/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem/treeitem[@accessiblename='Boundary Conditions']
+								</basepath>
+							</folder>
+							<item
+							addcaps="treeitem,accessible,accessibletreeitem"
+							capname="treeitem"
+							id="307ef372-02d8-4316-a294-c11a3f9cfbed"
+							name="GenericInputItem"
+							refimgid="f777eebd-4320-4874-8f43-bde43ccc4923"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem/treeitem[@accessiblename=$inputOutput]/treeitem[@accessiblename=$itemName]
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem
+							</basepath>
+						</folder>
+						<item
+						capname="treeitem"
+						id="e523434d-5228-4615-a475-a16752ae51db"
+						name="GenericTreeItemNode"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem?/treeitem?/treeitem?/treeitem[@accessiblename=$NameTreeItemNode]
+						</item>
+						<item
+						addcaps="treeitem,accessible,accessibletreeitem"
+						capname="treeitem"
+						id="c18f2c7f-4a32-4e53-9a5f-71d56e85112b"
+						name="Grid"
+						refimgid="887a5ac4-7e31-47e2-983e-60c98cb8dbb1"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem/treeitem/treeitem[@accessiblename='Grid']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem
+						</basepath>
+					</folder>
+					<item
+					addcaps="treeitem,accessible,accessibletreeitem"
+					capname="treeitem"
+					id="ba0d2420-79da-469e-8221-f622370931b0"
+					name="Project1"
+					refimgid="190476b0-b7b7-40de-a005-6fb6d4ed4d0a"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree/treeitem[@accessiblerole='OutlineItem']
+					</item>
+					<basepath>
+						/form[@title~'Delta Shell']//container[@controlname='ProjectTreeView']/tree/tree
+					</basepath>
+				</folder>
+				<folder
+				capname="container"
+				id="b33e5f12-b8c5-455a-95bb-4b329aa57a32"
+				isrooted="True"
+				name="PropertiesGrid"
+				refimgid="6da0c5c9-3b03-4cfe-94b0-1df37f7efca6"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="table"
+					id="57598b26-1135-463a-895f-ec27fff1e0b0"
+					isrooted="True"
+					name="PropertyTable"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="text,control,nativewindow"
+						capname="unknown"
+						id="abee9d83-340f-4744-9e0e-19bbd43408aa"
+						name="Edit"
+						refimgid="8ddfaeb4-7054-4db4-b28f-a4f7f23755e6"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//container[@controlname='PropertyGrid']//table/element[@name=$PropertyItem]
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//container[@controlname='PropertyGrid']//table
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//container[@controlname='PropertyGrid']
+					</basepath>
+				</folder>
+				<basepath>
+					/form[@title~'Delta Shell']
+				</basepath>
+			</folder>
+			<folder
+			capname="unknown"
+			id="54e31427-43f2-45d0-823a-1118700a6b06"
+			isrooted="True"
+			name="DocumentsPaneCentral"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="button,wpfelement,wpfgroupelement"
+				capname="button"
+				id="dbee5d78-a953-416d-a1a2-1aef3a4f68bc"
+				name="DocumentCloseButton"
+				refimgid="a2b010f0-9f44-4cda-a5a1-8c9d6b0fdb04"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpage[@selected='true']/button[@automationid='DocumentCloseButton']
+				</item>
+				<item
+				addcaps="button,accessible"
+				capname="button"
+				id="102f5611-002e-40e1-9cd0-9ceb1d0ea927"
+				name="PageDown"
+				refimgid="a45ba9b6-5043-4d24-993d-be9bcb8c1f8f"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//button[@text='Page Down']
+				</item>
+				<folder
+				capname="container"
+				id="38307eda-4f71-42f9-b0e5-b138d9c5f31b"
+				isrooted="True"
+				name="MapView"
+				searchtimeout="30000ms"
+				usecache="True">
+					<item
+					addcaps="unknown,control,nativewindow"
+					capname="unknown"
+					id="b00bebdb-4d2d-43c3-824c-260e4330d8c7"
+					name="MapControl"
+					refimgid="dd9a8732-d56c-4ec0-9700-236be0179fe4"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']/element
+					</item>
+					<folder
+					capname="tabpagelist"
+					id="687aa761-e846-4028-9104-221eac220923"
+					isrooted="True"
+					name="AttributeTableTab"
+					refimgid="7cb98304-4c52-4f0e-bb73-f00925d03054"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="145b8214-90f4-47a6-95c4-bce87c9aa5d5"
+						name="ButtonDocumentClose"
+						refimgid="a4ebaab6-cf6d-4a46-aa5d-eea3b10394ff"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist/button/container?/tabpage/text[@caption=$TextAttributeTable]/../button
+						</item>
+						<folder
+						capname="table"
+						id="7c896bc3-0673-4bce-b9c0-002b1b4660d0"
+						isrooted="True"
+						name="AttributeTable"
+						refimgid="ca48fde3-72eb-4ba5-a5d1-364ecba32b78"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							addcaps="cell,accessible"
+							capname="cell"
+							id="befe169b-b3cb-4d94-9c03-18bfb15c8b31"
+							name="AttributeTableCell"
+							refimgid="d77ed01b-9119-4c61-a774-7e2e8f715bd7"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//table[@accessiblerole='Table']//row[$rowNumber]/cell[@accessiblename&gt;$columnName]
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist//table[@accessiblerole='Table']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']//tabpagelist
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MapView']
+					</basepath>
+				</folder>
+				<folder
+				capname="tabpagelist"
+				id="d3a2f2a5-5af3-4efa-a3ac-f56dc54ecef0"
+				isrooted="True"
+				name="ModelSettingsTabControl"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="container"
+					id="9e70b14e-cfb1-46e0-bb3e-9fbe527b21e3"
+					isrooted="True"
+					name="Tabs"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="cf4e8c0d-c556-481d-a546-6882444c36b7"
+						name="GenericSubTab"
+						refimgid="40657279-169c-4a4b-8ac0-7cffc9e3ac14"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/container[@automationid='HeaderPanel']/tabpage/text[@caption=$NameSubTab]
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/container[@automationid='HeaderPanel']
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="a89e2180-5a4e-4a8f-a56e-63b62be7dd82"
+					isrooted="True"
+					name="General"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="a47ead53-23c2-44aa-bf82-38fe71517a71"
+						name="CoordinateSystemButton"
+						refimgid="cf3c83e6-7adb-4ea7-878d-dae651f76207"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//button[@automationid='CoordinateSystemButton']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="96a66752-e42e-43ca-bb59-1e18bdb5891f"
+						name="ProjectNameField"
+						refimgid="9cacbe68-20c7-4a11-81e5-af6dd277e295"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='ProjectNameTextBox']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="61d395c2-c1de-4d82-ad82-e874adc21dd8"
+						name="ProjectNumberField"
+						refimgid="53458a98-8633-4813-9c9c-313b4f1c0fea"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='ProjectNrTextBox']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="f40b523e-d6ee-4f18-9378-8bc186c2c069"
+						name="ReferenceDateField"
+						refimgid="23d87335-8810-4af0-b607-958520be8466"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='ReferenceDate']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="82d40b8b-4bf1-49e9-9636-15319ed36b00"
+					isrooted="True"
+					name="Spectral_Domain"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="combobox,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="600b7f62-22ec-4bf2-ad5a-f6b466b485b7"
+						name="DirectionalSpaceComboBox"
+						refimgid="e8c522de-e96a-4ced-9b0d-655ba28e9112"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//combobox[@automationid='DirSpace']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="fcb083a7-38a9-4fb1-8dc2-cb05733da2df"
+						name="NumberOfDirectionsField"
+						refimgid="9ed29cde-f63a-4e53-8d57-bec7e739a467"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='NDirTextBox']
+						</item>
+						<item
+						capname="text"
+						id="9a09f8b8-32ee-4265-9eed-8d982c2433d7"
+						name="NumberOfFrequenciesField"
+						refimgid="c5a69bf5-7ce5-4129-a54c-218bee404847"
+						robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/element"
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='NFreqTextBox']
+						</item>
+						<item
+						capname="text"
+						id="0378283b-32fd-438a-affe-29c7ee8d6274"
+						name="MinFrequenceField"
+						refimgid="dcfa377d-9b24-42e4-8bb1-2515b32064b6"
+						robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/element"
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='FreqMinTextBox']
+						</item>
+						<item
+						capname="text"
+						id="7c020060-55ce-4c92-be83-1de3ca10043e"
+						name="MaxFrequenceField"
+						refimgid="77d2da09-a93f-4bb2-b1e4-00bbedc24f99"
+						robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/element"
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='FreqMaxTextBox']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="dfd7c51e-2c51-4c40-9032-cc507f7fbec1"
+					isrooted="True"
+					name="Physical_Processes"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="d3de9c91-0d53-407e-815b-5b5602d421c2"
+						name="WaterLevelCorrectionField"
+						refimgid="0af4420a-7eb7-4c12-967c-5a1b0ac1680f"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='WaterLevelCorrectionTextBox']
+						</item>
+						<item
+						addcaps="combobox,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="38c76772-61ae-479d-879a-7d19f5a180ba"
+						name="GenModePhysComboBox"
+						refimgid="ed3f9db5-6bfc-48b2-a120-9c22d27578a3"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//combobox[@automationid='GenModePhys']
+						</item>
+						<item
+						addcaps="checkbox,wpfelement,wpfgroupelement"
+						capname="checkbox"
+						id="310c5889-5fd0-4b81-81a0-979de2aa0711"
+						name="WindGrowth"
+						refimgid="2f6bd4c1-9c46-49aa-bdb1-deb36bbb017b"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//checkbox[@automationid='WindGrowth']
+						</item>
+						<item
+						addcaps="checkbox,wpfelement,wpfgroupelement"
+						capname="checkbox"
+						id="66e2735d-8785-4c26-9463-86e498280b99"
+						name="Breaking"
+						refimgid="3c3d35e3-5e74-4b51-8b9e-14a60a9a47ed"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//checkbox[@automationid='Breaking']
+						</item>
+						<item
+						addcaps="checkbox,wpfelement,wpfgroupelement"
+						capname="checkbox"
+						id="3c86fd2c-6030-45c2-aa97-97a85173d3cc"
+						name="Quadruplets"
+						refimgid="2f465898-4190-4475-936a-6e0e6e864fd6"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//checkbox[@automationid='Quadruplets']
+						</item>
+						<item
+						addcaps="combobox,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="941e7505-413e-4760-afd7-63169de79ae3"
+						name="WhiteCappingComboBox"
+						refimgid="9ef1fc79-0907-45a6-b532-79ddaa540d29"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//combobox[@automationid='WhiteCapping']
+						</item>
+						<item
+						addcaps="checkbox,wpfelement,wpfgroupelement"
+						capname="checkbox"
+						id="034901e0-d0c5-4291-a408-933e810c50fd"
+						name="Refraction"
+						refimgid="0efffc9e-0c18-48c5-9ad1-dff6cd1de4c0"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//checkbox[@automationid='Refraction']
+						</item>
+						<item
+						addcaps="checkbox,wpfelement,wpfgroupelement"
+						capname="checkbox"
+						id="e4ba49ce-e382-475b-bce2-98cf8459c18f"
+						name="FreqShift"
+						refimgid="577bc728-1875-4860-8543-9bcf755775a7"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//checkbox[@automationid='FreqShift']
+						</item>
+						<item
+						addcaps="combobox,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="e2a4e099-9c36-4f43-a35b-3adea4a304b5"
+						name="WaveForcesComboBox"
+						refimgid="3f4894e7-d2de-480f-9887-06b04429f83c"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//combobox[@automationid='WaveForces']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="998f97cc-03c6-4a8b-bb29-5b72f7da37b2"
+						name="BedFrictionComboBox"
+						refimgid="3b82e2ac-3062-43c8-9a82-5518bdb4c06a"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//combobox[@automationid='BedFriction']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="350055e8-246f-41e1-a4ac-8ee7361b81f8"
+					isrooted="True"
+					name="Numerical_Parameters"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="2d3193ad-cd8a-442e-b460-7915f2df438e"
+						name="MaxIterTextBox"
+						refimgid="c88c7aa6-32cc-4f3d-ba6a-2397ad897b5b"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='MaxIterTextBox']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="2f206713-8a55-4e6e-b4da-37546e3933df"
+					isrooted="True"
+					name="TimeFrame"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						capname="text"
+						id="96a6380d-941a-46d0-9ec9-d7bb7ce88ee7"
+						name="InitialTimeStepField"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='DtInitTextBox']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="dd3af7bc-2c5b-4424-95bf-72e41f45eb01"
+						name="MaxCourantNrField"
+						refimgid="92455de9-548b-431a-9ec4-4f8cb275852d"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='CFLMaxTextBox']
+						</item>
+						<item
+						capname="text"
+						id="22caf7da-7f46-4f3b-960c-45900e26158d"
+						name="MaxTimeStepField"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='DtMaxTextBox']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="28b2266d-17f5-4155-ba6b-f933e428c7ff"
+						name="TimeZoneField"
+						refimgid="00e3c26b-7f95-4c8c-b638-889967022cb3"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='TzoneTextBox']
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="fc578e8f-1cb0-4edf-a290-f490104dda2c"
+						name="ReferenceTimeField"
+						refimgid="1f039b25-45e0-4d0f-9abc-deecef47356a"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='RefDate']
+						</item>
+						<item
+						capname="text"
+						id="bbd599b8-a499-4b94-b128-cba2a03f15b7"
+						name="StartTimeField"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='StartDateTime']
+						</item>
+						<item
+						capname="text"
+						id="3d9d28d0-079b-4112-b891-cea622a7f36e"
+						name="StopTimeField"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='StopDateTime']
+						</item>
+						<folder
+						capname="container"
+						id="0ec137e4-a0af-4cc4-804c-7c788ae84858"
+						isrooted="True"
+						name="UserTimeStep"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="8f78e354-9b96-4856-9e24-0850d34e5d88"
+							name="DaysField"
+							refimgid="43478fb9-c307-42bb-9688-3402eafa2918"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='User time step']/container/text[@automationid='InputFieldDays']
+							</item>
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="f79ef1e4-9173-40e5-b5e4-8484beb6554b"
+							name="HoursField"
+							refimgid="93121df5-fa35-48e8-8592-37732f29a548"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='User time step']/container/text[@automationid='InputFieldHours']
+							</item>
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="b57cbc46-9761-4052-a37b-f11f3a92a621"
+							name="MinutesField"
+							refimgid="91f8ee9a-ad98-4931-adff-c16d96f94b91"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='User time step']/container/text[@automationid='InputFieldMinutes']
+							</item>
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="7e4f8483-5881-41aa-9e05-ee668ef5db5d"
+							name="SecondsField"
+							refimgid="c19a74a5-f91e-48f4-b202-62c0f1ef93e3"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='User time step']/container/text[@automationid='InputFieldSeconds']
+							</item>
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="ab0d445b-9e2a-432a-b917-461b918dca48"
+							name="MilliSecondsField"
+							refimgid="98f4f885-7789-4665-88c0-b8ebc2b50e43"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='User time step']/container/text[@automationid='InputFieldMilliSeconds']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='User time step']/container
+							</basepath>
+						</folder>
+						<folder
+						capname="container"
+						id="53df4a6b-e3d3-41ce-89c7-113e3b3978e9"
+						isrooted="True"
+						name="NodalUpdateInterval"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="51066657-e8b7-44b5-9012-e24c045c8bdf"
+							name="DaysField"
+							refimgid="43478fb9-c307-42bb-9688-3402eafa2918"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='Nodal update interval']/container/text[@automationid='InputFieldDays']
+							</item>
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="84e61c16-09a6-4b40-8204-f55465e1ace6"
+							name="HoursField"
+							refimgid="93121df5-fa35-48e8-8592-37732f29a548"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='Nodal update interval']/container/text[@automationid='InputFieldHours']
+							</item>
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="6875d426-f730-47e4-884b-ef474adc41b9"
+							name="MinutesField"
+							refimgid="91f8ee9a-ad98-4931-adff-c16d96f94b91"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='Nodal update interval']/container/text[@automationid='InputFieldMinutes']
+							</item>
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="97fb49b0-8ea1-4ae9-8be9-cd778dcafacc"
+							name="SecondsField"
+							refimgid="c19a74a5-f91e-48f4-b202-62c0f1ef93e3"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='Nodal update interval']/container/text[@automationid='InputFieldSeconds']
+							</item>
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="3c2401c5-6212-483e-9389-a255fb391590"
+							name="MilliSecondsField"
+							refimgid="98f4f885-7789-4665-88c0-b8ebc2b50e43"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='Nodal update interval']/container/text[@automationid='InputFieldMilliSeconds']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/list/text[@caption='Nodal update interval']/container
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="e89969be-96c6-4dc5-b70b-cf1057a07cb3"
+					isrooted="True"
+					name="Initial_Conditions"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="a5a2f852-72d6-400d-867e-6a6402c442f8"
+						name="InitialWaterLevelField"
+						refimgid="0d0be099-31d4-43e4-84eb-bd1cff4b8a2a"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list//text[@automationid='WaterLevIniTextBox']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list
+						</basepath>
+					</folder>
+					<folder
+					capname="list"
+					id="c6c9440c-a8f3-4194-a871-aad4a22b6298"
+					isrooted="True"
+					name="Output_Parameters"
+					searchtimeout="30000ms"
+					usecache="True">
+						<folder
+						capname="button"
+						id="43c22bba-9e0c-4df3-90e2-72b4b6f813df"
+						isrooted="True"
+						name="Restart"
+						searchtimeout="30000ms"
+						usecache="True">
+							<item
+							addcaps="checkbox,wpfelement,wpfgroupelement"
+							capname="checkbox"
+							id="f4472336-6514-4f6d-b3a6-01f8bd75e3e0"
+							name="WriteRstFile"
+							refimgid="5ee14f7e-c54d-4a32-94d9-38b9138a4caa"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//checkbox[@automationid='WriteRstFile']
+							</item>
+							<folder
+							capname="container"
+							id="08e254d4-3c70-4a73-8092-47e1da95511f"
+							isrooted="True"
+							name="RstOutputDeltaT"
+							refimgid="b6d779e4-03bf-48c1-a7fe-26f90d30f826"
+							searchtimeout="30000ms"
+							usecache="False">
+								<item
+								addcaps="text,wpfelement,wpfgroupelement"
+								capname="text"
+								id="91b29d80-98be-42d5-9afc-24734d5d0389"
+								name="InputFieldDays"
+								refimgid="3104e84a-d4d1-4538-9561-ad0362d5432c"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']/text[@automationid='InputFieldDays']
+								</item>
+								<item
+								addcaps="text,wpfelement,wpfgroupelement"
+								capname="text"
+								id="70c197c0-1211-4e55-803e-4955322e23fd"
+								name="InputFieldHours"
+								refimgid="3d67486d-9e70-4337-9646-23373851d400"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']/text[@automationid='InputFieldHours']
+								</item>
+								<item
+								addcaps="text,wpfelement,wpfgroupelement"
+								capname="text"
+								id="e9cc391a-5cca-46aa-bb27-91c61a333225"
+								name="InputFieldMinutes"
+								refimgid="441a4da9-a7d9-4bed-8e28-2c7ef7babc48"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']/text[@automationid='InputFieldMinutes']
+								</item>
+								<item
+								addcaps="text,wpfelement,wpfgroupelement"
+								capname="text"
+								id="6a7b1e18-8fb7-4787-a2a7-4a515093895a"
+								name="InputFieldSeconds"
+								refimgid="b309a95f-2c86-4fc0-8cb2-1801ac4b2de4"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']/text[@automationid='InputFieldSeconds']
+								</item>
+								<item
+								addcaps="text,wpfelement,wpfgroupelement"
+								capname="text"
+								id="0e1ea17d-1ec6-4c50-baa4-9d271d019da1"
+								name="InputFieldMilliSeconds"
+								refimgid="ae90058a-0e0e-4401-9dfa-07e90a81db21"
+								robustPath=""
+								searchtimeout="30000ms">
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']/text[@automationid='InputFieldMilliSeconds']
+								</item>
+								<basepath>
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//container[@automationid='RstOutputDeltaT']
+								</basepath>
+							</folder>
+							<item
+							addcaps="checkbox,wpfelement,wpfgroupelement"
+							capname="checkbox"
+							id="562407d3-91bc-46e1-bf09-52007e09a92d"
+							name="SpecifyRstStart"
+							refimgid="ee6b4306-cc56-423e-af09-48fcbc0522bd"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//checkbox[@automationid='SpecifyRstStart']
+							</item>
+							<item
+							addcaps="text,wpfelement,wpfgroupelement"
+							capname="text"
+							id="b63c0915-280b-4900-9068-2caed3a89651"
+							name="RstOutputStartTimeField"
+							refimgid="b6da5696-b830-4102-bb03-b52fc1b06f52"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']//text[@automationid='RstOutputStartTime']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Restart']
+							</basepath>
+						</folder>
+						<folder
+						capname="button"
+						id="7788766e-bcde-495a-b436-7a4bf61a4b6e"
+						isrooted="True"
+						name="Other"
+						searchtimeout="30000ms"
+						usecache="True">
+							<folder
+							capname="container"
+							id="4830feb1-76e3-495f-9cdf-1d287d21d323"
+							isrooted="True"
+							name="OthersOutputGroup"
+							searchtimeout="30000ms"
+							usecache="False">
+								<basepath>
+									/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Others']/list/text[@caption=$OtherGroupCaptionName]/container
+								</basepath>
+							</folder>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Others']
+							</basepath>
+						</folder>
+						<folder
+						capname="list"
+						id="73241a1e-af1d-47b9-8e25-3e1198f66a07"
+						isrooted="True"
+						name="OutputGroup"
+						searchtimeout="30000ms"
+						usecache="True">
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header=$OutputGroupHeaderName]/list
+							</basepath>
+						</folder>
+						<folder
+						capname="button"
+						id="4ca43564-ef4c-40a9-a4cd-8eb0e1b1c16f"
+						isrooted="True"
+						name="Tables"
+						searchtimeout="30000ms"
+						usecache="True">
+							<item
+							addcaps="checkbox,wpfelement,wpfgroupelement"
+							capname="checkbox"
+							id="278405d8-a938-4eba-ac9d-b2663b007266"
+							name="WriteTable"
+							refimgid="a5a9d12c-f22c-49db-8115-23195d6ed46a"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Tables']//checkbox[@automationid='WriteTable']
+							</item>
+							<item
+							addcaps="checkbox,wpfelement,wpfgroupelement"
+							capname="checkbox"
+							id="328defa9-7aac-42eb-89e4-f345a9d19cc3"
+							name="WriteSpec1D"
+							refimgid="72b91d00-63a5-4ebb-a50b-e759399d513e"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Tables']//checkbox[@automationid='WriteSpec1D']
+							</item>
+							<item
+							addcaps="checkbox,wpfelement,wpfgroupelement"
+							capname="checkbox"
+							id="8029b431-ca10-4904-899a-ea085b335095"
+							name="WriteSpec2D"
+							refimgid="313919d3-90fe-401f-af3e-bc28937fa6c2"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Tables']//checkbox[@automationid='WriteSpec2D']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Tables']
+							</basepath>
+						</folder>
+						<folder
+						capname="button"
+						id="29ef8777-5a3d-4d27-ae96-18ac60e16d65"
+						isrooted="True"
+						name="Miscellaneous"
+						searchtimeout="30000ms"
+						usecache="True">
+							<item
+							addcaps="checkbox,wpfelement,wpfgroupelement"
+							capname="checkbox"
+							id="98fd4285-536d-4257-beba-de4477e7e3cd"
+							name="MapWriteNetCDF"
+							refimgid="6504d9db-2a82-4c56-a8dd-d4a8cc6bf425"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Miscellaneous']//checkbox[@automationid='MapWriteNetCDF']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list/button[@header='Miscellaneous']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']/list
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//tabpagelist[@automationid='MainTabControl']
+					</basepath>
+				</folder>
+				<folder
+				capname="container"
+				id="1a2ee6df-b5aa-4103-8a30-a4f0111eb965"
+				isrooted="True"
+				name="ValidationView"
+				searchtimeout="30000ms"
+				usecache="True">
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='ValidationView']
+					</basepath>
+				</folder>
+				<folder
+				capname="unknown"
+				id="4472ce02-7241-4c6a-aafb-04e6a823e74b"
+				isrooted="True"
+				name="WavesTimeFrameEditor"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="table"
+					id="65e23b4f-33d1-4eab-9cc5-6d0f272a1ed7"
+					isrooted="True"
+					name="TimePointsTable"
+					searchtimeout="30000ms"
+					usecache="True">
+						<folder
+						addcaps="row,accessible"
+						capname="row"
+						id="8bd3d88d-59d7-467b-b534-dd4617d03a8e"
+						isrooted="True"
+						name="Row1"
+						searchtimeout="30000ms"
+						usecache="True">
+							<item
+							addcaps="cell,accessible"
+							capname="cell"
+							id="890ce63a-6c9a-46a8-b1c0-1fff75245e2f"
+							name="TimeRow0"
+							refimgid="657f3fa8-0c58-4b97-bc68-a383e0550931"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Time Points']//table//row[1]/cell[1]
+							</item>
+							<item
+							addcaps="cell,accessible"
+							capname="cell"
+							id="649c6fd2-b39f-4a70-b7d4-778d687a5e81"
+							name="WaterLevelMRow0"
+							refimgid="356f56ba-dc6d-4d4e-8e8a-cf0e5ccab5f4"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Time Points']//table//row[1]/cell[2]
+							</item>
+							<item
+							addcaps="cell,accessible"
+							capname="cell"
+							id="28c1407f-daec-4eed-b1a2-5824edc5cd85"
+							name="VelocityXMSRow0"
+							refimgid="c0587906-17ca-44eb-bce5-a246a6a36dc5"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Time Points']//table//row[1]/cell[3]
+							</item>
+							<item
+							addcaps="cell,accessible"
+							capname="cell"
+							id="a975f932-e135-4a72-8814-714b92649f97"
+							name="VelocityYMSRow0"
+							refimgid="deb7e5cb-b6da-482c-833a-f4ed312de7c7"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Time Points']//table//row[1]/cell[4]
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Time Points']//table//row[1]
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Time Points']//table
+						</basepath>
+					</folder>
+					<folder
+					capname="text"
+					id="abe3d517-9ed6-4ba7-910a-3d880b633a36"
+					isrooted="True"
+					name="HydroDynamicsGroupBox"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="combobox,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="94827f3f-0262-408e-bcd3-b983976130e9"
+						name="ComboBoxInputType"
+						refimgid="7c0f7216-2ae7-43fb-8158-236d21172f4b"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Hydrodynamics']//combobox
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Hydrodynamics']
+						</basepath>
+					</folder>
+					<folder
+					capname="text"
+					id="73a7755a-b5de-4b31-b54c-22674bf4d712"
+					isrooted="True"
+					name="WindGroupBox"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="combobox,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="b8badcb3-63a5-40c7-9776-e91a9ea5ccec"
+						name="ComboBoxWind"
+						refimgid="36663b98-e918-47c3-aa6e-25413ae4fc8b"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Wind']//combobox
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="ebbcd2df-c88d-43c4-958c-73abe5b39a08"
+						name="SpeedTextBox"
+						refimgid="d72a40be-1387-4131-b9cd-c90843b9c88b"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Wind']//container/row[1]/text[2]
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="10dbbffd-573d-49d5-8f2e-92031161a63f"
+						name="DirectionTextBox"
+						refimgid="c117fcf0-ee04-4121-bf98-78a75555f2c3"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Wind']//container/row[2]/text[2]
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Wind']
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..
+					</basepath>
+				</folder>
+				<folder
+				addcaps="container,wpfelement,wpfgroupelement"
+				capname="unknown"
+				id="b969a557-35f9-48d2-b4f2-e71497aaf824"
+				isrooted="True"
+				name="WavesBoundaryEditor"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="text"
+					id="7401ca26-34be-41a1-887f-5493331e286d"
+					isrooted="True"
+					name="SettingsGroupBox"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="combobox,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="0f837bd9-78cc-48fd-8b13-df3f28f2ca6c"
+						name="ForcingTypeComboBox"
+						refimgid="a8320a7f-6df0-4636-b2b9-81b7fbdcbd09"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Settings']//row[2]/combobox
+						</item>
+						<item
+						addcaps="combobox,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="4aae1ddf-31fe-47f1-a078-0aee4079f0ee"
+						name="SpatialDefinitionComboBox"
+						refimgid="3efee6ea-fb4f-49ee-b163-fabb90aa793e"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Settings']//row[3]/combobox
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Settings']
+						</basepath>
+					</folder>
+					<folder
+					capname="text"
+					id="93d8a663-bb00-40f9-8b5d-b86b530a2f1e"
+					isrooted="True"
+					name="SupportPointsGroupBox"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="bc600eea-f2e2-450e-b253-da1347dadb68"
+						name="AddNewDistanceTextBox"
+						refimgid="de61f1f4-7446-4c46-997b-c858240504ad"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Support points']//text[@automationid='AddNewDistanceTextBox']
+						</item>
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="c8807b3d-6a58-4e2d-bfcd-9935e02beaf2"
+						name="AddSupportPointButton"
+						refimgid="380a553e-25c2-4587-9fd3-46bb030c2c5b"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Support points']//button[@automationid='AddSupportPointButton']
+						</item>
+						<item
+						addcaps="radiobutton,wpfelement,wpfgroupelement"
+						capname="radiobutton"
+						id="7c67f322-3342-461d-a89d-3b2d7ea768be"
+						name="SupportPoint2RadioButton"
+						refimgid="dac3e973-0945-4558-9ee7-b79ecd28690f"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Support points']//listitem[@index='1']//radiobutton
+						</item>
+						<item
+						addcaps="radiobutton,wpfelement,wpfgroupelement"
+						capname="radiobutton"
+						id="b3faf0da-2d15-4fd1-a4d1-0d6788a4a493"
+						name="SupportPoint3RadioButton"
+						refimgid="1042f4f2-19fa-4d8e-8ce9-bb27f7f1fc35"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Support points']//listitem[@index='2']/radiobutton
+						</item>
+						<item
+						addcaps="checkbox,wpfelement,wpfgroupelement"
+						capname="checkbox"
+						id="afd0d4b8-b45a-41e9-8d62-ccefde6becc7"
+						name="SupportPoint2CheckBox"
+						refimgid="91d1db30-9600-4c0c-9c35-95e3d9bcb017"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Support points']//listitem[@index='1']//checkbox
+						</item>
+						<item
+						addcaps="checkbox,wpfelement,wpfgroupelement"
+						capname="checkbox"
+						id="5d74819a-ed96-42ee-baca-8224846ab2cc"
+						name="SupportPoint3CheckBox"
+						refimgid="27d24b76-4c0b-4d08-8303-6737e06da7e2"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Support points']//listitem[@index='2']//checkbox
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Support points']
+						</basepath>
+					</folder>
+					<folder
+					capname="text"
+					id="4c46bfaa-8dff-40cb-ae44-ca3d55ed5816"
+					isrooted="True"
+					name="ParametersGroupBox"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="combobox,wpfelement,wpfgroupelement"
+						capname="combobox"
+						id="d081ab80-1870-4b29-8c31-42fba5cce3eb"
+						name="ShapeComboBox"
+						refimgid="30fc6f75-8845-4b29-a325-2e0c78dec1db"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Parameters']//row[1]/combobox
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption='Parameters']
+						</basepath>
+					</folder>
+					<folder
+					capname="text"
+					id="ab99dfc8-c0ba-44eb-b344-d8b269bdad0e"
+					isrooted="True"
+					name="SpatialParamertersGroupBox"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="9690c4e9-96b4-4495-9b86-f9a8c3dc9d6e"
+						name="HeightField"
+						refimgid="e1d5e7be-fd6a-4242-9d9b-2d5cbcc88b27"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Spatially Varying']//row[1]/text[2]
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="93cbd10d-c9b9-4b3b-8fae-5ee5d8836a8e"
+						name="PeriodField"
+						refimgid="97844ff5-865d-4709-8269-ae292212c3ce"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Spatially Varying']//row[2]/text[2]
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="da8f83b6-02eb-4273-8ab0-7775d59b3403"
+						name="DirectionField"
+						refimgid="50f751d9-7082-463f-b4b9-eaf7fdbd201c"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Spatially Varying']//row[3]/text[2]
+						</item>
+						<item
+						addcaps="text,wpfelement,wpfgroupelement"
+						capname="text"
+						id="b4eded31-2b5d-453d-83c7-5ab4467d1bf4"
+						name="SpreadingField"
+						refimgid="e2d942fb-5930-417f-bd47-c551dd135efd"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Spatially Varying']//row[4]/text[2]
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//text[@caption~'Spatially Varying']
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..
+					</basepath>
+				</folder>
+				<folder
+				capname="container"
+				id="299cea35-d04a-4675-ae43-a2122a1f4f5d"
+				isrooted="True"
+				name="WaterQualityParametersDocumentView"
+				refimgid="552c19a9-c86b-44ab-a649-81dbab3f9f81"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="table"
+					id="b885f380-e3cf-477a-8a95-a28fbed14721"
+					isrooted="True"
+					name="Table"
+					refimgid="75745939-3cad-48d0-989a-9ce57aee930e"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						capname="container"
+						id="30aa980d-8c1a-48b5-9e2b-b6445d4fe1ba"
+						name="Header"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='FunctionListView']//table/container[@accessiblename='Header Panel']
+						</item>
+						<folder
+						capname="container"
+						id="1d155697-b478-4211-9050-b179b95696f9"
+						isrooted="True"
+						name="Data"
+						searchtimeout="30000ms"
+						usecache="True">
+							<item
+							capname="cell"
+							id="1835095a-5d3d-466f-9e32-c4b0c30f5382"
+							name="EditCell"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='FunctionListView']//table/container[@accessiblename='Data Panel']/row/cell[@text=$VariableName]/../cell[@accessiblename&gt;'Edit']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='FunctionListView']//table/container[@accessiblename='Data Panel']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='FunctionListView']//table
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='FunctionListView']
+					</basepath>
+				</folder>
+				<folder
+				capname="container"
+				id="a77d1d78-faa8-4a50-acf3-871019a4aa83"
+				isrooted="True"
+				name="MultipleFunctionView"
+				searchtimeout="30000ms"
+				usecache="True">
+					<item
+					addcaps="button,accessible"
+					capname="button"
+					id="b545b9ac-9cc2-4a56-a569-4e1e4df88a29"
+					name="CsvImport"
+					refimgid="73566fae-0209-4415-b589-cad1aac78e84"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MultipleFunctionView']//button[@accessiblename='Csv import']
+					</item>
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='MultipleFunctionView']
+					</basepath>
+				</folder>
+				<folder
+				capname="container"
+				id="9804ee95-abec-4c13-8f5f-206f5fa03a85"
+				isrooted="True"
+				name="BoundaryConditionsEditor"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="container"
+					id="64dd22db-49be-4bd5-be2a-988745890f96"
+					isrooted="True"
+					name="BoundaryConditionPanel"
+					searchtimeout="30000ms"
+					usecache="False">
+						<folder
+						capname="container"
+						id="bd2770f9-7e44-4509-a0df-23b7f3d3d995"
+						isrooted="True"
+						name="BoundaryConditionSettings"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							addcaps="button,control,nativewindow"
+							capname="button"
+							id="faa53449-75da-4988-863d-babce7bba5fa"
+							name="AddDefinitionButton"
+							refimgid="6eee0b9d-3d34-40dd-bf7c-a8906aa474a5"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']/container/button[@controlname='addDefinitionButton']
+							</item>
+							<item
+							addcaps="combobox,control,nativewindow"
+							capname="combobox"
+							id="219d6b1f-2686-4167-a950-9d4784b5e14c"
+							name="QuantitiesComboBox"
+							refimgid="5dabd703-f3b8-4ea8-af6f-0f7a4f4c3d82"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']/container/combobox[@controlname='quantitiesComboBox']
+							</item>
+							<item
+							addcaps="combobox,control,nativewindow"
+							capname="combobox"
+							id="226210be-74f4-4921-bf75-94aef80d71cc"
+							name="ForcingTypeCombobox"
+							refimgid="79b1fe42-e682-4941-bfe6-c9a91b5297d1"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']/container/container/container/combobox[@controlname='dataTypeComboBox']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Boundary Condition']
+							</basepath>
+						</folder>
+						<item
+						addcaps="checkbox,accessible"
+						capname="checkbox"
+						id="f3a0d7de-b1ea-4c38-a5a8-78b8168762b1"
+						name="SupportPoint"
+						refimgid="6ad34ba2-1995-4397-bc2a-3d4422a459e3"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']/container[@caption='Location']/container/list/list/checkbox[@text=$SupportPointName]
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel1']
+						</basepath>
+					</folder>
+					<folder
+					capname="container"
+					id="8b8998c4-c188-4d76-a2a9-142ee0d95466"
+					isrooted="True"
+					name="TableChartPanel"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,control,nativewindow"
+						capname="button"
+						id="3b45807b-8a1e-4304-89b3-75a268a4c466"
+						name="GenerateSeriesButton"
+						refimgid="924f8d13-afe3-483c-a231-a0d3640ef8a5"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='tableLayoutPanel1']/button[@controlname='genDataButton']
+						</item>
+						<folder
+						capname="container"
+						id="1b5b65d5-6515-4afb-9cd3-6cf48ca93166"
+						isrooted="True"
+						name="TableDataBC"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							addcaps="cell,accessible"
+							capname="cell"
+							id="c1573adb-283b-4e77-af6d-6284a61a48ec"
+							name="GenAstronComponentAmplitudeCell"
+							refimgid="5d20984a-d4fe-4d01-9e06-5f3341b304c4"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblevalue&gt;$NameAstronomicalComponent]/cell[@accessiblename&gt;$ParameterName]
+							</item>
+							<item
+							addcaps="cell,accessible"
+							capname="cell"
+							id="269c6bb0-63f5-477d-be15-edae112b1adc"
+							name="GenericCellLastRow"
+							refimgid="aa5928d1-2bfe-41b2-bc13-ab7de0c3754c"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblename='NewItem Row']/cell[@accessiblename&gt;$ParameterName]
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='BoundaryConditionEditor']
+					</basepath>
+				</folder>
+				<folder
+				capname="container"
+				id="cf66f4cd-f31e-40fb-8493-3e971147c401"
+				isrooted="True"
+				name="DataTableManagerView"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="container"
+					id="0e8c848d-1eca-4fed-b056-b9c164deef84"
+					isrooted="True"
+					name="BoundaryDataPanel"
+					searchtimeout="30000ms"
+					usecache="False">
+						<folder
+						capname="container"
+						id="239e0ecc-016f-4e38-9b1e-9e0eff0d38d1"
+						isrooted="True"
+						name="BoundaryDataTable"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							capname="cell"
+							id="e22bb3fd-c892-4683-a882-fda145f27d6b"
+							name="BoundaryDataEnabled"
+							robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='DataTableManagerView']/container/container[@controlname='panel1']/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container/element"
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='DataTableManagerView']/container/container[@controlname='panel1']/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@caption='Data Panel']/row[@accessiblevalue&gt;$BoundaryDataName]/cell[@accessiblename&gt;'Enabled']
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='DataTableManagerView']/container/container[@controlname='panel1']/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@caption='Data Panel']
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='DataTableManagerView']/container/container[@controlname='panel1']
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..//container[@controlname='DataTableManagerView']
+					</basepath>
+				</folder>
+				<basepath>
+					/form[@title~'Delta Shell']//tabpagelist/button[@automationid='MenuDropDownButton']/..
+				</basepath>
+			</folder>
+			<folder
+			capname="form"
+			id="df1060c7-e006-41b5-af92-553280567c60"
+			isrooted="True"
+			name="DocumentsPaneRight"
+			searchtimeout="30000ms"
+			usecache="True">
+				<folder
+				capname="tree"
+				id="e882bcc2-2787-47d4-b645-fbe938ac842b"
+				isrooted="True"
+				name="OperationTree"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="treeitem"
+					id="01e729e0-6c41-433a-a1ab-cdcc0b428142"
+					isrooted="True"
+					name="RootItem"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="treeitem,accessible,accessibletreeitem"
+						capname="treeitem"
+						id="6600559d-abdd-40d5-b1df-9d5c2cdf87fd"
+						name="ImportSample"
+						refimgid="7d1131db-4e3e-4a9f-aab9-260f3e8cca86"
+						robustPath=""
+						searchtimeout="120000ms">
+							/form[@title~'Delta Shell']//container[@controlname='SpatialOperationSetLayerView']/tree/tree/treeitem/treeitem[@accessiblename&gt;'set']/treeitem[@accessiblename&gt;'Import samples']
+						</item>
+						<item
+						addcaps="treeitem,accessible,accessibletreeitem"
+						capname="treeitem"
+						id="f0343b84-e854-46be-afff-3f39b849de18"
+						name="Interpolate"
+						refimgid="ff23d252-1455-4330-bc7f-2f61eb85b6f1"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//container[@controlname='SpatialOperationSetLayerView']/tree/tree/treeitem/treeitem[@accessiblename&gt;'Interpolate']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//container[@controlname='SpatialOperationSetLayerView']/tree/tree/treeitem
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//container[@controlname='SpatialOperationSetLayerView']/tree/tree
+					</basepath>
+				</folder>
+				<folder
+				capname="tree"
+				id="763abf70-ee0b-419b-8f17-0b0515907837"
+				isrooted="True"
+				name="MapLegendTree"
+				refimgid="9dd436d1-0607-4e50-9229-f54d691ce82d"
+				searchtimeout="30000ms"
+				usecache="True">
+					<item
+					addcaps="button,wpfelement,wpfgroupelement"
+					capname="button"
+					id="c2568b39-ae5d-470d-935a-1e1935682900"
+					name="AddNewLayerButton"
+					refimgid="e4672522-e71b-4423-b6f8-febc625e8d8d"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//button[@automationid='AddLayerButton']
+					</item>
+					<item
+					addcaps="button,wpfelement,wpfgroupelement"
+					capname="button"
+					id="68ffbb56-69e5-4f83-8042-51c644ba1f0b"
+					name="AddNewWmsLayerButton"
+					refimgid="d8b00b1d-30f5-41b5-bb65-958014ac4363"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//button[@automationid='AddTileLayerButton']
+					</item>
+					<folder
+					capname="treeitem"
+					id="75306f78-f0cf-4c54-ab47-20eee31e7008"
+					isrooted="True"
+					name="OutputMapTreeItem"
+					searchtimeout="30000ms"
+					usecache="False">
+						<item
+						addcaps="button,wpfelement,wpfgroupelement"
+						capname="button"
+						id="f0297ad5-1265-4c0b-87f3-d624da343355"
+						name="OutputMapTreeItemExpander"
+						refimgid="1aa50458-f522-4e76-a8b3-2e7d379812b2"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output (map)']/parent::treeitem/button
+						</item>
+						<folder
+						capname="treeitem"
+						id="8725183d-8432-4a72-a855-0596fd34e808"
+						isrooted="True"
+						name="OutputMapVariableTreeItem"
+						searchtimeout="30000ms"
+						usecache="False">
+							<item
+							addcaps="checkbox,wpfelement,wpfgroupelement"
+							capname="checkbox"
+							id="ed28cbfb-94cf-422c-aaf2-5659a2c0a39c"
+							name="OutputMapVariableCheckBox"
+							refimgid="50d2de6e-a268-47b8-b332-2a0bc8d49e6e"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output (map)']/parent::treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem/checkbox
+							</item>
+							<item
+							addcaps="checkbox,wpfelement,wpfgroupelement"
+							capname="text"
+							id="b8c23e9d-1e09-4be3-a225-d24b9801a3ad"
+							name="OutputMapVariableText"
+							refimgid="50d2de6e-a268-47b8-b332-2a0bc8d49e6e"
+							robustPath=""
+							searchtimeout="30000ms">
+								/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output (map)']/parent::treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem/text
+							</item>
+							<basepath>
+								/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output (map)']/parent::treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem
+							</basepath>
+						</folder>
+						<basepath>
+							/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']//text[@text='Output (map)']/parent::treeitem
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//tree[@automationid='MapLegendTreeView']
+					</basepath>
+				</folder>
+				<item
+				addcaps="tabpagelist,wpfelement,wpfgroupelement"
+				capname="text"
+				id="a40a6408-0a72-4c67-a1ba-2f8bfc13cd7a"
+				name="AnchorableMapTab"
+				refimgid="38b34e41-a673-4dca-afb6-a7d8dc18ae0e"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//container[@automationid='HeaderPanel']/tabpage//text[@text='Map']
+				</item>
+				<basepath>
+					/form[@title~'Delta Shell']
+				</basepath>
+			</folder>
+			<folder
+			capname="form"
+			id="547c3fb5-e9f8-4ad5-8622-113efaea1045"
+			isrooted="True"
+			name="DocumentsPaneBottom"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				capname="text"
+				id="b9764484-a72b-40bf-bab1-d1922c0a4275"
+				name="MessagesTab"
+				robustPath="/form[@title~'Delta Shell']/element"
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//container[@automationid='HeaderPanel']/tabpage//text[@text='Messages']
+				</item>
+				<item
+				capname="text"
+				id="0e528756-5bee-409d-8969-754a8602f5b9"
+				name="TimeSeriesNavigatorTab"
+				robustPath="/form[@title~'Delta Shell']/element"
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//container[@automationid='HeaderPanel']/tabpage//text[@text='Time Navigator']
+				</item>
+				<folder
+				capname="table"
+				id="20c871a0-5647-42ce-9eec-89f727c8e379"
+				isrooted="True"
+				name="MessageTable"
+				searchtimeout="30000ms"
+				usecache="True">
+					<item
+					addcaps="cell,wpfelement,wpfgroupelement"
+					capname="cell"
+					id="37caece3-bd3a-4e48-9dbf-3b4fe072251b"
+					name="textLastMessage"
+					refimgid="e321f076-ae03-475e-8bdc-2734270e8fe4"
+					robustPath=""
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//table[@automationid='dataGrid']/container/row[1]/list/cell[2]
+					</item>
+					<item
+					capname="button"
+					id="8601c315-49d4-43c8-a726-691b762a1f2f"
+					name="showHideDebugMessages"
+					robustPath="/form[@title~'Delta Shell']/list[@automationid='ListView']/table[@automationid='dataGrid']/element"
+					searchtimeout="30000ms">
+						/form[@title~'Delta Shell']//table[@automationid='dataGrid']/container[2]/button[1]
+					</item>
+					<basepath>
+						/form[@title~'Delta Shell']//table[@automationid='dataGrid']
+					</basepath>
+				</folder>
+				<folder
+				capname="container"
+				id="5c81b39c-d6d9-4e04-a466-0c089a21981f"
+				isrooted="True"
+				name="TimeSeriesNavigator"
+				searchtimeout="30000ms"
+				usecache="True">
+					<folder
+					capname="toolbar"
+					id="d8a51878-6de6-4b66-81e7-14b4f1c98adb"
+					isrooted="True"
+					name="ButtonsStrip"
+					searchtimeout="30000ms"
+					usecache="True">
+						<item
+						capname="button"
+						id="9ff65be2-00be-40d9-a1c8-20fb2c488052"
+						name="PlayButton"
+						refimgid="9b81d738-5d91-4193-ad33-108b68c4c92e"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//container[@controlname='TimeSeriesNavigator']//toolbar/button[@name='Play']
+						</item>
+						<item
+						capname="button"
+						id="c6319342-25b9-469b-86d2-8e26bbd62f7e"
+						name="PauseButton"
+						refimgid="dbd57107-dac5-41ff-9bb1-73cfa4a25b2d"
+						robustPath=""
+						searchtimeout="30000ms">
+							/form[@title~'Delta Shell']//container[@controlname='TimeSeriesNavigator']//toolbar/button[@name='Pause']
+						</item>
+						<basepath>
+							/form[@title~'Delta Shell']//container[@controlname='TimeSeriesNavigator']//toolbar
+						</basepath>
+					</folder>
+					<basepath>
+						/form[@title~'Delta Shell']//container[@controlname='TimeSeriesNavigator']
+					</basepath>
+				</folder>
+				<basepath>
+					/form[@title~'Delta Shell']
+				</basepath>
+			</folder>
+			<folder
+			capname="statusbar"
+			id="daef23b2-2fce-4903-bc95-b79450aba4f8"
+			isrooted="True"
+			name="StatusBar"
+			searchtimeout="30000ms"
+			usecache="True">
+				<item
+				addcaps="statusbar,wpfelement,wpfgroupelement"
+				capname="listitem"
+				id="87c2038d-508d-4607-91e9-b91dc7bfc239"
+				name="StatusBarItem"
+				refimgid="5ad47dfb-31de-4b07-92b8-ced2d040a1b8"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@title~'Delta Shell']//statusbar/listitem
+				</item>
+				<basepath>
+					/form[@title~'Delta Shell']//statusbar
+				</basepath>
+			</folder>
+			<basepath>
+				/form[@title~'Delta Shell']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJkSURBVDhPY0AH63afFJ44cRs7lEsaWLntkOj6
+7SdmlVS26tXX1zP9//+f6cqjf0JXH/9QvXrvm/y2W7fwGzxrydaWg2ce3jp64fm2C3e+7Lv25Pfj
+m8/+/rz59O+/a49+vl+7/ew0oDJGiGoswD8kLmX11tNX1++5dG/KvE3Hl28+eeP4tY9frjz6/3/V
+1jOX0/PqkkNDVzFDlWMFQCdySnFyCkupqKiIZhQ312w8eOfB2Xt//x269PHT9qOPbu44+Wxj1/S1
+gVD12EFx9yLupVuvNuy/+OXhvvOfvkxfevB8fHrFNHMbt0xVTQMvOTU9RahSTLBo0QXubSc/zNty
+7M2j0qaZ63SNnUJFVU0N5O0zA7Sjp7Tppy6frRU3sxCqHBPM23yzr2vu3j2mDr7xUgZeVjpRE1st
+Svffta4+/s+66tg/s/xtrxXciqcwGBuzQrUgQFnHas/qvk1r1fXtHRTtU12MM1butiw/+Meq4uA/
+i5K9P7UjJpzkkzeMYOCXE4RqQQGMJR1rZyrrWFlKShpzaQW3TTPL2/LeonjXP4vi3f/NCnf+Mc7e
+8FY7ZsYGefssA6geJGBvzyKvYmQhLq7HDeQxSxiHFOnEzrhtmr/5HzLWS5h7TUzX2wWiCT/gZeEU
+NuWTMchSdC/bY5yx5q9u/OxXMrYp0xhERXmgaggDIRV7GXnXwgka4b0PxQwCOhi4uCSgUjgBo4pH
+rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
+QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="contextmenu,nativewindow,wpfwin32element,wpfelement,wpfgroupelement"
+		capname="contextmenu"
+		id="c6fb6701-19bf-4c34-bfab-191603d2cc22"
+		isrooted="True"
+		name="ContextMenu"
+		refimgid="72d7a73a-e20b-4e22-ae51-ac8fe42044c8"
+		refpath="/contextmenu[@processname='DeltaShell.Gui']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="text,wpfelement,wpfgroupelement"
+			capname="menuitem"
+			id="5f11e83f-94e4-48a2-9c49-559fff4b2cdf"
+			name="InterpolateSelectedSetMenuItem"
+			refimgid="8b0c71bb-f924-4344-98db-5160407955ef"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu[@processname='DeltaShell.Gui']//menuitem[@text='Interpolate selected set']
+			</item>
+			<item
+			addcaps="text,wpfelement,wpfgroupelement"
+			capname="menuitem"
+			id="2e290a1f-6509-4176-b979-91696562d3a7"
+			name="LegendProperties"
+			refimgid="ccade8d3-53ed-4be0-8975-f571cd1d4078"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu[@processname='DeltaShell.Gui']/menuitem[@text='Legend Properties']
+			</item>
+			<item
+			capname="menuitem"
+			id="2807b26f-970f-4752-b9a6-080e851cc489"
+			name="Option"
+			refimgid="235a94e1-a17d-40e8-ae4f-07d62f640d93"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu[@processname='DeltaShell.Gui']/menuitem[@accessiblename~$SubstringInOptionName]
+			</item>
+			<item
+			addcaps="menuitem,accessible"
+			capname="menuitem"
+			id="53b2838c-c44a-436d-bd5b-ed578f195fd7"
+			name="Export"
+			refimgid="38ec2401-5e97-4c64-967a-ee87458fe74b"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu[@processname='DeltaShell.Gui']/menuitem[@accessiblename&gt;'Export']
+			</item>
+			<item
+			addcaps="menuitem,accessible"
+			capname="menuitem"
+			id="a4559bec-1fc5-4cd8-932f-00ad4881273a"
+			name="MenuItemAdd"
+			refimgid="0b57bf5a-0568-4d31-909a-b31253de1bb5"
+			refpath="/contextmenu[@controlname='contextMenuFolder']/menuitem[@accessiblename='Add']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu[@processname='DeltaShell.Gui']/menuitem[@accessiblename='Add']
+			</item>
+			<item
+			addcaps="menuitem,accessible"
+			capname="menuitem"
+			id="434b1e54-c068-461f-bd94-361ee6683dbf"
+			name="NewModel"
+			refimgid="4bfd739f-a8ad-4220-a11b-953836fac3cc"
+			refpath="/contextmenu[@processname='DeltaShell.Gui' and @controltypename='ToolStripDropDownMenu']/menuitem[@accessiblename='New Model ...']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu[@processname='DeltaShell.Gui']/menuitem[@accessiblename='New Model ...']
+			</item>
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="4dcd1938-7010-4bf5-855f-ac6a0d94d151"
+			name="GenericListItemLayer"
+			refimgid="da1f90ea-3f78-44de-891d-af8c4ee5dd0d"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu[@processname='DeltaShell.Gui']/container/listitem[@text=$NameLayer]
+			</item>
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="0f6c324b-253d-47a3-b420-3e6f0604311c"
+			name="FlowFlexibleMeshModel"
+			refimgid="937fe5bd-043f-4e8f-820d-ac2045729811"
+			refpath="/contextmenu[@processname='DeltaShell.Gui']/list/listitem[@text='Flow Flexible Mesh Model']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu[@processname='DeltaShell.Gui']/list/listitem[@text='Flow Flexible Mesh Model']
+			</item>
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="9742f7de-fb0c-4ab0-a8d0-07dd1a12ecba"
+			name="GenericModelTypeToImport"
+			refimgid="937fe5bd-043f-4e8f-820d-ac2045729811"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu[@processname='DeltaShell.Gui']/list/listitem[@text~$NameModelTypeToImport]
+			</item>
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="dcbc870d-5196-43ee-ae19-fa2834b43a7d"
+			name="HydrodynamicsAsteriskHyd"
+			refimgid="cb057ff1-fa55-4ea3-a27c-eabdb5df4bbc"
+			refpath="/contextmenu[@processname='DeltaShell.Gui' and @win32ownerwindowlevel='1']/list/listitem[@text='Hydrodynamics (*.hyd)']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu[@processname='DeltaShell.Gui']/list/listitem[@text='Hydrodynamics (*.hyd)']
+			</item>
+			<basepath>
+				/contextmenu[@processname='DeltaShell.Gui']
+			</basepath>
+			<icon>
+				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
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,control,nativewindow"
+		capname="form"
+		id="38744eea-e115-43fd-8301-2684a79c647e"
+		isrooted="True"
+		name="DialogSelectItem"
+		refpath="/form[@controlname='SelectItemDialog']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,control,nativewindow"
+			capname="button"
+			id="7443605c-add6-45b3-b496-0aae877c3d9d"
+			name="ButtonOK"
+			refimgid="69887cc3-bc3e-4c8a-9166-f5024b01252c"
+			refpath="/form[@controlname='SelectItemDialog']/button[@controlname='buttonOk']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='SelectItemDialog']/button[@controlname='buttonOk']
+			</item>
+			<folder
+			capname="list"
+			id="2542cd81-b12f-4e5c-aee7-7717ee3dbdf2"
+			isrooted="True"
+			name="ListWithItems"
+			searchtimeout="30000ms"
+			usecache="False">
+				<item
+				addcaps="listitem,checkable"
+				capname="listitem"
+				id="5d83a091-0ac9-452c-bcb9-0ef20c40ef4d"
+				name="TextItemInSelectDialog"
+				refimgid="a3fd149b-3aa2-49bb-a868-7c3f10f919ed"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@controlname='SelectItemDialog']/list/listitem[@text~$StringInTextItemSelectDialog]
+				</item>
+				<item
+				addcaps="listitem,checkable"
+				capname="listitem"
+				id="d5cbff9a-88c1-47d4-b519-eea9ae74e859"
+				name="WavesModel"
+				refimgid="0ad515e0-57ec-4991-b46b-5c01391a48b7"
+				robustPath=""
+				searchtimeout="30000ms">
+					/form[@controlname='SelectItemDialog']/list/listitem[@text='Waves Model']
+				</item>
+				<basepath>
+					/form[@controlname='SelectItemDialog']/list
+				</basepath>
+			</folder>
+			<basepath>
+				/form[@controlname='SelectItemDialog']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAH4SURBVDhPrdFdSJNhGMbxR1BzhTJzapnsJGgU
+RnQQEXYQhGkEgRIUihSzrKyEMM0ME00ENRY6WjPLmOasObKkHDTKmoSBERUZbNWsVdtys/nRKjr5
+9+F74AvBwLrggufk/l0Hj/gveTDoYD6VzmcB6SnLsDGZbxOdfPW2EnbXMDNawvTjPCaHNnKlOj4y
+MGRQEfY08cVVzsyzQqYeZTN5by2fB9R0VC6KDNxvTZqzmknIrmGiP4VxaxzGsoVyYGxNNM7VMTzP
+iGVkVRyOlQrsusVMDWcT+r1qUxPoS+DTtWh83QJ9qUIOTN/sJWQ2ETDq8Taexro8noEmJaE7GoL9
+yQR6Ffh7ovjYJfBcFuhK4uRA8KIBf3MDnqpy3hwoQq9O5EaDkuCv1XFLDD6z4INJ8K5D4G4XNO5f
+IAfenzqB+3AxzvwdvMjZTPWSFCy1CfivRuGVVscuCV63CZxGQX1RrBxwFe5idFsWTzPXMZKh4aAq
+7a9/P7fS+SxQkZrKEdVSipPS2J24jAJlOlV9b+l08Kftd+GsDequw7Fu2HrcJgekpyxlZhdGO5y5
+DTVWONoF+9qgoOUH67U9kYG9hiectECpCbTnIV/3ndz6ADmVr1iReyEykFc3yJ5zsLM5zPZaH1sq
+XrLp0EM2aG+RntUiB+ZT6fxfIsRPbYnQgbXhGFYAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,control,nativewindow"
+		capname="form"
+		id="87ba3eb1-77a8-4b40-bc08-6fa48752022e"
+		isrooted="True"
+		name="DialogCoordinateConversion"
+		refpath="/form[@controlname='CoordinateConversionDialog']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,control,nativewindow"
+			capname="button"
+			id="6531245a-0f39-4ec8-9394-df9aeb8e3ebf"
+			name="ButtonOK"
+			refimgid="45dafae5-f892-4fad-82ea-6f94f164587c"
+			refpath="/form[@controlname='CoordinateConversionDialog']/button[@controlname='btnOK']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='CoordinateConversionDialog']/button[@controlname='btnOK']
+			</item>
+			<basepath>
+				/form[@controlname='CoordinateConversionDialog']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAH4SURBVDhPrdFdSJNhGMbxR1BzhTJzapnsJGgU
+RnQQEXYQhGkEgRIUihSzrKyEMM0ME00ENRY6WjPLmOasObKkHDTKmoSBERUZbNWsVdtys/nRKjr5
+9+F74AvBwLrggufk/l0Hj/gveTDoYD6VzmcB6SnLsDGZbxOdfPW2EnbXMDNawvTjPCaHNnKlOj4y
+MGRQEfY08cVVzsyzQqYeZTN5by2fB9R0VC6KDNxvTZqzmknIrmGiP4VxaxzGsoVyYGxNNM7VMTzP
+iGVkVRyOlQrsusVMDWcT+r1qUxPoS+DTtWh83QJ9qUIOTN/sJWQ2ETDq8Taexro8noEmJaE7GoL9
+yQR6Ffh7ovjYJfBcFuhK4uRA8KIBf3MDnqpy3hwoQq9O5EaDkuCv1XFLDD6z4INJ8K5D4G4XNO5f
+IAfenzqB+3AxzvwdvMjZTPWSFCy1CfivRuGVVscuCV63CZxGQX1RrBxwFe5idFsWTzPXMZKh4aAq
+7a9/P7fS+SxQkZrKEdVSipPS2J24jAJlOlV9b+l08Kftd+GsDequw7Fu2HrcJgekpyxlZhdGO5y5
+DTVWONoF+9qgoOUH67U9kYG9hiectECpCbTnIV/3ndz6ADmVr1iReyEykFc3yJ5zsLM5zPZaH1sq
+XrLp0EM2aG+RntUiB+ZT6fxfIsRPbYnQgbXhGFYAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow"
+		capname="form"
+		id="49615780-7f09-4ae4-8559-d6e3663cffda"
+		isrooted="True"
+		name="DialogClosingProject"
+		refpath="/form[@title='Closing project ...']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="5c1acbb0-3409-48cd-a982-116c88b2a4bb"
+			name="ButtonNo"
+			refimgid="3d0a6e8d-e0bd-4c0e-8395-6042ceae817c"
+			refpath="/form[@title='Closing project ...']/button[@text='&amp;No']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Closing project ...']/button[@text='&amp;No']
+			</item>
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="a8bb1cb9-bcec-48cb-8c83-467e915572d9"
+			name="ButtonYes"
+			refimgid="f28d4266-6711-40ed-bb13-4845681f8dcd"
+			refpath="/form[@title='Closing project ...']/button[@text='&amp;Yes']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Closing project ...']/button[@text='&amp;Yes']
+			</item>
+			<basepath>
+				/form[@title='Closing project ...']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJkSURBVDhPY0AH63afFJ44cRs7lEsaWLntkOj6
+7SdmlVS26tXX1zP9//+f6cqjf0JXH/9QvXrvm/y2W7fwGzxrydaWg2ce3jp64fm2C3e+7Lv25Pfj
+m8/+/rz59O+/a49+vl+7/ew0oDJGiGoswD8kLmX11tNX1++5dG/KvE3Hl28+eeP4tY9frjz6/3/V
+1jOX0/PqkkNDVzFDlWMFQCdySnFyCkupqKiIZhQ312w8eOfB2Xt//x269PHT9qOPbu44+Wxj1/S1
+gVD12EFx9yLupVuvNuy/+OXhvvOfvkxfevB8fHrFNHMbt0xVTQMvOTU9RahSTLBo0QXubSc/zNty
+7M2j0qaZ63SNnUJFVU0N5O0zA7Sjp7Tppy6frRU3sxCqHBPM23yzr2vu3j2mDr7xUgZeVjpRE1st
+Svffta4+/s+66tg/s/xtrxXciqcwGBuzQrUgQFnHas/qvk1r1fXtHRTtU12MM1butiw/+Meq4uA/
+i5K9P7UjJpzkkzeMYOCXE4RqQQGMJR1rZyrrWFlKShpzaQW3TTPL2/LeonjXP4vi3f/NCnf+Mc7e
+8FY7ZsYGefssA6geJGBvzyKvYmQhLq7HDeQxSxiHFOnEzrhtmr/5HzLWS5h7TUzX2wWiCT/gZeEU
+NuWTMchSdC/bY5yx5q9u/OxXMrYp0xhERXmgaggDIRV7GXnXwgka4b0PxQwCOhi4uCSgUjgBo4pH
+rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
+QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow,wpfwin32element,wpfelement,wpfgroupelement"
+		capname="form"
+		id="ef7c636b-dd8a-440a-9635-37aed9c65791"
+		isrooted="True"
+		name="ProgressDialog"
+		refimgid="64cfd88b-7b3e-4181-9141-68669609eeaa"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,wpfelement,wpfgroupelement"
+			capname="button"
+			id="cd56b20a-4473-4a0d-9950-b5ed3ebf8ea4"
+			name="CancelAllActivities"
+			refimgid="7c4231b0-40bb-4ac0-b063-82264664c431"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title=@null and @processname='DeltaShell.Gui']/button[@text='Cancel all activities']
+			</item>
+			<item
+			addcaps="progressbar,wpfelement,wpfgroupelement"
+			capname="progressbar"
+			id="9304e871-cc08-4d77-8f9e-fc1ce3ac9cf5"
+			name="ProgressBar"
+			refimgid="3968f93d-3e22-4a95-889b-363cf298e9ac"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title=@null and @processname='DeltaShell.Gui']/progressbar
+			</item>
+			<basepath>
+				/form[@title=@null and @processname='DeltaShell.Gui']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAALsSURBVDhPY0ADTEu3HBacv38/R319PRNUjDgQ
+GhrKNmnmUo31O0+1T5u33n3jjmMqF268Vzx7453e0csvrY6ee2a6afcVOaA6ZqgWVGBq6izcPXlR
+4tYDV45u2Xdp+a5jt+eeuPx63aX7349cefjjzImrr3cs33S0IioqUxCqBRXo6uoKRifmRE5buGXn
+7OW79oLo5ZuOnz588dXbMze/fN968Nb1rknL22qapqtq2YfyALVguIRJXFycm52fX1FMTE7J0NxJ
+L7OktWz1jkvXjlz5/OXQpQ/vtxy5f3XTkXvruqetiQ0MjBGD6kMBTAxaWmw1nYvV++btyl+44dzO
+1btv3pi+7NDhsuaZi0MTS9ucglJzzJzCbZWUXPihehAAFEC9C/ZIz1h1rnja8uPL6vpXL43KbGq1
+DyksNQ6oqDaI6O7Vi544WSOgNk3KxF8Wqg0OGLW0tIQmLTtZ3DJt26y4nPYaC7/MOO3g5gbjzBXb
+zQp33DAr2PXIKGPVFSXfmm5hXT91kB6IViDQ0rLnSSqd4lzTv3mRvU9SrKZbZrh+3MwFZgXbn5uX
+7vtmWrTzk3bszIvC+t5l3NI6egwyMpxQrRDgGpghFpfXnWjjGROgaOihp+5VUWKQtvSiecGOX+aF
+u/6a5m/7aZi+4plqUOsqSesEV1FRLVBMIICxsQu/uUOwuaKOjriEio2ojHV8snpo1x795EXPjTJW
+fzbJ2fjTKGvtV+2YaaelrBLC+eX1BaBa4YBJXl6eA0QzMNizCEgYyotoOPuIGYfUKPvU7tZNmP9K
+J2HOS0W30uVCKtYWQE+zQbThBqC8wMGnbKEi55jTourXeFTGLmUBh6iaDQODKKrzUUE9k6Sxj4ik
+ZaSGpHmEq6xNWpGURVy7iLZ3Aa+YjiVUM86MxsQADBwhVRtzIQ2XIGEtt2hBTedwAQUTe3Z+eQUG
+BrAXEVGHBQAl7Vl4pTSEOYXVpbjFFMUZhIV5geIg/2LRyMAAAJotA8Ny7VLRAAAAAElFTkSuQmCC
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow,wpfwin32element,wpfelement,wpfgroupelement"
+		capname="form"
+		id="2a775b4f-94fd-4338-b63b-deed46a9f56f"
+		isrooted="True"
+		name="WizardDialog"
+		refimgid="216475be-0808-4383-aae9-d5ee7c52351f"
+		searchtimeout="30000ms"
+		usecache="True">
+			<item
+			addcaps="button,accessible"
+			capname="button"
+			id="6c88f1ee-d399-4e50-a365-81bd657f345d"
+			name="ButtonNextWizard"
+			refimgid="4e244b76-45c9-450e-8678-a06b39a4a42f"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='WizardDialog']/?/element[@controlname='btnNext']/button
+			</item>
+			<item
+			addcaps="button,accessible"
+			capname="button"
+			id="e1f2b5c6-6482-4a5d-bd4e-92d66bf3f5e6"
+			name="ButtonFinishWizard"
+			refimgid="f96a1d24-c95e-47dd-a135-6c6b5bb31d31"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='WizardDialog']/element[@controlname='wizardControl1']/element[@controlname='btnFinish']/button[@accessiblename='&amp;Finish']
+			</item>
+			<item
+			addcaps="tabpage,accessible"
+			capname="tabpage"
+			id="07a12b90-052c-435e-935d-5cca57bcdf00"
+			name="CustomSubFile"
+			refimgid="84f991fe-8ea4-4f7f-a912-6a96f300cb92"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='WizardDialog']/element[@controlname='wizardControl1']/container[@caption&gt;'Import a substances and processes']/container[@controlname='SubstanceProcessLibraryWizardPage']/container[@controlname='groupBoxSubFile']/container[@controlname='panel1']/container[@controlname='splitContainer1']/container/tabpagelist/tabpage[@accessiblename~'Custom']
+			</item>
+			<item
+			addcaps="text,accessible"
+			capname="button"
+			id="7be7bbd2-f628-43ea-b501-07721328a5c2"
+			name="SubFileButton"
+			refimgid="aa2d1eec-e319-4a19-9b8c-a1d0943c0ab8"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='WizardDialog']/element[@controlname='wizardControl1']/container[@caption&gt;'Import a substances and processes']/container[@controlname='SubstanceProcessLibraryWizardPage']/container[@controlname='groupBoxSubFile']/container[@controlname='panel1']/container[@controlname='splitContainer1']/container/tabpagelist/tabpage/container[@controlname='customLibraryPanel']/button
+			</item>
+			<item
+			addcaps="button,control,nativewindow"
+			capname="button"
+			id="5a2eae7c-a93d-4701-9362-a14f47d785aa"
+			name="OpenFileButton"
+			refimgid="fd171636-1a61-4dd6-a93c-35dce031590c"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='WizardDialog']/element/?/container[@controlname='CsvDataWizardPage']/container/container/button
+			</item>
+			<item
+			addcaps="button,control,nativewindow"
+			capname="button"
+			id="b9c614ce-0ca9-4081-9f29-741121eeb2f1"
+			name="ButtonOpenFile"
+			refimgid="f4e3f997-40e5-4132-a881-053ee56ab9e2"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='WizardDialog']/element/container/container/button[@controlname='buttonOpenFile']
+			</item>
+			<basepath>
+				/form[@controlname='WizardDialog']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAALsSURBVDhPY0ADTEu3HBacv38/R319PRNUjDgQ
+GhrKNmnmUo31O0+1T5u33n3jjmMqF268Vzx7453e0csvrY6ee2a6afcVOaA6ZqgWVGBq6izcPXlR
+4tYDV45u2Xdp+a5jt+eeuPx63aX7349cefjjzImrr3cs33S0IioqUxCqBRXo6uoKRifmRE5buGXn
+7OW79oLo5ZuOnz588dXbMze/fN968Nb1rknL22qapqtq2YfyALVguIRJXFycm52fX1FMTE7J0NxJ
+L7OktWz1jkvXjlz5/OXQpQ/vtxy5f3XTkXvruqetiQ0MjBGD6kMBTAxaWmw1nYvV++btyl+44dzO
+1btv3pi+7NDhsuaZi0MTS9ucglJzzJzCbZWUXPihehAAFEC9C/ZIz1h1rnja8uPL6vpXL43KbGq1
+DyksNQ6oqDaI6O7Vi544WSOgNk3KxF8Wqg0OGLW0tIQmLTtZ3DJt26y4nPYaC7/MOO3g5gbjzBXb
+zQp33DAr2PXIKGPVFSXfmm5hXT91kB6IViDQ0rLnSSqd4lzTv3mRvU9SrKZbZrh+3MwFZgXbn5uX
+7vtmWrTzk3bszIvC+t5l3NI6egwyMpxQrRDgGpghFpfXnWjjGROgaOihp+5VUWKQtvSiecGOX+aF
+u/6a5m/7aZi+4plqUOsqSesEV1FRLVBMIICxsQu/uUOwuaKOjriEio2ojHV8snpo1x795EXPjTJW
+fzbJ2fjTKGvtV+2YaaelrBLC+eX1BaBa4YBJXl6eA0QzMNizCEgYyotoOPuIGYfUKPvU7tZNmP9K
+J2HOS0W30uVCKtYWQE+zQbThBqC8wMGnbKEi55jTourXeFTGLmUBh6iaDQODKKrzUUE9k6Sxj4ik
+ZaSGpHmEq6xNWpGURVy7iLZ3Aa+YjiVUM86MxsQADBwhVRtzIQ2XIGEtt2hBTedwAQUTe3Z+eQUG
+BrAXEVGHBQAl7Vl4pTSEOYXVpbjFFMUZhIV5geIg/2LRyMAAAJotA8Ny7VLRAAAAAElFTkSuQmCC
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow"
+		capname="form"
+		id="e915953d-3053-4068-9051-18e96ef83565"
+		isrooted="True"
+		name="DialogSelectFile"
+		refimgid="e08e232d-2353-4ae9-ac74-e47d62e205f0"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="text,nativewindow"
+			capname="text"
+			id="c5fa64a2-95d4-4032-b2ca-354cfeb4382a"
+			name="FieldFilePath"
+			refimgid="036dac7a-3e88-4850-b226-e67f37c770dc"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Select file']/combobox[@accessiblename='File name:']/text
+			</item>
+			<item
+			addcaps="text,nativewindow"
+			capname="combobox"
+			id="b690da41-f3a3-44e1-be10-16911f1e83f4"
+			name="FileType"
+			refimgid="036dac7a-3e88-4850-b226-e67f37c770dc"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Select file']/combobox[@accessiblename='Files of type:']
+			</item>
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="ccf393d4-1b90-4599-9e70-f300b2b48c21"
+			name="ButtonOpen"
+			refimgid="143cd896-9e69-4c2a-8baf-51dd69df1956"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Select file']/button[@text&lt;'Open']
+			</item>
+			<basepath>
+				/form[@title='Select file']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJkSURBVDhPY0AH63afFJ44cRs7lEsaWLntkOj6
+7SdmlVS26tXX1zP9//+f6cqjf0JXH/9QvXrvm/y2W7fwGzxrydaWg2ce3jp64fm2C3e+7Lv25Pfj
+m8/+/rz59O+/a49+vl+7/ew0oDJGiGoswD8kLmX11tNX1++5dG/KvE3Hl28+eeP4tY9frjz6/3/V
+1jOX0/PqkkNDVzFDlWMFQCdySnFyCkupqKiIZhQ312w8eOfB2Xt//x269PHT9qOPbu44+Wxj1/S1
+gVD12EFx9yLupVuvNuy/+OXhvvOfvkxfevB8fHrFNHMbt0xVTQMvOTU9RahSTLBo0QXubSc/zNty
+7M2j0qaZ63SNnUJFVU0N5O0zA7Sjp7Tppy6frRU3sxCqHBPM23yzr2vu3j2mDr7xUgZeVjpRE1st
+Svffta4+/s+66tg/s/xtrxXciqcwGBuzQrUgQFnHas/qvk1r1fXtHRTtU12MM1butiw/+Meq4uA/
+i5K9P7UjJpzkkzeMYOCXE4RqQQGMJR1rZyrrWFlKShpzaQW3TTPL2/LeonjXP4vi3f/NCnf+Mc7e
+8FY7ZsYGefssA6geJGBvzyKvYmQhLq7HDeQxSxiHFOnEzrhtmr/5HzLWS5h7TUzX2wWiCT/gZeEU
+NuWTMchSdC/bY5yx5q9u/OxXMrYp0xhERXmgaggDIRV7GXnXwgka4b0PxQwCOhi4uCSgUjgBo4pH
+rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
+QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,control,nativewindow"
+		capname="form"
+		id="28fbb5fe-4925-4966-8b63-3292b11412cd"
+		isrooted="True"
+		name="FormInterpolationOperation"
+		refpath="/form[@controlname='SpatialOperationInputForm']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,control,nativewindow"
+			capname="button"
+			id="7398e470-c13f-483c-a1c6-24e6f7fe17e1"
+			name="ButtonOK"
+			refimgid="5cd6889a-5050-40ec-a802-997f8250d21a"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='SpatialOperationInputForm']/?/?/button[@controltext='OK']
+			</item>
+			<item
+			addcaps="combobox,control,nativewindow"
+			capname="combobox"
+			id="ae15fedd-3963-494a-b964-d06c993ad9e9"
+			name="ComboboxOperationParameter"
+			refimgid="c2647571-a89b-4de5-92b7-aaddc5b0d832"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='SpatialOperationInputForm']/container/?/?/container/text[@caption=$InterpolationParameter]/../combobox
+			</item>
+			<item
+			capname="text"
+			id="5488cc3d-d2d5-489b-8e32-81724eaeebfa"
+			name="ValueField"
+			refimgid="5aa440b5-2eb0-4c64-a633-2ad4414397aa"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='SpatialOperationInputForm']//text[@caption='Value']/following-sibling::text
+			</item>
+			<basepath>
+				/form[@controlname='SpatialOperationInputForm']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAH4SURBVDhPrdFdSJNhGMbxR1BzhTJzapnsJGgU
+RnQQEXYQhGkEgRIUihSzrKyEMM0ME00ENRY6WjPLmOasObKkHDTKmoSBERUZbNWsVdtys/nRKjr5
+9+F74AvBwLrggufk/l0Hj/gveTDoYD6VzmcB6SnLsDGZbxOdfPW2EnbXMDNawvTjPCaHNnKlOj4y
+MGRQEfY08cVVzsyzQqYeZTN5by2fB9R0VC6KDNxvTZqzmknIrmGiP4VxaxzGsoVyYGxNNM7VMTzP
+iGVkVRyOlQrsusVMDWcT+r1qUxPoS+DTtWh83QJ9qUIOTN/sJWQ2ETDq8Taexro8noEmJaE7GoL9
+yQR6Ffh7ovjYJfBcFuhK4uRA8KIBf3MDnqpy3hwoQq9O5EaDkuCv1XFLDD6z4INJ8K5D4G4XNO5f
+IAfenzqB+3AxzvwdvMjZTPWSFCy1CfivRuGVVscuCV63CZxGQX1RrBxwFe5idFsWTzPXMZKh4aAq
+7a9/P7fS+SxQkZrKEdVSipPS2J24jAJlOlV9b+l08Kftd+GsDequw7Fu2HrcJgekpyxlZhdGO5y5
+DTVWONoF+9qgoOUH67U9kYG9hiectECpCbTnIV/3ndz6ADmVr1iReyEykFc3yJ5zsLM5zPZaH1sq
+XrLp0EM2aG+RntUiB+ZT6fxfIsRPbYnQgbXhGFYAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="list,nativewindow"
+		capname="list"
+		id="8373d488-f6cf-4d32-b015-ca1bc9e175b2"
+		isrooted="True"
+		name="ComboBoxList"
+		refpath="/list[@controlid='1000']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="listitem,nativeitem,checkable"
+			capname="listitem"
+			id="c042e912-548e-469a-a8b6-887a9a029081"
+			name="ListItem"
+			refimgid="26c7faff-d574-4826-9fc9-3bb9797aabc6"
+			robustPath=""
+			searchtimeout="30000ms">
+				/list[@controlid='1000']/listitem[@text=$listItemName]
+			</item>
+			<item
+			addcaps="listitem,nativeitem,checkable"
+			capname="listitem"
+			id="5f015047-3a58-4d48-901d-84151bb6d4a1"
+			name="OpenStreetMap"
+			refimgid="6e16a318-28e1-42cd-90c8-bb9b2c2be30e"
+			robustPath=""
+			searchtimeout="30000ms">
+				/list[@controlid='1000']/listitem[@text=$NameWmsLayer]
+			</item>
+			<basepath>
+				/list[@controlid='1000']
+			</basepath>
+			<icon>
+				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
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow"
+		capname="form"
+		id="1e3e1fdb-7d8e-42c9-98e1-97932512bc80"
+		isrooted="True"
+		name="DialogSelectFolder"
+		refimgid="68c41331-a67d-44d8-8457-fce054b1edeb"
+		searchtimeout="30000ms"
+		usecache="True">
+			<item
+			addcaps="text,nativewindow"
+			capname="text"
+			id="dd630d51-0ba0-4af4-8007-107b1b4c4874"
+			name="DirectoryPath"
+			refimgid="09548d9f-8105-4a8f-a4b2-38a6ddc7cbab"
+			refpath="/form[@title='Select folder']/text[@controlid='1152']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&gt;'Select folder']/text[@controlid='1152']
+			</item>
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="5420a916-2ecb-47ba-9d16-7f2a36bf7075"
+			name="SelectFolder"
+			refimgid="ebab8726-d384-4ec0-bf3d-a9bbbdf8944c"
+			refpath="/form[@title='Select folder']/button[@text='Select Folder']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&gt;'Select folder']/button[@text='Select Folder']
+			</item>
+			<basepath>
+				/form[@title&gt;'Select folder']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAHnSURBVDhPY6A6OHTmblZJVUswlEsaaO6ZJ3v+
+1qd3C1buyT9x5WX2tUc/j9x+9vfXrWd//wLxn60Hr6VAlWIHNq6e1pcf/P595dHffxj4wZ8/EXGZ
+MVCl2IGxsTErkNICMYFYWUJCxu7c3T9/zt3/+2/P6Rev5q85snbToftF9fWr2EDq8YL6vqVKh6/+
+eHzi1t9/ILx69837aXkNC128w6tkZdWloMqwg/WHXzscvPL7x/bTHz87e0c2AIU0hFRU+BSds9U0
+gtvcVDzq+SAqsYDeRcdUtpz69iE5r20+AweHvLJ7gbZ5yYEbVlUn/lpVn/gHwuqhnQuhylFB2syZ
+rPO3Pjxr4RRYIKdrI2icvmKudeXhfzBsXrjjI5+MURYDH58QVAsqiC+cEOwZktMoLy/PoepdnWpZ
+sucfMtaPn3dDzb+1DBhCTFAtqCA2b0KtjIwW2HQJ47B0s4Kt/9CxYfqKlxIGHqJgDVgAI5QGAmFe
+Nh4xfzE93yn6SYs+mGSv/QfCcvZpCxm0tAhHIwIYs0qZRvYbpCz7K22TtIKBm1sMKkEY2NvXs2iE
+9lToxE7/xC2llc3AIMgPlcIDgAEobZM6RdGt9JycQ+YudlGlRKCoIhAzg+WJBKAkzQ3EHECMFC7o
+gIEBAIuk2FMfZ8feAAAAAElFTkSuQmCC
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow"
+		capname="form"
+		id="b56acff9-1ff6-4505-92d5-c942aec0dd25"
+		isrooted="True"
+		name="DialogSelectAFileToExportTo"
+		refimgid="9686b6f1-706a-4b94-9186-a7c200f4c74c"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="text,nativewindow"
+			capname="text"
+			id="5a888f35-f269-4875-92b0-698f1a0b1f60"
+			name="FieldFilePath"
+			refimgid="73239b5f-cb6a-422b-91d3-c1a2dfe9a4b3"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&gt;'Select a file to export to']//text[@accessiblename='File name:']
+			</item>
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="bf76cc7b-fc85-4832-b3bd-70691065e67d"
+			name="ButtonSave"
+			refimgid="b4274940-a85e-4b70-86eb-787604cf9474"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&gt;'Select a file to export to']/button[@text='&amp;Save']
+			</item>
+			<basepath>
+				/form[@title&gt;'Select a file to export to']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJkSURBVDhPY0AH63afFJ44cRs7lEsaWLntkOj6
+7SdmlVS26tXX1zP9//+f6cqjf0JXH/9QvXrvm/y2W7fwGzxrydaWg2ce3jp64fm2C3e+7Lv25Pfj
+m8/+/rz59O+/a49+vl+7/ew0oDJGiGoswD8kLmX11tNX1++5dG/KvE3Hl28+eeP4tY9frjz6/3/V
+1jOX0/PqkkNDVzFDlWMFQCdySnFyCkupqKiIZhQ312w8eOfB2Xt//x269PHT9qOPbu44+Wxj1/S1
+gVD12EFx9yLupVuvNuy/+OXhvvOfvkxfevB8fHrFNHMbt0xVTQMvOTU9RahSTLBo0QXubSc/zNty
+7M2j0qaZ63SNnUJFVU0N5O0zA7Sjp7Tppy6frRU3sxCqHBPM23yzr2vu3j2mDr7xUgZeVjpRE1st
+Svffta4+/s+66tg/s/xtrxXciqcwGBuzQrUgQFnHas/qvk1r1fXtHRTtU12MM1butiw/+Meq4uA/
+i5K9P7UjJpzkkzeMYOCXE4RqQQGMJR1rZyrrWFlKShpzaQW3TTPL2/LeonjXP4vi3f/NCnf+Mc7e
+8FY7ZsYGefssA6geJGBvzyKvYmQhLq7HDeQxSxiHFOnEzrhtmr/5HzLWS5h7TUzX2wWiCT/gZeEU
+NuWTMchSdC/bY5yx5q9u/OxXMrYp0xhERXmgaggDIRV7GXnXwgka4b0PxQwCOhi4uCSgUjgBo4pH
+rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
+QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,control,nativewindow"
+		capname="form"
+		id="77ca5fac-b8b5-4d29-91ef-b27fb254db2b"
+		isrooted="True"
+		name="AstroComponentSelection"
+		refpath="/form[@controlname='AstroComponentSelection']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="cell,accessible"
+			capname="cell"
+			id="84f75043-3164-4ddf-9ea3-6397aaa4e8ba"
+			name="CheckBoxGenericAstronimicalComponent"
+			refimgid="0f649f77-7976-4f80-af1c-708a3a724258"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='AstroComponentSelection']/container/container[@controlname='panel1']/table[@controlname='dataGridView1']/row[@accessiblevalue~$NameAstronomicalComponent]/cell[2]
+			</item>
+			<item
+			addcaps="button,control,nativewindow"
+			capname="button"
+			id="d6c91e54-9ad9-48ca-8ae0-4eb573cada63"
+			name="OkAstroCompSelection"
+			refimgid="b5b9ed0d-f0db-4245-bf0c-2255f5ab0a24"
+			refpath="/form[@controlname='AstroComponentSelection']/container/container[@controlname='panel2']/button[@controlname='buttonOk']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='AstroComponentSelection']/container[@controlname='splitContainer1']/?/?/button[@controlname='buttonOk']
+			</item>
+			<basepath>
+				/form[@controlname='AstroComponentSelection']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAH4SURBVDhPrdFdSJNhGMbxR1BzhTJzapnsJGgU
+RnQQEXYQhGkEgRIUihSzrKyEMM0ME00ENRY6WjPLmOasObKkHDTKmoSBERUZbNWsVdtys/nRKjr5
+9+F74AvBwLrggufk/l0Hj/gveTDoYD6VzmcB6SnLsDGZbxOdfPW2EnbXMDNawvTjPCaHNnKlOj4y
+MGRQEfY08cVVzsyzQqYeZTN5by2fB9R0VC6KDNxvTZqzmknIrmGiP4VxaxzGsoVyYGxNNM7VMTzP
+iGVkVRyOlQrsusVMDWcT+r1qUxPoS+DTtWh83QJ9qUIOTN/sJWQ2ETDq8Taexro8noEmJaE7GoL9
+yQR6Ffh7ovjYJfBcFuhK4uRA8KIBf3MDnqpy3hwoQq9O5EaDkuCv1XFLDD6z4INJ8K5D4G4XNO5f
+IAfenzqB+3AxzvwdvMjZTPWSFCy1CfivRuGVVscuCV63CZxGQX1RrBxwFe5idFsWTzPXMZKh4aAq
+7a9/P7fS+SxQkZrKEdVSipPS2J24jAJlOlV9b+l08Kftd+GsDequw7Fu2HrcJgekpyxlZhdGO5y5
+DTVWONoF+9qgoOUH67U9kYG9hiectECpCbTnIV/3ndz6ADmVr1iReyEykFc3yJ5zsLM5zPZaH1sq
+XrLp0EM2aG+RntUiB+ZT6fxfIsRPbYnQgbXhGFYAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,control,nativewindow"
+		capname="form"
+		id="466f8f58-522c-4161-9656-9eef3ed5af77"
+		isrooted="True"
+		name="SupportPointSelectionForm"
+		refpath="/form[@controlname='SupportPointSelectionForm']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="radiobutton,control,nativewindow"
+			capname="radiobutton"
+			id="bef15140-badd-4ecb-9a4a-3ccc0bf1abd8"
+			name="RadioButtonAllSupportPoints"
+			refimgid="df9170ed-ec8c-4056-87ef-c285ce44893f"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='SupportPointSelectionForm']/radiobutton[@text=$SupportPointsToApplyTo]
+			</item>
+			<item
+			addcaps="button,control,nativewindow"
+			capname="button"
+			id="90ed5e7d-c6a0-4dda-a971-b8be58e941f3"
+			name="OkChoiceSupportPoints"
+			refimgid="9198eefe-9544-4434-b526-c3b3a1c21acd"
+			refpath="/form[@controlname='SupportPointSelectionForm']/button[@controlname='OkButton']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='SupportPointSelectionForm']/button[@controlname='OkButton']
+			</item>
+			<basepath>
+				/form[@controlname='SupportPointSelectionForm']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAH4SURBVDhPrdFdSJNhGMbxR1BzhTJzapnsJGgU
+RnQQEXYQhGkEgRIUihSzrKyEMM0ME00ENRY6WjPLmOasObKkHDTKmoSBERUZbNWsVdtys/nRKjr5
+9+F74AvBwLrggufk/l0Hj/gveTDoYD6VzmcB6SnLsDGZbxOdfPW2EnbXMDNawvTjPCaHNnKlOj4y
+MGRQEfY08cVVzsyzQqYeZTN5by2fB9R0VC6KDNxvTZqzmknIrmGiP4VxaxzGsoVyYGxNNM7VMTzP
+iGVkVRyOlQrsusVMDWcT+r1qUxPoS+DTtWh83QJ9qUIOTN/sJWQ2ETDq8Taexro8noEmJaE7GoL9
+yQR6Ffh7ovjYJfBcFuhK4uRA8KIBf3MDnqpy3hwoQq9O5EaDkuCv1XFLDD6z4INJ8K5D4G4XNO5f
+IAfenzqB+3AxzvwdvMjZTPWSFCy1CfivRuGVVscuCV63CZxGQX1RrBxwFe5idFsWTzPXMZKh4aAq
+7a9/P7fS+SxQkZrKEdVSipPS2J24jAJlOlV9b+l08Kftd+GsDequw7Fu2HrcJgekpyxlZhdGO5y5
+DTVWONoF+9qgoOUH67U9kYG9hiectECpCbTnIV/3ndz6ADmVr1iReyEykFc3yJ5zsLM5zPZaH1sq
+XrLp0EM2aG+RntUiB+ZT6fxfIsRPbYnQgbXhGFYAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow"
+		capname="form"
+		id="1f3a23e5-dd28-44cd-9cfb-1cbfa942cf65"
+		isrooted="True"
+		name="Confirm"
+		refpath="/form[@title='Confirm']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="159fb399-97ef-4b0e-af62-fd7e11cc54bc"
+			name="ButtonOK"
+			refimgid="acafcdc1-92f9-49f8-a84a-1dfb2f8cae16"
+			refpath="/form[@title='Confirm']/button[@text='OK']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Confirm']/button[@text='OK']
+			</item>
+			<basepath>
+				/form[@title='Confirm']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJkSURBVDhPY0AH63afFJ44cRs7lEsaWLntkOj6
+7SdmlVS26tXX1zP9//+f6cqjf0JXH/9QvXrvm/y2W7fwGzxrydaWg2ce3jp64fm2C3e+7Lv25Pfj
+m8/+/rz59O+/a49+vl+7/ew0oDJGiGoswD8kLmX11tNX1++5dG/KvE3Hl28+eeP4tY9frjz6/3/V
+1jOX0/PqkkNDVzFDlWMFQCdySnFyCkupqKiIZhQ312w8eOfB2Xt//x269PHT9qOPbu44+Wxj1/S1
+gVD12EFx9yLupVuvNuy/+OXhvvOfvkxfevB8fHrFNHMbt0xVTQMvOTU9RahSTLBo0QXubSc/zNty
+7M2j0qaZ63SNnUJFVU0N5O0zA7Sjp7Tppy6frRU3sxCqHBPM23yzr2vu3j2mDr7xUgZeVjpRE1st
+Svffta4+/s+66tg/s/xtrxXciqcwGBuzQrUgQFnHas/qvk1r1fXtHRTtU12MM1butiw/+Meq4uA/
+i5K9P7UjJpzkkzeMYOCXE4RqQQGMJR1rZyrrWFlKShpzaQW3TTPL2/LeonjXP4vi3f/NCnf+Mc7e
+8FY7ZsYGefssA6geJGBvzyKvYmQhLq7HDeQxSxiHFOnEzrhtmr/5HzLWS5h7TUzX2wWiCT/gZeEU
+NuWTMchSdC/bY5yx5q9u/OxXMrYp0xhERXmgaggDIRV7GXnXwgka4b0PxQwCOhi4uCSgUjgBo4pH
+rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
+QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow"
+		capname="form"
+		id="3fd4f716-144d-4db6-9860-26f39d33eeab"
+		isrooted="True"
+		name="SaveAsDialog"
+		refimgid="f7dd373c-b821-41e6-acb6-22823d56ed0f"
+		refpath="/form[@title='Save As']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="text,nativewindow"
+			capname="text"
+			id="2dc0ba72-830f-42f3-a464-9519658779df"
+			name="FilePathField"
+			refimgid="7955329f-d66e-4461-91d6-a06349f266e3"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Save As']/element/container/element/combobox/text[@accessiblename='File name:']
+			</item>
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="c2cc3fe5-1c52-4355-b043-2cd49ff0b46b"
+			name="SaveButton"
+			refimgid="df8a08d9-c371-438e-b875-7fcfa2d02d5a"
+			refpath="/form[@title='Save As']/button[@text='&amp;Save']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Save As']/button[@text='&amp;Save']
+			</item>
+			<basepath>
+				/form[@title='Save As']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJkSURBVDhPY0AH63afFJ44cRs7lEsaWLntkOj6
+7SdmlVS26tXX1zP9//+f6cqjf0JXH/9QvXrvm/y2W7fwGzxrydaWg2ce3jp64fm2C3e+7Lv25Pfj
+m8/+/rz59O+/a49+vl+7/ew0oDJGiGoswD8kLmX11tNX1++5dG/KvE3Hl28+eeP4tY9frjz6/3/V
+1jOX0/PqkkNDVzFDlWMFQCdySnFyCkupqKiIZhQ312w8eOfB2Xt//x269PHT9qOPbu44+Wxj1/S1
+gVD12EFx9yLupVuvNuy/+OXhvvOfvkxfevB8fHrFNHMbt0xVTQMvOTU9RahSTLBo0QXubSc/zNty
+7M2j0qaZ63SNnUJFVU0N5O0zA7Sjp7Tppy6frRU3sxCqHBPM23yzr2vu3j2mDr7xUgZeVjpRE1st
+Svffta4+/s+66tg/s/xtrxXciqcwGBuzQrUgQFnHas/qvk1r1fXtHRTtU12MM1butiw/+Meq4uA/
+i5K9P7UjJpzkkzeMYOCXE4RqQQGMJR1rZyrrWFlKShpzaQW3TTPL2/LeonjXP4vi3f/NCnf+Mc7e
+8FY7ZsYGefssA6geJGBvzyKvYmQhLq7HDeQxSxiHFOnEzrhtmr/5HzLWS5h7TUzX2wWiCT/gZeEU
+NuWTMchSdC/bY5yx5q9u/OxXMrYp0xhERXmgaggDIRV7GXnXwgka4b0PxQwCOhi4uCSgUjgBo4pH
+rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
+QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow"
+		capname="form"
+		id="ad944914-0bb7-46f5-8fb1-f009cc2b6153"
+		isrooted="True"
+		name="ConfirmSaveAsDialog"
+		refimgid="66af4e28-7624-45f0-a811-77b8c368f227"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="a51b31d5-1629-4deb-ad72-268c51a60397"
+			name="ConfirmYesButton"
+			refimgid="24c4f3b3-9245-4c3f-a9e6-a590a693b7ed"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&lt;'Save As']//button[@accessiblename='Yes']
+			</item>
+			<basepath>
+				/form[@title&lt;'Save As']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJkSURBVDhPY0AH63afFJ44cRs7lEsaWLntkOj6
+7SdmlVS26tXX1zP9//+f6cqjf0JXH/9QvXrvm/y2W7fwGzxrydaWg2ce3jp64fm2C3e+7Lv25Pfj
+m8/+/rz59O+/a49+vl+7/ew0oDJGiGoswD8kLmX11tNX1++5dG/KvE3Hl28+eeP4tY9frjz6/3/V
+1jOX0/PqkkNDVzFDlWMFQCdySnFyCkupqKiIZhQ312w8eOfB2Xt//x269PHT9qOPbu44+Wxj1/S1
+gVD12EFx9yLupVuvNuy/+OXhvvOfvkxfevB8fHrFNHMbt0xVTQMvOTU9RahSTLBo0QXubSc/zNty
+7M2j0qaZ63SNnUJFVU0N5O0zA7Sjp7Tppy6frRU3sxCqHBPM23yzr2vu3j2mDr7xUgZeVjpRE1st
+Svffta4+/s+66tg/s/xtrxXciqcwGBuzQrUgQFnHas/qvk1r1fXtHRTtU12MM1butiw/+Meq4uA/
+i5K9P7UjJpzkkzeMYOCXE4RqQQGMJR1rZyrrWFlKShpzaQW3TTPL2/LeonjXP4vi3f/NCnf+Mc7e
+8FY7ZsYGefssA6geJGBvzyKvYmQhLq7HDeQxSxiHFOnEzrhtmr/5HzLWS5h7TUzX2wWiCT/gZeEU
+NuWTMchSdC/bY5yx5q9u/OxXMrYp0xhERXmgaggDIRV7GXnXwgka4b0PxQwCOhi4uCSgUjgBo4pH
+rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
+QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,control,nativewindow"
+		capname="form"
+		id="79879e2f-8f01-45c2-b50e-8d2f978951b4"
+		isrooted="True"
+		name="GridBasedDialog"
+		refimgid="7bd27b5f-4dd3-4dad-a3cb-26b3eab311fc"
+		refpath="/form[@controlname='GridBasedDialog']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="cell,accessible"
+			capname="cell"
+			id="5830b4ab-93cd-4cd4-98a3-5f1ff3e4e25c"
+			name="WaterLevelCell"
+			refimgid="54f13397-aaa8-426b-bda9-29214f79610d"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='GridBasedDialog']/container/container/container/table/row/cell[@text='water level (waterlevel)']
+			</item>
+			<item
+			addcaps="button,control,nativewindow"
+			capname="button"
+			id="a7757bef-d2af-4495-9ad0-52f44784dcab"
+			name="ButtonOk"
+			refimgid="012c2e37-1248-4156-a994-fc37ce8ffb6d"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='GridBasedDialog']/container/container/button[@text='OK']
+			</item>
+			<basepath>
+				/form[@controlname='GridBasedDialog']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAH4SURBVDhPrdFdSJNhGMbxR1BzhTJzapnsJGgU
+RnQQEXYQhGkEgRIUihSzrKyEMM0ME00ENRY6WjPLmOasObKkHDTKmoSBERUZbNWsVdtys/nRKjr5
+9+F74AvBwLrggufk/l0Hj/gveTDoYD6VzmcB6SnLsDGZbxOdfPW2EnbXMDNawvTjPCaHNnKlOj4y
+MGRQEfY08cVVzsyzQqYeZTN5by2fB9R0VC6KDNxvTZqzmknIrmGiP4VxaxzGsoVyYGxNNM7VMTzP
+iGVkVRyOlQrsusVMDWcT+r1qUxPoS+DTtWh83QJ9qUIOTN/sJWQ2ETDq8Taexro8noEmJaE7GoL9
+yQR6Ffh7ovjYJfBcFuhK4uRA8KIBf3MDnqpy3hwoQq9O5EaDkuCv1XFLDD6z4INJ8K5D4G4XNO5f
+IAfenzqB+3AxzvwdvMjZTPWSFCy1CfivRuGVVscuCV63CZxGQX1RrBxwFe5idFsWTzPXMZKh4aAq
+7a9/P7fS+SxQkZrKEdVSipPS2J24jAJlOlV9b+l08Kftd+GsDequw7Fu2HrcJgekpyxlZhdGO5y5
+DTVWONoF+9qgoOUH67U9kYG9hiectECpCbTnIV/3ndz6ADmVr1iReyEykFc3yJ5zsLM5zPZaH1sq
+XrLp0EM2aG+RntUiB+ZT6fxfIsRPbYnQgbXhGFYAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,control,nativewindow"
+		capname="form"
+		id="7566cfd1-320d-4aa8-9c1e-2295675437b6"
+		isrooted="True"
+		name="OpenUrlDialog"
+		refpath="/form[@controlname='OpenUrlDialog']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,control,nativewindow"
+			capname="button"
+			id="ddbb5b1a-b548-4b24-8346-a304040f7eff"
+			name="OkButton"
+			refimgid="689ab0f2-6f10-4cdd-a305-67e829cf787e"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='OpenUrlDialog']/button[@text='OK']
+			</item>
+			<item
+			addcaps="button,accessible"
+			capname="button"
+			id="1b60d00e-0a23-4750-81b0-7623b43d6821"
+			name="ExpandDropDownMenu"
+			refimgid="eb59dff4-fa54-4903-a20b-12840e93b0b0"
+			refpath="/form[@controlname='OpenUrlDialog']/combobox/button[@accessiblename='Open']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='OpenUrlDialog']/combobox[@controlname='urlComboBox']/button[@accessiblename='Open']
+			</item>
+			<basepath>
+				/form[@controlname='OpenUrlDialog']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAH4SURBVDhPrdFdSJNhGMbxR1BzhTJzapnsJGgU
+RnQQEXYQhGkEgRIUihSzrKyEMM0ME00ENRY6WjPLmOasObKkHDTKmoSBERUZbNWsVdtys/nRKjr5
+9+F74AvBwLrggufk/l0Hj/gveTDoYD6VzmcB6SnLsDGZbxOdfPW2EnbXMDNawvTjPCaHNnKlOj4y
+MGRQEfY08cVVzsyzQqYeZTN5by2fB9R0VC6KDNxvTZqzmknIrmGiP4VxaxzGsoVyYGxNNM7VMTzP
+iGVkVRyOlQrsusVMDWcT+r1qUxPoS+DTtWh83QJ9qUIOTN/sJWQ2ETDq8Taexro8noEmJaE7GoL9
+yQR6Ffh7ovjYJfBcFuhK4uRA8KIBf3MDnqpy3hwoQq9O5EaDkuCv1XFLDD6z4INJ8K5D4G4XNO5f
+IAfenzqB+3AxzvwdvMjZTPWSFCy1CfivRuGVVscuCV63CZxGQX1RrBxwFe5idFsWTzPXMZKh4aAq
+7a9/P7fS+SxQkZrKEdVSipPS2J24jAJlOlV9b+l08Kftd+GsDequw7Fu2HrcJgekpyxlZhdGO5y5
+DTVWONoF+9qgoOUH67U9kYG9hiectECpCbTnIV/3ndz6ADmVr1iReyEykFc3yJ5zsLM5zPZaH1sq
+XrLp0EM2aG+RntUiB+ZT6fxfIsRPbYnQgbXhGFYAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow"
+		capname="form"
+		id="372cc43a-b9c5-4a7e-bfe5-7837ca2e6ef9"
+		isrooted="True"
+		name="OverwriteCurrentProject"
+		refpath="/form[@title='Overwrite current project']"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="ada4e4e8-8e62-4b6a-bacb-d76e0f33de92"
+			name="ButtonYes"
+			refimgid="06194b50-716d-4732-9b54-f02ea52baab0"
+			refpath="/form[@title='Overwrite current project']/button[@text='&amp;Yes']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Overwrite current project']/button[@text='&amp;Yes']
+			</item>
+			<basepath>
+				/form[@title='Overwrite current project']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJkSURBVDhPY0AH63afFJ44cRs7lEsaWLntkOj6
+7SdmlVS26tXX1zP9//+f6cqjf0JXH/9QvXrvm/y2W7fwGzxrydaWg2ce3jp64fm2C3e+7Lv25Pfj
+m8/+/rz59O+/a49+vl+7/ew0oDJGiGoswD8kLmX11tNX1++5dG/KvE3Hl28+eeP4tY9frjz6/3/V
+1jOX0/PqkkNDVzFDlWMFQCdySnFyCkupqKiIZhQ312w8eOfB2Xt//x269PHT9qOPbu44+Wxj1/S1
+gVD12EFx9yLupVuvNuy/+OXhvvOfvkxfevB8fHrFNHMbt0xVTQMvOTU9RahSTLBo0QXubSc/zNty
+7M2j0qaZ63SNnUJFVU0N5O0zA7Sjp7Tppy6frRU3sxCqHBPM23yzr2vu3j2mDr7xUgZeVjpRE1st
+Svffta4+/s+66tg/s/xtrxXciqcwGBuzQrUgQFnHas/qvk1r1fXtHRTtU12MM1butiw/+Meq4uA/
+i5K9P7UjJpzkkzeMYOCXE4RqQQGMJR1rZyrrWFlKShpzaQW3TTPL2/LeonjXP4vi3f/NCnf+Mc7e
+8FY7ZsYGefssA6geJGBvzyKvYmQhLq7HDeQxSxiHFOnEzrhtmr/5HzLWS5h7TUzX2wWiCT/gZeEU
+NuWTMchSdC/bY5yx5q9u/OxXMrYp0xhERXmgaggDIRV7GXnXwgka4b0PxQwCOhi4uCSgUjgBo4pH
+rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
+QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<folder
+		capname="form"
+		id="237e9fe0-c24b-4361-bb9a-966226de47c9"
+		isrooted="True"
+		name="PropertiesDialog"
+		refimgid="eea3c6f8-5b67-4073-b782-bc20c97d9058"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,wpfelement,wpfgroupelement"
+			capname="button"
+			id="6bfe1807-936e-47e3-85ce-b06d9e6eea81"
+			name="ButtonOk"
+			refimgid="a42d562c-9598-41af-ba6a-2be14125382c"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//button[@automationid='Ok']
+			</item>
+			<item
+			addcaps="radiobutton,wpfelement,wpfgroupelement"
+			capname="radiobutton"
+			id="e51b9ca1-dece-4c16-963e-65a89e56787e"
+			name="CustomRange"
+			refimgid="1167ad74-a713-4108-b4c2-1cac055ab8ce"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//radiobutton[@automationid='CustomRange']
+			</item>
+			<item
+			addcaps="text,wpfelement,wpfgroupelement"
+			capname="text"
+			id="fa3ff240-c3fa-4ca7-acb5-d68803ab2d4c"
+			name="NumberOfClassesField"
+			refimgid="b0cc911a-a139-4e53-8eca-325fc247d131"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//text[@automationid='NumberOfClasses']
+			</item>
+			<item
+			addcaps="button,wpfelement,wpfgroupelement"
+			capname="button"
+			id="6dad6ee3-70a8-4303-b245-3c24bb85c6af"
+			name="ButtonGenerate"
+			refimgid="a96b08be-133f-4ffa-8949-7b316bdad129"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//button[@automationid='Generate']
+			</item>
+			<item
+			addcaps="text,wpfelement,wpfgroupelement"
+			capname="text"
+			id="901777c3-8e49-403e-bd77-90541d99329f"
+			name="MinField"
+			refimgid="8e669f59-6d62-45e3-9711-fa509d5f756e"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//text[@automationid='MinRange']
+			</item>
+			<item
+			addcaps="text,wpfelement,wpfgroupelement"
+			capname="text"
+			id="5de193b6-da89-4444-b426-af05474748ef"
+			name="MaxField"
+			refimgid="537b6745-3d2c-4041-b66c-c665630ce246"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title='Properties']//text[@automationid='MaxRange']
+			</item>
+			<basepath>
+				/form[@title='Properties']
+			</basepath>
+		</folder>
+		<appfolder
+		addcaps="form,nativewindow,wpfwin32element,wpfelement,wpfgroupelement"
+		capname="form"
+		id="3c02a830-8efb-43f7-8740-82346f40ac83"
+		isrooted="True"
+		name="ProgressBarWindow"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="progressbar,wpfelement,wpfgroupelement"
+			capname="progressbar"
+			id="d2abd9d7-691c-4336-a878-31c6ba368b82"
+			name="ProgressBarBar"
+			refimgid="340dad46-b6b6-4b6b-810b-890a16412a6e"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@name='ProgressBarWindow']/progressbar
+			</item>
+			<basepath>
+				/form[@name='ProgressBarWindow']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJkSURBVDhPY0AH63afFJ44cRs7lEsaWLntkOj6
+7SdmlVS26tXX1zP9//+f6cqjf0JXH/9QvXrvm/y2W7fwGzxrydaWg2ce3jp64fm2C3e+7Lv25Pfj
+m8/+/rz59O+/a49+vl+7/ew0oDJGiGoswD8kLmX11tNX1++5dG/KvE3Hl28+eeP4tY9frjz6/3/V
+1jOX0/PqkkNDVzFDlWMFQCdySnFyCkupqKiIZhQ312w8eOfB2Xt//x269PHT9qOPbu44+Wxj1/S1
+gVD12EFx9yLupVuvNuy/+OXhvvOfvkxfevB8fHrFNHMbt0xVTQMvOTU9RahSTLBo0QXubSc/zNty
+7M2j0qaZ63SNnUJFVU0N5O0zA7Sjp7Tppy6frRU3sxCqHBPM23yzr2vu3j2mDr7xUgZeVjpRE1st
+Svffta4+/s+66tg/s/xtrxXciqcwGBuzQrUgQFnHas/qvk1r1fXtHRTtU12MM1butiw/+Meq4uA/
+i5K9P7UjJpzkkzeMYOCXE4RqQQGMJR1rZyrrWFlKShpzaQW3TTPL2/LeonjXP4vi3f/NCnf+Mc7e
+8FY7ZsYGefssA6geJGBvzyKvYmQhLq7HDeQxSxiHFOnEzrhtmr/5HzLWS5h7TUzX2wWiCT/gZeEU
+NuWTMchSdC/bY5yx5q9u/OxXMrYp0xhERXmgaggDIRV7GXnXwgka4b0PxQwCOhi4uCSgUjgBo4pH
+rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
+QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,control,nativewindow"
+		capname="form"
+		id="326584a1-e568-439b-a59f-9c36d4697f40"
+		isrooted="True"
+		name="SelectCoordinateSystemDialog"
+		refimgid="bd29972f-2cd2-4266-8d97-6221daa51cd9"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,control,nativewindow"
+			capname="button"
+			id="dc69074c-5766-485b-857d-dfb64e3f42af"
+			name="ButtonOk"
+			refimgid="cc009054-e90c-42d1-bb6d-6826aafdd11a"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='SelectCoordinateSystemDialog']/button[@text='OK']
+			</item>
+			<item
+			addcaps="text,accessible"
+			capname="text"
+			id="7713d563-5324-4fee-8463-1642a3474c12"
+			name="CoordinateSystemText"
+			refimgid="7a165ab0-bca5-41e6-86f9-7b79e849f279"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='SelectCoordinateSystemDialog']/container/container/text[@controlname='textBoxFilter']
+			</item>
+			<item
+			addcaps="treeitem,accessible,accessibletreeitem"
+			capname="treeitem"
+			id="c720710e-fe72-4063-86d7-4393b3f66917"
+			name="AmersfoortRDNewEPSG289924"
+			refimgid="dadb4c17-674b-4a8c-95da-ad03eef91102"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@controlname='SelectCoordinateSystemDialog']/container/container/tree/tree/treeitem[@accessiblename&gt;'Projected Coordinate Syst']/treeitem[@accessiblename&gt;'Amersfoort / RD New [EPSG']
+			</item>
+			<basepath>
+				/form[@controlname='SelectCoordinateSystemDialog']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAH4SURBVDhPrdFdSJNhGMbxR1BzhTJzapnsJGgU
+RnQQEXYQhGkEgRIUihSzrKyEMM0ME00ENRY6WjPLmOasObKkHDTKmoSBERUZbNWsVdtys/nRKjr5
+9+F74AvBwLrggufk/l0Hj/gveTDoYD6VzmcB6SnLsDGZbxOdfPW2EnbXMDNawvTjPCaHNnKlOj4y
+MGRQEfY08cVVzsyzQqYeZTN5by2fB9R0VC6KDNxvTZqzmknIrmGiP4VxaxzGsoVyYGxNNM7VMTzP
+iGVkVRyOlQrsusVMDWcT+r1qUxPoS+DTtWh83QJ9qUIOTN/sJWQ2ETDq8Taexro8noEmJaE7GoL9
+yQR6Ffh7ovjYJfBcFuhK4uRA8KIBf3MDnqpy3hwoQq9O5EaDkuCv1XFLDD6z4INJ8K5D4G4XNO5f
+IAfenzqB+3AxzvwdvMjZTPWSFCy1CfivRuGVVscuCV63CZxGQX1RrBxwFe5idFsWTzPXMZKh4aAq
+7a9/P7fS+SxQkZrKEdVSipPS2J24jAJlOlV9b+l08Kftd+GsDequw7Fu2HrcJgekpyxlZhdGO5y5
+DTVWONoF+9qgoOUH67U9kYG9hiectECpCbTnIV/3ndz6ADmVr1iReyEykFc3yJ5zsLM5zPZaH1sq
+XrLp0EM2aG+RntUiB+ZT6fxfIsRPbYnQgbXhGFYAAAAASUVORK5CYII=
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="contextmenu,nativewindow,wpfwin32element,wpfelement,wpfgroupelement"
+		capname="contextmenu"
+		id="7ed50f56-9719-4cf8-815b-8cd9c9564895"
+		isrooted="True"
+		name="SettingsContextMenu"
+		refpath="/contextmenu"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="77907732-68a8-4687-9ce6-5194600515f7"
+			name="Circle"
+			refpath="/contextmenu/container/listitem[@text='circle']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu/container/listitem[@text='circle']
+			</item>
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="bdf2b7c9-c604-4f91-8ef7-276f1b43e7e2"
+			name="Constant"
+			refpath="/contextmenu/container/listitem[@text='Constant']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu/container/listitem[@text='Constant']
+			</item>
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="0bdd6f9a-68c5-45e5-9f17-03d15fa23477"
+			name="PerTimepoint"
+			refpath="/contextmenu/container/listitem[@text='Per Timepoint']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu/container/listitem[@text='Per Timepoint']
+			</item>
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="74fc94e2-09f9-4c85-bfbc-130110a268c8"
+			name="ThirdGeneration"
+			refpath="/contextmenu/container/listitem[@text='third generation']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu/container/listitem[@text='third generation']
+			</item>
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="a3220871-1bc2-469a-8370-7497ad6c23cd"
+			name="Dissipation"
+			refpath="/contextmenu/container/listitem[@text='dissipation']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu/container/listitem[@text='dissipation']
+			</item>
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="424d5961-8830-45d0-a8b3-40a4815a7ab3"
+			name="JONSWAP"
+			refpath="/contextmenu/container/listitem[@text='JONSWAP']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu/container/listitem[@text='JONSWAP']
+			</item>
+			<item
+			addcaps="listitem,wpfelement,wpfgroupelement"
+			capname="listitem"
+			id="2b0f2d16-c97f-4334-abf4-bb4f58ea1eb6"
+			name="Komen"
+			refpath="/contextmenu/container/listitem[@text='Komen']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/contextmenu/container/listitem[@text='Komen']
+			</item>
+			<folder
+			addcaps="container,wpfelement,wpfgroupelement"
+			capname="container"
+			id="afe93b0c-42f8-42bd-bc92-98012db5b60d"
+			isrooted="True"
+			name="Grid"
+			refpath="/contextmenu/container"
+			searchtimeout="30000ms"
+			usecache="False">
+				<item
+				addcaps="listitem,wpfelement,wpfgroupelement"
+				capname="listitem"
+				id="5391b2ab-36d5-4493-a133-213895368306"
+				name="Jonswap1"
+				refpath="/contextmenu/container/listitem[@text='Jonswap']"
+				robustPath=""
+				searchtimeout="30000ms">
+					/contextmenu/container/listitem[@text='Jonswap']
+				</item>
+				<item
+				addcaps="listitem,wpfelement,wpfgroupelement"
+				capname="listitem"
+				id="9488ba09-514e-4f0d-8e02-9650ce7b1e53"
+				name="ParametrizedConstant"
+				refpath="/contextmenu/container/listitem[@text='Parametrized (Constant)']"
+				robustPath=""
+				searchtimeout="30000ms">
+					/contextmenu/container/listitem[@text='Parametrized (Constant)']
+				</item>
+				<item
+				addcaps="listitem,wpfelement,wpfgroupelement"
+				capname="listitem"
+				id="2c63b62b-42ca-4ac3-92d8-26b7e1c80734"
+				name="SpatiallyVarying"
+				refpath="/contextmenu/container/listitem[@text='Spatially Varying']"
+				robustPath=""
+				searchtimeout="30000ms">
+					/contextmenu/container/listitem[@text='Spatially Varying']
+				</item>
+				<basepath>
+					/contextmenu/container
+				</basepath>
+			</folder>
+			<basepath>
+				/contextmenu
+			</basepath>
+			<icon>
+				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
+			</icon>
+		</appfolder>
+		<basepath>
+		</basepath>
+	</rootfolder>
+	<variables>
+		<var
+		id="eb24b6dc-f471-4a90-8453-22de04049eed"
+		name="boundaryName">
+		</var>
+		<var
+		id="e62becbc-8aa3-4b65-9650-dae06e16ad96"
+		name="listItemName">
+		</var>
+		<var
+		id="6824a813-24ff-434c-b586-86a8c5584b15"
+		name="itemName">
+		</var>
+		<var
+		id="17c28b1a-4dab-4317-84e4-83aa7c764b95"
+		name="NameAstronomicalComponent">
+		</var>
+		<var
+		id="be5e7200-5399-41ef-9324-a9f812145d8a"
+		name="ParameterName">
+		</var>
+		<var
+		id="28ac1b3a-9df9-4417-895a-56e7b8f06310"
+		name="NameTreeItemNode">
+		</var>
+		<var
+		id="e1d949c6-ef32-44b1-9a7e-a2137b7a46b7"
+		name="TextAttributeTable">
+		</var>
+		<var
+		id="d1107f4e-97fa-474d-b473-c78f2420dfec"
+		name="TabName">
+		</var>
+		<var
+		id="947735a3-473d-4905-a68e-884bf15209d2"
+		name="NameLayer">
+		</var>
+		<var
+		id="c17b9c8a-9236-4b74-abb0-4c4551f59552"
+		name="InterpolationParameter">
+		</var>
+		<var
+		id="f2a2ee80-625d-4b18-8a0e-a8064fa26926"
+		name="SupportPointsToApplyTo">
+		</var>
+		<var
+		id="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
+		name="SubstringInOptionName">
+		</var>
+		<var
+		id="96fe739d-eb41-4d6c-a1b9-862eebde8bde"
+		name="StringInTextItemSelectDialog">
+		</var>
+		<var
+		id="4dc4a29e-24b4-4c49-9e90-db968bf0d9a6"
+		name="NameSubTab">
+		</var>
+		<var
+		id="5fa0df42-3429-4094-a902-91befaef4b36"
+		name="SupportPointName">
+		</var>
+		<var
+		id="046af1a5-a8f6-474b-ae9e-3849b87e46f4"
+		name="NameModelTypeToImport">
+		</var>
+		<var
+		id="beb100b1-338a-40cb-88d7-c0742d11d276"
+		name="NameWmsLayer">
+		</var>
+		<var
+		id="8cb128c8-71ba-4571-91a9-fa8cfdc80c0c"
+		name="OutputGroupHeaderName">
+		</var>
+		<var
+		id="a49d5229-eef7-4679-bfcd-de2f9f2ce99a"
+		name="OtherGroupCaptionName">
+		</var>
+		<var
+		id="1cb541ff-ae3e-4222-ac48-5c0cd23f7914"
+		name="variableName">
+		</var>
+		<var
+		id="40e28885-0ff2-4da4-a8ba-ed85726542ab"
+		name="inputOutput">
+		</var>
+		<var
+		id="8e9934c7-a04c-4bd8-b138-e1535118001c"
+		name="rowNumber">
+		</var>
+		<var
+		id="802b7a40-50d7-425c-b1bc-585751b36262"
+		name="columnName">
+		</var>
+		<var
+		id="62b383bd-0347-49e6-9747-7cb2a818455f"
+		name="PropertyItem">
+		</var>
+		<var
+		id="e1ca11fe-dbef-49e0-a2f0-145e30aa20a6"
+		name="rowNumberMinusOne">
+		</var>
+		<var
+		id="5fa9f1f5-4c91-47bd-a9fc-06cac88bac3e"
+		name="GenericItem">
+		</var>
+		<var
+		id="535623f4-1888-47b7-8c5e-cb0a366378fc"
+		name="ProjectTreeItem">
+		</var>
+		<var
+		id="deb7e911-bfbc-4350-9323-a31bda16500a"
+		name="BoundaryDataName">
+		</var>
+		<var
+		id="4209a8ae-1ab5-4d39-9d87-1e28f251f6b2"
+		name="SupportPointIndex">
+		</var>
+	</variables>
+</repository>

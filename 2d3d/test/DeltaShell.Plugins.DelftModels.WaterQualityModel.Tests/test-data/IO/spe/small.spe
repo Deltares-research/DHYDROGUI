@@ -1,0 +1,20 @@
+17 ; number of algae types
+3 ; number of coefficients = columns
+SPECIES    KORT  TYPE       KORT  TYPE_DESCRIPTION               EXTVLALG   EXTUVALG   NCRALG   
+FDIATOMS   FDIAT FDIATOMS_E FDI_E Fresh DIATOMS energy type      0.2700     0.2700     0.210    
+FFLAGELA   FFLAE FFLAGELA   FFL_E Fresh FLAGELAT energy type     0.2250     0.2250     0.275    
+GREENS     GREEN GREENS_E   GRE_E GREENS energy type             0.2250     0.2250     0.275    
+APHANIZO   APHAN APHANIZO_N APH_N APHANIZO nitrogen type         0.40       0.40       0.125    
+APHANIZO   APHAN APHANIZO_P APH_P APHANIZO phosphorus type       0.40       0.40       0.170    
+APHANFIX   APHNF APHANFIX_E APF_E APHANFIX energy type           0.45       0.45       0.220    
+APHANFIX   APHNF APHANFIX_N APF_N APHANFIX nitrogen type         0.40       0.40       0.125    
+BLUEGRN    BLUEG BLUEGRN_N  BLU_N BLUEGRN nitrogen type          0.2875     0.2875     0.125    
+BLUEGRN    BLUEG BLUEGRN_P  BLU_P BLUEGRN phosphorus type        0.2875     0.2875     0.150    
+MDIATOMS   MDIAT MDIATOMS_E MDI_E Marine DIATOMS energy type     2.40D-01   2.40D-01   0.25500  
+MDIATOMS   MDIAT MDIATOMS_N MDI_N Marine DIATOMS nitrogen type   2.10D-01   2.10D-01   0.07000  
+MDIATOMS   MDIAT MDIATOMS_P MDI_P Marine DIATOMS phosphorus type 2.10D-01   2.10D-01   0.10500  
+MFLAGELA   MFLAE MFLAGELA_E MFL_E Marine FLAGELAT energy type    2.50D-01   2.50D-01   0.20000  
+DINOMIX    DINOM DINOMIX_M  DIM_M Mixotrophic DINOFLAG type      1.75D-01   1.75D-01   0.03840  
+ULVAF      ULVAF ULVAF_N    ULF_N Ulva attached nitrogen type    2.48D-02   2.48D-02   0.0330   
+ULVAF      ULVAF ULVAF_P    ULF_P Ulva attached phosphorus type  2.48D-02   2.48D-02   0.0594   
+NODULA     NODUL NODULA_E   NOD_E NODULARIA energy type          0.45       0.45       0.220    

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain"
+                   assembly="DeltaShell.Plugins.DelftModels.RealTimeControl">
+
+  <subclass name="FactorRule" lazy="false" extends="HydraulicRule" discriminator-value="rtc_factor_rule">
+
+    <property name="Factor" column="factor" />
+
+  </subclass>
+</hibernate-mapping>
