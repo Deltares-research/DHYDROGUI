@@ -1,0 +1,6 @@
+QUANTITY     =solarradiation
+FILENAME     =surroundingDomain.pol
+VARNAME      = ssr
+FILETYPE     =11
+METHOD       =3
+OPERAND      =O

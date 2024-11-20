@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SerializableStatesInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <InState>
+    <Name>FlowFM: 2001-01-02 00:00:00</Name>
+    <ZipPath>C:\Users\sluis_pa\AppData\Local\Temp\state_FlowFM_2001-01-02_00-00-00.zip</ZipPath>
+  </InState>
+  <OutStates>
+    <StateInfo>
+      <Name>FlowFM: 2001-01-01 04:00:00</Name>
+      <ZipPath>D:\test\2020.06\standalone\Project1.dsproj_data\state_FlowFM_2001-01-01_04-00-00-61a8f364-369a-43cc-a471-4d2c76debaac.zip</ZipPath>
+    </StateInfo>
+    <StateInfo>
+      <Name>FlowFM: 2001-01-01 08:00:00</Name>
+      <ZipPath>D:\test\2020.06\standalone\Project1.dsproj_data\state_FlowFM_2001-01-01_08-00-00-5e141bad-9d9c-4fad-b014-20e7cdf10262.zip</ZipPath>
+    </StateInfo>
+    <StateInfo>
+      <Name>FlowFM: 2001-01-01 12:00:00</Name>
+      <ZipPath>D:\test\2020.06\standalone\Project1.dsproj_data\state_FlowFM_2001-01-01_12-00-00-92352b99-ff7c-4e19-bcf4-6223991f1353.zip</ZipPath>
+    </StateInfo>
+    <StateInfo>
+      <Name>FlowFM: 2001-01-01 16:00:00</Name>
+      <ZipPath>D:\test\2020.06\standalone\Project1.dsproj_data\state_FlowFM_2001-01-01_16-00-00-8300e7b4-0677-456c-99a3-6fe4bde8093c.zip</ZipPath>
+    </StateInfo>
+    <StateInfo>
+      <Name>FlowFM: 2001-01-01 20:00:00</Name>
+      <ZipPath>D:\test\2020.06\standalone\Project1.dsproj_data\state_FlowFM_2001-01-01_20-00-00-0a13f805-8f6d-4360-b0f4-5c080d5e9943.zip</ZipPath>
+    </StateInfo>
+    <StateInfo>
+      <Name>FlowFM: 2001-01-02 00:00:00</Name>
+      <ZipPath>D:\test\2020.06\standalone\Project1.dsproj_data\state_FlowFM_2001-01-02_00-00-00-e2fd6121-3c51-4f3e-9afa-3f524680b3e6.zip</ZipPath>
+    </StateInfo>
+  </OutStates>
+</SerializableStatesInfo>

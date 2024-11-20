@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <Directory Id='fm_rgfgrid_x64' Name='plugins-qt'>
+    <?define FMGuiRgfgridSourceDir ="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.Common.Gui\plugins-qt\x64" ?>
+    <Directory Id='RGFGridLibDir' Name='x64'>
+      <Directory Name="manuals" Id="rgfgrid_manuals_folder_x64">
+        <Component Id="FM_rgfgrid_manuals_x64" Guid="73FDB275-E653-4767-AE51-16E93F975F11">
+          <!-- The manual is copied from the manuals resources in the installer to the correct place in RGF Grid. -->
+          <File Id="x86E91B01A574F74D1CBB9C86211D5591AB" Source="$(var.ProjectDir)\..\FM\$(var.Delft3DPackageName)_Manuals\RGFGRID_User_Manual.pdf"/>
+        </Component>
+      </Directory>
+    </Directory>
+    <?undef FMGuiRgfgridSourceDir ?>
+  </Directory>
+</Include>

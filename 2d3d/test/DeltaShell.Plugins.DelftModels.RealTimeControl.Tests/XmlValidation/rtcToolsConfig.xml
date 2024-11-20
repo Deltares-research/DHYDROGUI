@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rtcToolsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wldelft.nl/fews ..\..\../xsd\rtcToolsConfig.xsd" xmlns="http://www.wldelft.nl/fews">
+  <general>
+    <description>Oberrhein Ploder Steuerung</description>
+    <poolRoutingScheme>Theta</poolRoutingScheme>
+    <theta>0.5</theta>
+  </general>
+  <rules>
+    <!-- Einlassbauwerke OP1, OP2 geschlossen -->
+    <rule>
+      <constant id="Erstein_OP1_0">
+        <constant>0.0</constant>
+        <output>
+          <y>Erstein_OP1</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- Einlassbauwerk OP1 wird mit einem Durchfluss von 87.5 m3/s geoeffnet -->
+    <rule>
+      <constant id="Erstein_OP1_87.5">
+        <constant>87.5</constant>
+        <output>
+          <y>Erstein_OP1</y>
+        </output>
+      </constant>
+    </rule>
+    <rule>
+      <constant id="Erstein_OP2_0">
+        <constant>0.0</constant>
+        <output>
+          <y>Erstein_OP2</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- Einlassbauwerk OP2 wird mit einem Durchfluss von 87.5 m3/s geoeffnet -->
+    <rule>
+      <constant id="Erstein_OP2_87.5">
+        <constant>87.5</constant>
+        <output>
+          <y>Erstein_OP2</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- Auslassbauwerke OV1, OV2 geschlossen -->
+    <rule>
+      <constant id="Erstein_OV1_0">
+        <constant>0.0</constant>
+        <output>
+          <y>Erstein_OV1</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- Auslassbauwerk OV1 wird mit einem Durchfluss von 4.5, 15 m3/s geoeffnet -->
+    <rule>
+      <constant id="Erstein_OV1_4.5">
+        <constant>4.5</constant>
+        <output>
+          <y>Erstein_OV1</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- Documentation -->
+    <rule>
+      <constant id="Erstein_OV1_15">
+        <constant>15.0</constant>
+        <output>
+          <y>Erstein_OV1</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- Documentation -->
+    <rule>
+      <constant id="Erstein_OV2_0">
+        <constant>0.0</constant>
+        <output>
+          <y>Erstein_OV2</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- Auslassbauwerk OV2 wird mit einem Durchfluss von 90 m3/s geoeffnet -->
+    <rule>
+      <constant id="Erstein_OV2_90">
+        <constant>90.0</constant>
+        <output>
+          <y>Erstein_OV2</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- 1.5.1: Die sechs Heberleitungen des Entnahmebauwerkes werden nacheinander in Betrieb genommen, so dass innerhalb von 30 Minuten der Zufluss in den Polder 160 m3/s erreicht. Zusatz DS: Das Anfahren findet vereinfacht in einem Zeitschritt statt. -->
+    <rule>
+      <constant id="Moder_160">
+        <constant>160</constant>
+        <output>
+          <y>Moder_QOut</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- 1.5.2: Die Fuellung wird beendet, wenn der Wasserstand im Polder NN + 118,45 m erreicht. -->
+    <rule>
+      <constant id="Moder_0">
+        <constant>0.0</constant>
+        <output>
+          <y>Moder_QOut</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- 1.5.3: Der Abfluss aus dem Polder betraegt max. 50 m3/s. Zusatz DS: Es wird vereinfacht angenommen, dass der Polder immer mit maximaler Kapazitaet entleert werden kann. -->
+    <rule>
+      <constant id="Moder_m50">
+        <constant>-50.0</constant>
+        <output>
+          <y>Moder_QOut</y>
+        </output>
+      </constant>
+    </rule>
+    <!-- Documentation -->
+    <rule>
+      <lookupTable id="Iffezheim">
+        <table>
+          <record x="0" y="123.60" />
+          <record x="3400" y="123.60" />
+          <record x="4800" y="123.00" />
+          <record x="20000" y="123.00" />
+        </table>
+        <input>
+          <x>Maxau_QIn</x>
+        </input>
+        <output>
+          <y>Iffezheim_HSP</y>
+        </output>
+      </lookupTable>
+    </rule>
+    <!-- Documentation -->
+    <rule>
+      <pid id="Iffezheim_PID">
+        <settingMin>116.00</settingMin>
+        <settingMax>123.60</settingMax>
+        <settingMaxSpeed>0.20</settingMaxSpeed>
+        <kp>0.5</kp>
+        <ki>0.2</ki>
+        <kd>0.0</kd>
+        <input>
+          <x>KW_Iffezheim_HIn</x>
+          <setpoint>Iffezheim_HSP</setpoint>
+        </input>
+        <output>
+          <y>Iffezheim_COut</y>
+          <integralPart>Iffezheim_KI</integralPart>
+        </output>
+      </pid>
+    </rule>
+    <!-- Documentation -->
+    <rule>
+      <lookupTable id="Gambsheim">
+        <table>
+          <record x="0" y="135.00" />
+          <record x="2100" y="135.00" />
+          <record x="2500" y="134.75" />
+          <record x="3000" y="134.25" />
+          <record x="3500" y="133.50" />
+          <record x="5200" y="133.50" />
+          <record x="7000" y="134.90" />
+          <record x="20000" y="134.90" />
+        </table>
+        <input>
+          <x>Maxau_QIn</x>
+        </input>
+        <output>
+          <y>Gambsheim_HSP</y>
+        </output>
+      </lookupTable>
+    </rule>
+    <rule>
+      <pid id="Gambsheim_PID">
+        <settingMin>116.00</settingMin>
+        <settingMax>123.60</settingMax>
+        <settingMaxSpeed>0.20</settingMaxSpeed>
+        <kp>0.5</kp>
+        <ki>0.2</ki>
+        <kd>0.0</kd>
+        <input>
+          <x>KW_Gambsheim_HIn</x>
+          <setpoint>Gambsheim_HSP</setpoint>
+        </input>
+        <output>
+          <y>Gambsheim_COut</y>
+          <integralPart>Gambsheim_KI</integralPart>
+        </output>
+      </pid>
+    </rule>
+  </rules>
+  <triggers>
+    <trigger>
+      <deadBand id="Totbandtrigger_Polder_Erstein">
+        <conditionOn>
+          <x1Series>Kehl_Kronenhof_OW_QIn</x1Series>
+          <relationalOperator>Greater</relationalOperator>
+          <x2Value>3600.0</x2Value>
+        </conditionOn>
+        <conditionOff>
+          <x1Series>Kehl_Kronenhof_OW_QIn</x1Series>
+          <relationalOperator>Less</relationalOperator>
+          <x2Value>3000.0</x2Value>
+        </conditionOff>
+        <true>
+          <trigger>
+            <expression id="Altenheim_Minus_Erstein">
+              <x1Series>Altenheim_HIn</x1Series>
+              <mathematicalOperator>-</mathematicalOperator>
+              <x2Series>Polder_Erstein_HIn</x2Series>
+              <y>Altenheim_Minus_Erstein_Trigger</y>
+            </expression>
+          </trigger>
+          <trigger>
+            <standard id="Altenheim_Groesser_Erstein">
+              <condition>
+                <x1Series ref="IMPLICIT">Altenheim_Minus_Erstein_Trigger</x1Series>
+                <relationalOperator>Greater</relationalOperator>
+                <x2Value>0.0</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <standard id="Erstein_OP1_Pegel">
+                    <condition>
+                      <x1Series>Polder_Erstein_HIn</x1Series>
+                      <relationalOperator>Greater</relationalOperator>
+                      <x2Value>149.6</x2Value>
+                    </condition>
+                    <true>
+                      <trigger>
+                        <ruleReference>Erstein_OP1_0</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OP2_0</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OV1_4.5</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OV2_90</ruleReference>
+                      </trigger>
+                    </true>
+                    <false>
+                      <trigger>
+                        <ruleReference>Erstein_OP1_87.5</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OP2_87.5</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OV1_4.5</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OV2_0</ruleReference>
+                      </trigger>
+                    </false>
+                    <output>
+                      <status>Erstein_OP1_Pegel_Trigger</status>
+                    </output>
+                  </standard>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>Erstein_OP1_0</ruleReference>
+                </trigger>
+                <trigger>
+                  <ruleReference>Erstein_OP2_0</ruleReference>
+                </trigger>
+                <trigger>
+                  <ruleReference>Erstein_OV1_0</ruleReference>
+                </trigger>
+                <trigger>
+                  <ruleReference>Erstein_OV2_0</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>Erstein_OP1_Pegel_Trigger</status>
+              </output>
+            </standard>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="Polder_Erstein Leer">
+              <condition>
+                <x1Series>Polder_Erstein_HIn</x1Series>
+                <relationalOperator>Less</relationalOperator>
+                <x2Value>140.0</x2Value>
+              </condition>
+              <true>
+                <!-- Keine Polderflutung ! -->
+                <trigger>
+                  <ruleReference>Erstein_OP1_0</ruleReference>
+                </trigger>
+                <trigger>
+                  <ruleReference>Erstein_OP2_0</ruleReference>
+                </trigger>
+                <trigger>
+                  <ruleReference>Erstein_OV1_0</ruleReference>
+                </trigger>
+                <trigger>
+                  <ruleReference>Erstein_OV2_0</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <!-- Ist der Wasserstand im Polder Erstein groesser als im Plombsheimer Becken ? -->
+                  <expression id="Erstein_Minus_Plombsheim">
+                    <x1Series>Polder_Erstein_HIn</x1Series>
+                    <mathematicalOperator>-</mathematicalOperator>
+                    <x2Series>Plombsheimer_Becken_HIn</x2Series>
+                    <y>Erstein_Minus_Plombsheim_Trigger</y>
+                  </expression>
+                </trigger>
+                <trigger>
+                  <standard id="Erstein_Groesser_Plombsheim">
+                    <condition>
+                      <x1Series ref="IMPLICIT">Erstein_Minus_Plombsheim_Trigger</x1Series>
+                      <relationalOperator>Greater</relationalOperator>
+                      <x2Value>0.0</x2Value>
+                    </condition>
+                    <true>
+                      <!-- Entleerung [Regel 2] -->
+                      <trigger>
+                        <ruleReference>Erstein_OP1_0</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OP2_0</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OV1_15</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OV2_90</ruleReference>
+                      </trigger>
+                    </true>
+                    <false>
+                      <trigger>
+                        <ruleReference>Erstein_OP1_0</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OP2_0</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OV1_15</ruleReference>
+                      </trigger>
+                      <trigger>
+                        <ruleReference>Erstein_OV2_0</ruleReference>
+                      </trigger>
+                    </false>
+                    <output>
+                      <status>Erstein_Groesser_Plombsheim_Trigger</status>
+                    </output>
+                  </standard>
+                </trigger>
+              </false>
+              <output>
+                <status>Erstein_Leer_Trigger</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>Erstein_Totband_Trigger</status>
+        </output>
+      </deadBand>
+    </trigger>
+    <trigger>
+      <deadBand id="Totbandtrigger_Polder_Moder">
+        <!-- 1.5.1: Die Fuellung beginnt, wenn der Abfluss des Rheins am Pegel Maxau 4.400 m3/s ueberschreitet -->
+        <conditionOn>
+          <x1Series>Maxau_QIn</x1Series>
+          <relationalOperator>Greater</relationalOperator>
+          <x2Value>4400.0</x2Value>
+        </conditionOn>
+        <!-- 1.5.3: Die Entleerung beginnt, wenn der Abfluss des Rheins am Pegel Maxau 4.000 m3/s unterschreitet. -->
+        <conditionOff>
+          <x1Series>Maxau_QIn</x1Series>
+          <relationalOperator>Less</relationalOperator>
+          <x2Value>4000.0</x2Value>
+        </conditionOff>
+        <true>
+          <trigger>
+            <standard id="Moder_Fuellung">
+              <condition>
+                <x1Series>Polder_Moder_HIn</x1Series>
+                <relationalOperator>Greater</relationalOperator>
+                <x2Value>118.45</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>Moder_0</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>Moder_160</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>Moder_Fuellung_Trigger</status>
+              </output>
+            </standard>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="Moder_Entleerung">
+              <condition>
+                <x1Series>Polder_Moder_HIn</x1Series>
+                <relationalOperator>Greater</relationalOperator>
+                <x2Value>110.45</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>Moder_m50</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>Moder_0</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>Moder_Entleerung_Trigger</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>Moder_Totband_Trigger</status>
+        </output>
+      </deadBand>
+    </trigger>
+  </triggers>
+</rtcToolsConfig>

@@ -1,0 +1,5 @@
+GUIGroups,(order determines order of appearance),,,,,,,,,,,,,,
+misc,Miscellaneous,,,,,,,,,,,,,,
+MduGroups,(order determines order in written mdu file),,,,,,,,,,,,,,
+MduGroup,MduName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MduOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description,Unit
+TestGroup,"This, that, here, there",,,,Double,1.0,,,FALSE,,,,,,My description,dummyUnit

@@ -1,0 +1,26 @@
+[
+  {
+    "SourceModelName": "Potato",
+    "TargetModelName": "Real-Time Control",
+    "Exchanges": [
+      {
+        "SourceName": "observations/ObservationPoint01/water_depth",
+        "TargetName": "Control Group 1.input0"
+      },
+      {
+        "SourceName": "observations/ObservationPoint01/water_level",
+        "TargetName": "Control Group 1.input1"
+      }
+    ]
+  },
+  {
+    "SourceModelName": "Real-Time Control",
+    "TargetModelName": "Potato",
+    "Exchanges": [
+      {
+        "SourceName": "Control Group 1.output0",
+        "TargetName": "generalstructures/structure01/GateLowerEdgeLevel"
+      }
+    ]
+  }
+]

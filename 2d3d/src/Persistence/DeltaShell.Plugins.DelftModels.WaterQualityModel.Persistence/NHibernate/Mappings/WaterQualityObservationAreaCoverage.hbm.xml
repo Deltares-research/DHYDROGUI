@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas"
+                   assembly="DeltaShell.Plugins.DelftModels.WaterQualityModel">
+
+  <subclass name="WaterQualityObservationAreaCoverage"
+            extends="NetTopologySuite.Extensions.Coverages.UnstructuredGridCellCoverage, NetTopologySuite.Extensions"
+            discriminator-value="waq_obs_area_coverage">
+    <meta attribute="anyType">IValueConverter.OriginalValue</meta>
+  </subclass>
+
+</hibernate-mapping>

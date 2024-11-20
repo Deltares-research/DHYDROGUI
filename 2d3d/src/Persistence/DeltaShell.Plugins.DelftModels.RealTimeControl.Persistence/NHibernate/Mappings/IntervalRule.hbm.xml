@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain"
+                   assembly="DeltaShell.Plugins.DelftModels.RealTimeControl">
+
+  <subclass name="IntervalRule" lazy="false" extends="RuleBase" discriminator-value="rtc_interval_rule">
+
+    <property name="DeadbandAroundSetpoint" column="DeadbandAroundSetpoint" />
+
+    <property name="IntervalType" />
+    <property name="FixedInterval" />
+    <property name="DeadBandType" />
+
+    <many-to-one access="property"
+                 name="TimeSeries"
+                 cascade="save-update"
+                 class="DelftTools.Functions.TimeSeries, DelftTools.Functions"
+                 column="rtc_timeseries_id" />
+
+    <many-to-one access="property"
+                 name="Setting"
+                 cascade="save-update"
+                 class="Setting"
+                 column="rtc_setting_id" />
+  </subclass>
+</hibernate-mapping>

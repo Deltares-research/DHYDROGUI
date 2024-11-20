@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.WaterQualityModel"
+                   assembly="DeltaShell.Plugins.DelftModels.WaterQualityModel">
+
+  <joined-subclass name="WaterQualityModel"
+                   table="waq_model"
+                   persister="DeltaShell.Plugins.Data.NHibernate.LegacyLoaderInjector`1[[DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate.WaterQualityModel353LegacyLoader, DeltaShell.Plugins.DelftModels.WaterQualityModel]], DeltaShell.Plugins.Data.NHibernate"
+                   extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core">
+
+    <key column="project_item_id" />
+
+    <many-to-one name="ModelSettings"
+                 lazy="false"
+                 cascade="all-delete-orphan"
+                 class="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model.WaterQualityModelSettings"
+                 column="wq_model_settings_id" />
+
+    <many-to-one name="OutputFolder"
+                 lazy="false"
+                 cascade="all-delete-orphan"
+                 class="DeltaShell.NGHS.Common.IO.FileBasedFolder, DeltaShell.NGHS.Common"
+                 column="filebased_folder_id" />
+
+    <!-- Mapped via data item:
+     * InputFileCommandLine
+     * InputFileHybrid
+     * SubstanceProcessLibrary
+     * Loads
+     * ObservationPoints
+     * InitialConditions
+     * ProcessCoefficients
+     * Dispersion
+     
+     Mapped via hyd file:
+     * Grid
+     * Bathymetry
+     * ReferenceTime
+     * ModelType
+     * ZTop
+     * ZBot
+     * Areas
+     * Volumes
+     * Flows
+     * Pointers
+     * Lenghts
+     * Vertical diffusion path
+     * Surfaces
+     * Salinity
+     * Temperature
+     * Shear stress
+     * Attributes
+     * Number of horizontal exchanges
+     * Number of vertical exchanges
+     * Number of Hydrodynamic layers
+     * Number of waq segments per hydrodynamic layer
+     * Number of waq segment layers
+     * Boundaries
+     * Hydrodynamic layer thicknesses
+     * Number of hydrodynamic layers per waq layer
+-->
+
+    <property name="VerticalDispersion" />
+    <property name="UseAdditionalHydrodynamicVerticalDiffusion" />
+
+    <many-to-one name="HydroData"
+                 lazy="false"
+                 cascade="all-delete-orphan"
+                 class="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.IHydroData, DeltaShell.Plugins.DelftModels.WaterQualityModel" />
+    <property name="layerType" access="field" />
+    <property name="HasEverImportedHydroData" access="field" />
+
+    <property name="UseSaveStateTimeRange" />
+    <property name="SaveStateStartTime" />
+    <property name="SaveStateStopTime" />
+    <property name="SaveStateTimeStep" />
+    <property name="ReferenceTime" />
+
+    <property name="ModelDataDirectory" />
+
+    <property name="CoordinateSystem" column="coordinate_system" type="DeltaShell.Plugins.SharpMapGis.HibernateMappings.CoordinateSystemUserType, DeltaShell.Plugins.SharpMapGis" />
+
+    <list name="Loads"
+          lazy="false"
+          cascade="all-delete-orphan"
+          collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaterQualityLoad, DeltaShell.Plugins.DelftModels.WaterQualityModel]], DeltaShell.Plugins.Data.NHibernate">
+      <key column="loads_waq_model_id" />
+      <index column="load_list_index" />
+      <one-to-many class="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaterQualityLoad, DeltaShell.Plugins.DelftModels.WaterQualityModel" />
+    </list>
+
+    <list name="ObservationPoints"
+          lazy="false"
+          cascade="all-delete-orphan"
+          collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.WaterQualityObservationPoint, DeltaShell.Plugins.DelftModels.WaterQualityModel]], DeltaShell.Plugins.Data.NHibernate">
+      <key column="observation_point_waq_model_id" />
+      <index column="observation_point_list_index" />
+      <one-to-many class="DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.WaterQualityObservationPoint, DeltaShell.Plugins.DelftModels.WaterQualityModel" />
+    </list>
+
+    <list name="Boundaries"
+          lazy="false"
+          cascade="all-delete-orphan"
+          collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaterQualityBoundary, DeltaShell.Plugins.DelftModels.WaterQualityModel]], DeltaShell.Plugins.Data.NHibernate">
+      <key column="boundaries_waq_model_id" />
+      <index column="boundaries_list_index" />
+      <one-to-many class="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaterQualityBoundary, DeltaShell.Plugins.DelftModels.WaterQualityModel" />
+    </list>
+
+  </joined-subclass>
+
+</hibernate-mapping>

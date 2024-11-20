@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas"
+                   assembly="DeltaShell.Plugins.DelftModels.WaterQualityModel">
+  <subclass name="OverwriteLabelOperation"
+            extends="SharpMap.SpatialOperations.SpatialOperation, SharpMap"
+            discriminator-value="waq_overwrite_label_operation">
+
+    <property name="x" column="coordinate_x" access="field" />
+    <property name="y" column="coordinate_y" access="field" />
+
+    <property name="labelToSet" column="label" access="field" />
+
+    <property name="InputCoordinateSystem" column="input_cs" type="DeltaShell.Plugins.SharpMapGis.HibernateMappings.CoordinateSystemUserType, DeltaShell.Plugins.SharpMapGis" />
+  </subclass>
+</hibernate-mapping>

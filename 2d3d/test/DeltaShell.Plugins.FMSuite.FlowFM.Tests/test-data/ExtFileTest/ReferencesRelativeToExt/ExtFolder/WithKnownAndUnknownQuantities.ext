@@ -1,0 +1,76 @@
+QUANTITY        =windxy
+FILENAME        =../MduFolder/windxy.tim
+FILETYPE        =2
+METHOD          =1
+OPERAND         =+
+
+QUANTITY        =initialwaterlevel
+FILENAME        =../MduFolder/initialwaterlevel.xyz
+FILETYPE        =7
+METHOD          =6
+OPERAND         =O
+AVERAGINGTYPE   =2
+
+QUANTITY        =initialtemperature
+FILENAME        =../MduFolder/initialtemperature.xyz
+FILETYPE        =7
+METHOD          =5
+OPERAND         =O
+
+QUANTITY        =internaltidesfrictioncoefficient
+FILENAME        =../MduFolder/internaltidesfrictioncoefficient.pol
+FILETYPE        =10
+METHOD          =4
+OPERAND         =*
+VALUE           =0.0125
+
+QUANTITY        =frictioncoefficient
+FILENAME        =../MduFolder/frictioncoefficient.pol
+FILETYPE        =10
+METHOD          =4
+OPERAND         =O
+VALUE           =0.028
+    
+QUANTITY        =frictioncoefficient
+FILENAME        =../MduFolder/frictioncoefficient.xyz
+FILETYPE        =7
+METHOD          =5
+OPERAND         =*
+
+QUANTITY        =horizontaleddyviscositycoefficient
+FILENAME        =../MduFolder/horizontaleddyviscositycoefficient.pol
+FILETYPE        =10
+METHOD          =4
+OPERAND         =O
+VALUE           =0.1
+
+QUANTITY        =horizontaleddydiffusivitycoefficient
+FILENAME        =../MduFolder/horizontaleddydiffusivitycoefficient.pol
+FILETYPE        =10
+METHOD          =4
+OPERAND         =O
+VALUE           =0.1
+    
+QUANTITY        =rainfall_rate
+FILENAME        =../MduFolder/rainfall_rate.nc
+FILETYPE        =11
+METHOD          =3
+OPERAND         =O
+    
+QUANTITY        =waterlevelbnd
+FILENAME        =../MduFolder/waterlevelbnd.pli
+FILETYPE        =9
+METHOD          =3
+OPERAND         =O
+    
+QUANTITY        =initialsalinity
+FILENAME        =../MduFolder/initialsalinity.xyz
+FILETYPE        =7
+METHOD          =5
+OPERAND         =O   
+    
+QUANTITY        =initialsalinitytop
+FILENAME        =../MduFolder/initialsalinitytop.xyz
+FILETYPE        =7
+METHOD          =5
+OPERAND         =O

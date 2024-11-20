@@ -1,0 +1,50 @@
+\casesection{Restart from an rst-file, with instationary boundary conditions (2D)\label{case:restartrst2dbndinstationary}}
+
+
+
+\paragraph*{Purpose}
+D-Flow FM facilitates the restart of a computation from flow data resulting from a previously performed computation. For this purpose a \texttt{\_map.nc}-file and an \texttt{\_rst.nc}-file can be used. Both types can be specified in the \texttt{.mdu}-file. 
+
+
+\paragraph*{Linked claims}
+Claims that are related to the current test case are:
+\begin{itemize}
+\item \clrefnoh{cl:generalOutput}
+\end{itemize}
+It is claimed that:
+\begin{itemize}
+\item a computation restarted from a \texttt{\_rst.nc}-file yields \emph{exactly} the same output data as the previously performed computation from which the original \texttt{\_rst.nc}-file was a result.
+\end{itemize}
+
+
+\paragraph*{Approach}
+A computation is run for 240 seconds. Along the time path, several \texttt{\_map.nc}-files and \texttt{\_rst.nc}-files are written. From the output \texttt{\_rst.nc} files that have been generated, the file containing the flow field after 60 seconds (w.r.t.\ the original start), is used as input for the computation subjected to the test. The results after 240 seconds, both from the cold start and from the restart file, should \emph{exactly} be the same. The boundary conditions specified are varying in time, in this case.
+
+
+
+\paragraph*{Model description}
+A simple 10 $\times$ 4 grid is generated with one open boundary. At this boundary, a time-varying water level signal and salinity signal are imposed. The physical parameters as such are not of particular interest for this test case. The start time and stop time of the original computation are 0 seconds and 240 seconds w.r.t.\ the reference time, respectively. Output, either as a \texttt{\_map.nc}-file and as an \texttt{\_rst.nc}-file, is generated at arbitrary times. The restart information is specified in the \texttt{mdu}-file as follows:
+\begin{itemize}
+\item \import{\currfiledir}{restartinfo}
+\end{itemize}
+
+
+\paragraph*{Results}
+The difference between the results from the cold start and from the restart at $t = 240$ seconds, is examined for the water levels, the face-normal velocities and the salinity by means of the root-mean-square difference measure:
+\begin{itemize}
+\item water levels $h$, measured difference $\Delta h_{rms} = $ \import{\currfiledir}{dh} m (w.r.t.\ reference),
+\item velocities $u$, measured difference $\Delta u_{rms} = $ \import{\currfiledir}{du} m/s,
+\item salinity $s$, measured difference $\Delta s_{rms} = $ \import{\currfiledir}{ds} ppt.
+\end{itemize}
+Since all the three values are non-zero, it can be concluded that the restart is not fully \emph{exact}. The restart functionality itself appears to be properly.
+
+
+\paragraph*{Conclusion}
+The functional working of the possibility to use \texttt{\_rst.nc}-files for restart purpose does operate properly. However, the restart is not fully exact.
+
+
+\paragraph*{Version}
+This test has been carried out with version dflow-fm-x64-1.1.116.35661.
+
+
+

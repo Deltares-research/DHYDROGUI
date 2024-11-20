@@ -1,0 +1,1 @@
+INCLUDE 'D:/test/WAQ_model/westernscheldt/westernscheldt.atr' ; attributes file

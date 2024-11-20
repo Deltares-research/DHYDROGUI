@@ -1,0 +1,31 @@
+screen output of swan.bat is written to this file 
+and will be overwritten everytime that swan.bat is executed 
+ECHO is off.
+SWAN batchfile executed for Delft3D 
+Using swan.bat in directory D:\D3DFMIQ-2276\D-HYDRO\bin\Debug\plugins\DeltaShell.Dimr\kernels\x64\swan\scripts\ 
+Using D:\D3DFMIQ-2276\D-HYDRO\bin\Debug\plugins\DeltaShell.Dimr\kernels\x64\swan\scripts\\..\bin\swan_omp.exe 
+Performing wave computation for: Waves.swn 
+        1 file(s) copied.
+
+ SWAN is preparing computation
+
+ Number of threads during execution of parallel region = 12
+
+ iteration    1; sweep 1
++iteration    1; sweep 2
++iteration    1; sweep 3
++iteration    1; sweep 4
+ accuracy OK in   4.14 % of wet grid points ( 99.00 % required)
+
+ iteration    2; sweep 1
++iteration    2; sweep 2
++iteration    2; sweep 3
++iteration    2; sweep 4
+ accuracy OK in 100.00 % of wet grid points ( 99.00 % required)
+
++SWAN is processing output request    1
++SWAN is processing output request    2
++SWAN is processing output request    3
++SWAN is processing output request    4
++SWAN is processing output request    5
+        1 file(s) copied.

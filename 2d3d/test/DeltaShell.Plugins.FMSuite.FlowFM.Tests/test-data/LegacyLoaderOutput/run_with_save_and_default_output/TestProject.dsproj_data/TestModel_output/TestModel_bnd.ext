@@ -1,0 +1,10 @@
+
+[boundary]
+quantity=dischargebnd
+locationfile=Boundary01.pli
+forcingfile=Discharge.bc
+
+[boundary]
+quantity=tracerbndtracer1
+locationfile=Boundary01.pli
+forcingfile=tracer1.bc

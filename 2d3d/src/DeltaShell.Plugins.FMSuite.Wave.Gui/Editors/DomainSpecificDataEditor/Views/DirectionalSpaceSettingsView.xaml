@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views.DirectionalSpaceSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:viewModels="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels"
+             xmlns:converters="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Converters"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:DirectionSpaceTypeToBooleanConverter x:Key="DirectionSpaceTypeToBooleanConverter" />
+
+        <ObjectDataProvider x:Key="DirectionalSpaceTypes"
+                            MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="viewModels:DirectionalSpaceType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <Style x:Key="HorizontalStackPanelStyle" TargetType="{x:Type StackPanel}">
+            <Setter Property="Margin" Value="0,0,0,5" />
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+
+        <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="Width" Value="90" />
+        </Style>
+
+        <Style x:Key="ComboBoxStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="Width" Value="110" />
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Width" Value="110" />
+        </Style>
+        <Style x:Key="UnitStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="5,0,0,0" />
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical">
+
+        <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
+            <TextBlock Style="{StaticResource TextBlockStyle}">Type</TextBlock>
+            <ComboBox SelectedItem="{Binding Path=Type}" ItemsSource="{Binding Source={StaticResource DirectionalSpaceTypes}}" Style="{StaticResource ComboBoxStyle}" />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
+            <TextBlock Text="Nr. of directions" Style="{StaticResource TextBlockStyle}" />
+            <TextBox Text="{Binding Path=NrOfDirections}" Style="{StaticResource TextBoxStyle}" />
+            <TextBlock Text="[-]" Style="{StaticResource UnitStyle}" />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource HorizontalStackPanelStyle}" IsEnabled="{Binding Path = Type, Converter={StaticResource DirectionSpaceTypeToBooleanConverter}}">
+            <TextBlock Text="Start direction" Style="{StaticResource TextBlockStyle}" />
+            <TextBox Text="{Binding Path=StartDirection}" Style="{StaticResource TextBoxStyle}" />
+            <TextBlock Text="[deg]" Style="{StaticResource UnitStyle}" />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource HorizontalStackPanelStyle}" IsEnabled="{Binding Path = Type, Converter={StaticResource DirectionSpaceTypeToBooleanConverter}}">
+            <TextBlock Text="End direction" Style="{StaticResource TextBlockStyle}" />
+            <TextBox Text="{Binding Path=EndDirection}" Style="{StaticResource TextBoxStyle}" />
+            <TextBlock Text="[deg]" Style="{StaticResource UnitStyle}" />
+        </StackPanel>
+
+    </StackPanel>
+
+</UserControl>

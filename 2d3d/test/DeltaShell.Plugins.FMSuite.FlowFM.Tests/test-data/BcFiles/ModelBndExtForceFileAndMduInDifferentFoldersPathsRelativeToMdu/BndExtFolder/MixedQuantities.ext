@@ -1,0 +1,19 @@
+[boundary]
+quantity=waterlevelbnd
+locationfile= MixedQuantities.pli
+forcingfile= MixedQuantities.bc
+
+[boundary]
+quantity=salinitybnd
+locationfile= MixedQuantities.pli
+forcingfile= MixedQuantities.bc
+return_time=42
+
+[lateral]
+id=LateralDischarge
+type=discharge
+locationType=2d
+numCoordinates=1
+xCoordinates=1.7590300e+005
+yCoordinates=3.0731400e+005
+discharge=Discharge.bc

@@ -1,0 +1,144 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.TracerDefinitionsEditorWpf"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:gui="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <local:TracerDefinitionsEditorWpfViewModel x:Name="ViewModel" />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <DrawingBrush x:Key="InvalidBrush">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <DrawingGroup.Children>
+                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                        <GeometryDrawing Brush="#FFE41400" Geometry="F1M9,10L7,10 7,3 9,3z M9,13L7,13 7,11 9,11z M8,1C4.134,1 1,4.134 1,8 1,11.865 4.134,15 8,15 11.865,15 15,11.865 15,8 15,4.134 11.865,1 8,1" />
+                        <GeometryDrawing Brush="#FFEFEFF0" Geometry="F1M9,11L7,11 7,13 9,13z M9,10L7,10 7,3 9,3z" />
+                    </DrawingGroup.Children>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+        <DrawingBrush x:Key="AddBrush">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <DrawingGroup.Children>
+                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                        <GeometryDrawing Brush="#FF388934" Geometry="F1M15,9L9,9 9,15 7,15 7,9 1,9 1,7 7,7 7,1 9,1 9,7 15,7z" />
+                    </DrawingGroup.Children>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+        <DrawingBrush x:Key="DisabledAddBrush">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <DrawingGroup.Children>
+                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                        <GeometryDrawing Brush="DarkSeaGreen" Geometry="F1M15,9L9,9 9,15 7,15 7,9 1,9 1,7 7,7 7,1 9,1 9,7 15,7z" />
+                    </DrawingGroup.Children>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+        <DrawingBrush x:Key="RemoveBrush">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <DrawingGroup.Children>
+                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                        <GeometryDrawing Brush="#FFE51400" Geometry="F1M9.4141,8L12.4141,11 11.0001,12.414 8.0001,9.414 5.0001,12.414 3.5861,11 6.5861,8 3.5861,5 5.0001,3.586 8.0001,6.586 11.0001,3.586 12.4141,5z" />
+                    </DrawingGroup.Children>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </UserControl.Resources>
+    <StackPanel>
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0"
+                     VerticalAlignment="Center"
+                     Height="20"
+                     x:Name="AddTextBox" />
+
+            <Button x:Name="AddButton"
+                    Grid.Column="1" Margin="5,5,0,5"
+                    Command="{Binding AddTracerCommand}"
+                    CommandParameter="{Binding Text, ElementName=AddTextBox}"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Rectangle Width="24" Height="24" Fill="{StaticResource AddBrush}" />
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsEnabled, ElementName=AddButton}" Value="False">
+                                <Setter Property="ToolTip">
+                                    <Setter.Value>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Rectangle Width="24" Height="24"
+                                                       Grid.Column="0"
+                                                       VerticalAlignment="Top"
+                                                       Margin="5"
+                                                       Fill="{StaticResource InvalidBrush}" />
+                                            <TextBlock Grid.Column="1"
+                                                       VerticalAlignment="Center"
+                                                       Text="{Binding CanAddMessage}" />
+                                        </Grid>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <Rectangle Width="24" Height="24" Fill="{StaticResource DisabledAddBrush}" />
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+
+        <ListBox x:Name="ListBox"
+                 Margin="5"
+                 HorizontalContentAlignment="Stretch"
+                 Height="200"
+                 ItemsSource="{Binding Tracers}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0"
+                                Command="{Binding DataContext.RemoveTracerCommand, ElementName=ListBox}"
+                                CommandParameter="{Binding}">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Rectangle Width="24" Height="24" Fill="{StaticResource RemoveBrush}" />
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                        <TextBlock Grid.Column="1" Text="{Binding}" Margin="5" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>
+</UserControl>

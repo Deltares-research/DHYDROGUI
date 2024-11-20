@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.StructureFormulaViews.SimpleWeirFormulaView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
+             xmlns:structureFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.StructureFormulaViews"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.NetworkEditor.Gui;component/Editors/Structures/Views/StructureStyling.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel Style="{StaticResource StructuresView}">
+        <GroupBox Header="Weir">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LeftPane}" />
+                    <ColumnDefinition Width="{StaticResource RightPane}" />
+                </Grid.ColumnDefinitions>
+
+                <structureFormulaViews:StructurePropertiesView 
+                    Grid.Column="0"
+                    DataContext="{Binding StructurePropertiesViewModel}" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Coefficients">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LeftPane}" />
+                    <ColumnDefinition Width="{StaticResource RightPane}" />
+                </Grid.ColumnDefinitions>
+
+                <components:StructuresValueBox Label="Contraction coefficient"
+                                               ValueContent="{Binding Path=ContractionCoefficient}" />
+            </Grid>
+        </GroupBox>
+    </StackPanel>
+</UserControl>

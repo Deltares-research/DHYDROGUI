@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.StructureFormulaViews.GatePropertiesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
+             xmlns:converters="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:structureFormulas="clr-namespace:DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;assembly=DelftTools.Hydro"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.NetworkEditor.Gui;component/Editors/Structures/Views/StructureStyling.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
+
+            <DataTemplate x:Key="EnumLabeledComboBoxTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="GateOpeningDirections"
+                                MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="structureFormulas:GateOpeningDirection" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <GroupBox Header="Gate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LeftPane}" />
+                <ColumnDefinition Width="{StaticResource RightPane}" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <components:LabeledTimeSeriesHeaderView />
+                <components:LabeledTimeSeriesView StructureName="{Binding Path=StructurePropertiesViewModel.StructureName}"
+                                                  Label="Gate lower edge level"
+                                                  SingleValueContent="{Binding GateLowerEdgeLevel}"
+                                                  TimeSeries="{Binding GateLowerEdgeLevelTimeSeries}"
+                                                  IsTimeSeries="{Binding UseGateLowerEdgeLevelTimeSeries}"
+                                                  Unit="m AD" />
+                <components:StructuresValueBox Label="Gate height"
+                                               ValueContent="{Binding GateHeight}"
+                                               Unit="m" />
+                <components:GateOpeningHeightCalculatedFieldView CrestLevel="{Binding Path=StructurePropertiesViewModel.CrestLevel}"
+                                                                 GateLowerEdgeLevel="{Binding Path=GateLowerEdgeLevel}"
+                                                                 IsUsingCrestLevelTimeSeries="{Binding Path=StructurePropertiesViewModel.UseCrestLevelTimeSeries}"
+                                                                 IsUsingGateLowerEdgeLevelTimeSeries="{Binding Path=UseGateLowerEdgeLevelTimeSeries}" />
+                <components:LabeledTimeSeriesView StructureName="{Binding Path=StructurePropertiesViewModel.StructureName}"
+                                                  Label="Horizontal opening width"
+                                                  SingleValueContent="{Binding HorizontalGateOpeningWidth}"
+                                                  TimeSeries="{Binding HorizontalGateOpeningWidthTimeSeries}"
+                                                  IsTimeSeries="{Binding UseHorizontalGateOpeningWidthTimeSeries}"
+                                                  Unit="m" />
+                <components:StructuresComboBox Label="Horizontal opening direction"
+                                               SelectedItem="{Binding Path=GateOpeningHorizontalDirection}"
+                                               ItemsSource="{Binding Source={StaticResource GateOpeningDirections}}"
+                                               ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}"
+                                               IsEnabled="{Binding Path=CanChooseGateOpeningDirection}" />
+            </StackPanel>
+        </Grid>
+    </GroupBox>
+</UserControl>

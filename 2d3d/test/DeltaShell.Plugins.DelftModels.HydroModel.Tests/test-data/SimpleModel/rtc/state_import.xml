@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<treeVectorFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.openda.org" xsi:schemaLocation="http://www.openda.org C:\D-HYDRO-test\_SimpleModel\export\rtc\treeVector.xsd">
+  <treeVector>
+    <treeVectorLeaf id="[Output]NW_1026.34_C_SK_Maeslantkering/GateOpeningWidth">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="[Output]NW_1026.34_C_SK_Maeslantkering/GateLowerEdgeLevel">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="[Output]HK_1.67_C_SK_HartelkeringZ/GateLowerEdgeLevel">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="[Output]HK_1.67_R_SK_HartelkeringN/GateLowerEdgeLevel">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="[Output]HD_998.75_L_US_Volkeraksluizen/GateLowerEdgeLevel">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+  </treeVector>
+</treeVectorFile>

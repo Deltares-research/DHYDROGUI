@@ -1,0 +1,29 @@
+[forcing]
+name                            = Boundary1_0001
+function                        = timeseries
+timeInterpolation               = linear
+vertPositionType                = single
+vertInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2008-01-09 00:00:00
+quantity                        = salinitybnd
+unit                            = ppt
+quantity                        = waterlevelbnd
+unit                            = m
+907200   22   3
+2116800  22   4
+
+[forcing]
+name                            = Boundary1_0002
+function                        = timeseries
+timeInterpolation               = linear
+vertPositionType                = single
+vertInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2008-01-09 00:00:00
+quantity                        = salinitybnd
+unit                            = ppt
+quantity                        = waterlevelbnd
+unit                            = m
+907200   22   5
+2116800  22   6

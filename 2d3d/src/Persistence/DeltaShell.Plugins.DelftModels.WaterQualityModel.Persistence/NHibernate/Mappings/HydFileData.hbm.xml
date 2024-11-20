@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO"
+                   assembly="DeltaShell.Plugins.DelftModels.WaterQualityModel">
+
+  <joined-subclass name="HydFileData"
+                   extends="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.IHydroData, DeltaShell.Plugins.DelftModels.WaterQualityModel"
+                   lazy="false">
+    <key column="wq_hydro_data_id" />
+
+    <property name="Path" column="wq_hyd_file_path" />
+    <property name="Checksum" column="wq_hyd_file_checksum" />
+
+  </joined-subclass>
+
+</hibernate-mapping>

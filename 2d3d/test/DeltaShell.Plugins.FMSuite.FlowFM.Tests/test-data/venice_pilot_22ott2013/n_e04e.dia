@@ -1,0 +1,542 @@
+** INFO   : Opened file : unstruc.hlp
+** INFO   : Closed file : unstruc.hlp
+** INFO   : Opened file : ISOCOLOUR.hls
+** INFO   : Using Local FileISOCOLOUR.hls
+** INFO   : Closed file : ISOCOLOUR.hls
+** INFO   : Opened file : ISOCOLOUR.hls
+** INFO   : Using Local FileISOCOLOUR.hls
+** INFO   : Closed file : ISOCOLOUR.hls
+* Deltares, D-Flow FM Version 1.1.81.000000, Oct 29 2013, 10:51:18
+* File creation date: 13:45:26, 31-10-2013
+** INFO   :  MAXIMUM NUMBER OF LINKS         :            2
+** INFO   :  MAXIMUM NUMBER OF NODES         :            0
+** INFO   :  RESOLUTION GRAPHICS SCREEN      :         1200         900
+** INFO   :  RESOLUTION TEXT     SCREEN      :          150          60
+** INFO   :  NUMBER OF COLOURS AVAILABLE     :          256
+** INFO   :              0        100002 NOD(KMAX)
+** INFO   :              6        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** INFO   :              6         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** INFO   :              6         50000 xlan(maxlan)
+** INFO   :              7         50000 ylan(maxlan)
+** INFO   :              7         50000 zlan(maxlan)
+** INFO   :              7         25000 nclan(maxlan)
+** INFO   : Load network      (*.unt/*.net/*_net.nc)
+** INFO   : Load MDU-file                    (*.mdu)
+** INFO   : Opened file : n_e04e.mdu
+** INFO   : Closed file : n_e04e.mdu
+** INFO   :              8        100002 NOD(KMAX)
+** INFO   :             14        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** INFO   :             14          1440 xsp(maxspl, maxsplen)
+** INFO   :             14          1440 ysp(maxspl, maxsplen)
+** INFO   :             14          1440 xsp2(maxspl, maxsplen)
+** INFO   :             14          1440 ysp2(maxspl, maxsplen)
+** INFO   :             14         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** INFO   :             14         60000 xlan(maxlan)
+** INFO   :             15         60000 ylan(maxlan)
+** INFO   :             15         60000 zlan(maxlan)
+** INFO   :             16         30000 nclan(maxlan)
+ Until here copy of previous diagnostic file
+** INFO   : Opened Model definition file : n_e04e.mdu
+** DEBUG  : Opened 'nn_01_03e.nc_net.nc' as #         3.
+** DEBUG  : Closed NetCDF file 'nn_01_03e.nc_net.nc.
+** INFO   : Opened file : Lagchsez.ldb
+** INFO   :             16         72000 xlan(maxlan)
+** INFO   :             17         72000 ylan(maxlan)
+** INFO   :             17         72000 zlan(maxlan)
+** INFO   :             18         36000 nclan(maxlan)
+** INFO   :             18         86400 xlan(maxlan)
+** INFO   :             19         86400 ylan(maxlan)
+** INFO   :             20         86400 zlan(maxlan)
+** INFO   :             20         43200 nclan(maxlan)
+** INFO   :             21        103680 xlan(maxlan)
+** INFO   :             22        103680 ylan(maxlan)
+** INFO   :             23        103680 zlan(maxlan)
+** INFO   :             23         51840 nclan(maxlan)
+** INFO   :             24        124416 xlan(maxlan)
+** INFO   :             25        124416 ylan(maxlan)
+** INFO   :             26        124416 zlan(maxlan)
+** INFO   :             26         62208 nclan(maxlan)
+** INFO   :             28        149299 xlan(maxlan)
+** INFO   :             29        149299 ylan(maxlan)
+** INFO   :             30        149299 zlan(maxlan)
+** INFO   :             31         74649 nclan(maxlan)
+** INFO   : Closed file : Lagchsez.ldb
+** INFO   : Opened file : laguna_obs.xyn
+** INFO   : Closed file : laguna_obs.xyn
+** INFO   : Opened file : laguna_thd.pli
+** INFO   : Closed file : laguna_thd.pli
+** INFO   : Opened file : laguna_crs.pli
+** INFO   : Closed file : laguna_crs.pli
+** INFO   : Opened display settings file : n_e04e.cfg
+** INFO   :             32        132337 netcell(numpx1)
+** INFO   :             33        173226 lnn(numl)
+** INFO   :             36        346452 lne(2,numl)
+** INFO   :             37         84964 xz(numc)
+** INFO   :             37         84964 yz(numc)
+** INFO   :             38         84964 xzw(numc)
+** INFO   :             39         84964 yzw(numc)
+** INFO   :             39         84964 ba(numc)
+** INFO   : Opened file : nn_01_03c.ext
+** INFO   :             41        173226 xe (nx)
+** INFO   :             42        173226 ye (nx)
+** INFO   :             43        173226 xyen(2, nx)
+** INFO   :             56       1559034 kce(nx), kez(nx), keu(nx), kes(nx), kesd(nx), ket(nx), ken(nx), keg(nx), ked(nx), kep(nx), itpez(nx), itpenz(nx), itpeu(nx)
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Found optional keyword VALUE
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Found optional keyword VALUE
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Found optional keyword VALUE
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Found optional keyword VALUE
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Found optional keyword VALUE
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : dd-01-03e_01.pli
+** INFO   : Closed file : dd-01-03e_01.pli
+** INFO   : waterlevelbnd dd-01-03e_01.pli      99 nr of open bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : dd-01-03e_02.pli
+** INFO   : Closed file : dd-01-03e_02.pli
+** INFO   : waterlevelbnd dd-01-03e_02.pli      55 nr of open bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : dd-01-03e_03.pli
+** INFO   : Closed file : dd-01-03e_03.pli
+** INFO   : waterlevelbnd dd-01-03e_03.pli      64 nr of open bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : keyword QUANTITY NOT found!
+** INFO   :             61        681456 nd(ndx), bl(ndx), bai(ndx), kcs(ndx), aif(ndx)
+** INFO   :             72        331418 ln   (2,lnx)
+** INFO   :             75        331418 lncn (2,lnx)
+** INFO   :             77        331418 bob  (2,lnx)
+** INFO   :             79        165709 dx   (  lnx)
+** INFO   :             80        165709 dxi  (  lnx)
+** INFO   :             81        165709 wu   (  lnx)
+** INFO   :             83        165709 wui  (  lnx)
+** INFO   :             84        165709 kcu  (  lnx)
+** INFO   :             85        165709 csu  (  lnx)
+** INFO   :             87        165709 snu  (  lnx)
+** INFO   :             88        165709 acl  (  lnx)
+** INFO   :             89        165709 acn  (2,lnx)
+** INFO   :             91        165709 iadv   (lnx)
+** INFO   :             92        165709 ibot   (lnx)
+** INFO   :             96        497127 xu(lnx), yu(lnx) , blu(lnx)
+** INFO   :             97        173226 ln2lne (nex)
+** INFO   :             99        173226 lne2ln (nex)
+** INFO   :            102         88225  cn (numk)
+** INFO   :            103         88225 ucnx(numk)
+** INFO   :            104         88225 ucny(numk)
+** INFO   :            104         88225 ban (numk)
+** INFO   : cutcell_list; nr of *.cut files found =              0             4
+** INFO   :            106        165709 wcx1(lnx)
+** INFO   :            107        165709 wcy1(lnx)
+** INFO   :            108        165709 wcx2(lnx)
+** INFO   :            110        165709 wcy2(lnx)
+** INFO   :            111        170364 wcxy (2,ndx)
+** INFO   :            114        331418 wcL  (2,Lnx)
+** INFO   :            114         85182 wc     (ndx)
+** INFO   :            116        165709 wcnx3(lnx)
+** INFO   :            117        165709 wcny3(lnx)
+** INFO   :            118        165709 wcnx4(lnx)
+** INFO   :            120        165709 wcny4(lnx)
+** INFO   :            122        264675 wcnxy (3,numk)
+** INFO   :            122          7266 cscnw(nrcnw)
+** INFO   :            122          7266 sncnw(nrcnw)
+** INFO   :            122          7266  kcnw(nrcnw)
+** INFO   : cutcell_list; nr of *.cut files found =              0             5
+** INFO   :            125        102048 walls(17,nw)
+** INFO   :            128        339856 banf(mxban)
+** INFO   :            131        339856 nban(2,mxban)
+** INFO   :            133        339856 rr(mxban), nr(mxban)
+** INFO   :            136        339856 banh (mxban)
+** INFO   :            139        339856 nbanh(2,mxban)
+** INFO   :            140        170364 s0  (ndx) , s1  (ndx)
+** INFO   :            142        170364 a0  (ndx) , a1  (ndx)
+** INFO   :            143        170364 hs  (ndx) , s00 (ndx)
+** INFO   :            144         85182 cfs (ndx)
+** INFO   :            145        170364 ucx (ndkx) , ucy (ndkx)
+** INFO   :            146        170364 uqcx(ndkx) , uqcy(ndkx)
+** INFO   :            148        170364 ucxq(ndkx) , ucyq(ndkx)
+** INFO   :            149        170364 qin (ndkx) , vih (ndkx)
+** INFO   :            150        170364 dvxc(ndkx) , dvyc(ndkx)
+** INFO   :            151         85182 cfli(ndkx)
+** INFO   :            152         85182 squ (ndkx)
+** INFO   :            153         85182 sqi (ndkx)
+** INFO   :            153         85182 sq  (ndkx)
+** INFO   :            154         85182 vol0(ndkx)
+** INFO   :            155         85182 vol1(ndkx)
+** INFO   :            155         85182 volerror(ndkx)
+** INFO   :            156         85182 tidep (ndx)
+** INFO   :            157        165709 cfu  (lnx)
+** INFO   :            158         85182 frcu (lnx)
+** INFO   :            159         85182 ifrcutp(lnx)
+** INFO   :            160        165709 wsu  (lnx)
+** INFO   :            161        165709 u0   (lnkx)
+** INFO   :            163        165709 u1   (lnkx)
+** INFO   :            164        165709 q1   (lnkx)
+** INFO   :            165        165709 qa   (lnkx)
+** INFO   :            167        165709 v    (lnkx)
+** INFO   :            168        165709 ucxu (lnkx)
+** INFO   :            169        165709 ucyu (lnkx)
+** INFO   :            171        165709 hu   (lnkx)
+** INFO   :            172        165709 huvli(lnkx)
+** INFO   :            173        165709 au   (lnkx)
+** INFO   :            175        165709 viu  (lnkx)
+** INFO   :            176        165709 cflj (lnkx)
+** INFO   :            177        165709 tetaj(lnkx)
+** INFO   :            179        165709 suu  (lnkx)
+** INFO   :            180        165709 advi (lnkx)
+** INFO   :            181        165709 adve (lnkx)
+** INFO   :            182        165709 rhou (lnkx)
+** INFO   :            184        165709 plotlin(max(lnkx,ndkx))
+** INFO   :            184         85182 numlimdt(ndx)
+** INFO   :            185         85182 bb   (ndx )
+** INFO   :            186         85182 dd   (ndx )
+** INFO   :            187         85182 fu   (lnkx)
+** INFO   :            187         85182 ru   (lnkx)
+** INFO   :            189        165709 teta (lnx)
+** INFO   :            189          2180 xbndz(nbndz), ybndz(nbndz), xy2bndz(2,nbndz), zbndz(nbndz), kbndz(n4,nbndz), zbndz0(nbndz), kdz(nbndz)
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Found optional keyword VALUE
+** INFO   : External Forcing or Initialising 'frictioncoefficient' from file 'channels_manning.pol'.
+** INFO   :            190        165709 viuh(lnx)
+** INFO   :            191        165709 zh(nx)
+** INFO   : Opened file : channels_manning.pol
+** INFO   : Closed file : channels_manning.pol
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Found optional keyword VALUE
+** INFO   : External Forcing or Initialising 'frictioncoefficient' from file 'sea_manning.pol'.
+** INFO   :            193        165709 viuh(lnx)
+** INFO   :            194        165709 zh(nx)
+** INFO   : Opened file : sea_manning.pol
+** INFO   : Closed file : sea_manning.pol
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Found optional keyword VALUE
+** INFO   : External Forcing or Initialising 'frictioncoefficient' from file 'north_manning.pol'.
+** INFO   :            195        165709 viuh(lnx)
+** INFO   :            197        165709 zh(nx)
+** INFO   : Opened file : north_manning.pol
+** INFO   : Closed file : north_manning.pol
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Found optional keyword VALUE
+** INFO   : External Forcing or Initialising 'frictioncoefficient' from file 'marsh_south_manning.pol'.
+** INFO   :            198        165709 viuh(lnx)
+** INFO   :            199        165709 zh(nx)
+** INFO   : Opened file : marsh_south_manning.pol
+** INFO   : Closed file : marsh_south_manning.pol
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Found optional keyword VALUE
+** INFO   : External Forcing or Initialising 'frictioncoefficient' from file 'marsh_north_manning.pol'.
+** INFO   :            200        165709 viuh(lnx)
+** INFO   :            202        165709 zh(nx)
+** INFO   : Opened file : marsh_north_manning.pol
+** INFO   : Closed file : marsh_north_manning.pol
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : External Forcing or Initialising 'waterlevelbnd' from file 'dd-01-03e_01.pli'.
+** INFO   : Opened file : dd-01-03e_01.pli
+** INFO   : Closed file : dd-01-03e_01.pli
+** INFO   : Opened file : dd-01-03e_01_0001.tim
+** INFO   : Opened file : dd-01-03e_01_0002.tim
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : External Forcing or Initialising 'waterlevelbnd' from file 'dd-01-03e_02.pli'.
+** INFO   : Opened file : dd-01-03e_02.pli
+** INFO   : Closed file : dd-01-03e_02.pli
+** INFO   : Opened file : dd-01-03e_02_0001.tim
+** INFO   : Opened file : dd-01-03e_02_0002.tim
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : External Forcing or Initialising 'waterlevelbnd' from file 'dd-01-03e_03.pli'.
+** INFO   : Opened file : dd-01-03e_03.pli
+** INFO   : Closed file : dd-01-03e_03.pli
+** INFO   : Opened file : dd-01-03e_03_0001.tim
+** INFO   : Opened file : dd-01-03e_03_0002.tim
+** INFO   : looking for keyword: QUANTITY
+** INFO   : keyword QUANTITY NOT found!
+** INFO   : External Forcing or Initialising 'waterlevelbnd' from file 'dd-01-03e_03.pli'.
+** INFO   : Closed file : nn_01_03c.ext
+** INFO   :            203        165709 klnup(6,lnx)
+** INFO   :            204        165709 slnup(6,lnx)
+** INFO   :            205         85182 ij(nodtot)
+** INFO   :            206         85182 nodbr2(nodtot)
+** INFO   :            207         85182 nbrstk(nodtot)
+** INFO   :            207         85182 nodstk(nodtot)
+** INFO   :            208         85182 noel(nodtot)
+** INFO   :            209         85182 noel0(nodtot)
+** INFO   :            209         85182 ia(nodtot)
+** INFO   :            210         85182 row(nodtot)
+** INFO   :            211        165709 lv2(lintot)
+** INFO   :            212         85182 jagauss(nodtot)
+** INFO   :            221        331479 ccr(0:ijstck)
+** INFO   :            223        331479 bbl(0:ijstck)
+** INFO   :            225        170364 bbr(nodtot), ddr(nodtot)
+** INFO   :            228        425910 d0(nodtot), zkr(nodtot),pk(0:nodtot), apk(nodtot), rk(nodtot)
+** INFO   : nogauss , nocg :          44237         40926
+** INFO   : Modelinit finished   at: 13:46:23, 31-10-2013
+** INFO   : * Active Model definition:
+# Generated on 13:46:23, 31-10-2013
+# Deltares, D-Flow FM Version 1.1.81.000000, Oct 29 2013, 10:51:18
+
+[model]
+Program              = D-Flow FM
+Version              = 1.1.81.000000
+AutoStart            = 0                   # Autostart simulation after loading MDU or not (0=no, 1=autostart, 2=autostartstop).
+
+[geometry]
+NetFile              = nn_01_03e.nc_net.nc # *_net.nc
+BathymetryFile       =                     # *.xyb
+WaterLevIniFile      =                     # Initial water levels sample file *.xyz
+LandBoundaryFile     = Lagchsez.ldb        # Only for plotting
+ThinDamFile          = laguna_thd.pli      # *_thd.pli, Polyline(s) for tracing thin dams.
+FixedWeirFile        =                     # *_fxw.pli, Polyline(s) x,y,z, z = fixed weir top levels
+ProflocFile          =                     # *_proflocation.xyz)    x,y,z, z = profile refnumber
+ProfdefFile          =                     # *_profdefinition.def) definition for all profile nrs
+ManholeFile          =                     # *...
+WaterLevIni          = 0.                  # Initial water level
+Bedlevuni            = -5.                 # Uniform bottom level, (only if bedlevtype>=3, used at missing z values in netfile
+BedlevType           = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
+                                           # 2 : Bottom levels at velocity points  (=flow links),            xu, yu, blu, bob = blu,    bl = lowest connected link
+                                           # 3 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
+                                           # 4 : Bottom levels at velocity points  (=flow links), using min  network levels xk, yk, zk  bl = lowest connected link
+                                           # 5 : Bottom levels at velocity points  (=flow links), using max  network levels xk, yk, zk  bl = lowest connected link
+PartitionFile        =                     # *_part.pol, polyline(s) x,y
+AngLat               = 45.                 # Angle of latitude (deg), 0=no Coriolis
+Conveyance2D         = 0                   # -1:R=HU,0:R=H, 1:R=A/P, 2:K=analytic-1D conv, 3:K=analytic-2D conv
+Makeorthocenters     = 0                   # 1=yes, 0=no switch from circumcentres to orthocentres in geominit
+Dcenterinside        = 1.                  # limit cell center; 1.0:in cell <-> 0.0:on c/g
+
+[numerics]
+CFLMax               = 0.7                 # Max. Courant nr.
+CFLWaveFrac          = 0.1                 # Wave velocity fraction, total courant vel = u + cflw*wavevelocity
+AdvecType            = 3                   # Adv type, 0=no, 1= Wenneker, qu-udzt, 2=1, q(uio-u), 3=Perot q(uio-u), 4=Perot q(ui-u), 5=Perot q(ui-u) without itself
+Limtypmom            = 4                   # Limiter type for cell center advection velocity, 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Limtypsa             = 0                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Icgsolver            = 1                   # Solver type , 1 = sobekGS_OMP, 2 = sobekGS_OMPthreadsafe, 3 = sobekGS, 4 = sobekGS + Saadilud, 5 = parallel/global Saad, 6 = parallel/Petsc, 7 = parallel/GS
+Maxdegree            = 6                   # Maximum degree in Gauss elimination
+Tlfsmo               = 0.                  # Fourier smoothing time on waterlevel boundaries (s)
+Slopedrop2D          = 0.3                 # Apply droplosses only if local bottom slope > Slopedrop2D, 0=no droplosses
+
+[physics]
+UnifFrictCoef        = 3.d-2               # Uniform friction coefficient, 0=no friction
+UnifFrictType        = 1                   # 0=Chezy, 1=Manning, 2=White Colebrook, 3=z0 etc
+UnifFrictCoefLin     = 0.                  # Uniform linear friction coefficient for ocean models (m/s), 0=no
+Vicouv               = 0.                  # Uniform horizontal eddy viscosity (m2/s)
+Dicouv               = 0.                  # Uniform horizontal eddy diffusivity (m2/s)
+Smagorinsky          = 0.                  # Add Smagorinsky horizontal turbulence : vicu = vicu + ( (Smagorinsky*dx)**2)*S, e.g. 0.1
+Elder                = 0.                  # Add Elder contribution                : vicu = vicu + Elder*kappa*ustar*H/6),   e.g. 1.0
+irov                 = 0                   # 0=free slip, 1 = partial slip using wall_ks
+wall_ks              = 0.                  # Nikuradse roughness for side walls, wall_z0=wall_ks/30
+Rhomean              = 1000.               #  Average water density (kg/m3)
+Ag                   = 9.81                #  Gravitational acceleration
+TidalForcing         = 1                   # Tidal forcing (0=no, 1=yes) (only for jsferic == 1)
+Salinity             = 0                   # Include salinity, (0=no, 1=yes)
+
+[wind]
+ICdtyp               = 2                   # ( ),1=const, 2=S&B 2 breakpoints, 3= S&B 3 breakpoints, 4=Charnock constant
+Cdbreakpoints        = 6.3d-4 7.23d-3      # ( ),   e.g. 0.00063  0.00723
+Windspeedbreakpoints = 0. 100.             # (m/s), e.g. 0.0      100.0
+Rhoair               = 1.20000004768372    # Air density (kg/m3)
+PavBnd               = 101325.             # Average air Pressure on open boundaries, (N/m2), only applied if value > 0
+Gapres               = 101325.             # Global Atmospheric Pressure, (N/m2)
+
+[time]
+RefDate              = 20021029            # Reference date (yyyymmdd)
+Tunit                = M                   # Time units in MDU (H, M or S)
+DtUser               = 60.                 # User timestep in seconds (interval for external forcing update & his/map output)
+DtMax                = 60.                 # Max timestep in seconds
+DtInit               = 1.                  # Initial timestep in seconds
+AutoTimestep         = 1                   # Use CFL timestep limit or not (1/0)
+TStart               = 4320.               # Start time w.r.t. RefDate (in TUnit)
+TStop                = 10080.              # Stop  time w.r.t. RefDate (in TUnit)
+
+[restart]
+RestartFile          =                     # Restart file, only map, hence: *_map.nc
+RestartDateTime      =                     # Restart time (YYYYMMDDHHMMSS)
+
+[external forcing]
+ExtForceFile         = nn_01_03c.ext       # *.ext
+
+[output]
+OutputDir            =                     # Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for no dir/current dir.
+ObsFile              = laguna_obs.xyn      # *.xyn Coords+name of observation stations.
+CrsFile              = laguna_crs.pli      # *_crs.pli Polyline(s) definining cross section(s).
+HisInterval          = 600.                # History output, given as "interval" "start period" "end period" (s)
+XLSInterval          = 0.                  # Interval (s) between XLS history
+FlowGeomFile         =                     # *_flowgeom.nc Flow geometry file in NetCDF format.
+MapInterval          = 10800.              # Map file output, given as "interval" "start period" "end period" (s)
+MapFormat            = 1                   # Map file format, 1: netCDF, 2: Tecplot, 3: netCFD and Tecplot
+RstInterval          = 86400.              # Interval (s) between restart file outputs
+WaqInterval          = 0.                  # Interval (in s) between Delwaq file outputs
+StatsInterval        = 0.                  # Interval (in s) between simulation statistics output.
+TimingsInterval      = 90.                 # Timings output interval
+TimeSplitInterval    = 0X                  # Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s.
+MapOutputTimeVector  =                     # File (.mpt) containing fixed map output times (s) w.r.t. RefDate
+FullGridOutput       = 0                   # 0:compact, 1:full time-varying grid data
+** INFO   : **
+* Active Model definition:
+# Generated on 13:46:23, 31-10-2013
+# Deltares, D-Flow FM Version 1.1.81.000000, Oct 29 2013, 10:51:18
+
+[model]
+Program              = D-Flow FM
+Version              = 1.1.81.000000
+AutoStart            = 0                   # Autostart simulation after loading MDU or not (0=no, 1=autostart, 2=autostartstop).
+
+[geometry]
+NetFile              = nn_01_03e.nc_net.nc # *_net.nc
+BathymetryFile       =                     # *.xyb
+WaterLevIniFile      =                     # Initial water levels sample file *.xyz
+LandBoundaryFile     = Lagchsez.ldb        # Only for plotting
+ThinDamFile          = laguna_thd.pli      # *_thd.pli, Polyline(s) for tracing thin dams.
+FixedWeirFile        =                     # *_fxw.pli, Polyline(s) x,y,z, z = fixed weir top levels
+ProflocFile          =                     # *_proflocation.xyz)    x,y,z, z = profile refnumber
+ProfdefFile          =                     # *_profdefinition.def) definition for all profile nrs
+ManholeFile          =                     # *...
+WaterLevIni          = 0.                  # Initial water level
+Bedlevuni            = -5.                 # Uniform bottom level, (only if bedlevtype>=3, used at missing z values in netfile
+BedlevType           = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
+                                           # 2 : Bottom levels at velocity points  (=flow links),            xu, yu, blu, bob = blu,    bl = lowest connected link
+                                           # 3 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
+                                           # 4 : Bottom levels at velocity points  (=flow links), using min  network levels xk, yk, zk  bl = lowest connected link
+                                           # 5 : Bottom levels at velocity points  (=flow links), using max  network levels xk, yk, zk  bl = lowest connected link
+PartitionFile        =                     # *_part.pol, polyline(s) x,y
+AngLat               = 45.                 # Angle of latitude (deg), 0=no Coriolis
+Conveyance2D         = 0                   # -1:R=HU,0:R=H, 1:R=A/P, 2:K=analytic-1D conv, 3:K=analytic-2D conv
+Makeorthocenters     = 0                   # 1=yes, 0=no switch from circumcentres to orthocentres in geominit
+Dcenterinside        = 1.                  # limit cell center; 1.0:in cell <-> 0.0:on c/g
+
+[numerics]
+CFLMax               = 0.7                 # Max. Courant nr.
+CFLWaveFrac          = 0.1                 # Wave velocity fraction, total courant vel = u + cflw*wavevelocity
+AdvecType            = 3                   # Adv type, 0=no, 1= Wenneker, qu-udzt, 2=1, q(uio-u), 3=Perot q(uio-u), 4=Perot q(ui-u), 5=Perot q(ui-u) without itself
+Limtypmom            = 4                   # Limiter type for cell center advection velocity, 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Limtypsa             = 0                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Icgsolver            = 1                   # Solver type , 1 = sobekGS_OMP, 2 = sobekGS_OMPthreadsafe, 3 = sobekGS, 4 = sobekGS + Saadilud, 5 = parallel/global Saad, 6 = parallel/Petsc, 7 = parallel/GS
+Maxdegree            = 6                   # Maximum degree in Gauss elimination
+Tlfsmo               = 0.                  # Fourier smoothing time on waterlevel boundaries (s)
+Slopedrop2D          = 0.3                 # Apply droplosses only if local bottom slope > Slopedrop2D, 0=no droplosses
+
+[physics]
+UnifFrictCoef        = 3.d-2               # Uniform friction coefficient, 0=no friction
+UnifFrictType        = 1                   # 0=Chezy, 1=Manning, 2=White Colebrook, 3=z0 etc
+UnifFrictCoefLin     = 0.                  # Uniform linear friction coefficient for ocean models (m/s), 0=no
+Vicouv               = 0.                  # Uniform horizontal eddy viscosity (m2/s)
+Dicouv               = 0.                  # Uniform horizontal eddy diffusivity (m2/s)
+Smagorinsky          = 0.                  # Add Smagorinsky horizontal turbulence : vicu = vicu + ( (Smagorinsky*dx)**2)*S, e.g. 0.1
+Elder                = 0.                  # Add Elder contribution                : vicu = vicu + Elder*kappa*ustar*H/6),   e.g. 1.0
+irov                 = 0                   # 0=free slip, 1 = partial slip using wall_ks
+wall_ks              = 0.                  # Nikuradse roughness for side walls, wall_z0=wall_ks/30
+Rhomean              = 1000.               #  Average water density (kg/m3)
+Ag                   = 9.81                #  Gravitational acceleration
+TidalForcing         = 1                   # Tidal forcing (0=no, 1=yes) (only for jsferic == 1)
+Salinity             = 0                   # Include salinity, (0=no, 1=yes)
+
+[wind]
+ICdtyp               = 2                   # ( ),1=const, 2=S&B 2 breakpoints, 3= S&B 3 breakpoints, 4=Charnock constant
+Cdbreakpoints        = 6.3d-4 7.23d-3      # ( ),   e.g. 0.00063  0.00723
+Windspeedbreakpoints = 0. 100.             # (m/s), e.g. 0.0      100.0
+Rhoair               = 1.20000004768372    # Air density (kg/m3)
+PavBnd               = 101325.             # Average air Pressure on open boundaries, (N/m2), only applied if value > 0
+Gapres               = 101325.             # Global Atmospheric Pressure, (N/m2)
+
+[time]
+RefDate              = 20021029            # Reference date (yyyymmdd)
+Tunit                = M                   # Time units in MDU (H, M or S)
+DtUser               = 60.                 # User timestep in seconds (interval for external forcing update & his/map output)
+DtMax                = 60.                 # Max timestep in seconds
+DtInit               = 1.                  # Initial timestep in seconds
+AutoTimestep         = 1                   # Use CFL timestep limit or not (1/0)
+TStart               = 4320.               # Start time w.r.t. RefDate (in TUnit)
+TStop                = 10080.              # Stop  time w.r.t. RefDate (in TUnit)
+
+[restart]
+RestartFile          =                     # Restart file, only map, hence: *_map.nc
+RestartDateTime      =                     # Restart time (YYYYMMDDHHMMSS)
+
+[external forcing]
+ExtForceFile         = nn_01_03c.ext       # *.ext
+
+[output]
+OutputDir            =                     # Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for no dir/current dir.
+ObsFile              = laguna_obs.xyn      # *.xyn Coords+name of observation stations.
+CrsFile              = laguna_crs.pli      # *_crs.pli Polyline(s) definining cross section(s).
+HisInterval          = 600.                # History output, given as "interval" "start period" "end period" (s)
+XLSInterval          = 0.                  # Interval (s) between XLS history
+FlowGeomFile         =                     # *_flowgeom.nc Flow geometry file in NetCDF format.
+MapInterval          = 10800.              # Map file output, given as "interval" "start period" "end period" (s)
+MapFormat            = 1                   # Map file format, 1: netCDF, 2: Tecplot, 3: netCFD and Tecplot
+RstInterval          = 86400.              # Interval (s) between restart file outputs
+WaqInterval          = 0.                  # Interval (in s) between Delwaq file outputs
+StatsInterval        = 0.                  # Interval (in s) between simulation statistics output.
+TimingsInterval      = 90.                 # Timings output interval
+TimeSplitInterval    = 0X                  # Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s.
+MapOutputTimeVector  =                     # File (.mpt) containing fixed map output times (s) w.r.t. RefDate
+FullGridOutput       = 0                   # 0:compact, 1:full time-varying grid data
+**
+** DEBUG  : Opened NetCDF file 'DFM_OUTPUT_\n_e04e_his.nc' as #         3.
+** DEBUG  : Opened NetCDF file 'DFM_OUTPUT_\n_e04e_map.nc' as #         4.
+** INFO   : Opened file : DFM_OUTPUT_\n_e04e_20021101_000000.rst
+** INFO   : Closed file : DFM_OUTPUT_\n_e04e_20021101_000000.rst
+** INFO   : User interrupt

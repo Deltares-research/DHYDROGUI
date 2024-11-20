@@ -1,0 +1,42 @@
+[forcing]
+name                            = r01_001_0001
+function                        = timeseries
+timeInterpolation               = linear
+vertPositionType                = single
+vertInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2025-01-01 00:00:00
+quantity                        = temperaturebnd
+unit                            = °C
+vertPositionIndex               = 1
+0       20
+950400  20
+
+[forcing]
+name                            = r01_002_0001
+function                        = timeseries
+timeInterpolation               = linear
+vertPositionType                = single
+vertInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2025-01-01 00:00:00
+quantity                        = temperaturebnd
+unit                            = °C
+vertPositionIndex               = 1
+0       20
+950400  20
+
+[forcing]
+name                            = r01_002_0002
+function                        = timeseries
+timeInterpolation               = linear
+vertPositionType                = single
+vertInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2025-01-01 00:00:00
+quantity                        = temperaturebnd
+unit                            = °C
+vertPositionIndex               = 1
+0       20
+950400  20
+

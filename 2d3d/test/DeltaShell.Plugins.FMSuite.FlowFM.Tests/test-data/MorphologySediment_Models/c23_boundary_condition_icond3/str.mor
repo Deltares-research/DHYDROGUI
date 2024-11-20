@@ -1,0 +1,66 @@
+[MorphologyFileInformation]
+	FileCreatedBy = Willem Ottevanger
+	FileCreationDate = 2012/12/09
+	FileVersion = 02.00
+[Morphology]
+
+	EpsPar 			= False 	#	Only for waves in combination with k-eps
+	IopKCW 			= 1 		#	Flag for determining Rc and Rw
+	RDC 			= 0.01 		# [m] 	Current related roughness (IopKCW = 2)
+	RDW 			= 0.02 		# [m] 	Wave related roughness (IopKCW = 2)
+	MorFac          	= 1    	        # [-]     Morphological scale factor
+   	MorStt          	= 300           # [TUnits]   Spin-up interval from TStart till start of morphological changes
+	Thresh 			= 1.0  		# [m] 	Threshold sed thickness for reducing sed exchange
+	BedUpd 			= true          #	Update bathymetry during flow run
+	CmpUpd                  = True
+	EqmBc			= false 	#	Equilibrium concentration at inflow boundaries
+	#NeuBcSand 		= false 	#	Equilibrium concentration at inflow boundaries for non-cohesive suspended sediment
+	NeglectEntrainment      = True 		#
+	DensIn 			= false 		#	Include effect of sediment on density gradient
+	AksFac 			= 1 		# [-] 	Van Rijn's reference height = AKSFAC * KS
+	RWave 			= 2 		# [-] 	Wave related roughness = RWAVE * estimated	ripple height. Van Rijn Recommends range 1-3
+	AlfaBs 			= 1 		# [-] 	Longitudinal bed gradient factor for bedload transport
+	AlfaBn 			= 1		    # [-] 	Transverse bed gradient factor for bedload transport
+	Sus 			= 1 		# [-] 	Multipl fac for suspended sed reference concentration
+	Bed 			= 1 		# [-] 	Multipl factor for bedload transport vector magnitude
+	SusW 			= 1 		# [-] 	Wave-related suspended sed. transport factor
+	BedW 			= 1 		# [-] 	Wave-related bedload sed. transport factor
+	SedThr 			= 0.1 		# [m] 	Minimum threshold depth for sediment computations
+	ThetSD 			= 1. 		# [-] 	Fraction of erosion to assign to adjacent dry cells
+	#HMaxTH 		= 9 	    # [m] 	Max depth for var THETSD. Set < SEDTHR to use global value only
+	#Espir			= 1		     # Effect of spiral flow on bedload transport
+	ISlope			= 1		     # bed slopw formulation (1= no, 2=Bagnold, 3=Koch, 4=Parker)
+	UpdInf			= true		 # Update bed levels at inflwo boundaries
+        BcFil                   = str4.bcm
+        AShld                   = 0.85
+        BShld                   = 0.5
+        CShld                   = 0.0
+        DShld                   = 0.0
+[Output]
+        BedTranspDueToCurrentsAtFlux = true             
+        BedTranspDueToWavesAtFlux    = true 
+        SuspTranspDueToWavesAtFlux   = true
+[Boundary]
+Name     = #upstream#
+IBedCond = 3                  # 0 no bed level constraint
+                              # 1 bed level fixed
+                              # 2 depth specified as function of time
+                              # 3 depth change specified as function of time
+                              # 4 bedload transport rate prescribed (volume rate of bed material)
+                              # 5 bedload transport rate prescribed (volume rate of stone)
+ICmpCond = 2                  # 0 no bed composition constraint
+                              # 1 composition constant
+                              # 2 mass fractions specified as function of time
+                              # 3 volume fractions specified as function of time
+[Boundary]
+Name     = #downstream#
+IBedCond = 0                  # 0 no bed level constraint
+                              # 1 bed level fixed
+                              # 2 depth specified as function of time
+                              # 3 depth change specified as function of time
+                              # 4 bedload transport rate prescribed (volume rate of bed material)
+                              # 5 bedload transport rate prescribed (volume rate of stone)
+ICmpCond = 0                  # 0 no bed composition constraint
+                              # 1 composition constant
+                              # 2 mass fractions specified as function of time
+                              # 3 volume fractions specified as function of time

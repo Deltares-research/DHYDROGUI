@@ -1,0 +1,6 @@
+*var    tsrts    sstop  numcyc   knfac     v0plu  layno elp
+ wl      0.      1440.   1    1.000       0.0
+ uxa     0.      1440.   1    1.000       0.0
+ uya     0.      1440.   1    1.000       0.0
+ uxa     0.      1440.   3    1.000       0.0
+ uya     0.      1440.   3    1.000       0.0

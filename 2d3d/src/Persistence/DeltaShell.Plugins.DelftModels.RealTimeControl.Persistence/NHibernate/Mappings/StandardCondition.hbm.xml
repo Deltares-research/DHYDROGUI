@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain"
+                   assembly="DeltaShell.Plugins.DelftModels.RealTimeControl">
+
+  <subclass name="StandardCondition" lazy="false" extends="ConditionBase" discriminator-value="rtc_standard_condition">
+
+    <property name="Value" column="value" />
+    <property name="Reference" column="reference" />
+    <property name="Operation" column="operation" />
+
+  </subclass>
+</hibernate-mapping>
