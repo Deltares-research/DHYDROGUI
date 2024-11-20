@@ -49,31 +49,30 @@ namespace DHYDRO.Common.IO.BndExtForce
         /// </summary>
         /// <remarks>
         /// The default value of 0s means that the Thatcher-Harleman return time has no impact.
-        /// This is an optional value, defaults to <see cref="double.NaN"/>.
+        /// This is an optional value.
         /// </remarks>
-        public double ReturnTime { get; set; } = double.NaN;
+        public double ReturnTime { get; set; }
 
         /// <summary>
         /// Gets or sets the fall velocity for the tracer (m/s).
         /// </summary>
         /// <remarks>
         /// The default value 0m/s means that settling is disabled for this tracer.
-        /// This is an optional value, defaults to <see cref="double.NaN"/>.
+        /// This is an optional value.
         /// </remarks>
-        public double TracerFallVelocity { get; set; } = double.NaN;
+        public double TracerFallVelocity { get; set; }
 
         /// <summary>
         /// Gets or sets decay lifetime (τ) for the tracer (s).
         /// </summary>
         /// <remarks>
         /// The default value 0s means that tracer decay is disabled for this tracer.
-        /// This is an optional value, defaults to <see cref="double.NaN"/>.
+        /// This is an optional value.
         /// </remarks>
-        public double TracerDecayTime { get; set; } = double.NaN;
+        public double TracerDecayTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the custom width for boundary flow link,
-        /// to override default mirrored internal flow link width.
+        /// Gets or sets the custom width for boundary flow link, to override default mirrored internal flow link width.
         /// </summary>
         /// <remarks>
         /// Only used for 1D.

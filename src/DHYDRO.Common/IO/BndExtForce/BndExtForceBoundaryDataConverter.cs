@@ -20,9 +20,9 @@ namespace DHYDRO.Common.IO.BndExtForce
                 NodeId = section.GetPropertyValue(BndExtForceFileConstants.Keys.NodeId),
                 LocationFile = section.GetPropertyValue(BndExtForceFileConstants.Keys.LocationFile),
                 ForcingFiles = section.GetAllPropertyValues(BndExtForceFileConstants.Keys.ForcingFile),
-                ReturnTime = section.GetPropertyValue(BndExtForceFileConstants.Keys.ReturnTime, double.NaN),
-                TracerFallVelocity = section.GetPropertyValue(BndExtForceFileConstants.Keys.TracerFallVelocity, double.NaN),
-                TracerDecayTime = section.GetPropertyValue(BndExtForceFileConstants.Keys.TracerDecayTime, double.NaN),
+                ReturnTime = section.GetPropertyValue<double>(BndExtForceFileConstants.Keys.ReturnTime),
+                TracerFallVelocity = section.GetPropertyValue<double>(BndExtForceFileConstants.Keys.TracerFallVelocity),
+                TracerDecayTime = section.GetPropertyValue<double>(BndExtForceFileConstants.Keys.TracerDecayTime),
                 FlowLinkWidth = section.GetPropertyValue(BndExtForceFileConstants.Keys.FlowLinkWidth, double.NaN),
                 BedLevelDepth = section.GetPropertyValue(BndExtForceFileConstants.Keys.BedLevelDepth, double.NaN)
             };
@@ -39,9 +39,9 @@ namespace DHYDRO.Common.IO.BndExtForce
             section.AddPropertyIf(BndExtForceFileConstants.Keys.NodeId, boundaryData.NodeId, value => !string.IsNullOrEmpty(value));
             section.AddPropertyIf(BndExtForceFileConstants.Keys.LocationFile, boundaryData.LocationFile, value => !string.IsNullOrEmpty(value));
             section.AddMultipleProperties(BndExtForceFileConstants.Keys.ForcingFile, boundaryData.ForcingFiles ?? Enumerable.Empty<string>());
-            section.AddPropertyIf(BndExtForceFileConstants.Keys.ReturnTime, boundaryData.ReturnTime, value => !double.IsNaN(value));
-            section.AddPropertyIf(BndExtForceFileConstants.Keys.TracerFallVelocity, boundaryData.TracerFallVelocity, value => !double.IsNaN(value));
-            section.AddPropertyIf(BndExtForceFileConstants.Keys.TracerDecayTime, boundaryData.TracerDecayTime, value => !double.IsNaN(value));
+            section.AddPropertyIf(BndExtForceFileConstants.Keys.ReturnTime, boundaryData.ReturnTime, value => value > 0);
+            section.AddPropertyIf(BndExtForceFileConstants.Keys.TracerFallVelocity, boundaryData.TracerFallVelocity, value => value > 0);
+            section.AddPropertyIf(BndExtForceFileConstants.Keys.TracerDecayTime, boundaryData.TracerDecayTime, value => value > 0);
             section.AddPropertyIf(BndExtForceFileConstants.Keys.FlowLinkWidth, boundaryData.FlowLinkWidth, value => !double.IsNaN(value));
             section.AddPropertyIf(BndExtForceFileConstants.Keys.BedLevelDepth, boundaryData.BedLevelDepth, value => !double.IsNaN(value));
 
