@@ -59,6 +59,7 @@ $RECYCLE.BIN/
 AcceptanceModels
 AcceptanceModelsRTCFMDimrXmlBased
 
+
 # Automatically generated
 src/DeltaShell.Dimr/drtc_xsd/rtcRuntimeConfig.cs
 src/DeltaShell.Dimr/dimr_xsd/dimr.cs
@@ -82,6 +83,7 @@ ranorex/test-data
 ranorex/RanorexAutomationHelpers/packages.config
 ranorex/RanorexAutomationHelpers/Ranorex Automation Helpers.csproj
 ranorex/RanorexAutomationHelpers/packages.config
+
 
 # Installer generated
 HarvestedDeltaShellFiles.wxs

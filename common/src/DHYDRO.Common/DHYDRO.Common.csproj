@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup Condition="'$(BUILD_SERVER)' == 'true'">
+        <!--Set to true with a build server build to normalize stored file paths. Should be false during local dev or the debugger won’t be able to find the local source files.-->
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Deltares.NET.Infrastructure" />
+        <PackageReference Include="Deltares.NET.Infrastructure.API" />
+        <PackageReference Include="DHYDRO.SharedConfigurations" />
+        <PackageReference Include="log4net"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
+        <PackageReference Include="System.IO.Abstractions"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+        <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+        <OutputPath>$(SolutionDir)bin\$(Configuration)\src</OutputPath>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Resource Include="Resources\**"/>
+    </ItemGroup>
+
+    <!--Ensure resources are generated correctly.-->
+    <ItemGroup Condition="Exists('Properties\Resources.resx')">
+        <Compile Update="Properties\Resources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup Condition="Exists('Properties\Resources.resx')">
+        <EmbeddedResource Update="Properties\Resources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <!-- Make internals visible to test project -->
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+</Project>

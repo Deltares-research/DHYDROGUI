@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>DHYDRO.Common.TestUtils</id>
+    <title>DHYDRO.Common.TestUtils</title>
+    <description>A shared D-HYDRO Suite test utils library.</description>
+    <version>1.2.0</version>
+    <authors>Deltares</authors>
+    <copyright>Deltares 2024</copyright>
+    <dependencies>
+      <group targetFramework=".NETFramework4.8" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\bin\$configuration$\tests\DHYDRO.Common.TestUtils.dll" target="lib\net48" />
+  </files>
+</package>

@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DHYDRO.Common", "src\DHYDRO.Common\DHYDRO.Common.csproj", "{AB6BEE91-7205-4340-8EB6-A016A5181F87}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7A1C8D07-D31A-4F6C-9006-8D5361AAF91F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C631D7DD-EA1F-4E96-A853-EACB5C61AA74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DHYDRO.Common.Tests", "test\DHYDRO.Common.Tests\DHYDRO.Common.Tests.csproj", "{7354B145-3890-48F3-A79B-99FBF9C8595F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8C91921F-2222-4A01-83C5-F0FEC1DE7639}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.packages.props = Directory.packages.props
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DHYDRO.Common.TestUtils", "test\DHYDRO.Common.TestUtils\DHYDRO.Common.TestUtils.csproj", "{B26AAB1D-7B46-41BD-927B-D0A486B312F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB6BEE91-7205-4340-8EB6-A016A5181F87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB6BEE91-7205-4340-8EB6-A016A5181F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB6BEE91-7205-4340-8EB6-A016A5181F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB6BEE91-7205-4340-8EB6-A016A5181F87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7354B145-3890-48F3-A79B-99FBF9C8595F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7354B145-3890-48F3-A79B-99FBF9C8595F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7354B145-3890-48F3-A79B-99FBF9C8595F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7354B145-3890-48F3-A79B-99FBF9C8595F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B26AAB1D-7B46-41BD-927B-D0A486B312F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B26AAB1D-7B46-41BD-927B-D0A486B312F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B26AAB1D-7B46-41BD-927B-D0A486B312F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B26AAB1D-7B46-41BD-927B-D0A486B312F6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AB6BEE91-7205-4340-8EB6-A016A5181F87} = {7A1C8D07-D31A-4F6C-9006-8D5361AAF91F}
+		{7354B145-3890-48F3-A79B-99FBF9C8595F} = {C631D7DD-EA1F-4E96-A853-EACB5C61AA74}
+		{B26AAB1D-7B46-41BD-927B-D0A486B312F6} = {C631D7DD-EA1F-4E96-A853-EACB5C61AA74}
+	EndGlobalSection
+EndGlobal
