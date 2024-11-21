@@ -51,4 +51,19 @@
     <data name="Forcing_file_does_not_exist_0_" xml:space="preserve">
         <value>Forcing file does not exist: {0}.</value>
     </data>
+    <data name="Location_file_does_not_exist_0_" xml:space="preserve">
+        <value>Location file does not exist: {0}.</value>
+    </data>
+    <data name="Unsupported_discharge_value_0_Line_1_" xml:space="preserve">
+        <value>Unsupported discharge value: {0}. Line: {1}.</value>
+    </data>
+    <data name="Y_coordinates_count_must_be_equal_to_0_" xml:space="preserve">
+        <value>Y-coordinates count must be equal to the expected number of coordinates ({0}).</value>
+    </data>
+    <data name="X_coordinates_count_must_be_equal_to_0_" xml:space="preserve">
+        <value>X-coordinates count must be equal to the expected number of coordinates ({0}).</value>
+    </data>
+    <data name="Discharge_file_does_not_exist_0_" xml:space="preserve">
+        <value>Discharge file does not exist: {0}.</value>
+    </data>
 </root>

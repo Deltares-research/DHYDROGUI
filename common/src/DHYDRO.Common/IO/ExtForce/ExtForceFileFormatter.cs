@@ -9,7 +9,7 @@ using Deltares.Infrastructure.API.Guards;
 namespace DHYDRO.Common.IO.ExtForce
 {
     /// <summary>
-    /// Formats external forcings data to a formatted string.
+    /// Provides a formatter for the external forcings file (*.ext).
     /// </summary>
     public sealed class ExtForceFileFormatter
     {
