@@ -1,12 +1,11 @@
 using System.IO;
 using Deltares.Infrastructure.API.Guards;
-using Deltares.Infrastructure.Extensions;
 using Deltares.Infrastructure.IO.Ini;
 
 namespace DHYDRO.Common.IO.InitialField
 {
     /// <summary>
-    /// Formats initial field file data to an INI-formatted string.
+    /// Provides a formatter for the initial field file (*.ini).
     /// </summary>
     public sealed class InitialFieldFileFormatter
     {
@@ -38,8 +37,7 @@ namespace DHYDRO.Common.IO.InitialField
         {
             Ensure.NotNull(initialFieldFileData, nameof(initialFieldFileData));
 
-            IniData iniData = CreateIniData(initialFieldFileData);
-
+            IniData iniData = ConvertInitialFieldFileData(initialFieldFileData);
             return iniFormatter.Format(iniData);
         }
 
@@ -56,39 +54,38 @@ namespace DHYDRO.Common.IO.InitialField
             Ensure.NotNull(initialFieldFileData, nameof(initialFieldFileData));
             Ensure.NotNull(stream, nameof(stream));
 
-            IniData iniData = CreateIniData(initialFieldFileData);
-
+            IniData iniData = ConvertInitialFieldFileData(initialFieldFileData);
             iniFormatter.Format(iniData, stream);
         }
 
-        private static IniData CreateIniData(InitialFieldFileData initialFieldFileData)
+        private static IniData ConvertInitialFieldFileData(InitialFieldFileData initialFieldFileData)
         {
             var iniData = new IniData();
 
-            iniData.AddSection(CreateGeneralSection(initialFieldFileData));
+            iniData.AddSection(ConvertFileInfo(initialFieldFileData.General));
 
             foreach (InitialFieldData initial in initialFieldFileData.InitialConditions)
             {
-                iniData.AddSection(CreateInitialConditionSection(initial));
+                iniData.AddSection(ConvertInitialCondition(initial));
             }
 
             foreach (InitialFieldData parameter in initialFieldFileData.Parameters)
             {
-                iniData.AddSection(CreateParameterSection(parameter));
+                iniData.AddSection(ConvertInitialParameter(parameter));
             }
 
             return iniData;
         }
 
-        private static IniSection CreateGeneralSection(InitialFieldFileData initialFieldFileData)
+        private static IniSection ConvertFileInfo(InitialFieldFileInfo fileInfo)
         {
             var generalSection = new IniSection(InitialFieldFileConstants.Headers.General);
-            generalSection.AddProperty(InitialFieldFileConstants.Keys.FileVersion, initialFieldFileData.General.FileVersion);
-            generalSection.AddProperty(InitialFieldFileConstants.Keys.FileType, initialFieldFileData.General.FileType);
+            generalSection.AddProperty(InitialFieldFileConstants.Keys.FileVersion, fileInfo.FileVersion);
+            generalSection.AddProperty(InitialFieldFileConstants.Keys.FileType, fileInfo.FileType);
             return generalSection;
         }
 
-        private static IniSection CreateInitialConditionSection(InitialFieldData initialCondition)
+        private static IniSection ConvertInitialCondition(InitialFieldData initialCondition)
         {
             Ensure.NotNull(initialCondition, nameof(initialCondition));
 
@@ -98,7 +95,7 @@ namespace DHYDRO.Common.IO.InitialField
             return iniSection;
         }
 
-        private static IniSection CreateParameterSection(InitialFieldData parameter)
+        private static IniSection ConvertInitialParameter(InitialFieldData parameter)
         {
             Ensure.NotNull(parameter, nameof(parameter));
 
@@ -110,43 +107,38 @@ namespace DHYDRO.Common.IO.InitialField
 
         private static void AddPropertiesToSection(InitialFieldData initialFieldData, IniSection iniSection)
         {
-            iniSection.AddProperty(InitialFieldFileConstants.Keys.Quantity, initialFieldData.Quantity.GetDescription());
+            iniSection.AddProperty(InitialFieldFileConstants.Keys.Quantity, initialFieldData.Quantity);
             iniSection.AddProperty(InitialFieldFileConstants.Keys.DataFile, initialFieldData.DataFile);
-            iniSection.AddProperty(InitialFieldFileConstants.Keys.DataFileType, initialFieldData.DataFileType.GetDescription());
+            iniSection.AddProperty(InitialFieldFileConstants.Keys.DataFileType, initialFieldData.DataFileType);
 
             if (initialFieldData.DataFileType == InitialFieldDataFileType.OneDField)
             {
                 return;
             }
 
-            iniSection.AddProperty(InitialFieldFileConstants.Keys.InterpolationMethod, initialFieldData.InterpolationMethod.GetDescription());
-            iniSection.AddProperty(InitialFieldFileConstants.Keys.Operand, initialFieldData.Operand.GetDescription());
+            iniSection.AddProperty(InitialFieldFileConstants.Keys.InterpolationMethod, initialFieldData.InterpolationMethod);
+            iniSection.AddProperty(InitialFieldFileConstants.Keys.Operand, initialFieldData.Operand);
 
             if (initialFieldData.InterpolationMethod == InitialFieldInterpolationMethod.Averaging)
             {
-                iniSection.AddProperty(InitialFieldFileConstants.Keys.AveragingType, initialFieldData.AveragingType.GetDescription());
+                iniSection.AddProperty(InitialFieldFileConstants.Keys.AveragingType, initialFieldData.AveragingType);
                 iniSection.AddProperty(InitialFieldFileConstants.Keys.AveragingRelSize, initialFieldData.AveragingRelSize);
                 iniSection.AddProperty(InitialFieldFileConstants.Keys.AveragingNumMin, initialFieldData.AveragingNumMin);
                 iniSection.AddProperty(InitialFieldFileConstants.Keys.AveragingPercentile, initialFieldData.AveragingPercentile);
             }
 
-            iniSection.AddProperty(CreateBooleanProperty(InitialFieldFileConstants.Keys.ExtrapolationMethod, initialFieldData.ExtrapolationMethod));
-            iniSection.AddProperty(InitialFieldFileConstants.Keys.LocationType, initialFieldData.LocationType.GetDescription());
+            iniSection.AddProperty(InitialFieldFileConstants.Keys.ExtrapolationMethod, initialFieldData.ExtrapolationMethod ? "yes" : "no");
+            iniSection.AddProperty(InitialFieldFileConstants.Keys.LocationType, initialFieldData.LocationType);
 
             if (initialFieldData.DataFileType == InitialFieldDataFileType.Polygon)
             {
-                iniSection.AddProperty(InitialFieldFileConstants.Keys.Value, initialFieldData.Value);
+                iniSection.AddPropertyIf(InitialFieldFileConstants.Keys.Value, initialFieldData.Value, value => !double.IsNaN(value));
             }
-            
+
             if (initialFieldData.Quantity == InitialFieldQuantity.FrictionCoefficient)
             {
-                iniSection.AddProperty(InitialFieldFileConstants.Keys.FrictionType, (int) initialFieldData.FrictionType);
+                iniSection.AddProperty(InitialFieldFileConstants.Keys.FrictionType, (int)initialFieldData.FrictionType);
             }
-        }
-
-        private static IniProperty CreateBooleanProperty(string key, bool value)
-        {
-            return new IniProperty(key, value ? "yes" : "no");
         }
     }
 }
