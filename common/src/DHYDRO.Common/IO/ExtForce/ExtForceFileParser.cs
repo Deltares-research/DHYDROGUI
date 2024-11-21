@@ -10,7 +10,7 @@ using Deltares.Infrastructure.Extensions;
 namespace DHYDRO.Common.IO.ExtForce
 {
     /// <summary>
-    /// Parses formatted text to an external forcings data object.
+    /// Provides a parser for the external forcings file (*.ext).
     /// </summary>
     public sealed class ExtForceFileParser
     {
