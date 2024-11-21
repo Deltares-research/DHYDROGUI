@@ -32,15 +32,41 @@ namespace DHYDRO.Common.Tests.IO.InitialField
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
         }
+        
+        [Test]
+        public void Parse_StringIsNull_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call() => parser.Parse((string)null);
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
 
         [Test]
         public void Parse_StreamIsNull_ThrowsArgumentNullException()
         {
             // Act
-            void Call() => parser.Parse(null);
+            void Call() => parser.Parse((Stream)null);
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Parse_EmptyIniString_ReturnsEmptyInitialFieldFileData()
+        {
+            // Arrange
+            const string ini = @"  
+";
+            
+            // Act
+            InitialFieldFileData result = parser.Parse(ini);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.InitialConditions, Is.Empty);
+            Assert.That(result.Parameters, Is.Empty);
         }
 
         [Test]

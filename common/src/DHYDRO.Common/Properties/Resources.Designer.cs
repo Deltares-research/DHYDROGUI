@@ -69,6 +69,15 @@ namespace DHYDRO.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Discharge file does not exist: {0}..
+        /// </summary>
+        public static string Discharge_file_does_not_exist_0_ {
+            get {
+                return ResourceManager.GetString("Discharge_file_does_not_exist_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Forcing file does not exist: {0}..
         /// </summary>
         public static string Forcing_file_does_not_exist_0_ {
@@ -83,6 +92,15 @@ namespace DHYDRO.Common.Properties {
         public static string Initial_field_data_file_does_not_exist_0_ {
             get {
                 return ResourceManager.GetString("Initial_field_data_file_does_not_exist_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location file does not exist: {0}..
+        /// </summary>
+        public static string Location_file_does_not_exist_0_ {
+            get {
+                return ResourceManager.GetString("Location_file_does_not_exist_0_", resourceCulture);
             }
         }
         
@@ -137,6 +155,33 @@ namespace DHYDRO.Common.Properties {
         public static string Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_ {
             get {
                 return ResourceManager.GetString("Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported discharge value: {0}. Line: {1}..
+        /// </summary>
+        public static string Unsupported_discharge_value_0_Line_1_ {
+            get {
+                return ResourceManager.GetString("Unsupported_discharge_value_0_Line_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X-coordinates count must be equal to the expected number of coordinates ({0})..
+        /// </summary>
+        public static string X_coordinates_count_must_be_equal_to_0_ {
+            get {
+                return ResourceManager.GetString("X_coordinates_count_must_be_equal_to_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y-coordinates count must be equal to the expected number of coordinates ({0})..
+        /// </summary>
+        public static string Y_coordinates_count_must_be_equal_to_0_ {
+            get {
+                return ResourceManager.GetString("Y_coordinates_count_must_be_equal_to_0_", resourceCulture);
             }
         }
     }

@@ -7,7 +7,7 @@ using DHYDRO.Common.Properties;
 namespace DHYDRO.Common.IO.InitialField
 {
     /// <summary>
-    /// Parses INI-formatted text to an initial field file data object.
+    /// Provides a parser for the initial field file (*.ini).
     /// </summary>
     public sealed class InitialFieldFileParser
     {
@@ -30,11 +30,30 @@ namespace DHYDRO.Common.IO.InitialField
         }
 
         /// <summary>
+        /// Parses INI-formatted text from the specified string to an initial field file data object.
+        /// </summary>
+        /// <param name="str">The formatted text to parse.</param>
+        /// <returns>An <see cref="InitialFieldFileData"/> object containing the parsed initial field file data.</returns>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="str"/> is <c>null</c>.</exception>
+        /// <exception cref="System.FormatException">When the text has an invalid format.</exception>
+        /// <remarks>
+        /// INI sections with the header "Initial" or "Parameter" can be parsed.
+        /// Other sections cannot be parsed and for these a warning message is reported to the user.
+        /// </remarks>
+        public InitialFieldFileData Parse(string str)
+        {
+            Ensure.NotNull(str, nameof(str));
+
+            IniData iniData = iniParser.Parse(str);
+            return ConvertIniData(iniData);
+        }
+
+        /// <summary>
         /// Parses INI-formatted text from the specified stream to an initial field file data object.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> from which to read the INI-formatted text.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when <paramref name="stream"/> is <c>null</c>.</exception>
         /// <returns>An <see cref="InitialFieldFileData"/> object containing the parsed initial field file data.</returns>
+        /// <exception cref="System.ArgumentNullException">Thrown when <paramref name="stream"/> is <c>null</c>.</exception>
         /// <remarks>
         /// INI sections with the header "Initial" or "Parameter" can be parsed.
         /// Other sections cannot be parsed and for these a warning message is reported to the user.
@@ -43,18 +62,23 @@ namespace DHYDRO.Common.IO.InitialField
         {
             Ensure.NotNull(stream, nameof(stream));
 
+            IniData iniData = iniParser.Parse(stream);
+            return ConvertIniData(iniData);
+        }
+
+        private InitialFieldFileData ConvertIniData(IniData iniData)
+        {
             initialFieldFileData = new InitialFieldFileData();
 
-            IniData iniData = iniParser.Parse(stream);
             foreach (IniSection section in iniData.Sections)
             {
-                ProcessSection(section);
+                ConvertIniSection(section);
             }
 
             return initialFieldFileData;
         }
 
-        private void ProcessSection(IniSection section)
+        private void ConvertIniSection(IniSection section)
         {
             if (IsGeneralSection(section))
             {
@@ -110,15 +134,15 @@ namespace DHYDRO.Common.IO.InitialField
                 LineNumber = section.LineNumber,
                 Quantity = section.GetPropertyValue(InitialFieldFileConstants.Keys.Quantity, InitialFieldQuantity.None),
                 DataFile = section.GetPropertyValue(InitialFieldFileConstants.Keys.DataFile),
-                DataFileType = section.GetPropertyValue(InitialFieldFileConstants.Keys.DataFileType, InitialFieldDataFileType.None),
-                InterpolationMethod = section.GetPropertyValue(InitialFieldFileConstants.Keys.InterpolationMethod, InitialFieldInterpolationMethod.None),
+                DataFileType = section.GetPropertyValue<InitialFieldDataFileType>(InitialFieldFileConstants.Keys.DataFileType),
+                InterpolationMethod = section.GetPropertyValue<InitialFieldInterpolationMethod>(InitialFieldFileConstants.Keys.InterpolationMethod),
                 Operand = section.GetPropertyValue(InitialFieldFileConstants.Keys.Operand, InitialFieldOperand.Override),
-                AveragingType = section.GetPropertyValue(InitialFieldFileConstants.Keys.AveragingType, InitialFieldAveragingType.Mean),
+                AveragingType = section.GetPropertyValue<InitialFieldAveragingType>(InitialFieldFileConstants.Keys.AveragingType),
                 FrictionType = section.GetPropertyValue(InitialFieldFileConstants.Keys.FrictionType, InitialFieldFrictionType.Manning),
                 AveragingRelSize = section.GetPropertyValue(InitialFieldFileConstants.Keys.AveragingRelSize, 1.01),
                 AveragingNumMin = section.GetPropertyValue(InitialFieldFileConstants.Keys.AveragingNumMin, 1),
-                AveragingPercentile = section.GetPropertyValue(InitialFieldFileConstants.Keys.AveragingPercentile, 0.0),
-                ExtrapolationMethod = section.GetPropertyValue(InitialFieldFileConstants.Keys.ExtrapolationMethod, false),
+                AveragingPercentile = section.GetPropertyValue<double>(InitialFieldFileConstants.Keys.AveragingPercentile),
+                ExtrapolationMethod = section.GetPropertyValue<bool>(InitialFieldFileConstants.Keys.ExtrapolationMethod),
                 LocationType = section.GetPropertyValue(InitialFieldFileConstants.Keys.LocationType, InitialFieldLocationType.All),
                 Value = section.GetPropertyValue(InitialFieldFileConstants.Keys.Value, double.NaN)
             };
